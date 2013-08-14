@@ -1,0 +1,24 @@
+{
+  "name": "Vault",
+  "version": "0.1",
+  "manifest_version": 2,
+  "description": "Login Anywhere with Clef",
+  "background": {
+    "scripts": ["/js/background.js"]
+  },
+  "content_scripts": [{
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["js/jquery.min.js", "/js/clef.js"]
+  }],
+  "permissions": [
+  	"http://*/*", 
+  	"https://*/*"
+  ],
+  "icons": {
+    "16": "/img/clef16.png",
+    "48": "/img/clef48.png",
+    "128": "/img/clef128.png"
+  },
+  "options_page": "html/options.html",
+  "homepage_url": "http://getclef.com"
+}
