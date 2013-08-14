@@ -1,35 +1,29 @@
 (function($) {
 
-console.log("in");
-
-var clefCircle = $("<div>");
+var cSource = chrome.extension.getURL("/img/clef128.png");
+console.log(cSource);
+var clefCircle = $("<div><img src='"+cSource+"' width='64' height='64' /></div>");
 
 $(clefCircle).css({
 	position: "fixed",
-	bottom: 0,
-	right: 0,
-	height: 0,
-	width: 0,
-	"background-color": "rgba(13, 72, 134, .9)",
-	"border-radius": 0,
-	"border-color": "rgba(13, 157, 219, .9)",
-	"border-style": "solid",
-	"border-width": 0,
-	"-webkit-transition": "border-width 1.5s, height .5s, width .5s, bottom .5s, right .5s"
+	bottom: 25,
+	right: 25
 });
 
 $("body").append(clefCircle);
 
-setTimeout(function() {
+setInterval(function() {
+	console.log("flip");
 	$(clefCircle).css({
-		bottom: -200,
-		right: -200,
-		height: 350,
-		width: 350,
-		"border-width": 50,
-		"border-radius": 400
-	})
-}, 500);
-
+		'-webkit-transform': 'rotateZ(0deg)',
+		"-webkit-transition": "none"
+	});
+	setTimeout(function() {
+		$(clefCircle).css({
+			"-webkit-transition": "-webkit-transform 1s",
+			'-webkit-transform': 'rotateZ(360deg)'
+		});
+	}, 10);
+}, 3000);
 
 })(jQuery);
