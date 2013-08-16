@@ -1,5 +1,4 @@
 #clef-vault-login-wrapper {
-	-webkit-transition: height .5s, width .5s, bottom .5s, -webkit-transform .5s;
 	background-repeat: no-repeat;
 	width: 64px;
 	height: 64px;
@@ -8,11 +7,46 @@
 	position: fixed;
 	bottom: 25px;
 	right: 25px;
+	-webkit-animation: spin-clef-logo 3s linear infinite;
+	cursor: pointer;
+	-webkit-transform: rotateX(0deg) rotateZ(0deg);
 }
 
+#clef-vault-login-wrapper.remove {
+	-webkit-animation: none !important;
+	-webkit-transition: opacity 1s, -webkit-transform 1s !important;
+	opacity: 0 !important;
+	-webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
+}
 
-#clef-vault-login-wrapper.spinning {
-	-webkit-animation: spin-clef-logo 3s linear infinite;
+#clef-vault-login-wrapper:hover {
+	-webkit-transition: -webkit-transform .5s;
+	-webkit-animation: none;
+	-webkit-transform: rotateX(0deg) rotateZ(359deg);
+	opacity: 1;
+}
+
+#clef-vault-login-wrapper svg path {
+	stroke-width: 0;
+	-webkit-transition: stroke-width .5s;
+}
+
+#clef-vault-login-wrapper svg circle {
+	fill: transparent;
+}
+
+#clef-vault-login-wrapper:hover svg path {
+	stroke-width: 19.5;
+}
+
+#clef-vault-login-wrapper.clef-login-action svg circle {
+	fill: #0d9ddb;
+	-webkit-transition: fill .2s;
+}
+
+#clef-vault-login-wrapper.clef-dismiss-action svg circle {
+	fill: #b4181d;
+	-webkit-transition: fill .2s;
 }
 
 @-webkit-keyframes spin-clef-logo {
