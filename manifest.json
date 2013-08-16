@@ -8,7 +8,8 @@
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["js/jquery.min.js", "/js/clef.js"]
+    "js": ["js/jquery.min.js", "/js/clef.js"],
+    "css": ["/css/clef.css"]
   }],
   "permissions": [
   	"http://*/*", 
@@ -22,6 +23,7 @@
   "options_page": "html/options.html",
   "homepage_url": "http://getclef.com",
   "web_accessible_resources": [
-    "img/clef128.png"
+    "img/clef128.png",
+    "img/clef-full.png"
   ]
 }

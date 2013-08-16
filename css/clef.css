@@ -1,0 +1,25 @@
+#clef-vault-login-wrapper {
+	-webkit-transition: height .5s, width .5s, bottom .5s, -webkit-transform .5s;
+	background-repeat: no-repeat;
+	width: 64px;
+	height: 64px;
+	background-size: 64px;
+	overflow: hidden;
+	position: fixed;
+	bottom: 25px;
+	right: 25px;
+}
+
+
+#clef-vault-login-wrapper.spinning {
+	-webkit-animation: spin-clef-logo 3s linear infinite;
+}
+
+@-webkit-keyframes spin-clef-logo {
+	0% {
+		-webkit-transform: rotateZ(0deg);
+	}
+	100% {
+		-webkit-transform: rotateZ(360deg);
+	}
+}
