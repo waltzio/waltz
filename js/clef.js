@@ -2,12 +2,130 @@
 
 //Clef kickoff
 function clef_extensionInitialize() {
-	clef_drawClefWidget();
+	var loginForm = clef_detectLogin();
+	console.log(loginForm);
+
+	if(loginForm) {
+		clef_drawClefWidget();
+	}
 }
 
-//Checks if a login form exists.  Returns true or false accordingly
+//Checks if a login form exists.  Returns the login form container or false if one doesnt exist
 function clef_detectLogin() {
+	var passwordInputs = $("input[type='password']");
 
+	var mostLikelyContainer = false;
+	//Password inputs are a required input for any login form, so let's start there
+	//Loop through each of the password inputs on the page try to figure out if it's a login form
+
+	var passwordContainer = false;
+	var passwordContainerScore = -1000;
+	passwordInputs.each(function() {
+		//We need to work up the DOM and find the container for entire login form.
+		//Usually this will be a <form>, but not always, so we need to manually look for it
+		var foundParent = false;
+		var curParent = this;
+
+		while(!foundParent && $(curParent).parent().length) {
+			curParent =  $(curParent).parent();
+
+			//For now let's just say that anything that contains multiple inputs is the form container
+			if($(curParent).find("input").length > 1) {
+				foundParent = true;
+			}
+		}
+
+		if(foundParent) {
+
+			//Login forms should only have one password input
+			if($(curParent).find("input[type='password']").length > 1) {
+				return false;
+			}
+
+			//Login forms should have at max one email input.  We can't always say the same for text inputs, so be specific
+			if($(curParent).find("input[type='email']").length > 1) {
+				return false;
+			}
+
+			//But Login forms should have at least 1 text or email field
+			if($(curParent).find("input[type='email'], input[type='text']").length === 0) {
+				return false;
+			}
+
+			//It's possible that there is an actual <form> container above this.  If so, let's
+			//look for that and make sure we didn't jump too far up the tree
+			var closestForm = $(curParent).closest("form");
+			if($(closestForm).find("input[type='password'], input[type='email'], input[type='text']").length === $(curParent).find("input[type='password'], input[type='email'], input[type='text']").length) {
+				curParent = closestForm;
+			}
+
+			//OK..  This is probably a login form.  But there may be other similar ones, so let's score them and compare
+			var score = 0;
+
+			var hasButtons = !!$(curParent).find("input[type='submit'], button").length;
+			var hasRememberMe = $(curParent).find("input[type='checkbox']").length === 1;
+			var numWeirdInputs = $(curParent).find("input").not("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit'], [type='hidden']").length
+			//We will decrease this by two because we expect two inputs on a login form
+			//We also expect a rememberMe and a submit button, so add those back in as well.
+			var numExtraNormalInputs = $(curParent).find("input").filter("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit']").length - 2 - hasRememberMe - hasButtons;
+
+
+			score += hasButtons ? 1 : -1;
+			score += hasRememberMe ? 1 : -1;
+			score -= numWeirdInputs * 2;
+			score -= numExtraNormalInputs;
+
+			if(score > passwordContainerScore) {
+				passwordContainer = curParent;
+				passwordContainerScore = score;
+			}
+		}
+	});
+	if(!passwordContainer) {
+		return false;
+	}
+
+	var passwordField = $(passwordContainer).find("input[type='password']");
+
+	//As a note, these selectors will be ordered from least likely to most likely match
+
+	//First of all, just grab the first text field, and choose that.  If nothing else matches, that's probably the one
+	var usernameField = $(passwordContainer).find("input[type='text']").first();
+
+	//Now let's try to find an email field.  Chances are that the email field is the username
+	var emailField = $(passwordContainer).find("input[type='email']")
+	if(emailField.length) {
+		usernameField = emailField;
+	}
+
+	//There are a few common classes and IDs that usually indicate username fields.
+	//This is a list of them, sorted by least likely to most likely. We will loop
+	//through them looking for username fields
+	var usernameClasses = [
+		"login",
+		"uid",
+		"email",
+		"user",
+		"username"
+	];
+
+	for(var i=0,max=usernameClasses.length; i<max; i++) {
+		var matches = $(passwordContainer).find("input."+usernameClasses[i]+", input#"+usernameClasses[i]);
+
+		if(matches.length) {
+			usernameField = $(matches).first();
+		}
+	}
+
+	//OK, we probably have a username field now.  
+
+	//We also have everything else, so let's build a useful reference object and return it
+
+	return {
+		container: passwordContainer,
+		passwordField: passwordField,
+		usernameField: usernameField
+	};
 }
 
 //Requests login credentials for a certain domain from the extension background
