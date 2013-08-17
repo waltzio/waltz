@@ -7,13 +7,12 @@
     "scripts": ["/js/delegate.js", "/js/crypto.js", "/js/storage.js"]
   },
   "content_scripts": [{
-    "matches": ["http://*/*", "https://*/*"],
+    "matches": ["https://www.facebook.com/*"],
     "js": ["js/jquery.min.js", "/js/clef.js"],
     "css": ["/css/clef.css"]
   }],
   "permissions": [
-  	"http://*/*", 
-  	"https://*/*"
+  	"https://www.facebook.com/*"
   ],
   "icons": {
     "16": "/img/clef16.png",
