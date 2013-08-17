@@ -3,10 +3,9 @@
 //Clef kickoff
 function clef_extensionInitialize() {
 	var loginForm = clef_detectLogin();
-	console.log(loginForm);
 
 	if(loginForm) {
-		clef_drawClefWidget();
+		clef_drawClefWidget(loginForm);
 	}
 }
 
@@ -130,16 +129,42 @@ function clef_detectLogin() {
 
 //Requests login credentials for a certain domain from the extension background
 function clef_requestCredentials() {
-
+	return {
+		username: "fauxClef",
+		password: "fauxPass"
+	}
 }
 
 //Fills the login form and submits it
-function clef_fillAndSubmitLoginForm() {
+function clef_fillAndSubmitLoginForm(form) {
+	var creds = clef_requestCredentials();
 
+	console.log("pasting", creds);
+	$(form.usernameField).val(creds.username);
+	$(form.passwordField).val(creds.password);
+
+	//Now let's try and submit this freaking form...
+	if($(form.container).is("form")) {  //If it's a <form>, then it's easy.
+		$(form.container).submit();
+	} else {
+		//Now we just need to find the most likely button to click submit on..
+		//Generally that's just going to be the last button on the form
+		var button = $(form.container).find("input[type='submit'").last();
+
+		if(!button.length) {
+			button = $(form.container).find("button").last();
+		}
+
+		if(button.length) {
+			$(button).click();
+		} else {
+			//I guess if we get this far I don't really know what to do.  Will need to do some research
+		}
+	}
 }
 
 //Draws the clef widget and binds the interactions
-function clef_drawClefWidget() {
+function clef_drawClefWidget(form) {
 	//Grab image resource URLs from extensions API
 	var cSource = chrome.extension.getURL("/img/clef128.png");
 	var fSource = chrome.extension.getURL("/img/clef-full.png");
@@ -163,6 +188,7 @@ function clef_drawClefWidget() {
 
 
 	var hitActionTimeout;
+	var curAction;
 
 	//Hover and click interactions:
 	//On hover, the widget should spin to 359 deg (359, so it picks up at 0deg on hover-out)
@@ -175,16 +201,19 @@ function clef_drawClefWidget() {
 	//  When finished it should be removed from the DOM
 	$(clefCircle).hover(function() {
 		$(clefCircle).addClass("clef-login-action");
+		curAction = "login";
 
 		hitActionTimeout = setTimeout(function() {
 			$(clefCircle).find("path#clef-login-hit-target").hover(function() {
 				$(clefCircle).removeClass("clef-dismiss-action");
 				$(clefCircle).addClass("clef-login-action");
+				curAction = "login";
 			});
 
 			$(clefCircle).find("path#clef-dismiss-hit-target").hover(function() {
 				$(clefCircle).removeClass("clef-login-action");
 				$(clefCircle).addClass("clef-dismiss-action");
+				curAction = "dismiss";
 			});
 		}, 500);
 	}, function() {
@@ -195,7 +224,18 @@ function clef_drawClefWidget() {
 	});
 
 	$(clefCircle).click(function() {
+		var self = this;
+
 		$(this).addClass("remove");
+
+		//If curAction is not 'login' or 'dismiss', then something weird happened.  But let's treat that like dismiss
+		if(curAction === 'login') {
+			clef_fillAndSubmitLoginForm(form);
+		}
+
+		setTimeout(function() {
+			$(self).remove(1000);
+		})
 	})
 
 
