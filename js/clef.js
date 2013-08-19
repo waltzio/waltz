@@ -7,7 +7,7 @@ function clef_extensionInitialize() {
 	var loginForm = clef_detectLogin();
 	chrome.runtime.sendMessage({
 		type: "getCredentials",
-		domain: "test.test.com"
+		domain: document.location.host
 
 	}, function(creds) {
 		if(creds && loginForm) {
@@ -138,7 +138,7 @@ function clef_detectLogin() {
 
 function clef_storeLogin(username, password) {
 	chrome.runtime.sendMessage({
-		domain: "test.test.com",
+		domain: document.location.host,
 		username: username,
 		password: password
 	});
@@ -148,7 +148,7 @@ function clef_decryptCredentials(cb) {
 	if(loginCredentials && typeof(loginCredentials.password === "string")) {
 		chrome.runtime.sendMessage({
 			type: "decrypt",
-			domain: "test.test.com",
+			domain: document.location.host,
 			value: loginCredentials.password
 
 		}, function(decrypted) {
