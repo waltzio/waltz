@@ -11,4 +11,13 @@ function Storage() {
 
 }
 
+Storage.prototype.getCredentialsForDomain = function(domain, cb) {
+	setTimeout(function() {
+		cb({
+			username: "fauxClef",
+			password: "fauxPassword"
+		});
+	}, 0);
+}
+
 var storage = new Storage();

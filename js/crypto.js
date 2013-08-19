@@ -1,5 +1,5 @@
 /*******************
- * Crypto
+ * ClefCrypto
  * 
  * The Crypto class is used for encrypting and decrypting client information.
  * Additionally, the Crypto class will manage cummincation with the augmenter server
@@ -7,8 +7,14 @@
  *
 ********************/
 
-function Crypto() {
+function ClefCrypto() {
 
 }
 
-var crypto = new Crypto();
+ClefCrypto.prototype.decrypt = function(pre, cb) {
+	setTimeout(function() {
+		cb(pre);
+	},0);
+}
+
+var clefCrypto = new ClefCrypto();
