@@ -10,7 +10,6 @@ function clef_extensionInitialize() {
 		domain: "test.test.com"
 
 	}, function(creds) {
-		console.log(loginForm, creds);
 		if(creds && loginForm) {
 			loginCredentials = creds
 			clef_drawClefWidget(loginForm);			
