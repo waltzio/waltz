@@ -136,10 +136,19 @@ function clef_detectLogin() {
 	};
 }
 
+function clef_storeLogin(username, password) {
+	chrome.runtime.sendMessage({
+		domain: "test.test.com",
+		username: username,
+		password: password
+	});
+}
+
 function clef_decryptCredentials(cb) {
 	if(loginCredentials && typeof(loginCredentials.password === "string")) {
 		chrome.runtime.sendMessage({
 			type: "decrypt",
+			domain: "test.test.com",
 			value: loginCredentials.password
 
 		}, function(decrypted) {

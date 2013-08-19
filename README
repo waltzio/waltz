@@ -6,4 +6,4 @@ Currently there is no way for you to store credentials in the extension.  Ya kno
 
 Anyways, run the following in the `_generated_background_page.html` to store some test credentials:
 
-     storage.storeCredentialsForDomain("test.test.com", "fauxClef", "fauxPassword");
+     delegate.saveCredentials("test.test.com", "fauxClef", "fauxPassword", function() { });
