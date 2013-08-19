@@ -12,7 +12,8 @@
     "css": ["/css/clef.css"]
   }],
   "permissions": [
-  	"https://www.facebook.com/*"
+  	"https://www.facebook.com/*",
+    "storage"
   ],
   "icons": {
     "16": "/img/clef16.png",
