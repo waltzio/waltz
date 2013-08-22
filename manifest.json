@@ -8,12 +8,12 @@
       "/js/delegate.js", 
       "/js/crypto.js", 
       "/js/storage.js",
-      "/js/aes.js"
+      "/js/vendor/cryptojs.js"
     ]
   },
   "content_scripts": [{
     "matches": ["https://www.facebook.com/*"],
-    "js": ["js/jquery.min.js", "/js/clef.js"],
+    "js": ["js/vendor/jquery.min.js", "/js/clef.js"],
     "css": ["/css/clef.css"]
   }],
   "permissions": [
