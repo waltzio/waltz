@@ -8,7 +8,7 @@
       "/js/delegate.js", 
       "/js/crypto.js", 
       "/js/storage.js",
-      "/js/vendor/cryptojs.js"
+      "/js/vendor/aes.js"
     ]
   },
   "content_scripts": [{
