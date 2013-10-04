@@ -12,12 +12,12 @@
     ]
   },
   "content_scripts": [{
-    "matches": ["https://www.facebook.com/*"],
+    "matches": ["https://www.facebook.com/*", "http://www.stealmylogin.com/*"],
     "js": ["js/vendor/jquery.min.js", "/js/clef.js"],
     "css": ["/css/clef.css"]
   }],
   "permissions": [
-  	"https://www.facebook.com/*",
+  	"*://*/*",
     "storage"
   ],
   "icons": {

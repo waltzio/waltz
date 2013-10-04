@@ -32,8 +32,6 @@ Storage.prototype.storeCredentialsForDomain = function(domain, username, passwor
 		password: password
 	};
 
-	console.log(creds)
-
 	chrome.storage.local.set(creds, cb);
 }
 

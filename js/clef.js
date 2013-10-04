@@ -10,12 +10,18 @@ function clef_extensionInitialize() {
 		domain: document.location.host
 
 	}, function(creds) {
-		console.log(creds);
-		if(creds && loginForm) {
-			loginCredentials = creds
-			clef_drawClefWidget(loginForm);			
+		if(creds.error) {
+			if(creds.error === "authentication") {
+				console.log("auth error");
+			} else {
+				console.log(creds.error, creds.status);
+			}
+		} else {
+			if(creds.creds && loginForm) {
+				loginCredentials = creds.creds
+				clef_drawClefWidget(loginForm);			
+			}
 		}
-
 	});
 }
 
@@ -152,12 +158,13 @@ function clef_decryptCredentials(cb) {
 			domain: document.location.host,
 			value: loginCredentials.password
 
-		}, function(decrypted) {
+		}, function(response) {
 
 			if(typeof(cb) === "function") {
 				cb({
 					username: loginCredentials.username,
-					password: decrypted
+					password: response.output,
+					error: response.error
 				});
 			}
 
@@ -165,29 +172,63 @@ function clef_decryptCredentials(cb) {
 	}
 }
 
+function clef_insertClef() {
+	var iFrame = $("<iframe>");
+	$(iFrame).css({
+		position: 'absolute',
+		height: '100%',
+		width: '100%'
+	});
+
+	$(iFrame).attr('src', 'http://localhost:3333/login');
+
+	$(iFrame).on('load', function() {
+		console.log($(iFrame)[0].contentWindow.location.href);
+	});
+
+	$("body").append(iFrame);
+
+	$(iFrame).css({
+		position: 'absolute',
+		height: '100%',
+		width: '100%',
+		top: 0,
+		left: 0,
+		border: 'none'
+	});
+}
+
 //Fills the login form and submits it
 function clef_fillAndSubmitLoginForm(form) {
 
-	clef_decryptCredentials(function(creds) {
-		$(form.usernameField).val(creds.username);
-		$(form.passwordField).val(creds.password);
-
-		//Now let's try and submit this freaking form...
-		if($(form.container).is("form")) {  //If it's a <form>, then it's easy.
-			$(form.container).submit();
-		} else {
-			//Now we just need to find the most likely button to click submit on..
-			//Generally that's just going to be the last button on the form
-			var button = $(form.container).find("input[type='submit'").last();
-
-			if(!button.length) {
-				button = $(form.container).find("button").last();
-			}
-
-			if(button.length) {
-				$(button).click();
+	clef_decryptCredentials(function(response) {
+		if(response.error) {
+			if(response.error === "authentication") {
+				clef_insertClef();
 			} else {
-				//I guess if we get this far I don't really know what to do.  Will need to do some research
+				console.log(response);
+			}
+		} else {
+			$(form.usernameField).val(creds.username);
+			$(form.passwordField).val(creds.password);
+
+			//Now let's try and submit this freaking form...
+			if($(form.container).is("form")) {  //If it's a <form>, then it's easy.
+				$(form.container).submit();
+			} else {
+				//Now we just need to find the most likely button to click submit on..
+				//Generally that's just going to be the last button on the form
+				var button = $(form.container).find("input[type='submit'").last();
+
+				if(!button.length) {
+					button = $(form.container).find("button").last();
+				}
+
+				if(button.length) {
+					$(button).click();
+				} else {
+					//I guess if we get this far I don't really know what to do.  Will need to do some research
+				}
 			}
 		}
 	});
