@@ -14,14 +14,15 @@ function ClefCrypto() {
 ClefCrypto.prototype.encrypt = function(pre, identifier, cb) {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
-		console.log(xhr);
 		if(xhr.readyState == 4) {
 			if(xhr.status == 200) {
-				var encrypted = CryptoJS.AES.encrypt(pre, identifier);
+				var keyInfo = JSON.parse(xhr.responseText);
+
+				var encrypted = CryptoJS.AES.encrypt(pre, keyInfo.key.key);
 				if(typeof(cb) === "function") {
 					cb({
 						error: null,
-						output: encrypted
+						output: encrypted.toString()
 					});
 				}
 			} else if(xhr.status == 403) {
@@ -47,11 +48,12 @@ ClefCrypto.prototype.decrypt = function(pre, identifier, cb) {
 
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
-		console.log(xhr);
 		if(xhr.readyState == 4) {
-			console.log(xhr.status);
 			if(xhr.status == 200) {
-				var decrypted = CryptoJS.AES.decrypt(pre, identifer);
+
+				var keyInfo = JSON.parse(xhr.responseText);
+
+				var decrypted = CryptoJS.AES.decrypt(pre, keyInfo.key.key);
 				if(typeof(cb) === "function") {
 					cb({
 						error: null,

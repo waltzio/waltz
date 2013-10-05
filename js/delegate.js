@@ -34,7 +34,8 @@ function Delegate() {
 
 Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
 	clefCrypto.encrypt(password, domain, function(encrypted) {
-		storage.storeCredentialsForDomain(domain, username, encrypted, function() {
+		console.log(domain, username, password, encrypted);
+		storage.storeCredentialsForDomain(domain, username, encrypted.output, function() {
 			cb(true);
 		});
 	});

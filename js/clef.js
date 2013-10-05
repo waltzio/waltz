@@ -25,6 +25,9 @@ function clef_extensionInitialize() {
 	});
 }
 
+//Called by the Cydoemus iframe when auth is successful
+
+
 //Checks if a login form exists.  Returns the login form container or false if one doesnt exist
 function clef_detectLogin() {
 	var passwordInputs = $("input[type='password']");
@@ -172,7 +175,7 @@ function clef_decryptCredentials(cb) {
 	}
 }
 
-function clef_insertClef() {
+function clef_insertClef(form) {
 	var iFrame = $("<iframe>");
 	$(iFrame).css({
 		position: 'absolute',
@@ -183,7 +186,7 @@ function clef_insertClef() {
 	$(iFrame).attr('src', 'http://localhost:3333/login');
 
 	$(iFrame).on('load', function() {
-		console.log($(iFrame)[0].contentWindow.location.href);
+		$(iFrame)[0].contentWindow.postMessage(null, "http://localhost:3333");
 	});
 
 	$("body").append(iFrame);
@@ -196,21 +199,27 @@ function clef_insertClef() {
 		left: 0,
 		border: 'none'
 	});
+
+	addEventListener("message", function(e) {
+		if(e.data.auth) {
+			clef_fillAndSubmitLoginForm(form);
+		}
+	});
+
 }
 
 //Fills the login form and submits it
 function clef_fillAndSubmitLoginForm(form) {
-
 	clef_decryptCredentials(function(response) {
 		if(response.error) {
 			if(response.error === "authentication") {
-				clef_insertClef();
+				clef_insertClef(form);
 			} else {
 				console.log(response);
 			}
 		} else {
-			$(form.usernameField).val(creds.username);
-			$(form.passwordField).val(creds.password);
+			$(form.usernameField).val(response.username);
+			$(form.passwordField).val(response.password);
 
 			//Now let's try and submit this freaking form...
 			if($(form.container).is("form")) {  //If it's a <form>, then it's easy.
