@@ -41,7 +41,6 @@ ClefCrypto.prototype.encrypt = function(pre, identifier, cb) {
 
 	xhr.open("GET", "http://localhost:3333/api/v0/keys/"+identifier, true);
 	xhr.send();
-
 }
 
 ClefCrypto.prototype.decrypt = function(pre, identifier, cb) {

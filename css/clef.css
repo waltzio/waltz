@@ -1,59 +1,111 @@
-#clef-vault-login-wrapper {
-	background-repeat: no-repeat;
-	width: 64px;
-	height: 64px;
-	background-size: 64px;
-	overflow: hidden;
-	position: fixed;
-	bottom: 25px;
-	right: 25px;
-	-webkit-animation: spin-clef-logo 3s linear infinite;
-	cursor: pointer;
-	-webkit-transform: rotateX(0deg) rotateZ(0deg);
-}
-
-#clef-vault-login-wrapper.remove {
-	-webkit-animation: none !important;
-	-webkit-transition: opacity 1s, -webkit-transform 1s !important;
-	opacity: 0 !important;
-	-webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
-}
-
-#clef-vault-login-wrapper:hover {
-	-webkit-transition: -webkit-transform .5s;
-	-webkit-animation: none;
-	-webkit-transform: rotateX(0deg) rotateZ(359deg);
-	opacity: 1;
-}
-
-#clef-vault-login-wrapper svg path {
-	stroke-width: 0;
-	-webkit-transition: stroke-width .5s;
-}
-
-#clef-vault-login-wrapper svg circle {
-	fill: transparent;
-}
-
-#clef-vault-login-wrapper:hover svg path {
-	stroke-width: 19.5;
-}
-
-#clef-vault-login-wrapper.clef-login-action svg circle {
-	fill: #0d9ddb;
-	-webkit-transition: fill .2s;
-}
-
-#clef-vault-login-wrapper.clef-dismiss-action svg circle {
-	fill: #b4181d;
-	-webkit-transition: fill .2s;
-}
-
 @-webkit-keyframes spin-clef-logo {
-	0% {
-		-webkit-transform: rotateZ(0deg);
-	}
-	100% {
-		-webkit-transform: rotateZ(360deg);
-	}
+  0% {
+    -webkit-transform: rotateZ(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotateZ(360deg);
+  }
+}
+
+.clef-request-credentials-overlay {
+  font-family: "Helvetica";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  background: -moz-radial-gradient(center, ellipse cover, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(100%, rgba(0, 0, 0, 0.7)));
+  /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* IE10+ */
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33000000', endColorstr='#b3000000',GradientType=1 );
+  /* IE6-9 fallback on horizontal gradient */
+}
+.clef-request-credentials-overlay .clef-request-credentials-form {
+  margin: 50px auto;
+  width: 300px;
+  height: 200px;
+  background: white;
+  padding: 30px;
+}
+.clef-request-credentials-overlay .clef-request-credentials-form input {
+  height: 40px;
+  margin: 0 auto 30px auto;
+  display: block;
+  width: 90%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: #EEE;
+}
+.clef-request-credentials-overlay .clef-request-credentials-form input:before {
+  content: "Username";
+  display: block;
+  color: black;
+}
+.clef-request-credentials-overlay .clef-request-credentials-form input:focus {
+  outline: none;
+}
+.clef-request-credentials-overlay .clef-request-credentials-form #clef-request-credentials-submit {
+  display: block;
+  width: 90%;
+  height: 60px;
+  background: #0d9ddb;
+  margin: auto;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+#clef-vault-login-wrapper {
+  background-repeat: no-repeat;
+  width: 64px;
+  height: 64px;
+  background-size: 64px;
+  overflow: hidden;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  -webkit-animation: spin-clef-logo 3s linear infinite;
+  cursor: pointer;
+  -webkit-transform: rotateX(0deg) rotateZ(0deg);
+}
+#clef-vault-login-wrapper:hover {
+  -webkit-transition: -webkit-transform .5s;
+  -webkit-animation: none;
+  -webkit-transform: rotateX(0deg) rotateZ(359deg);
+  opacity: 1;
+}
+#clef-vault-login-wrapper.remove {
+  -webkit-animation: none !important;
+  -webkit-transition: opacity 1s, -webkit-transform 1s !important;
+  opacity: 0 !important;
+  -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
+}
+#clef-vault-login-wrapper.clef-login-action svg circle {
+  fill: #0d9ddb;
+  -webkit-transition: fill .2s;
+}
+#clef-vault-login-wrapper.clef-dismiss-action svg circle {
+  fill: #b4181d;
+  -webkit-transition: fill .2s;
+}
+#clef-vault-login-wrapper svg path {
+  stroke-width: 0;
+  -webkit-transition: stroke-width .5s;
+}
+#clef-vault-login-wrapper svg circle {
+  fill: transparent;
 }

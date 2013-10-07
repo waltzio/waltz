@@ -1,0 +1,15 @@
+{
+  "name": "Valut",
+  "description": "A password manager for use with Clef",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-sass": "~0.5.0",
+    "grunt-contrib-watch": "~0.5.3"
+  },
+  "engines": {
+    "node": "0.10",
+    "npm": "1.1.x"
+  }
+}
