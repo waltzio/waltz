@@ -1,0 +1,60 @@
+@import "_animations";
+@import "_credentials";
+
+#clef-vault-login-wrapper {
+    background-repeat: no-repeat;
+    width: 64px;
+    height: 64px;
+    background-size: 64px;
+    overflow: hidden;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    -webkit-animation: spin-clef-logo 3s linear infinite;
+    cursor: pointer;
+    -webkit-transform: rotateX(0deg) rotateZ(0deg);
+    &:hover {
+        -webkit-transition: -webkit-transform .5s;
+        -webkit-animation: none;
+        -webkit-transform: rotateX(0deg) rotateZ(359deg);
+        opacity: 1;
+        svg {
+            path {
+                // stroke-width: 19.5;
+            }
+        }
+    }
+    &.remove {
+        -webkit-animation: none !important;
+        -webkit-transition: opacity 1s, -webkit-transform 1s !important;
+        opacity: 0 !important;
+        -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
+    }
+    &.clef-login-action {
+        svg {
+            circle {
+                fill: #0d9ddb;
+                -webkit-transition: fill .2s;
+            }
+        }
+    }
+
+    &.clef-dismiss-action {
+        svg {
+            circle {
+                fill: #b4181d;
+                -webkit-transition: fill .2s;
+            }
+        }
+    }
+
+    svg {
+        path {
+            stroke-width: 0;
+            -webkit-transition: stroke-width .5s;
+        }
+        circle {
+            fill: transparent;
+        }
+    }
+}
