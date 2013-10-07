@@ -9,6 +9,7 @@
 }
 
 .clef-request-credentials-overlay {
+  font-family: "Helvetica";
   position: absolute;
   top: 0;
   left: 0;
@@ -31,10 +32,41 @@
   /* IE6-9 fallback on horizontal gradient */
 }
 .clef-request-credentials-overlay .clef-request-credentials-form {
-  margin: auto;
-  width: 400px;
+  margin: 50px auto;
+  width: 300px;
   height: 200px;
   background: white;
+  padding: 30px;
+}
+.clef-request-credentials-overlay .clef-request-credentials-form input {
+  height: 40px;
+  margin: 0 auto 30px auto;
+  display: block;
+  width: 90%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: #EEE;
+}
+.clef-request-credentials-overlay .clef-request-credentials-form input:before {
+  content: "Username";
+  display: block;
+  color: black;
+}
+.clef-request-credentials-overlay .clef-request-credentials-form input:focus {
+  outline: none;
+}
+.clef-request-credentials-overlay .clef-request-credentials-form #clef-request-credentials-submit {
+  display: block;
+  width: 90%;
+  height: 60px;
+  background: #0d9ddb;
+  margin: auto;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  font-size: 30px;
+  cursor: pointer;
 }
 
 #clef-vault-login-wrapper {

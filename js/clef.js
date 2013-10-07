@@ -18,9 +18,9 @@ function clef_extensionInitialize() {
 			}
 		} else {
 			if(creds.creds && loginForm) {
-				loginCredentials = creds.creds
-				clef_drawClefWidget(loginForm);			
+				loginCredentials = creds.creds	
 			}
+			clef_drawClefWidget(loginForm);		
 		}
 	});
 }
@@ -175,7 +175,22 @@ function clef_decryptCredentials(cb) {
 	}
 }
 
-function clef_insertClef(form) {
+function clef_encryptCredentials(credentials, cb) {
+	chrome.runtime.sendMessage({
+		type: "saveCredentials",
+		domain: document.location.host,
+		username: credentials.username,
+		password: credentials.password
+	}, function(response) {
+		console.log(response);
+		if(typeof(cb) === "function") {
+			cb();
+		}
+
+	});
+}
+
+function clef_logIn(cb) {
 	var iFrame = $("<iframe>");
 	$(iFrame).css({
 		position: 'absolute',
@@ -201,48 +216,96 @@ function clef_insertClef(form) {
 	});
 
 	addEventListener("message", function(e) {
+		console.log('hi');
 		if(e.data.auth) {
-			clef_fillAndSubmitLoginForm(form);
+			if (typeof cb == "function") {
+				cb();
+			}
 		}
 	});
 
 }
 
-//Fills the login form and submits it
-function clef_fillAndSubmitLoginForm(form) {
+function clef_decryptAndLogIn(form) {
 	clef_decryptCredentials(function(response) {
 		if(response.error) {
 			if(response.error === "authentication") {
-				clef_insertClef(form);
+				clef_login(this);
 			} else {
 				console.log(response);
 			}
 		} else {
-			$(form.usernameField).val(response.username);
-			$(form.passwordField).val(response.password);
+			clef_fillAndSubmitLoginForm(form, response);
+		}
+	});
+}
 
-			//Now let's try and submit this freaking form...
-			if($(form.container).is("form")) {  //If it's a <form>, then it's easy.
-				$(form.container).submit();
-			} else {
-				//Now we just need to find the most likely button to click submit on..
-				//Generally that's just going to be the last button on the form
-				var button = $(form.container).find("input[type='submit'").last();
+//Fills the login form and submits it
+function clef_fillAndSubmitLoginForm(form, data) {
+	$(form.usernameField).val(data.username);
+	$(form.passwordField).val(data.password);
 
-				if(!button.length) {
-					button = $(form.container).find("button").last();
-				}
+	//Now let's try and submit this freaking form...
+	if($(form.container).is("form")) {  //If it's a <form>, then it's easy.
+		$(form.container).submit();
+	} else {
+		//Now we just need to find the most likely button to click submit on..
+		//Generally that's just going to be the last button on the form
+		var button = $(form.container).find("input[type='submit'").last();
 
-				if(button.length) {
-					$(button).click();
-				} else {
-					//I guess if we get this far I don't really know what to do.  Will need to do some research
-				}
+		if(!button.length) {
+			button = $(form.container).find("button").last();
+		}
+
+		if(button.length) {
+			$(button).click();
+		} else {
+			//I guess if we get this far I don't really know what to do.  Will need to do some research
+		}
+	}
+}
+
+function clef_checkAuthentication(cb) {
+	chrome.runtime.sendMessage({
+		type: "checkAuthentication",
+		domain: document.location.host
+	}, function(response) {
+		if (!response.user) {
+			clef_logIn(cb);
+		} else {
+			if (typeof(cb) == "function") {
+				cb();
 			}
 		}
 	});
+}
 
+function clef_requestCredentials(form) {
+	// TODO: use same labels as actual login form
+	var $html = $([
+		"<div class='clef-request-credentials-overlay'>",
+			"<form class='clef-request-credentials-form'>",
+				"<input type='text' name='username'/>",
+				"<input type='password' name='password'/>",
+				"<input type='submit' id='clef-request-credentials-submit' value='submit'/>",
+			"</form>",
+		"</div>"
+	].join(""));
 
+	$('body').append($html);
+
+	$html.find('form').submit(function(e) {
+		e.preventDefault();
+
+		var credentials = {
+			password: $html.find('input[type="password"]').val(),
+			username: $html.find('input[type="text"]').val()
+		}
+
+		clef_encryptCredentials(credentials, function() {
+			clef_fillAndSubmitLoginForm(form, credentials)
+		})
+	});
 }
 
 //Draws the clef widget and binds the interactions
@@ -282,22 +345,8 @@ function clef_drawClefWidget(form) {
 	//On click the widget should fade out and do a spinning animation.
 	//  When finished it should be removed from the DOM
 	$(clefCircle).hover(function() {
-		$(clefCircle).addClass("clef-login-action");
+		// $(clefCircle).addClass("clef-login-action");
 		curAction = "login";
-
-		hitActionTimeout = setTimeout(function() {
-			$(clefCircle).find("path#clef-login-hit-target").hover(function() {
-				$(clefCircle).removeClass("clef-dismiss-action");
-				$(clefCircle).addClass("clef-login-action");
-				curAction = "login";
-			});
-
-			$(clefCircle).find("path#clef-dismiss-hit-target").hover(function() {
-				$(clefCircle).removeClass("clef-login-action");
-				$(clefCircle).addClass("clef-dismiss-action");
-				curAction = "dismiss";
-			});
-		}, 500);
 	}, function() {
 		clearTimeout(hitActionTimeout);
 
@@ -312,7 +361,13 @@ function clef_drawClefWidget(form) {
 
 		//If curAction is not 'login' or 'dismiss', then something weird happened.  But let's treat that like dismiss
 		if(curAction === 'login') {
-			clef_fillAndSubmitLoginForm(form);
+			clef_checkAuthentication(function() {
+				if (loginCredentials) {
+					clef_decryptAndLogIn(form);
+				} else {
+					clef_requestCredentials(form);
+				}
+			});
 		}
 
 		setTimeout(function() {
