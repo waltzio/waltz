@@ -6,6 +6,8 @@
  *
 ********************/
 
+cydoemusHost = "http://cydoemus.vault.tk";
+
 function Delegate() {
 	var self = this;
 
@@ -26,6 +28,9 @@ function Delegate() {
 				break;
 			case "checkAuthentication":
 				return self.checkAuthentication(sendResponse);
+				break;
+			case "getHost":
+				sendResponse(cydoemusHost);
 				break;
 		}
 
@@ -87,7 +92,7 @@ Delegate.prototype.checkAuthentication = function(cb) {
 		}
 	}
 
-	xhr.open("GET", "http://localhost:3333/check", true);
+	xhr.open("GET", cydoemusHost+"/check", true);
 	xhr.send();
 
 	return true;

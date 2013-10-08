@@ -1,27 +1,35 @@
 (function($) {
 
 var loginCredentials = false;
+var cydoemusHost = "";
 
 //Clef kickoff
 function clef_extensionInitialize() {
-	var loginForm = clef_detectLogin();
 	chrome.runtime.sendMessage({
-		type: "getCredentials",
-		domain: document.location.host
+		type: "getHost"
+	}, function(host) {
+		cydoemusHost = host;
 
-	}, function(creds) {
-		if(creds.error) {
-			if(creds.error === "authentication") {
-				console.log("auth error");
+		
+		var loginForm = clef_detectLogin();
+		chrome.runtime.sendMessage({
+			type: "getCredentials",
+			domain: document.location.host
+
+		}, function(creds) {
+			if(creds.error) {
+				if(creds.error === "authentication") {
+					console.log("auth error");
+				} else {
+					console.log(creds.error, creds.status);
+				}
 			} else {
-				console.log(creds.error, creds.status);
+				if(creds.creds && loginForm) {
+					loginCredentials = creds.creds	
+				}
+				clef_drawClefWidget(loginForm);		
 			}
-		} else {
-			if(creds.creds && loginForm) {
-				loginCredentials = creds.creds	
-			}
-			clef_drawClefWidget(loginForm);		
-		}
+		});
 	});
 }
 
@@ -198,10 +206,10 @@ function clef_logIn(cb) {
 		width: '100%'
 	});
 
-	$(iFrame).attr('src', 'http://localhost:3333/login');
+	$(iFrame).attr('src', cydoemusHost+'/login');
 
 	$(iFrame).on('load', function() {
-		$(iFrame)[0].contentWindow.postMessage(null, "http://localhost:3333");
+		$(iFrame)[0].contentWindow.postMessage(null, cydoemusHost);
 	});
 
 	$("body").append(iFrame);
