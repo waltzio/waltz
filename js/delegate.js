@@ -71,7 +71,6 @@ Delegate.prototype.decrypt = function(value, domain, cb) {
 Delegate.prototype.checkAuthentication = function(cb) {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
-		chrome.extension.getBackgroundPage().console.log('foo');
 		if(xhr.readyState == 4) {
 			if(xhr.status == 200) {
 
