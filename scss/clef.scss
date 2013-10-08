@@ -14,14 +14,26 @@
     -webkit-animation: spin-clef-logo 3s linear infinite;
     cursor: pointer;
     -webkit-transform: rotateX(0deg) rotateZ(0deg);
+    overflow: visible;
     &:hover {
         -webkit-transition: -webkit-transform .5s;
         -webkit-animation: none;
         -webkit-transform: rotateX(0deg) rotateZ(359deg);
         opacity: 1;
-        svg {
-            path {
-                // stroke-width: 19.5;
+
+        .clef-button {
+            height: 20px;
+            width: 20px;
+            -webkit-transform: rotateZ(360deg);
+            opacity: 1;
+
+            &.clef-dismiss {
+                left: -19px;
+                top: 15px;
+            }
+            &.clef-edit {
+                left: -13px;
+                top: 25px;
             }
         }
     }
@@ -31,31 +43,32 @@
         opacity: 0 !important;
         -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
     }
-    &.clef-login-action {
-        svg {
-            circle {
-                fill: #0d9ddb;
-                -webkit-transition: fill .2s;
-            }
-        }
-    }
 
-    &.clef-dismiss-action {
-        svg {
-            circle {
-                fill: #b4181d;
-                -webkit-transition: fill .2s;
-            }
-        }
-    }
+    .clef-button {
+        background-color: black;
+        height: 0px;
+        width: 0px;
+        border: 2px solid white;
+        border-radius: 25px;
+        display: block;
+        background-size: 60%;
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0;
+        -webkit-transform: rotateZ(0deg);
+        -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
+        -webkit-transition-delay: .1s;
+        position: relative;
+        top: 25px;
+        left: 25px;
 
-    svg {
-        path {
-            stroke-width: 0;
-            -webkit-transition: stroke-width .5s;
+        &.clef-dismiss {
+
         }
-        circle {
-            fill: transparent;
+
+        &.clef-edit {
+            -webkit-transition-delay: .2s;
         }
+
     }
 }

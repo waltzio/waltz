@@ -29,6 +29,7 @@
   "homepage_url": "http://getclef.com",
   "web_accessible_resources": [
     "img/clef128.png",
-    "img/clef-full.png"
+    "img/clef-full.png",
+    "img/pencil.png"
   ]
 }
