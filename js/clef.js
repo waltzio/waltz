@@ -336,12 +336,13 @@
 		var cSource = chrome.extension.getURL("/img/clef128.png");
 		var fSource = chrome.extension.getURL("/img/clef-full.png");
 		var pSource = chrome.extension.getURL("/img/pencil.png");
+		var xSource = chrome.extension.getURL("/img/x.png");
 
 
 		//Build HTML for clef widget
 		var clefCircle = $("<div id='clef-vault-login-wrapper' class='spinning'></div>");
 		var clefActions = $(
-			"<button style='background-image:url("+pSource+");' class='clef-button clef-dismiss'></button>"
+			"<button style='background-image:url("+xSource+");' class='clef-button clef-dismiss'></button>"
 			+"<button style='background-image:url("+pSource+");' class='clef-button clef-edit'></button>"
 			);
 
@@ -365,7 +366,17 @@
 			setTimeout(function() {
 				$(self).remove();
 			}, 1000)
-		})
+		});
+
+		$(clefCircle).find(".clef-dismiss").click(function(e) {
+			e.stopPropagation();
+
+			$(this).parent().addClass("remove");
+
+			setTimeout(function() {
+				$(self).remove();
+			});
+		});
 
 
 		$("body").append(clefCircle);

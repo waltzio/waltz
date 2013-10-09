@@ -30,6 +30,7 @@
   "web_accessible_resources": [
     "img/clef128.png",
     "img/clef-full.png",
-    "img/pencil.png"
+    "img/pencil.png",
+    "img/x.png"
   ]
 }

@@ -72,44 +72,53 @@
   -webkit-animation: spin-clef-logo 3s linear infinite;
   cursor: pointer;
   -webkit-transform: rotateX(0deg) rotateZ(0deg);
-  overflow: visible; }
+  overflow: visible;
+  padding: 20px;
+  background-position: center; }
   #clef-vault-login-wrapper:hover {
     -webkit-transition: -webkit-transform .5s;
     -webkit-animation: none;
     -webkit-transform: rotateX(0deg) rotateZ(359deg);
     opacity: 1; }
     #clef-vault-login-wrapper:hover .clef-button {
-      height: 20px;
-      width: 20px;
+      height: 15px;
+      width: 15px;
       -webkit-transform: rotateZ(360deg);
       opacity: 1; }
       #clef-vault-login-wrapper:hover .clef-button.clef-dismiss {
         left: -19px;
         top: 15px; }
+        #clef-vault-login-wrapper:hover .clef-button.clef-dismiss:hover {
+          background-color: #db070a; }
       #clef-vault-login-wrapper:hover .clef-button.clef-edit {
-        left: -13px;
-        top: 25px; }
+        left: -12px;
+        top: 34px; }
+        #clef-vault-login-wrapper:hover .clef-button.clef-edit:hover {
+          background-color: #19b008; }
   #clef-vault-login-wrapper.remove {
     -webkit-animation: none !important;
     -webkit-transition: opacity 1s, -webkit-transform 1s !important;
     opacity: 0 !important;
     -webkit-transform: rotateX(360deg) rotateZ(359deg) !important; }
   #clef-vault-login-wrapper .clef-button {
-    background-color: black;
     height: 0px;
     width: 0px;
-    border: 2px solid white;
     border-radius: 25px;
     display: block;
-    background-size: 60%;
+    background-size: 50%;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: 4px 4px;
     opacity: 0;
     -webkit-transform: rotateZ(0deg);
     -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
     -webkit-transition-delay: .1s;
     position: relative;
     top: 25px;
-    left: 25px; }
+    left: 25px;
+    border: none;
+    cursor: pointer; }
+    #clef-vault-login-wrapper .clef-button.clef-dismiss {
+      background-color: #db4c53; }
     #clef-vault-login-wrapper .clef-button.clef-edit {
-      -webkit-transition-delay: .2s; }
+      -webkit-transition-delay: .2s;
+      background-color: #7fe26c; }
