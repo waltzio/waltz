@@ -378,6 +378,12 @@
 			});
 		});
 
+		$(clefCircle).find(".clef-edit").click(function(e) {
+			e.stopPropagation();
+
+			self.requestCredentials();
+		});
+
 
 		$("body").append(clefCircle);
 
