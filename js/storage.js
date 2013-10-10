@@ -35,4 +35,21 @@ Storage.prototype.storeCredentialsForDomain = function(domain, username, passwor
 	chrome.storage.local.set(creds, cb);
 }
 
+Storage.prototype.getOptions = function(cb) {
+	chrome.storage.local.get("options", function(options) {
+		if(typeof(options.options) !== "object") {
+			var defaultOptions = {
+				cydoemus_url: "http://cydoemus.vault.tk"
+			};
+
+			//We don't need to wait for this to finish, because we already have the default options defined.
+			chrome.storage.local.set({options: defaultOptions});
+
+			cb(defaultOptions);
+		} else {
+			cb(options.options);
+		}
+	});
+}
+
 var storage = new Storage();

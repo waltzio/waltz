@@ -5,10 +5,10 @@
   "description": "Login Anywhere with Clef",
   "background": {
     "scripts": [
-      "/js/delegate.js", 
       "/js/crypto.js", 
       "/js/storage.js",
-      "/js/vendor/aes.js"
+      "/js/vendor/aes.js",
+      "/js/delegate.js"
     ]
   },
   "content_scripts": [{

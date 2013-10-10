@@ -33,9 +33,11 @@ function Delegate() {
 				sendResponse(cydoemusHost);
 				break;
 		}
-
 	});
 
+	storage.getOptions(function(options) {
+		self.options = options;
+	});
 }
 
 Delegate.prototype.saveCredentials = function(domain, username, password, cb) {

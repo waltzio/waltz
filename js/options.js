@@ -47,6 +47,23 @@
 				//});
 			});
 
+			var options;
+
+			//The default options *should* have been loaded in by now
+			chrome.storage.local.get("options", function(data) {
+				if(typeof(data.options) === "object") {
+					options = data.options;
+
+					$("#cydoemus-url").val(data.options.cydoemus_url);
+				}
+			});
+
+			$(".all-settings").find("input").change(function() {
+				options[$(this).attr('name')] = $(this).val();
+
+				chrome.storage.local.set({options: options});
+			});
+
 			$(document).on('click', '.togglePass', function() {
 				var toggleInput = $(this).siblings(".toggle");
 				var val = $(toggleInput).val();
@@ -59,6 +76,12 @@
 					$(this).removeClass("open").addClass('closed');
 				}
 
+			});
+
+			$("nav").find("li").click(function() {
+				var target = $($(this).data('target'));
+				$(".main-content").hide();
+				$(target).show();
 			});
 		});
 	});
