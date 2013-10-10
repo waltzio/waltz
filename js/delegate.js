@@ -6,7 +6,7 @@
  *
 ********************/
 
-cydoemusHost = "http://cydoemus.vault.tk";
+cydoemusHost = "http://localhost:3333";
 
 function Delegate() {
 	var self = this;
