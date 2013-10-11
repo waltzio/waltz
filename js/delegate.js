@@ -16,6 +16,7 @@ function Delegate() {
 	}
 
 	this.logged_in = false;
+	this.backgrounded = false;
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		if(typeof(request.type) === "undefined") {
@@ -115,7 +116,7 @@ Delegate.prototype.logout = function() {
 					iconUrl: "img/clef48.png"
 				},
 				function() {});
-			this.logged_in = false;
+			_this.logged_in = false;
 		});
 	});
 }
@@ -128,10 +129,10 @@ Delegate.prototype.focusChanged = function(windowID) {
 			var _this = this;
 			this.checkAuthentication(function(data) {
 				if (!data.user) {
+					this.logged_in = false;
 					_this.logout();
 				}
 			});
-			this.logged_in = false;
 		}
 		this.backgrounded = false;
 	}
@@ -139,7 +140,6 @@ Delegate.prototype.focusChanged = function(windowID) {
 
 Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
 	clefCrypto.encrypt(password, domain, function(encrypted) {
-		console.log(domain, username, password, encrypted);
 		storage.storeCredentialsForDomain(domain, username, encrypted.output, function() {
 			cb(true);
 		});
