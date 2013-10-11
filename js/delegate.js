@@ -42,7 +42,10 @@ function Delegate() {
 				sendResponse(cydoemusHost);
 				break;
 		}
+	});
 
+	storage.getOptions(function(options) {
+		self.options = options;
 	});
 
 	this.focusChanged = this.focusChanged.bind(this);
@@ -132,7 +135,6 @@ Delegate.prototype.focusChanged = function(windowID) {
 		}
 		this.backgrounded = false;
 	}
-
 }
 
 Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
