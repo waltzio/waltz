@@ -14,7 +14,7 @@
 
 				var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-domain='"+domain+"'>"
 						   +"	<h3>"+domain+"</h3>"
-						   +"	<button class='decrypt'>Decrypt</button>"
+						   +"	<button class='decrypt styled'>Decrypt</button>"
 						   +"	</li>"
 
 				$(".sites-list").find("ul").append(html);
@@ -30,16 +30,13 @@
 				var password = $(parent).data('password');
 
 				checkAuthentication(function(authed) {
-					console.log(authed, domain, username, password);
 					if(authed) {
-						console.log("decrypt, please");
 						chrome.runtime.sendMessage({
 							type: "decrypt",
 							domain: domain,
 							value: password
 
 						}, function(response) {
-							console.log(response);
 							$(self).remove();
 
 							if(response.error) {
@@ -48,12 +45,11 @@
 							} 
 
 							var decryptedHTML =  "<label for='username'>Username:</label> "
-												+"<input type='text' value='"+response.output+"' />"
+												+"<input type='text' class='username' value='"+username+"' />"
 												+"<label for='password'>Password:</label> "
-												+"<input type='password' class='toggle' value='fakePassword' />"
-												+"<button class='togglePass closed'></button>";
-
-							console.log(decryptedHTML);
+												+"<input type='password' class='toggle password' value='"+response.output+"' />"
+												+"<button class='togglePass closed'></button>"
+												+"<button class='savePass styled'>Save</button>";
 
 							$(parent).append(decryptedHTML);
 
@@ -87,13 +83,29 @@
 				var val = $(toggleInput).val();
 
 				if($(toggleInput).attr('type') === "password") {
-					$(toggleInput).replaceWith("<input class='toggle' type='text' value='"+val+"' />");
+					$(toggleInput).replaceWith("<input class='toggle password' type='text' value='"+val+"' />");
 					$(this).removeClass("closed").addClass("open");
 				} else {
-					$(toggleInput).replaceWith("<input class='toggle' type='password' value='"+val+"' />");
+					$(toggleInput).replaceWith("<input class='toggle password' type='password' value='"+val+"' />");
 					$(this).removeClass("open").addClass('closed');
 				}
 
+			});
+
+			$(document).on('click', '.savePass', function() {
+				var self = this;
+
+				chrome.runtime.sendMessage({
+					type: "saveCredentials",
+					domain: $(self).parent().data('domain'),
+					username: $(self).siblings(".username").val(),
+					password: $(self).siblings(".password").val()
+				});
+
+				$(self).addClass('success');
+				setTimeout(function() {
+					$(self).removeClass('success')
+				}, 1000);
 			});
 
 			$("nav").find("li").click(function() {

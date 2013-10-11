@@ -175,6 +175,7 @@ Delegate.prototype.focusChanged = function(windowID) {
 }
 
 Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
+	console.log(password, domain, username);
 	clefCrypto.encrypt(password, domain, function(encrypted) {
 		storage.storeCredentialsForDomain(domain, username, encrypted.output, function() {
 			cb(true);
