@@ -92,7 +92,7 @@
 				//OK..  This is probably a login form.  But there may be other similar ones, so let's score them and compare
 				var score = 0;
 
-				var hasButtons = !!$(curParent).find("input[type='submit'], button").length;
+				var hasButtons = !!$(curParent).find("input[type='submit'], button, input[type='image']").length;
 				var hasRememberMe = $(curParent).find("input[type='checkbox']").length === 1;
 				var numWeirdInputs = $(curParent).find("input").not("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit'], [type='hidden']").length
 				//We will decrease this by two because we expect two inputs on a login form
@@ -226,7 +226,8 @@
 			top: 0,
 			left: 0,
 			border: 'none',
-			display: 'none'
+			display: 'none',
+			"z-index": 999999999
 		});
 
 		$iframe.on('load', function() {
@@ -298,6 +299,10 @@
 
 			if(!button.length) {
 				button = $(self.loginForm.container).find("button").last();
+			}
+
+			if(!button.length) {
+				button = $(self.loginForm.container).find("input[type='image']").last();
 			}
 
 			if(button.length) {
