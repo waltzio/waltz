@@ -236,6 +236,9 @@
 	}
 
 	Vault.prototype.logIn = function(cb) {
+		var self = this;
+
+
 		if (!this.iframe) {
 			this.loadIframe
 		}
@@ -244,6 +247,7 @@
 
 		addEventListener("message", function(e) {
 			if(e.data.auth) {
+				self.iframe.remove();
 				if (typeof cb == "function") {
 					cb();
 				}
