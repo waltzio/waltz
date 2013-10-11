@@ -8,7 +8,7 @@
 ********************/
 
 function Storage() {
-
+	this.LOGIN_KEY = 'clef_logins';
 }
 
 Storage.prototype.getCredentialsForDomain = function(domain, cb) {
@@ -33,6 +33,29 @@ Storage.prototype.storeCredentialsForDomain = function(domain, username, passwor
 	};
 
 	chrome.storage.local.set(creds, cb);
+}
+
+Storage.prototype.getLogins = function(cb) {
+	var _this = this;
+	chrome.storage.local.get(this.LOGIN_KEY, function(data) {
+		if (data && data[_this.LOGIN_KEY]) {
+			data = data[_this.LOGIN_KEY];
+		}
+		cb(data);
+	});
+}
+
+Storage.prototype.addLogin = function(domain) {
+	this.getLogins(function(data) {
+		if (data[this.LOGIN_KEY]) data = data[this.LOGIN_KEY];
+		data[domain] = new Date().getTime();
+		
+		chrome.storage.local.set({ "clef_logins": data }, function() {});
+	})
+}
+
+Storage.prototype.clearLogins = function() {
+	chrome.storage.local.remove(this.LOGIN_KEY);
 }
 
 Storage.prototype.getOptions = function(cb) {

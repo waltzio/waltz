@@ -5,6 +5,8 @@
   "description": "Login Anywhere with Clef",
   "background": {
     "scripts": [
+      "/js/vendor/rsvp.js",
+      "/js/vendor/pubnub.js",
       "/js/crypto.js", 
       "/js/storage.js",
       "/js/vendor/aes.js",
@@ -18,7 +20,10 @@
   }],
   "permissions": [
   	"*://*/*",
-    "storage"
+    "storage",
+    "cookies",
+    "tabs",
+    "notifications"
   ],
   "icons": {
     "16": "/img/clef16.png",

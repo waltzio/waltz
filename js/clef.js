@@ -6,33 +6,37 @@
 		self.loginCredentials = false;
 		self.cydoemusHost = "";
 
+		self.loginForm = self.detectLogin();
 
-		chrome.runtime.sendMessage({
-			type: "getHost"
-		}, function(host) {
-			self.cydoemusHost = host;
-
-			
-			self.loginForm = self.detectLogin();
+		if (self.loginForm) {
 			chrome.runtime.sendMessage({
-				type: "getCredentials",
-				domain: document.location.host
+				type: "getHost"
+			}, function(host) {
+				self.cydoemusHost = host;
 
-			}, function(creds) {
-				if(creds.error) {
-					if(creds.error === "authentication") {
-						console.log("auth error");
+				
+				chrome.runtime.sendMessage({
+					type: "getCredentials",
+					domain: document.location.host
+
+				}, function(creds) {
+					if(creds.error) {
+						if(creds.error === "authentication") {
+							console.log("auth error");
+						} else {
+							console.log(creds.error, creds.status);
+						}
 					} else {
-						console.log(creds.error, creds.status);
+						if(creds.creds && self.loginForm) {
+							self.loginCredentials = creds.creds	
+						}
+						self.drawClefWidget();		
 					}
-				} else {
-					if(creds.creds && self.loginForm) {
-						self.loginCredentials = creds.creds	
-					}
-					self.drawClefWidget();		
-				}
+				});
 			});
-		});
+		}
+
+		window.addEventListener('message', this.closeIFrame.bind(this));
 	}
 
 
@@ -191,7 +195,6 @@
 			username: credentials.username,
 			password: credentials.password
 		}, function(response) {
-			console.log(response);
 			if(typeof(cb) === "function") {
 				cb();
 			}
@@ -199,33 +202,44 @@
 		});
 	}
 
-	Vault.prototype.logIn = function(cb) {
+	Vault.prototype.loadIFrame = function() {
+		if (this.iframe) return;
+
 		var self = this;
 
+		var $iframe = this.iframe = $("<iframe id='clef_iframe'>");
 
-		var iFrame = $("<iframe>");
-		$(iFrame).css({
+		$iframe.css({
 			position: 'absolute',
 			height: '100%',
 			width: '100%'
 		});
 
-		$(iFrame).attr('src', self.cydoemusHost+'/login');
+		$iframe.attr('src', self.cydoemusHost+'/login');
 
-		$(iFrame).on('load', function() {
-			$(iFrame)[0].contentWindow.postMessage(null, self.cydoemusHost);
-		});
+		$("body").append($iframe);
 
-		$("body").append(iFrame);
-
-		$(iFrame).css({
+		$iframe.css({
 			position: 'absolute',
 			height: '100%',
 			width: '100%',
 			top: 0,
 			left: 0,
-			border: 'none'
+			border: 'none',
+			display: 'none'
 		});
+
+		$iframe.on('load', function() {
+			$iframe[0].contentWindow.postMessage(null, self.cydoemusHost);
+		});
+	}
+
+	Vault.prototype.logIn = function(cb) {
+		if (!this.iframe) {
+			this.loadIframe
+		}
+
+		this.iframe.fadeIn();
 
 		addEventListener("message", function(e) {
 			if(e.data.auth) {
@@ -234,8 +248,18 @@
 				}
 			}
 		});
-
 	}
+
+	Vault.prototype.closeIFrame = function(e) {
+		if (e.origin == this.cydoemusHost) {
+			if (e.data && e.data.method == "closeIFrame" && this.iframe) {
+				this.iframe.remove();
+				this.iframe = false;
+				this.loadIFrame();
+			}
+		}
+	}
+
 
 	Vault.prototype.decryptAndLogIn = function() {
 		var self = this;
@@ -262,19 +286,28 @@
 
 		//Now let's try and submit this freaking form...
 		if($(self.loginForm.container).is("form")) {  //If it's a <form>, then it's easy.
+			chrome.runtime.sendMessage({
+				type: "login",
+				domain: document.location.host
+			}, function() {});
 			$(self.loginForm.container).submit();
 		} else {
 			//Now we just need to find the most likely button to click submit on..
 			//Generally that's just going to be the last button on the form
-			var button = $(self.loginForm.container).find("input[type='submit'").last();
+			var button = $(self.loginForm.container).find("input[type='submit']").last();
 
 			if(!button.length) {
 				button = $(self.loginForm.container).find("button").last();
 			}
 
 			if(button.length) {
+				chrome.runtime.sendMessage({
+					type: "login",
+					domain: document.location.host
+				}, function() {});
 				$(button).click();
 			} else {
+				console.log('OH NOES!');
 				//I guess if we get this far I don't really know what to do.  Will need to do some research
 			}
 		}
@@ -350,9 +383,11 @@
 			"background-image": "url("+cSource+")"
 		}).append(clefActions);
 
+		$(document).ready(this.loadIFrame.bind(this));
+
 
 		$(clefCircle).click(function() {
-			$(this).addClass("remove");
+			$(this).addClass("loading");
 
 			self.checkAuthentication(function() {
 				if (self.loginCredentials) {
@@ -380,7 +415,9 @@
 		$(clefCircle).find(".clef-edit").click(function(e) {
 			e.stopPropagation();
 
-			self.requestCredentials();
+			self.checkAuthentication(function() {
+				self.requestCredentials();
+			});
 		});
 
 
