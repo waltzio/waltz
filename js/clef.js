@@ -35,6 +35,8 @@
 				});
 			});
 		}
+
+		window.addEventListener('message', this.closeIFrame.bind(this));
 	}
 
 
@@ -200,33 +202,44 @@
 		});
 	}
 
-	Vault.prototype.logIn = function(cb) {
+	Vault.prototype.loadIFrame = function() {
+		if (this.iframe) return;
+
 		var self = this;
 
+		var $iframe = this.iframe = $("<iframe id='clef_iframe'>");
 
-		var iFrame = $("<iframe>");
-		$(iFrame).css({
+		$iframe.css({
 			position: 'absolute',
 			height: '100%',
 			width: '100%'
 		});
 
-		$(iFrame).attr('src', self.cydoemusHost+'/login');
+		$iframe.attr('src', self.cydoemusHost+'/login');
 
-		$(iFrame).on('load', function() {
-			$(iFrame)[0].contentWindow.postMessage(null, self.cydoemusHost);
-		});
+		$("body").append($iframe);
 
-		$("body").append(iFrame);
-
-		$(iFrame).css({
+		$iframe.css({
 			position: 'absolute',
 			height: '100%',
 			width: '100%',
 			top: 0,
 			left: 0,
-			border: 'none'
+			border: 'none',
+			display: 'none'
 		});
+
+		$iframe.on('load', function() {
+			$iframe[0].contentWindow.postMessage(null, self.cydoemusHost);
+		});
+	}
+
+	Vault.prototype.logIn = function(cb) {
+		if (!this.iframe) {
+			this.loadIframe
+		}
+
+		this.iframe.fadeIn();
 
 		addEventListener("message", function(e) {
 			if(e.data.auth) {
@@ -235,8 +248,18 @@
 				}
 			}
 		});
-
 	}
+
+	Vault.prototype.closeIFrame = function(e) {
+		if (e.origin == this.cydoemusHost) {
+			if (e.data && e.data.method == "closeIFrame" && this.iframe) {
+				this.iframe.remove();
+				this.iframe = false;
+				this.loadIFrame();
+			}
+		}
+	}
+
 
 	Vault.prototype.decryptAndLogIn = function() {
 		var self = this;
@@ -360,9 +383,11 @@
 			"background-image": "url("+cSource+")"
 		}).append(clefActions);
 
+		$(document).ready(this.loadIFrame.bind(this));
+
 
 		$(clefCircle).click(function() {
-			$(this).addClass("remove");
+			$(this).addClass("loading");
 
 			self.checkAuthentication(function() {
 				if (self.loginCredentials) {

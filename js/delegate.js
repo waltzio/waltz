@@ -7,6 +7,7 @@
 ********************/
 
 cydoemusHost = "https://cydoemus.vault.tk";
+// cydoemusHost = "http://localhost:3333";
 
 function Delegate() {
 	var self = this;
@@ -14,6 +15,10 @@ function Delegate() {
 	this.logout_map = {
 		'www.facebook.com': 'c_user'
 	}
+
+	this.pubnub = PUBNUB.init({
+        subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
+    });
 
 	this.logged_in = false;
 	this.backgrounded = false;
@@ -54,8 +59,33 @@ function Delegate() {
 }
 
 Delegate.prototype.login = function(domain) {
-	this.logged_in = true;
+	if (!this.logged_in) {
+		this.logged_in = true;
+		this.pubnubSubscribe();
+	}
 	storage.addLogin(domain);
+}
+
+Delegate.prototype.pubnubSubscribe = function() {
+	var _this = this;
+
+	this.checkAuthentication(function(data) {
+		_this.user = data.user;
+		_this.pubnub.subscribe({
+			channel: data.user,
+			message: function(m) {
+				if (m && m == "logout") {
+					_this.logout();
+				}
+			}
+		})
+	});
+}
+
+Delegate.prototype.pubnubUnsubscribe = function(channel) {
+	this.pubnub.unsubscribe({
+		channel: channel
+	});
 }
 
 Delegate.prototype.logout = function() {
@@ -116,7 +146,10 @@ Delegate.prototype.logout = function() {
 					iconUrl: "img/clef48.png"
 				},
 				function() {});
+			_this.pubnubUnsubscribe(_this.user);
+			_this.user = false;
 			_this.logged_in = false;
+			_
 		});
 	});
 }
@@ -168,6 +201,7 @@ Delegate.prototype.decrypt = function(value, domain, cb) {
 }
 
 Delegate.prototype.checkAuthentication = function(cb) {
+	var _this = this;
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState == 4) {
@@ -176,6 +210,8 @@ Delegate.prototype.checkAuthentication = function(cb) {
 				var data = JSON.parse(xhr.responseText);
 
 				if(typeof(cb) === "function") {
+					
+
 					cb({
 						error: null,
 						user: data.user

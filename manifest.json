@@ -6,6 +6,7 @@
   "background": {
     "scripts": [
       "/js/vendor/rsvp.js",
+      "/js/vendor/pubnub.js",
       "/js/crypto.js", 
       "/js/storage.js",
       "/js/vendor/aes.js",

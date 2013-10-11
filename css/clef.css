@@ -118,6 +118,9 @@
   opacity: 0 !important;
   -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
 }
+#clef-vault-login-wrapper.loading {
+  -webkit-animation: spin-clef-logo 1s linear infinite;
+}
 #clef-vault-login-wrapper .clef-button {
   height: 0px;
   width: 0px;
