@@ -39,7 +39,7 @@ ClefCrypto.prototype.encrypt = function(pre, identifier, cb) {
 		}
 	}
 
-	xhr.open("GET", cydoemusHost+"/api/v0/keys/"+identifier, true);
+	xhr.open("GET", delegate.options.cydoemus_url+"/api/v0/keys/"+identifier, true);
 	xhr.send();
 }
 
@@ -73,7 +73,7 @@ ClefCrypto.prototype.decrypt = function(pre, identifier, cb) {
 		}
 	}
 
-	xhr.open("GET", cydoemusHost+"/api/v0/keys/"+identifier, true);
+	xhr.open("GET", delegate.options.cydoemus_url+"/api/v0/keys/"+identifier, true);
 	xhr.send();
 }
 

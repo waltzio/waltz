@@ -1,12 +1,18 @@
 (function($) {
-	
+	var cydoemusHost = "";
+
+	chrome.runtime.sendMessage({
+		type: "getHost"
+	}, function(host) {
+		cydoemusHost = host;
+	});
 
 	$(document).ready(function() {
 		chrome.storage.local.get(null, function(sites) {
 			for(domain in sites) {
 				var site = sites[domain];
 
-				var html = "<li data-username='"+site.username+"' date-password='"+site.password+"' data-domain='"+domain+"'>"
+				var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-domain='"+domain+"'>"
 						   +"	<h3>"+domain+"</h3>"
 						   +"	<button class='decrypt'>Decrypt</button>"
 						   +"	</li>"
@@ -18,33 +24,44 @@
 				var self = this;
 				var parent = $(self).parent();
 
-				$(self).remove();
 
 				var domain = $(parent).data('domain');
 				var username = $(parent).data('username');
 				var password = $(parent).data('password');
 
-				/*chrome.runtime.sendMessage({
-					type: "decrypt",
-					domain: domain,
-					value: password
+				checkAuthentication(function(authed) {
+					console.log(authed, domain, username, password);
+					if(authed) {
+						console.log("decrypt, please");
+						chrome.runtime.sendMessage({
+							type: "decrypt",
+							domain: domain,
+							value: password
 
-				}, function(response) {
+						}, function(response) {
+							console.log(response);
+							$(self).remove();
 
-					if(response.error) {
-						alert(response.error);
-						return false;
-					} */
+							if(response.error) {
+								alert(response.error);
+								return false;
+							} 
 
-					var decryptedHTML =  "<label for='username'>Username:</label> "
-										+"<input type='text' value='"+username+"' />"
-										+"<label for='password'>Password:</label> "
-										+"<input type='password' class='toggle' value='fakePassword' />"
-										+"<button class='togglePass closed'></button>";
+							var decryptedHTML =  "<label for='username'>Username:</label> "
+												+"<input type='text' value='"+response.output+"' />"
+												+"<label for='password'>Password:</label> "
+												+"<input type='password' class='toggle' value='fakePassword' />"
+												+"<button class='togglePass closed'></button>";
 
-					$(parent).append(decryptedHTML);
+							console.log(decryptedHTML);
 
-				//});
+							$(parent).append(decryptedHTML);
+
+						});
+					} else{
+						loginWithClef();
+					}
+				});
 			});
 
 			var options;
@@ -62,6 +79,7 @@
 				options[$(this).attr('name')] = $(this).val();
 
 				chrome.storage.local.set({options: options});
+				chrome.runtime.sendMessage({type: "refreshSettings"});
 			});
 
 			$(document).on('click', '.togglePass', function() {
@@ -85,5 +103,55 @@
 			});
 		});
 	});
+
+	function checkAuthentication(cb) {
+		chrome.runtime.sendMessage({
+			type: "checkAuthentication",
+			domain: document.location.host
+		}, function(response) {
+			if (!response.user) {
+				if (typeof(cb) == "function") {
+					cb(false);
+				}
+			} else {
+				if (typeof(cb) == "function") {
+					cb(true);
+				}
+			}
+		});
+	}
+
+	function loginWithClef() {
+		var iFrame = $("<iframe>");
+		$(iFrame).css({
+			position: 'absolute',
+			height: '100%',
+			width: '100%'
+		});
+
+		$(iFrame).attr('src', cydoemusHost+'/login');
+
+		$(iFrame).on('load', function() {
+			$(iFrame)[0].contentWindow.postMessage(null, cydoemusHost);
+		});
+
+		$("body").append(iFrame);
+
+		$(iFrame).css({
+			position: 'absolute',
+			height: '100%',
+			width: '100%',
+			top: 0,
+			left: 0,
+			border: 'none'
+		});
+
+		addEventListener("message", function(e) {
+			if(e.data.auth) {
+				$(iFrame).fadeOut(200, function() { $(this).remove(); });
+			}
+		});
+
+	}
 
 })(jQuery);

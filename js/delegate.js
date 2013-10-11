@@ -6,7 +6,6 @@
  *
 ********************/
 
-cydoemusHost = "http://localhost:3333";
 
 function Delegate() {
 	var self = this;
@@ -30,7 +29,13 @@ function Delegate() {
 				return self.checkAuthentication(sendResponse);
 				break;
 			case "getHost":
-				sendResponse(cydoemusHost);
+				sendResponse(self.options.cydoemus_url);
+				break;
+			case "refreshSettings":
+				storage.getOptions(function(options) {
+					console.log("new options");
+					self.options = options;
+				});
 				break;
 		}
 	});
@@ -71,6 +76,8 @@ Delegate.prototype.decrypt = function(value, domain, cb) {
 }
 
 Delegate.prototype.checkAuthentication = function(cb) {
+	var self = this;
+
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState == 4) {
@@ -93,7 +100,7 @@ Delegate.prototype.checkAuthentication = function(cb) {
 		}
 	}
 
-	xhr.open("GET", cydoemusHost+"/check", true);
+	xhr.open("GET", self.options.cydoemus_url+"/check", true);
 	xhr.send();
 
 	return true;

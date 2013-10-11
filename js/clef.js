@@ -228,7 +228,6 @@
 		});
 
 		addEventListener("message", function(e) {
-			console.log('hi');
 			if(e.data.auth) {
 				if (typeof cb == "function") {
 					cb();
