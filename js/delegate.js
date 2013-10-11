@@ -10,7 +10,10 @@ function Delegate() {
 	var self = this;
 
 	this.logout_map = {
-		'www.facebook.com': 'c_user'
+		'www.facebook.com': 'c_user',
+		'news.ycombinator.com': 'user',
+		'twitter.com': 'auth_token',
+		'servicing.capitalone.com': 'AuthenticationTicket'
 	}
 
 	this.pubnub = PUBNUB.init({
