@@ -6,10 +6,16 @@
  *
 ********************/
 
-cydoemusHost = "http://cydoemus.vault.tk";
+cydoemusHost = "https://cydoemus.vault.tk";
 
 function Delegate() {
 	var self = this;
+
+	this.logout_map = {
+		'www.facebook.com': 'c_user'
+	}
+
+	this.logged_in = false;
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		if(typeof(request.type) === "undefined") {
@@ -29,12 +35,103 @@ function Delegate() {
 			case "checkAuthentication":
 				return self.checkAuthentication(sendResponse);
 				break;
+			case "login":
+				return self.login(request.domain);
+				break;
 			case "getHost":
 				sendResponse(cydoemusHost);
 				break;
 		}
 
 	});
+
+	this.focusChanged = this.focusChanged.bind(this);
+	chrome.windows.onFocusChanged.addListener(this.focusChanged);
+}
+
+Delegate.prototype.login = function(domain) {
+	this.logged_in = true;
+	storage.addLogin(domain);
+}
+
+Delegate.prototype.logout = function() {
+	var _this = this;
+	storage.getLogins(function(data) {
+		var sitesCompleted = [],
+			promise;
+		for (domain in data) {
+			var url = 'https://' + domain;
+
+			if (_this.logout_map[domain]) {
+				promise = RSVP.Promise(function(resolve, reject) {
+					chrome.cookies.remove({
+						url: url,
+						name: _this.logout_map[domain]
+					}, function() { resolve(); })
+				});
+				sitesCompleted.push(promise);
+			} else {
+				// if we haven't manually set a user cookie name,
+				// REMOVE ALL THE COOKIES (wuh wuh)
+				chrome.cookies.getAll({
+					url: url
+				}, function(cookies) {
+
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = cookies[i];
+						var promise = RSVP.Promise(function(resolve, reject) {
+							chrome.cookies.remove({
+								url: url,
+								name: cookie.name
+							}, function() { resolve(); });
+						});
+						sitesCompleted.push(promise);
+					}
+				})
+			}
+		}
+
+		RSVP.all(sitesCompleted).then(function() {
+			for (domain in data) {
+				chrome.tabs.query(
+					{ url: '*://' + domain + '/*'}, 
+					function(data) { 
+						for (var i = 0; i < data.length; i++) {
+							chrome.tabs.reload(data[i].id);
+						}
+					}
+				);
+			}
+			storage.clearLogins();
+			chrome.notifications.create(
+				"", 
+				{
+					type: "basic",
+					title: "You've been logged out of Bypass.",
+					message: "You've been logged out of all of your Bypass sites",
+					iconUrl: "img/clef48.png"
+				},
+				function() {});
+			this.logged_in = false;
+		});
+	});
+}
+
+Delegate.prototype.focusChanged = function(windowID) {
+	if (windowID == chrome.windows.WINDOW_ID_NONE) {
+		this.backgrounded = true;
+	} else if (this.backgrounded) {
+		if (this.logged_in) {
+			var _this = this;
+			this.checkAuthentication(function(data) {
+				if (!data.user) {
+					_this.logout();
+				}
+			});
+			this.logged_in = false;
+		}
+		this.backgrounded = false;
+	}
 
 }
 

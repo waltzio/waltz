@@ -17,6 +17,7 @@
     overflow: visible;
     padding: 20px;
     background-position: center;
+    z-index: 9999;
 
     &:hover {
         -webkit-transition: -webkit-transform .5s;

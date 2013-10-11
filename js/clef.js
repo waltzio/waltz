@@ -6,33 +6,35 @@
 		self.loginCredentials = false;
 		self.cydoemusHost = "";
 
+		self.loginForm = self.detectLogin();
 
-		chrome.runtime.sendMessage({
-			type: "getHost"
-		}, function(host) {
-			self.cydoemusHost = host;
-
-			
-			self.loginForm = self.detectLogin();
+		if (self.loginForm) {
 			chrome.runtime.sendMessage({
-				type: "getCredentials",
-				domain: document.location.host
+				type: "getHost"
+			}, function(host) {
+				self.cydoemusHost = host;
 
-			}, function(creds) {
-				if(creds.error) {
-					if(creds.error === "authentication") {
-						console.log("auth error");
+				
+				chrome.runtime.sendMessage({
+					type: "getCredentials",
+					domain: document.location.host
+
+				}, function(creds) {
+					if(creds.error) {
+						if(creds.error === "authentication") {
+							console.log("auth error");
+						} else {
+							console.log(creds.error, creds.status);
+						}
 					} else {
-						console.log(creds.error, creds.status);
+						if(creds.creds && self.loginForm) {
+							self.loginCredentials = creds.creds	
+						}
+						self.drawClefWidget();		
 					}
-				} else {
-					if(creds.creds && self.loginForm) {
-						self.loginCredentials = creds.creds	
-					}
-					self.drawClefWidget();		
-				}
+				});
 			});
-		});
+		}
 	}
 
 
@@ -263,19 +265,28 @@
 
 		//Now let's try and submit this freaking form...
 		if($(self.loginForm.container).is("form")) {  //If it's a <form>, then it's easy.
+			chrome.runtime.sendMessage({
+				type: "login",
+				domain: document.location.host
+			}, function() {});
 			$(self.loginForm.container).submit();
 		} else {
 			//Now we just need to find the most likely button to click submit on..
 			//Generally that's just going to be the last button on the form
-			var button = $(self.loginForm.container).find("input[type='submit'").last();
+			var button = $(self.loginForm.container).find("input[type='submit']").last();
 
 			if(!button.length) {
 				button = $(self.loginForm.container).find("button").last();
 			}
 
 			if(button.length) {
+				chrome.runtime.sendMessage({
+					type: "login",
+					domain: document.location.host
+				}, function() {});
 				$(button).click();
 			} else {
+				console.log('OH NOES!');
 				//I guess if we get this far I don't really know what to do.  Will need to do some research
 			}
 		}
@@ -381,7 +392,9 @@
 		$(clefCircle).find(".clef-edit").click(function(e) {
 			e.stopPropagation();
 
-			self.requestCredentials();
+			self.checkAuthentication(function() {
+				self.requestCredentials();
+			});
 		});
 
 
