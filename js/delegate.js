@@ -14,7 +14,8 @@ function Delegate() {
 		'news.ycombinator.com': 'user',
 		'twitter.com': 'auth_token',
 		'servicing.capitalone.com': 'AuthenticationTicket',
-		'accounts.google.com': "SSID"
+		'accounts.google.com': "SSID",
+		'github.com': 'user_session'
 	}
 
 	this.pubnub = PUBNUB.init({
