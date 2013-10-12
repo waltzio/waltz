@@ -1,5 +1,5 @@
 {
-  "name": "Vault",
+  "name": "Waltz",
   "version": "0.1",
   "manifest_version": 2,
   "description": "Login Anywhere with Clef",
@@ -15,8 +15,8 @@
   },
   "content_scripts": [{
     "matches": ["*://*/*"],
-    "js": ["js/vendor/jquery.min.js", "/js/clef.js"],
-    "css": ["/css/clef.css"]
+    "js": ["js/vendor/jquery.min.js", "/js/waltz.js"],
+    "css": ["/css/waltz.css"]
   }],
   "permissions": [
   	"*://*/*",
@@ -31,7 +31,7 @@
     "128": "/img/clef128.png"
   },
   "options_page": "html/options.html",
-  "homepage_url": "http://getclef.com",
+  "homepage_url": "http://waltz.io",
   "web_accessible_resources": [
     "img/clef128.png",
     "img/clef-full.png",

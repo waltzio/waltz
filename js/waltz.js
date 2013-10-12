@@ -1,6 +1,6 @@
 (function($) {
 
-	var Vault = function() {
+	var Waltz = function() {
 		var self = this;
 
 		self.loginCredentials = false;
@@ -41,7 +41,7 @@
 
 
 	//Checks if a login form exists.  Returns the login form container or false if one doesnt exist
-	Vault.prototype.detectLogin = function() {
+	Waltz.prototype.detectLogin = function() {
 		var passwordInputs = $("input[type='password']");
 
 		var mostLikelyContainer = false;
@@ -158,7 +158,7 @@
 		};
 	}
 
-	Vault.prototype.storeLogin = function(username, password) {
+	Waltz.prototype.storeLogin = function(username, password) {
 		chrome.runtime.sendMessage({
 			domain: document.location.host,
 			username: username,
@@ -166,7 +166,7 @@
 		});
 	}
 
-	Vault.prototype.decryptCredentials = function(cb) {
+	Waltz.prototype.decryptCredentials = function(cb) {
 		var self = this;
 		if(self.loginCredentials && typeof(self.loginCredentials.password === "string")) {
 			chrome.runtime.sendMessage({
@@ -188,7 +188,7 @@
 		}
 	}
 
-	Vault.prototype.encryptCredentials = function(credentials, cb) {
+	Waltz.prototype.encryptCredentials = function(credentials, cb) {
 		chrome.runtime.sendMessage({
 			type: "saveCredentials",
 			domain: document.location.host,
@@ -202,7 +202,7 @@
 		});
 	}
 
-	Vault.prototype.loadIFrame = function() {
+	Waltz.prototype.loadIFrame = function() {
 		if (this.iframe) return;
 
 		var self = this;
@@ -229,7 +229,7 @@
 		});
 	}
 
-	Vault.prototype.logIn = function(cb) {
+	Waltz.prototype.logIn = function(cb) {
 		var self = this;
 
 
@@ -249,7 +249,7 @@
 		});
 	}
 
-	Vault.prototype.closeIFrame = function(e) {
+	Waltz.prototype.closeIFrame = function(e) {
 		if (e.origin == this.cydoemusHost) {
 			if (e.data && e.data.method == "closeIFrame" && this.iframe) {
 				this.iframe.remove();
@@ -260,7 +260,7 @@
 	}
 
 
-	Vault.prototype.decryptAndLogIn = function() {
+	Waltz.prototype.decryptAndLogIn = function() {
 		var self = this;
 
 		self.decryptCredentials(function(response) {
@@ -277,7 +277,7 @@
 	}
 
 	//Fills the login form and submits it
-	Vault.prototype.fillAndSubmitLoginForm = function(data) {
+	Waltz.prototype.fillAndSubmitLoginForm = function(data) {
 		var self = this;
 
 		$(self.loginForm.usernameField).val(data.username);
@@ -316,7 +316,7 @@
 		}
 	}
 
-	Vault.prototype.checkAuthentication = function(cb) {
+	Waltz.prototype.checkAuthentication = function(cb) {
 		var self = this;
 
 		chrome.runtime.sendMessage({
@@ -333,18 +333,18 @@
 		});
 	}
 
-	Vault.prototype.requestCredentials = function(form) {
+	Waltz.prototype.requestCredentials = function(form) {
 		var _this = this,
-			FOCUS_ID = 'clef-credential-focus',
-			OVERLAY_ID = 'clef-credential-overlay',
-			MESSAGE_ID = 'clef-credential-message',
-			MESSAGE_TEXT_ID = 'clef-credential-message-text',
-			NEXT_ID = 'clef-credential-next';
+			FOCUS_ID = 'waltz-credential-focus',
+			OVERLAY_ID = 'waltz-credential-overlay',
+			MESSAGE_ID = 'waltz-credential-message',
+			MESSAGE_TEXT_ID = 'waltz-credential-message-text',
+			NEXT_ID = 'waltz-credential-next';
 
 		// set up templates for tutorial
 		var $overlay = $("<div id='" + OVERLAY_ID + "''></div>"),
 			$message = $("<div id='" + MESSAGE_ID + "'></div>"),
-			$messageText = $("<div id='" + MESSAGE_TEXT_ID + "'>It looks like you haven't used this site with Vault yet, please enter your username</div>"),
+			$messageText = $("<div id='" + MESSAGE_TEXT_ID + "'>It looks like you haven't used this site with Waltz yet, please enter your username</div>"),
 			$nextButton = $("<div id='" + NEXT_ID + "'>Next</div>"),
 			$body = $('body');
 
@@ -427,7 +427,7 @@
 	}
 
 	//Draws the clef widget and binds the interactions
-	Vault.prototype.drawClefWidget = function(form) {
+	Waltz.prototype.drawClefWidget = function(form) {
 		var self = this;
 
 		//Grab image resource URLs from extensions API
@@ -438,16 +438,16 @@
 
 
 		//Build HTML for clef widget
-		var clefCircle = $("<div id='clef-vault-login-wrapper' class='spinning'></div>");
-		var clefActions = $(
-			"<button style='background-image:url("+xSource+");' class='clef-button clef-dismiss'></button>"
-			+"<button style='background-image:url("+pSource+");' class='clef-button clef-edit'></button>"
+		var clefCircle = $("<div id='clef-waltz-login-wrapper' class='spinning'></div>");
+		var waltzActions = $(
+			"<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
+			+"<button style='background-image:url("+pSource+");' class='waltz-button waltz-edit'></button>"
 			);
 
 		//Style the widget with the correct image resource
 		$(clefCircle).css({
 			"background-image": "url("+cSource+")"
-		}).append(clefActions);
+		}).append(waltzActions);
 
 		$(document).ready(this.loadIFrame.bind(this));
 
@@ -468,7 +468,7 @@
 			}, 1000)
 		});
 
-		$(clefCircle).find(".clef-dismiss").click(function(e) {
+		$(clefCircle).find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
 
 			$(this).parent().addClass("remove");
@@ -478,7 +478,7 @@
 			});
 		});
 
-		$(clefCircle).find(".clef-edit").click(function(e) {
+		$(clefCircle).find(".waaltz-edit").click(function(e) {
 			e.stopPropagation();
 
 			self.checkAuthentication(function() {
@@ -491,6 +491,6 @@
 
 	}
 
-	new Vault();
+	new Waltz();
 
 })(jQuery);

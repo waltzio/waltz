@@ -1,5 +1,5 @@
 /*******************
- * ClefCrypto
+ * WaltzCrypto
  * 
  * The Crypto class is used for encrypting and decrypting client information.
  * Additionally, the Crypto class will manage commincation with the augmenter server
@@ -7,11 +7,11 @@
  *
 ********************/
 
-function ClefCrypto() {
+function WaltzCrypto() {
 
 }
 
-ClefCrypto.prototype.encrypt = function(pre, identifier, cb) {
+WaltzCrypto.prototype.encrypt = function(pre, identifier, cb) {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState == 4) {
@@ -43,7 +43,7 @@ ClefCrypto.prototype.encrypt = function(pre, identifier, cb) {
 	xhr.send();
 }
 
-ClefCrypto.prototype.decrypt = function(pre, identifier, cb) {
+WaltzCrypto.prototype.decrypt = function(pre, identifier, cb) {
 
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
@@ -77,4 +77,4 @@ ClefCrypto.prototype.decrypt = function(pre, identifier, cb) {
 	xhr.send();
 }
 
-var clefCrypto = new ClefCrypto();
+var waltzCrypto = new WaltzCrypto();
