@@ -340,33 +340,41 @@
 	}
 
 	Vault.prototype.requestCredentials = function(form) {
-		var self = this;
+		var _this = this;
 
-		// TODO: use same labels as actual login form
-		var $html = $([
-			"<div class='clef-request-credentials-overlay'>",
-				"<form class='clef-request-credentials-form'>",
-					"<input type='text' name='username'/>",
-					"<input type='password' name='password'/>",
-					"<input type='submit' id='clef-request-credentials-submit' value='submit'/>",
-				"</form>",
-			"</div>"
-		].join(""));
+		var $overlay = $("<div id='clef-credential-overlay'></div>");
+		var $message = $("<div id='clef-credential-message'></div>");
+		var $messageText = $("<div id='clef-credential-message-text'>It looks like you haven't used this site with Vault yet, please enter your username</div>");
+		var $nextButton = $("<div id='clef-credential-next'>Next</div>");
+		var $body = $('body');
 
-		$('body').append($html);
+		$body.append($overlay);
+		$body.prepend($message);
+		$message.append($messageText);
+		$message.append($nextButton);
 
-		$html.find('form').submit(function(e) {
-			e.preventDefault();
+		this.loginForm.usernameField.attr('id','clef-credential-focus');
+		this.loginForm.usernameField.focus();
 
-			var credentials = {
-				password: $html.find('input[type="password"]').val(),
-				username: $html.find('input[type="text"]').val()
-			}
+		$nextButton.on('click', function() {
+			_this.loginForm.usernameField.removeAttr('id');
+			_this.loginForm.passwordField.attr('id', 'clef-credential-focus');
+			_this.loginForm.passwordField.focus();
+			$messageText.text("Now, your password (the last time, we promise)!");
+			$nextButton.text("Submit");
+			$nextButton.off('click');
+			$nextButton.click(function() {
+				var credentials = {
+					password: _this.loginForm.passwordField.val(),
+					username: _this.loginForm.usernameField.val()
+				}
 
-			self.encryptCredentials(credentials, function() {
-				self.fillAndSubmitLoginForm(credentials)
-			})
+				_this.encryptCredentials(credentials, function() {
+					_this.fillAndSubmitLoginForm(credentials)
+				});
+			});
 		});
+
 	}
 
 	//Draws the clef widget and binds the interactions
