@@ -334,40 +334,95 @@
 	}
 
 	Vault.prototype.requestCredentials = function(form) {
-		var _this = this;
+		var _this = this,
+			FOCUS_ID = 'clef-credential-focus',
+			OVERLAY_ID = 'clef-credential-overlay',
+			MESSAGE_ID = 'clef-credential-message',
+			MESSAGE_TEXT_ID = 'clef-credential-message-text',
+			NEXT_ID = 'clef-credential-next';
 
-		var $overlay = $("<div id='clef-credential-overlay'></div>");
-		var $message = $("<div id='clef-credential-message'></div>");
-		var $messageText = $("<div id='clef-credential-message-text'>It looks like you haven't used this site with Vault yet, please enter your username</div>");
-		var $nextButton = $("<div id='clef-credential-next'>Next</div>");
-		var $body = $('body');
+		// set up templates for tutorial
+		var $overlay = $("<div id='" + OVERLAY_ID + "''></div>"),
+			$message = $("<div id='" + MESSAGE_ID + "'></div>"),
+			$messageText = $("<div id='" + MESSAGE_TEXT_ID + "'>It looks like you haven't used this site with Vault yet, please enter your username</div>"),
+			$nextButton = $("<div id='" + NEXT_ID + "'>Next</div>"),
+			$body = $('body');
 
+		// add tutorial templates
 		$body.append($overlay);
 		$body.prepend($message);
 		$message.append($messageText);
 		$message.append($nextButton);
 
-		this.loginForm.usernameField.attr('id','clef-credential-focus');
+		// focus on the username field
+		this.loginForm.usernameField.attr('id', FOCUS_ID);
 		this.loginForm.usernameField.focus();
 
-		$nextButton.on('click', function() {
+		// add handlers to save credentials if form is submitted
+		// outside of tutorial walkthrough
+		if (this.loginForm.container.is("form")) {
+			// if it's a form, bind to submit
+			this.loginForm.container.submit(submitForm);
+		}
+		// form or not a form, bind submit to the ENTER key
+		$.merge(this.loginForm.usernameField, this.loginForm.passwordField)
+		.on(
+			"keydown", 
+			function(e) {
+				// check if enter key
+				if (e.which == 13) {
+					submitForm(e);
+				}
+			}
+		);
+
+		// bind moving to next field to actual Next button click
+		// and tab keydown
+		$nextButton.on('click', jumpToNextField);
+		this.loginForm.usernameField.on('keydown', function(e) {
+			// check if tab key
+			if(e.which == 9) {
+	            jumpToNextField();
+	            e.preventDefault();
+	        }
+		});
+
+		// right now, this is only written for jumping from username to
+		// password
+		//
+		// TODO: extend so we could use it for some sort of registration setup
+		function jumpToNextField() {
 			_this.loginForm.usernameField.removeAttr('id');
-			_this.loginForm.passwordField.attr('id', 'clef-credential-focus');
+			_this.loginForm.passwordField.attr('id', FOCUS_ID);
 			_this.loginForm.passwordField.focus();
 			$messageText.text("Now, your password (the last time, we promise)!");
 			$nextButton.text("Submit");
 			$nextButton.off('click');
-			$nextButton.click(function() {
-				var credentials = {
-					password: _this.loginForm.passwordField.val(),
-					username: _this.loginForm.usernameField.val()
-				}
+			$nextButton.click(submitForm);
+		}
 
-				_this.encryptCredentials(credentials, function() {
-					_this.fillAndSubmitLoginForm(credentials)
-				});
+		// capture the form submit, save our credentials, and then continue
+		// the submit
+		function submitForm(e) {
+			e.preventDefault();
+
+			// remove handlers that bind this event, so we don't go
+			// into an infinite loop
+			_this.loginForm.container.off('submit');
+			$.merge(_this.loginForm.usernameField, _this.loginForm.passwordField).off("keydown");
+
+			// get those credentials
+			var credentials = {
+				password: _this.loginForm.passwordField.val(),
+				username: _this.loginForm.usernameField.val()
+			}
+
+			// store the credentials in the DB
+			_this.encryptCredentials(credentials, function() {
+				// BOOM!
+				_this.fillAndSubmitLoginForm(credentials);
 			});
-		});
+		}
 
 	}
 
