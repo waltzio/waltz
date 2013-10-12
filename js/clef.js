@@ -209,18 +209,12 @@
 
 		var $iframe = this.iframe = $("<iframe id='clef_iframe'>");
 
-		$iframe.css({
-			position: 'absolute',
-			height: '100%',
-			width: '100%'
-		});
-
 		$iframe.attr('src', self.cydoemusHost+'/login');
 
 		$("body").append($iframe);
 
 		$iframe.css({
-			position: 'absolute',
+			position: 'fixed',
 			height: '100%',
 			width: '100%',
 			top: 0,
