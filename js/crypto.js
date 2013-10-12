@@ -1,5 +1,5 @@
 /*******************
- * ClefCrypto
+ * WaltzCrypto
  * 
  * The Crypto class is used for encrypting and decrypting client information.
  * Additionally, the Crypto class will manage commincation with the augmenter server
