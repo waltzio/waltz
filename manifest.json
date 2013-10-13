@@ -26,9 +26,9 @@
     "notifications"
   ],
   "icons": {
-    "16": "/img/clef16.png",
-    "48": "/img/clef48.png",
-    "128": "/img/clef128.png"
+    "16": "/img/waltz-16.png",
+    "48": "/img/waltz-48.png",
+    "128": "/img/waltz-128.png"
   },
   "options_page": "html/options.html",
   "homepage_url": "http://getclef.com",

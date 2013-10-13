@@ -20,10 +20,21 @@ grunt.initConfig({
         'css/clef.css': 'scss/clef.scss'
       }
     }
+  },
+  compress: {
+    zip:{ 
+      options: {
+        archive: '../waltz.zip'
+      },
+      files: [
+        {expand: true, src: ['**/*']}
+      ]
+    }
   }
 });
 
 grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-contrib-watch');
+grunt.loadNpmTasks('grunt-contrib-compress');
 
 grunt.registerTask('default', ['watch']);
