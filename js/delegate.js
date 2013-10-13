@@ -149,8 +149,8 @@ Delegate.prototype.logout = function() {
 				"", 
 				{
 					type: "basic",
-					title: "You've been logged out of Bypass.",
-					message: "You've been logged out of all of your Bypass sites",
+					title: "You've been logged out of Waltz.",
+					message: "You've been logged out of all of your Waltz sites",
 					iconUrl: "img/clef48.png"
 				},
 				function() {});
@@ -180,7 +180,7 @@ Delegate.prototype.focusChanged = function(windowID) {
 }
 
 Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
-	clefCrypto.encrypt(password, domain, function(encrypted) {
+	waltzCrypto.encrypt(password, domain, function(encrypted) {
 		storage.storeCredentialsForDomain(domain, username, encrypted.output, function() {
 			cb(true);
 		});
@@ -201,7 +201,7 @@ Delegate.prototype.getCredentials = function(domain, cb) {
 }
 
 Delegate.prototype.decrypt = function(value, domain, cb) {
-	clefCrypto.decrypt(value, domain, function(decrypted) {
+	waltzCrypto.decrypt(value, domain, function(decrypted) {
 		cb(decrypted);
 	});
 

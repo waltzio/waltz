@@ -8,7 +8,7 @@
 ********************/
 
 function Storage() {
-	this.LOGIN_KEY = 'clef_logins';
+	this.LOGIN_KEY = 'waltz_logins';
 }
 
 Storage.prototype.getCredentialsForDomain = function(domain, cb) {
@@ -50,7 +50,7 @@ Storage.prototype.addLogin = function(domain) {
 		if (data[this.LOGIN_KEY]) data = data[this.LOGIN_KEY];
 		data[domain] = new Date().getTime();
 		
-		chrome.storage.local.set({ "clef_logins": data }, function() {});
+		chrome.storage.local.set({ "waltz_logins": data }, function() {});
 	})
 }
 

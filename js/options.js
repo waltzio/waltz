@@ -163,7 +163,6 @@
 				$(iFrame).fadeOut(200, function() { $(this).remove(); });
 			}
 		});
-
 	}
 
 })(jQuery);

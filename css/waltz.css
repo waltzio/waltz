@@ -8,7 +8,7 @@
   }
 }
 
-#clef-credential-overlay {
+#waltz-credential-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -30,12 +30,12 @@
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33000000', endColorstr='#b3000000',GradientType=1 );
 }
 
-#clef-credential-focus {
+#waltz-credential-focus {
   position: relative;
   z-index: 9999;
 }
 
-#clef-credential-message {
+#waltz-credential-message {
   background: #0d9ddb;
   color: white;
   text-align: center;
@@ -49,11 +49,11 @@
   height: 40px;
   line-height: 40px;
 }
-#clef-credential-message #clef-credential-message-text {
+#waltz-credential-message #waltz-credential-message-text {
   display: inline-block;
   width: 80%;
 }
-#clef-credential-message #clef-credential-next {
+#waltz-credential-message #waltz-credential-next {
   display: inline-block;
   height: 100%;
   width: 20%;
@@ -65,7 +65,7 @@
   clear: both;
 }
 
-#clef-vault-login-wrapper {
+#clef-waltz-login-wrapper {
   background-repeat: no-repeat;
   width: 64px;
   height: 64px;
@@ -82,42 +82,42 @@
   background-position: center;
   z-index: 9999;
 }
-#clef-vault-login-wrapper:hover {
+#clef-waltz-login-wrapper:hover {
   -webkit-transition: -webkit-transform .5s;
   -webkit-animation: none;
   -webkit-transform: rotateX(0deg) rotateZ(359deg);
   opacity: 1;
 }
-#clef-vault-login-wrapper:hover .clef-button {
+#clef-waltz-login-wrapper:hover .waltz-button {
   height: 15px;
   width: 15px;
   -webkit-transform: rotateZ(360deg);
   opacity: 1;
 }
-#clef-vault-login-wrapper:hover .clef-button.clef-dismiss {
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss {
   left: -19px;
   top: 15px;
 }
-#clef-vault-login-wrapper:hover .clef-button.clef-dismiss:hover {
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss:hover {
   background-color: #db070a;
 }
-#clef-vault-login-wrapper:hover .clef-button.clef-edit {
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-edit {
   left: -12px;
   top: 34px;
 }
-#clef-vault-login-wrapper:hover .clef-button.clef-edit:hover {
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-edit:hover {
   background-color: #19b008;
 }
-#clef-vault-login-wrapper.remove {
+#clef-waltz-login-wrapper.remove {
   -webkit-animation: none !important;
   -webkit-transition: opacity 1s, -webkit-transform 1s !important;
   opacity: 0 !important;
   -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
 }
-#clef-vault-login-wrapper.loading {
+#clef-waltz-login-wrapper.loading {
   -webkit-animation: spin-clef-logo 1s linear infinite;
 }
-#clef-vault-login-wrapper .clef-button {
+#clef-waltz-login-wrapper .waltz-button {
   height: 0px;
   width: 0px;
   border-radius: 25px;
@@ -135,10 +135,10 @@
   border: none;
   cursor: pointer;
 }
-#clef-vault-login-wrapper .clef-button.clef-dismiss {
+#clef-waltz-login-wrapper .waltz-button.waltz-dismiss {
   background-color: #db4c53;
 }
-#clef-vault-login-wrapper .clef-button.clef-edit {
+#clef-waltz-login-wrapper .waltz-button.waltz-edit {
   -webkit-transition-delay: .2s;
   background-color: #7fe26c;
 }

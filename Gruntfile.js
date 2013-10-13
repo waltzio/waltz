@@ -17,7 +17,7 @@ grunt.initConfig({
         style: 'expanded'
       },
       files: {                         // Dictionary of files
-        'css/clef.css': 'scss/clef.scss'
+        'css/waltz.css': 'scss/waltz.scss'
       }
     }
   }

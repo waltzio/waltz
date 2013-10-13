@@ -2,7 +2,7 @@
 @import "_animations";
 @import "_credentials";
 
-#clef-vault-login-wrapper {
+#clef-waltz-login-wrapper {
     background-repeat: no-repeat;
     width: 64px;
     height: 64px;
@@ -25,13 +25,13 @@
         -webkit-transform: rotateX(0deg) rotateZ(359deg);
         opacity: 1;
 
-        .clef-button {
+        .waltz-button {
             height: 15px;
             width: 15px;
             -webkit-transform: rotateZ(360deg);
             opacity: 1;
 
-            &.clef-dismiss {
+            &.waltz-dismiss {
                 left: -19px;
                 top: 15px;
 
@@ -39,7 +39,7 @@
                     background-color: $red;
                 }
             }
-            &.clef-edit {
+            &.waltz-edit {
                 left: -12px;
                 top: 34px;
 
@@ -59,7 +59,7 @@
         -webkit-animation: spin-clef-logo 1s linear infinite;
     }
 
-    .clef-button {
+    .waltz-button {
         height: 0px;
         width: 0px;
         border-radius: 25px;
@@ -77,11 +77,11 @@
         border: none;
         cursor: pointer;
 
-        &.clef-dismiss {
+        &.waltz-dismiss {
             background-color: $red-off;
         }
 
-        &.clef-edit {
+        &.waltz-edit {
             -webkit-transition-delay: .2s;
             background-color: $green-off;
         }
