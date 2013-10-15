@@ -35,6 +35,15 @@ Storage.prototype.storeCredentialsForDomain = function(domain, username, passwor
 	chrome.storage.local.set(creds, cb);
 }
 
+Storage.prototype.deleteCredentialsForDomain = function(domain, cb) {
+	if(!domain){
+		cb(false);
+		return;
+	}
+	chrome.storage.local.remove(domain);
+	cb(true);
+}
+
 Storage.prototype.getLogins = function(cb) {
 	var _this = this;
 	chrome.storage.local.get(this.LOGIN_KEY, function(data) {

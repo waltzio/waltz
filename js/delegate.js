@@ -34,6 +34,9 @@ function Delegate() {
 			case "saveCredentials":
 				return self.saveCredentials(request.domain, request.username, request.password, sendResponse);
 				break;
+			case "deleteCredentials":
+				return self.deleteCredentials(request.domain, sendResponse);
+				break;
 			case "getCredentials":
 				return self.getCredentials(request.domain, sendResponse);
 				break;
@@ -186,6 +189,11 @@ Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
 		});
 	});
 
+	return true;
+}
+
+Delegate.prototype.deleteCredentials = function(domain, cb) {
+	storage.deleteCredentialsForDomain(domain, cb);
 	return true;
 }
 
