@@ -49,7 +49,8 @@
 												+"<label for='password'>Password:</label> "
 												+"<input type='password' class='toggle password' value='"+response.output+"' />"
 												+"<button class='togglePass closed'></button>"
-												+"<button class='savePass styled'>Save</button>";
+												+"<button class='savePass styled'>Save</button>"
+												+"<button class='deleteAccount styled'>Delete</button>";
 
 							$(parent).append(decryptedHTML);
 
@@ -106,6 +107,16 @@
 				setTimeout(function() {
 					$(self).removeClass('success')
 				}, 1000);
+			});
+
+			$(document).on('click', '.deleteAccount', function() {
+				var self = this;
+
+				chrome.runtime.sendMessage({
+					type: "deleteCredentials",
+					domain: $(self).parent().data('domain')
+				});
+				$(self).parent().remove();
 			});
 
 			$("nav").find("li").click(function() {
