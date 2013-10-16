@@ -1,12 +1,9 @@
 @-webkit-keyframes spin-clef-logo {
   0% {
-    -webkit-transform: rotateZ(0deg);
-  }
+    -webkit-transform: rotateZ(0deg); }
 
   100% {
-    -webkit-transform: rotateZ(360deg);
-  }
-}
+    -webkit-transform: rotateZ(360deg); } }
 
 #waltz-credential-overlay {
   position: absolute;
@@ -27,13 +24,11 @@
   /* IE10+ */
   background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33000000', endColorstr='#b3000000',GradientType=1 );
-}
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33000000', endColorstr='#b3000000',GradientType=1 ); }
 
 #waltz-credential-focus {
   position: relative;
-  z-index: 9999;
-}
+  z-index: 9999; }
 
 #waltz-credential-message {
   background: #0d9ddb;
@@ -47,23 +42,19 @@
   font-weight: 500;
   width: 100%;
   height: 40px;
-  line-height: 40px;
-}
-#waltz-credential-message #waltz-credential-message-text {
-  display: inline-block;
-  width: 80%;
-}
-#waltz-credential-message #waltz-credential-next {
-  display: inline-block;
-  height: 100%;
-  width: 20%;
-  cursor: pointer;
-  background: #19b008;
-}
+  line-height: 40px; }
+  #waltz-credential-message #waltz-credential-message-text {
+    display: inline-block;
+    width: 80%; }
+  #waltz-credential-message #waltz-credential-next {
+    display: inline-block;
+    height: 100%;
+    width: 20%;
+    cursor: pointer;
+    background: #19b008; }
 
 .clear {
-  clear: both;
-}
+  clear: both; }
 
 #clef-waltz-login-wrapper {
   background-repeat: no-repeat;
@@ -80,65 +71,53 @@
   overflow: visible;
   padding: 20px;
   background-position: center;
-  z-index: 9999;
-}
-#clef-waltz-login-wrapper:hover {
-  -webkit-transition: -webkit-transform .5s;
-  -webkit-animation: none;
-  -webkit-transform: rotateX(0deg) rotateZ(359deg);
-  opacity: 1;
-}
-#clef-waltz-login-wrapper:hover .waltz-button {
-  height: 15px;
-  width: 15px;
-  -webkit-transform: rotateZ(360deg);
-  opacity: 1;
-}
-#clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss {
-  left: -19px;
-  top: 15px;
-}
-#clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss:hover {
-  background-color: #db070a;
-}
-#clef-waltz-login-wrapper:hover .waltz-button.waltz-edit {
-  left: -12px;
-  top: 34px;
-}
-#clef-waltz-login-wrapper:hover .waltz-button.waltz-edit:hover {
-  background-color: #19b008;
-}
-#clef-waltz-login-wrapper.remove {
-  -webkit-animation: none !important;
-  -webkit-transition: opacity 1s, -webkit-transform 1s !important;
-  opacity: 0 !important;
-  -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
-}
-#clef-waltz-login-wrapper.loading {
-  -webkit-animation: spin-clef-logo 1s linear infinite;
-}
-#clef-waltz-login-wrapper .waltz-button {
-  height: 0px;
-  width: 0px;
-  border-radius: 25px;
-  display: block;
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-position: 4px 4px;
-  opacity: 0;
-  -webkit-transform: rotateZ(0deg);
-  -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
-  -webkit-transition-delay: .1s;
-  position: relative;
-  top: 25px;
-  left: 25px;
-  border: none;
-  cursor: pointer;
-}
-#clef-waltz-login-wrapper .waltz-button.waltz-dismiss {
-  background-color: #db4c53;
-}
-#clef-waltz-login-wrapper .waltz-button.waltz-edit {
-  -webkit-transition-delay: .2s;
-  background-color: #7fe26c;
-}
+  z-index: 9999; }
+  #clef-waltz-login-wrapper:hover {
+    -webkit-transition: -webkit-transform .5s;
+    -webkit-animation: none;
+    -webkit-transform: rotateX(0deg) rotateZ(359deg);
+    opacity: 1; }
+    #clef-waltz-login-wrapper:hover .waltz-button {
+      height: 15px;
+      width: 15px;
+      -webkit-transform: rotateZ(360deg);
+      opacity: 1; }
+      #clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss {
+        left: -19px;
+        top: 15px; }
+        #clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss:hover {
+          background-color: #db070a; }
+      #clef-waltz-login-wrapper:hover .waltz-button.waltz-edit {
+        left: -12px;
+        top: 34px; }
+        #clef-waltz-login-wrapper:hover .waltz-button.waltz-edit:hover {
+          background-color: #19b008; }
+  #clef-waltz-login-wrapper.remove {
+    -webkit-animation: none !important;
+    -webkit-transition: opacity 1s, -webkit-transform 1s !important;
+    opacity: 0 !important;
+    -webkit-transform: rotateX(360deg) rotateZ(359deg) !important; }
+  #clef-waltz-login-wrapper.loading {
+    -webkit-animation: spin-clef-logo 1s linear infinite; }
+  #clef-waltz-login-wrapper .waltz-button {
+    height: 0px;
+    width: 0px;
+    border-radius: 25px;
+    display: block;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+    opacity: 0;
+    -webkit-transform: rotateZ(0deg);
+    -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
+    -webkit-transition-delay: .1s;
+    position: relative;
+    top: 25px;
+    left: 25px;
+    border: none;
+    cursor: pointer; }
+    #clef-waltz-login-wrapper .waltz-button.waltz-dismiss {
+      background-color: #db4c53; }
+    #clef-waltz-login-wrapper .waltz-button.waltz-edit {
+      -webkit-transition-delay: .2s;
+      background-color: #7fe26c; }
