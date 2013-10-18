@@ -408,8 +408,8 @@
 		var self = this;
 
 		//Grab image resource URLs from extensions API
-		var cSource = chrome.extension.getURL("/img/clef128.png");
-		var fSource = chrome.extension.getURL("/img/clef-full.png");
+		var wSource = chrome.extension.getURL("/img/waltz-128.png");
+		var fSource = chrome.extension.getURL("/img/waltz-full.png");
 		var pSource = chrome.extension.getURL("/img/pencil.png");
 		var xSource = chrome.extension.getURL("/img/x.png");
 
@@ -423,7 +423,7 @@
 
 		//Style the widget with the correct image resource
 		$(clefCircle).css({
-			"background-image": "url("+cSource+")"
+			"background-image": "url("+wSource+")"
 		}).append(waltzActions);
 
 		$(document).ready(this.loadIFrame.bind(this));

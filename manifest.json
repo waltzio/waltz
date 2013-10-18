@@ -33,8 +33,8 @@
   "options_page": "html/options.html",
   "homepage_url": "http://waltz.io",
   "web_accessible_resources": [
-    "img/clef128.png",
-    "img/clef-full.png",
+    "img/waltz-128.png",
+    "img/waltz-full.png",
     "img/pencil.png",
     "img/x.png"
   ]

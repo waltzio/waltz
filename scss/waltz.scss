@@ -11,9 +11,7 @@
     position: fixed;
     bottom: 25px;
     right: 25px;
-    -webkit-animation: spin-clef-logo 3s linear infinite;
     cursor: pointer;
-    -webkit-transform: rotateX(0deg) rotateZ(0deg);
     overflow: visible;
     padding: 20px;
     background-position: center;
@@ -21,7 +19,6 @@
 
     &:hover {
         -webkit-transition: -webkit-transform .5s;
-        -webkit-animation: none;
         -webkit-transform: rotateX(0deg) rotateZ(359deg);
         opacity: 1;
 
@@ -50,7 +47,6 @@
         }
     }
     &.remove {
-        -webkit-animation: none !important;
         -webkit-transition: opacity 1s, -webkit-transform 1s !important;
         opacity: 0 !important;
         -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
