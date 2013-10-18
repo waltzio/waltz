@@ -53,7 +53,7 @@
     cursor: pointer;
     background: #19b008; }
 
-.clear {
+.waltz-clear {
   clear: both; }
 
 #clef-waltz-login-wrapper {
@@ -92,12 +92,12 @@
         top: 34px; }
         #clef-waltz-login-wrapper:hover .waltz-button.waltz-edit:hover {
           background-color: #19b008; }
-  #clef-waltz-login-wrapper.remove {
+  #clef-waltz-login-wrapper.waltz-remove {
     -webkit-animation: none !important;
     -webkit-transition: opacity 1s, -webkit-transform 1s !important;
     opacity: 0 !important;
     -webkit-transform: rotateX(360deg) rotateZ(359deg) !important; }
-  #clef-waltz-login-wrapper.loading {
+  #clef-waltz-login-wrapper.waltz-loading {
     -webkit-animation: spin-clef-logo 1s linear infinite; }
   #clef-waltz-login-wrapper .waltz-button {
     height: 0px;
