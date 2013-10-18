@@ -335,71 +335,48 @@
 
 	Waltz.prototype.requestCredentials = function(form) {
 		var _this = this,
-			FOCUS_ID = 'waltz-credential-focus',
-			OVERLAY_ID = 'waltz-credential-overlay',
-			MESSAGE_ID = 'waltz-credential-message',
-			MESSAGE_TEXT_ID = 'waltz-credential-message-text',
-			NEXT_ID = 'waltz-credential-next';
+			OVERLAY_ID = "waltz-credential-overlay",
+			USERNAME_ID = "waltz-credential-username",
+			PASSWORD_ID = "waltz-credential-password",
+			SUBMIT_ID = "waltz-credential-submit",
+			FORM_ID = "waltz-credential-form",
+			SLIDE_IN_CLASS = "slide-in"
 
 		// set up templates for tutorial
-		var $overlay = $("<div id='" + OVERLAY_ID + "''></div>"),
-			$message = $("<div id='" + MESSAGE_ID + "'></div>"),
-			$messageText = $("<div id='" + MESSAGE_TEXT_ID + "'>It looks like you haven't used this site with Waltz yet, please enter your username</div>"),
-			$nextButton = $("<div id='" + NEXT_ID + "'>Next</div>"),
+		var $overlay = $("<div id='" + OVERLAY_ID + "''></div>")
+			$form = $("<div id='"+ FORM_ID + "'></div>")
+			$usernameField = $("<input type='text' placeholder='Username' id='" + USERNAME_ID + "' />");
+			$passwordField = $("<input type='password' placeholder='Password' id='" + PASSWORD_ID + "' />");
+			$submitButton = $("<input type='submit' value='Submit' id='" + SUBMIT_ID + "' />");
 			$body = $('body');
 
 		// add tutorial templates
 		$body.append($overlay);
-		$body.prepend($message);
-		$message.append($messageText);
-		$message.append($nextButton);
+		$form.append($usernameField).append($passwordField).append($submitButton);
+		$body.append($form)
 
-		// focus on the username field
-		this.loginForm.usernameField.attr('id', FOCUS_ID);
-		this.loginForm.usernameField.focus();
+		//Put this on a timeout, because we need the class to be added after the initial draw
+		setTimeout(function() {
+			$.merge($overlay, $form).addClass(SLIDE_IN_CLASS);
+		}, 0);
 
-		// add handlers to save credentials if form is submitted
-		// outside of tutorial walkthrough
-		if (this.loginForm.container.is("form")) {
-			// if it's a form, bind to submit
-			this.loginForm.container.submit(submitForm);
-		}
-		// form or not a form, bind submit to the ENTER key
-		$.merge(this.loginForm.usernameField, this.loginForm.passwordField)
-		.on(
-			"keydown", 
-			function(e) {
-				// check if enter key
-				if (e.which == 13) {
-					submitForm(e);
-				}
+		$usernameField.focus();
+
+		$.merge($usernameField, $passwordField).keyup(function(e) {
+			if(e.which === 13) {
+				submitForm(e);
 			}
-		);
-
-		// bind moving to next field to actual Next button click
-		// and tab keydown
-		$nextButton.on('click', jumpToNextField);
-		this.loginForm.usernameField.on('keydown', function(e) {
-			// check if tab key
-			if(e.which == 9) {
-	            jumpToNextField();
-	            e.preventDefault();
-	        }
 		});
 
-		// right now, this is only written for jumping from username to
-		// password
-		//
-		// TODO: extend so we could use it for some sort of registration setup
-		function jumpToNextField() {
-			_this.loginForm.usernameField.removeAttr('id');
-			_this.loginForm.passwordField.attr('id', FOCUS_ID);
-			_this.loginForm.passwordField.focus();
-			$messageText.text("Now, your password (the last time, we promise)!");
-			$nextButton.text("Submit");
-			$nextButton.off('click');
-			$nextButton.click(submitForm);
-		}
+		$submitButton.click(submitForm);
+
+		$overlay.click(function() {
+			$.merge($overlay, $form).removeClass(SLIDE_IN_CLASS);
+			setTimeout(function() {
+				$.merge($overlay, $form).remove();
+			}, 500);
+		});
+
 
 		// capture the form submit, save our credentials, and then continue
 		// the submit
@@ -408,13 +385,13 @@
 
 			// remove handlers that bind this event, so we don't go
 			// into an infinite loop
-			_this.loginForm.container.off('submit');
-			$.merge(_this.loginForm.usernameField, _this.loginForm.passwordField).off("keydown");
+			$submitButton.off('click');
+			$.merge($usernameField, $passwordField).off("keyup");
 
 			// get those credentials
 			var credentials = {
-				password: _this.loginForm.passwordField.val(),
-				username: _this.loginForm.usernameField.val()
+				password: $passwordField.val(),
+				username: $usernameField.val()
 			}
 
 			// store the credentials in the DB
