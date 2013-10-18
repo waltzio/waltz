@@ -50,7 +50,7 @@
 												+"<input type='password' class='toggle password' value='"+response.output+"' />"
 												+"<button class='togglePass closed'></button>"
 												+"<button class='savePass styled'>Save</button>"
-												+"<button class='deleteAccount styled'>Delete</button>";
+												+"<button class='deleteAccount styled'>Forget</button>";
 
 							$(parent).append(decryptedHTML);
 
