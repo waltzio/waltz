@@ -49,13 +49,13 @@
             }
         }
     }
-    &.remove {
+    &.waltz-remove {
         -webkit-animation: none !important;
         -webkit-transition: opacity 1s, -webkit-transform 1s !important;
         opacity: 0 !important;
         -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
     }
-    &.loading {
+    &.waltz-loading {
         -webkit-animation: spin-clef-logo 1s linear infinite;
     }
 
