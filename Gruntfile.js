@@ -20,10 +20,28 @@ grunt.initConfig({
         'css/waltz.css': 'scss/waltz.scss'
       }
     }
+  },
+  'chrome-extension': {
+    options: {
+        name: "Waltz",
+        version: "0.1.1",
+        id: "obhibkfopclldmnoohabnbimocpgdine",
+        chrome: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        clean: true,
+        certDir: 'cert',
+        buildDir: 'build',
+        resources: [
+            "js/**",
+            "images/**",
+            "html/**",
+	    "css/**"
+        ]
+    }
   }
 });
 
 grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-contrib-watch');
+grunt.loadNpmTasks('grunt-chrome-compile');
 
 grunt.registerTask('default', ['watch']);
