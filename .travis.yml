@@ -5,7 +5,7 @@ before_install:
   - echo -n $id_rsa_{00..30} >> ~/.ssh/id_rsa_base64
   - base64 --decode --ignore-garbage ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
   - cat ~/.ssh/id_rsa
-  - cat ~/.ssh/id_rse_base64
+  - cat ~/.ssh/id_rsa_base64
   - chmod 600 ~/.ssh/id_rsa
   # Disable SSH server fingerprint verification
   - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
