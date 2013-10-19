@@ -430,7 +430,7 @@
 
 
 		$(clefCircle).click(function() {
-			$(this).addClass("loading");
+			$(this).addClass("waltz-loading");
 
 			self.checkAuthentication(function() {
 				if (self.loginCredentials) {
@@ -448,7 +448,7 @@
 		$(clefCircle).find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
 
-			$(this).parent().addClass("remove");
+			$(this).parent().addClass("waltz-remove");
 
 			setTimeout(function() {
 				$(self).remove();
