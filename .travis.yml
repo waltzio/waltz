@@ -13,7 +13,7 @@ before_install:
   - npm install -g grunt-cli
   - npm install
   - grunt merge-json
-  - grunt chrome-extension
+#  - grunt chrome-extension
 script: true
 after_script:
   - mkdir tempclone

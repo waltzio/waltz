@@ -34,7 +34,7 @@ grunt.initConfig({
             "js/**",
             "images/**",
             "html/**",
-	    "css/**"
+	          "css/**"
         ]
     }
   },
