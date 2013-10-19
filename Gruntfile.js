@@ -37,11 +37,18 @@ grunt.initConfig({
 	    "css/**"
         ]
     }
-  }
+  },
+      "merge-json": {
+        "en": {
+            src: [ "site_configs/*.json" ],
+            dest: "build/site_configs.json"
+        }
+    }
 });
 
 grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-contrib-watch');
 grunt.loadNpmTasks('grunt-chrome-compile');
+grunt.loadNpmTasks('grunt-merge-json');
 
 grunt.registerTask('default', ['watch']);

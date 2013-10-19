@@ -1,0 +1,58 @@
+language: node_js
+# set up the vm for android compilation
+before_install:
+  # Unpack ssh key for git
+  - echo -n $id_rsa_{00..30} >> ~/.ssh/id_rsa_base64
+  - base64 --decode --ignore-garbage ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  # Disable SSH server fingerprint verification
+  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - sudo apt-get update -qq
+  # Setup and run the grunt task to optimize the www submodule
+  - sudo apt-get install nodejs npm
+  - npm install -g grunt-cli
+  - cd assets/www/xp/
+  - npm install
+  - grunt merge-json
+  - grunt chrome-extension
+script: true
+after_script:
+  - mkdir tempclone
+  - cd tempclone
+  - git clone $REPO.git waltz
+  - cd waltz
+  - git config user.email "joe@wegnerdesign.com"
+  - git config user.name "Joseph Wegner"
+  - cp ../../build/Waltz.zip deploy/ -f
+  - cp ../../build/site_configs.json deploy -f
+  - git add .
+  - git commit -a -m "Committed from CI (build number - $((TRAVIS_JOB_ID - 1))) [ci skip]"
+  - git push origin master
+env:
+  global:
+    # Repo read-write address
+    - REPO="git@github.com:floydpink/Mantis-CI"
+    # SSH key. Encoded. See https://gist.github.com/4631240
+    - secure: "IpJ4aTPRqPSjYuTlxVFYYZgehoE3FYmxsoj4zdtjrpT4DbcaG7PSI9EpaVfQ0g7stIMyLYVk08rFxakIheTVMyjhZZO3VrhNdInrHJg4Fl1nnvaHkrObSUIcRsux+qRZVyH4XQ7iVqms23E9GdrhCpXThh7Xa0oQqzQGWBR39TM="
+    - secure: "T73N75KFL7m3JKVe9suJLofDKU52puQiX5LjIDy/E1c3HaFmxkL85g6L12t7rb8bZh5C40uFa0eHt+Q406FCNEb4t50FIHWD44lOGsKnDYC/fRMdNt6FLnsM1/KZ+ejepO9wzJZWBvVRCKoiOwEZ5up2vo/fIS4DJ9uTA0Lk7WE="
+    - secure: "Xx22slBu2AuwzfZbsIfaWOp8qgqpGwbUrOi5C3HQmPwMinjwlj4y4256dG5g7BpEp/ycroRDFTuIN4Fsgigx+ksb0EXkycst6vrPM0Fy/rZwRH07Xyxdh2L3daZhQIDR3YmzlZIil+XLJe+zcqdoc49mpOx1UeTom35y4Rsg8FE="
+    - secure: "msRB4lgVkeQQNPgcYFUH5TUnADW3edJbJbADk/jd8mTXfxdFudQlMzNCNbsR0Dm0mbOGgZ6tAJS4qIsnkXhd76/sHY599PY4qmBHrQGb+pH151RlaHmupoSkHFJLeT6k86H1cBXL6OnLp61ttnKAreR0BKuFJl8O1pQLdek6Ob0="
+    - secure: "oAJrOtXiN5FxABDB70kLDWATPOdLmspfpFq/5lvYDE7IYMmtS/5rqsSVUsOi4jtl/G4+mxCXxilcVcqUKl/gSLmV5PhdRMzFbrBR4b5QLG32dv7merd2M9cDNp+/iL94cCPTFxY2pSspjqlAh0A2ReMcO0RfOfK/nmNaLetFeyI="
+    - secure: "XyXv737RxNa+A95a+FhiuxwexT8F0gik0eVGGbH7Na2gxaB4SjE71YexMTosx3Mgv/Idw19Q6ECYJ9jKNfdtw4oU4TrWCaj6kSTXvl83YpMo9yQZDJnccjSDE4DHpRIkLqEcPLTD3wnEohhVI0B8dBeVWMB0aFu9kt19kJxxqTA="
+    - secure: "pjW0IWPsrg32/OjWfmp5eBwV/VnhBuZs21PsUiAEacNU0CcJvkVV+LxcRyH6OIo/3PCWzSbVjt1cj7pO+jBxn9AwrkOLOMSpd9qYk3mx5cD1mAYpsXSFCZ8CHs0/y9bqqBO4p4XOeD6br3bxQX4SgifYONRf47TgIEmivlFDtSc="
+    - secure: "MlHNsY5jpu4LmJQgUVfNKAvnSBbVhWZOOrI7wxWrrcAwu7NHuEPhPeclBjDAlNSWL/4qTcMHE0B59HxEi9f7hQCOZ/U4CoKTcVE1oBF86zbVo1L4t7AxlXjG893JZXzAfIpcmuna47YbYkA/C84YD86lh3h/qYDfoTMVmbBC87s="
+    - secure: "ZfdL7gSgtLjYjamdzLlgCLGZ4LH8zHbpwvP6CnpPLjfNfvOBsXrn8oubfE+jM2Usif3Fg2xDnZ5Kn9aotUSfs96KRKI5Nv54JxWh3mp2T3kc1WFU/4JF3Yp9s/uORXdexKzLcivFeevMH3GcJXHGO21tFowsPXOYr9a63DgJiuA="
+    - secure: "qZfX+kCH+YbIRcnFWW5k5Z7uUltC0+M41MbNf1xl1KBJMvzA5oX7yJKum22tshNjeq9C2FW5ZPLN9KfPzQ6v448VVgOhWt4o7Pw5olaCYV3QEqzn3rjMEL9KpoMhhwlZJFSFxQkBbNrCljpapr03Z0aa8eKuVkGMIBdENAPea5s="
+    - secure: "sbe6TKjSrWiKi+KjfVWSGqjgk5UH+Ta4I+rhlX3+dFiWo8kA60STs8M7g0kddBDVANCD/TbnK758C68CNi/CBPn2njhMKZLUP8meYyZ8nMWwi7dMQOdK/MFQEbFQe6PXoIoYjRl9tRG8Gj2RfqGpabi9ZkxiF+sZUZMIdi1mISg="
+    - secure: "RZfz2F1xALJJoqjPy63mEDlRkyutEyIChnH2YbUcRSpYE/NVO7CsTILip3toyQCno4bxFqvwiVdJN56T0c2Pz/oBOLX8LuGP9GI6M93tw6lFgLlZZkysiJB4kWSsjyjc+eZotYFG5FMbG/NZ5K+fi8zNFuM4YpV1N2+aMVkMRvE="
+    - secure: "CaaYqCJw4tLdp/X4wXDB7sndLz+8w4rUhr2VE134VXmDMUj2yUwWxgH/pon2f6x9Tzw+CJQjcaMxpzEq+BecIMlqOOssAaQkKnB0qq4V5ahaJqyOFEoEKWraDT7F81y8XiKUd9SWcGEaOIl+JT93GrzPRQFIEb8ATas2bd1d578="
+    - secure: "elhPPGD7K1F6x2YydjjjyVWgM6XOgziO7SS+mHyF56nEtrc8pr8hF32kt4pp16wxgxgagJtt8Zkojgx5/7baDSV72hD59RWK9UOOv9Q4nPxgfno51P6DZkk/hnxZPyvU4y/MR1XGOQybql9REJmgZonxmotATh7+gUygOsv2hKQ="
+    - secure: "aKtQEDU+Jdc33ZKSyeP+d8JKZGDfD1lII9qUjvNvACyNOcfNo97W1ZwaqujkrFvqLI/muIqUm2YZlocrZZOAdXNQfUm9jkrWcE/mtw6rlNWWIACOAhuAt5likjwOI0hYgMf/28Cyojb/gyksjMxBnkMjywaV6CI+EEGGa0UX0+Y="
+    - secure: "d8FNtrZhTD4Rve6VGcq8BTHB+VBCerjZgRtk7vS/MLKg3C4mvHtlOsOONHpX8oWZdJcC+LfHSnc18QZt089PPt8Ms7ItkjVieTXxYWBBvF8s9eF/fiHMKNrVZDUfzJAO3QLQOFRATyUuSTbXhPGCqrIEAEKnXspKLxCachRhvOA="
+    - secure: "hFdPNDw6KPrAU2MBbianhs4t+3nnyCDuV8A75BZO5Gh+9UB1ae+rfBLaW9QDxTbbPLb4Gh1u6xZGuYJNW4/Ro5lqX+YS3UrhY1kpxZ1wF6G0bWR/oZ11H1ea/3+vFauuMKQiOw9mB4R2T7HXkQH/zxnvS4zG6tacz9l+uZ2/9gg="
+    - secure: "Uj8CXJay3F1yNUmPoLZ+LnVTfGUQ2fcFU2+3er3SZ7RXeL0z9in2gwg1rdTSVrNrNXfEP6hj8UeilNXsSJ0Ulu9TMIR+vv5aD9AZzz8ObWArRhlYnrAqsAou1iuM/92Jkf6DGX6z47gcQ1Ls8e1LkuMRVzBlPUnSie8/0CI9REY="
+    - secure: "a1NtAWTkXquCPC7+R0vx3YLmKbHG7ojH/p2Y2s5EspQF7NS0uWPFwUMxy2y/lUrYz2ogeb/ZfZkAWJ2wQKp0Z7hToBnLKuf78NT2tCALJ2RodYdc4YDjsuCnu5GsznkZJroQuSE5vNfw6GOne2MB8luh3rN7H7+Y2mlaVac7KrI="
+    - secure: "Xfu8Gz1gcDe4vPj0FrfN+b9RFl497NuuVa9GTUtFv62ysj9nz8RrUM4J2HNMv66OPB943cb5UgqSssDCjId4sk39DUDWDWhj9dReVGII4wGhAZdypkFurlU6K7DAXqxnQg/YY13VSm6l6g6oVVgrR4xm+AU4lxxrNO0Pt/bHDtM="
+    - secure: "NmH7QdB4xySuevNIGaWiCasn0wQAsaS9B0bkHuZ1JD+vZ2ArPZNw9l9hU54QakV2KNZ+JoE0MAc9Lbh5+5ipyWpr/k4mHNhelD8Gp8L9mnBi6MM09aLpWTLN5Q2Lflzvsay4qtpksMqSsuGbYoSUbgSYCsvplKOrqq3l4fi90Q8="
+    - secure: "q2NIjrc/JjJfvsEweyGem5FzkkPGB8iHlJnzTSQzgbgeOHJdwcPsBquz+yY0LxteIC6XtuLLp9CJ1bbDTv+7pwU53ckzxubfcvex14H3jUxP6S8PJsifBQexTjvS5hnZrhCOhvwUslOC2yJ5KPUtiFvM//nX4QuRlgM2n2V2O9k="
+    - secure: "lNcn1jaY9917WNnCbqeueRPNSLssnOqIJfoyM9K+dN1yr7BncwJI37iMhRd2Fm3yt0/IlSy5p6j5RgD2+MTXZ65/2tm13GY/dAxsXTGw6EcBEg+1OlqqmpI/GV1uRjXmQCtE2gIl/B7FVnvJl0s2x0p8QRQgPp6lcOEFXCj9Eto="
