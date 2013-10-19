@@ -57,3 +57,6 @@ env:
     - secure: "NmH7QdB4xySuevNIGaWiCasn0wQAsaS9B0bkHuZ1JD+vZ2ArPZNw9l9hU54QakV2KNZ+JoE0MAc9Lbh5+5ipyWpr/k4mHNhelD8Gp8L9mnBi6MM09aLpWTLN5Q2Lflzvsay4qtpksMqSsuGbYoSUbgSYCsvplKOrqq3l4fi90Q8="
     - secure: "q2NIjrc/JjJfvsEweyGem5FzkkPGB8iHlJnzTSQzgbgeOHJdwcPsBquz+yY0LxteIC6XtuLLp9CJ1bbDTv+7pwU53ckzxubfcvex14H3jUxP6S8PJsifBQexTjvS5hnZrhCOhvwUslOC2yJ5KPUtiFvM//nX4QuRlgM2n2V2O9k="
     - secure: "lNcn1jaY9917WNnCbqeueRPNSLssnOqIJfoyM9K+dN1yr7BncwJI37iMhRd2Fm3yt0/IlSy5p6j5RgD2+MTXZ65/2tm13GY/dAxsXTGw6EcBEg+1OlqqmpI/GV1uRjXmQCtE2gIl/B7FVnvJl0s2x0p8QRQgPp6lcOEFXCj9Eto="
+branches:
+  only:
+    - travis-build
