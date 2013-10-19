@@ -11,8 +11,6 @@ before_install:
   # Setup and run the grunt task to optimize the www submodule
   - sudo apt-get install nodejs npm
   - npm install -g grunt-cli
-  - cd assets/www/xp/
-  - npm install
   - grunt merge-json
   - grunt chrome-extension
 script: true
