@@ -23,8 +23,9 @@ after_script:
   - git config user.email "joe@wegnerdesign.com"
   - git config user.name "Joseph Wegner"
   - git checkout travis-build
-  - cp ../../build/Waltz.zip deploy/ -f
-  - cp ../../build/site_configs.json deploy -f
+#  - cp ../../build/Waltz.zip deploy/ -f
+  - ls ../../build
+  - cp ../../build/site_configs.json deploy/site_configs.json -f
   - git add .
   - git commit -a -m "Committed from CI (build number - $((TRAVIS_JOB_ID - 1))) [ci skip]"
   - git push origin travis-build
