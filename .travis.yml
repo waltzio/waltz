@@ -30,7 +30,7 @@ after_script:
 env:
   global:
     # Repo read-write address
-    - REPO="git@github.com:floydpink/Mantis-CI"
+    - REPO="git@github.com:waltzio/waltz.git"
     # SSH key. Encoded. See https://gist.github.com/4631240
     - secure: "IpJ4aTPRqPSjYuTlxVFYYZgehoE3FYmxsoj4zdtjrpT4DbcaG7PSI9EpaVfQ0g7stIMyLYVk08rFxakIheTVMyjhZZO3VrhNdInrHJg4Fl1nnvaHkrObSUIcRsux+qRZVyH4XQ7iVqms23E9GdrhCpXThh7Xa0oQqzQGWBR39TM="
     - secure: "T73N75KFL7m3JKVe9suJLofDKU52puQiX5LjIDy/E1c3HaFmxkL85g6L12t7rb8bZh5C40uFa0eHt+Q406FCNEb4t50FIHWD44lOGsKnDYC/fRMdNt6FLnsM1/KZ+ejepO9wzJZWBvVRCKoiOwEZ5up2vo/fIS4DJ9uTA0Lk7WE="
