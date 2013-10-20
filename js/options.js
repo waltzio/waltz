@@ -12,12 +12,15 @@
 			for(domain in sites) {
 				var site = sites[domain];
 
-				var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-domain='"+domain+"'>"
-						   +"	<h3>"+domain+"</h3>"
-						   +"	<button class='decrypt styled'>Decrypt</button>"
-						   +"	</li>"
+				if(domain != "options" && domain != "waltz_logins"){ //Options and Waltz_logins don't have username/password pairs
 
-				$(".sites-list").find("ul").append(html);
+					var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-domain='"+domain+"'>"
+							   +"	<h3>"+domain+"</h3>"
+							   +"	<button class='decrypt styled'>Decrypt</button>"
+							   +"	</li>"
+
+					$(".sites-list").find("ul").append(html);
+				}
 			}
 
 			$(".sites-list").find(".decrypt").click(function() {
