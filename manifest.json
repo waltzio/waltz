@@ -7,15 +7,15 @@
     "scripts": [
       "/js/vendor/rsvp.js",
       "/js/vendor/pubnub.js",
-      "/js/crypto.js", 
-      "/js/storage.js",
+      "/js/background/crypto.js", 
+      "/js/background/storage.js",
       "/js/vendor/aes.js",
-      "/js/delegate.js"
+      "/js/background/delegate.js"
     ]
   },
   "content_scripts": [{
     "matches": ["*://*/*"],
-    "js": ["js/vendor/jquery.min.js", "/js/waltz.js"],
+    "js": ["js/vendor/jquery.min.js", "/js/client/waltz.js"],
     "css": ["/css/waltz.css"]
   }],
   "permissions": [
