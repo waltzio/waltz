@@ -5,7 +5,7 @@
   "description": "Forget About Your Accounts",
   "background": {
     "scripts": [
-      "/js/vendor/rsvp.js",
+      "js/vendor/jquery.min.js",
       "/js/vendor/pubnub.js",
       "/js/background/crypto.js", 
       "/js/background/storage.js",

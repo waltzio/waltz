@@ -108,12 +108,11 @@ Delegate.prototype.logout = function() {
 			var url = 'https://' + domain;
 
 			if (_this.logout_map[domain]) {
-				promise = RSVP.Promise(function(resolve, reject) {
-					chrome.cookies.remove({
-						url: url,
-						name: _this.logout_map[domain]
-					}, function() { resolve(); })
-				});
+				var promise = $.Deferred();
+				chrome.cookies.remove({
+					url: url,
+					name: _this.logout_map[domain]
+				}, function() { promise.resolve(); })
 				sitesCompleted.push(promise);
 			} else {
 				// if we haven't manually set a user cookie name,
@@ -122,21 +121,22 @@ Delegate.prototype.logout = function() {
 					url: url
 				}, function(cookies) {
 
-					for (var i = 0; i < cookies.length; i++) {
-						var cookie = cookies[i];
-						var promise = RSVP.Promise(function(resolve, reject) {
-							chrome.cookies.remove({
-								url: url,
-								name: cookie.name
-							}, function() { resolve(); });
-						});
+					$.each(cookies, function(i, cookie) {
+						var promise = $.Deferred();
+
+						chrome.cookies.remove({
+							url: url,
+							name: cookie.name
+						}, function() { promise.resolve(); });
+
 						sitesCompleted.push(promise);
-					}
+					});
+
 				})
 			}
 		}
 
-		RSVP.all(sitesCompleted).then(function() {
+		$.when(sitesCompleted).then(function() {
 			for (domain in data) {
 				chrome.tabs.query(
 					{ url: '*://' + domain + '/*'}, 
