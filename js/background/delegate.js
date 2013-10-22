@@ -160,7 +160,6 @@ Delegate.prototype.logout = function() {
 			_this.pubnubUnsubscribe(_this.user);
 			_this.user = false;
 			_this.logged_in = false;
-			_
 		});
 	});
 }
