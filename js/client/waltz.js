@@ -152,7 +152,8 @@
 	//Fills the login form and submits it
 	Waltz.prototype.submitLoginForm = function(data) {
 
-		var siteConfig = this.options.site.config;
+		var siteConfig = this.options.site.config,
+			_this = this;
 
 		var form = $('<form />')
 			.hide()
@@ -174,6 +175,15 @@
 		        .val( data.username )
 		)
 
+		if (siteConfig.login.redirectField) {
+			form.append(
+		    	$('<input />')
+			        .attr( "type", "hidden" )
+			        .attr({ "name" : siteConfig.login.redirectField })
+			        .val( window.location.href )
+			)
+		}
+
 		if (siteConfig.login.otherFields) {
 			$.get(siteConfig.login.url, function(data) {
 				var $data = $(data);
@@ -188,7 +198,6 @@
 			submitForm();
 		}
 
-		var _this = this;
 		function submitForm() {
 			chrome.runtime.sendMessage({
 	            method: "login",
