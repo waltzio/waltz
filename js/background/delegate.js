@@ -6,7 +6,7 @@
  *
 ********************/
 
-Delegate.prototype.DEBUG = true;
+Delegate.prototype.DEBUG = false;
 
 Delegate.prototype.options = {};
 
