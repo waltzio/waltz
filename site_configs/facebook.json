@@ -1,12 +1,10 @@
 {
     "*://*.facebook.com/*": {
         "logout": {
-            "cookies": [
-                {
-                    "url": "https://www.facebook.com",
-                    "name": "c_user"
+            "cookies": {
+                    "domain": "facebook.com",
+                    "names": ["c_user"]
                 }
-            ]
         },
         "login": {
             "url": "https://www.facebook.com/login.php?login_attempt=1",

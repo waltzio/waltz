@@ -128,21 +128,33 @@ Delegate.prototype.logout = function() {
 
 	storage.getLogins(function(data) {
 		var sitesCompleted = [],
-			promise;
+			promise,
+			siteConfig,
+			i;
 
 		for (domain in data) {
-			var siteConfig = _this.siteConfigs[domain];
-
-			var promise = $.Deferred();
+			siteConfig = _this.siteConfigs[domain];
+			promise = $.Deferred();
 
 			(function() {
-				// this is ugly
-				var p = promise;
+				var p = promise
 
-				chrome.cookies.remove({
-					url: siteConfig.logout.cookies[0].url,
-					name: siteConfig.logout.cookies[0].name
-				}, function() { p.resolve(); })
+				chrome.cookies.getAll(
+					{ domain: siteConfig.logout.cookies.domain },
+					function(cookies) {
+						var cookie;
+						for (i = 0; i < cookies.length; i++) {
+							cookie = cookies[i];
+							if (siteConfig.logout.cookies.names.indexOf(cookie.name) != -1) {
+								chrome.cookies.remove({
+									url: extrapolateUrlFromCookie(cookie),
+									name: cookie.name
+								}, function() {});
+							}
+						}
+						promise.resolve();
+					}
+				);
 			})();
 
 			sitesCompleted.push(promise);
@@ -320,4 +332,12 @@ function parse_match_pattern(input) {
     match_pattern += input.split('*').map(regEscape).join('.*');
     match_pattern += '$)';
     return match_pattern;
+}
+
+function extrapolateUrlFromCookie(cookie) {
+    var prefix = cookie.secure ? "https://" : "http://";
+    if (cookie.domain.charAt(0) == ".")
+        prefix += "www";
+
+    return prefix + cookie.domain + cookie.path;
 }

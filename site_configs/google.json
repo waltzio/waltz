@@ -1,12 +1,10 @@
 {
     "*://*.google.com/*": {
         "logout": {
-            "cookies": [
-                {
-                    "url": "https://www.facebook.com",
-                    "name": "c_user"
-                }
-            ]
+            "cookies": {
+                "domain": "google.com",
+                "names": ["SID", "GX"]
+            }
         },
         "login": {
             "url": "https://accounts.google.com/ServiceLoginAuth",
