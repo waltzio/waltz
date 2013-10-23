@@ -349,7 +349,7 @@
 			});
 		});
 
-		$(clefCircle).find(".waaltz-edit").click(function(e) {
+		$(clefCircle).find(".waltz-edit").click(function(e) {
 			e.stopPropagation();
 
 			self.checkAuthentication(function() {
