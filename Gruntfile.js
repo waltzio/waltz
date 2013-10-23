@@ -9,6 +9,13 @@ grunt.initConfig({
       options: {
         debounceDelay: 500
       }
+    },
+    'merge-json': {
+      files: ['site_configs/*.json'],
+      tasks: ['merge-json'],
+      options: {
+        debounceDelay: 500
+      }
     }
   },
   sass: {                              // Task

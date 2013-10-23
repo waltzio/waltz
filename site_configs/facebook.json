@@ -1,0 +1,14 @@
+{
+    "*://*.facebook.com/*": {
+        "logout": {
+            "cookies": ["c_user"]
+        },
+        "login": {
+            "url": "https://www.facebook.com/login.php?login_attempt=1",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "pass",
+            "check": "input[type='submit'][value='Log Out']"
+        }
+    }
+}
