@@ -152,32 +152,51 @@
 	//Fills the login form and submits it
 	Waltz.prototype.submitLoginForm = function(data) {
 
+		var siteConfig = this.options.site.config;
+
 		var form = $('<form />')
 			.hide()
-			.attr({ method : this.options.site.config.login.method })
-			.attr({ action : this.options.site.config.login.url });
+			.attr({ method : siteConfig.login.method })
+			.attr({ action : siteConfig.login.url });
 
 
 	    form.append(
 	     	$('<input />')
 		        .attr( "type","hidden" )
-		        .attr({ "name" : this.options.site.config.login.passwordField })
+		        .attr({ "name" : siteConfig.login.passwordField })
 		        .val( data.password )
 	    );
 
 	    form.append(
 	    	$('<input />')
 		        .attr( "type","hidden" )
-		        .attr({ "name" : this.options.site.config.login.usernameField })
+		        .attr({ "name" : siteConfig.login.usernameField })
 		        .val( data.username )
 		)
 
-		chrome.runtime.sendMessage({
-            method: "login",
-            domain: this.options.site.domain
-        }, function() {});
+		if (siteConfig.login.otherFields) {
+			$.get(siteConfig.login.url, function(data) {
+				var $data = $(data);
 
-		form.append('<input type="submit" />').appendTo($("body")).submit();
+				for (var i = 0; i < siteConfig.login.otherFields.length; i++) {
+					form.append($data.find('input[name="' + siteConfig.login.otherFields[i] + '"]').clone())
+				}
+				
+				submitForm();
+			});
+		} else {
+			submitForm();
+		}
+
+		var _this = this;
+		function submitForm() {
+			chrome.runtime.sendMessage({
+	            method: "login",
+	            domain: _this.options.site.domain
+	        }, function() {});
+
+			form.append('<input type="submit" />').appendTo($("body")).submit();
+		}
 	}
 
 	Waltz.prototype.checkAuthentication = function(cb) {

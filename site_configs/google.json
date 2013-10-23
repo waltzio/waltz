@@ -1,5 +1,19 @@
 {
-	"*://*.google.com/*": {
-        "cookies": ["auth"]
-	}
+    "*://*.google.com/*": {
+        "logout": {
+            "cookies": [
+                {
+                    "url": "https://www.facebook.com",
+                    "name": "c_user"
+                }
+            ]
+        },
+        "login": {
+            "url": "https://accounts.google.com/ServiceLoginAuth",
+            "method": "POST",
+            "usernameField": "Email",
+            "passwordField": "Passwd",
+            "otherFields": ["GALX"]
+        }
+    }
 }
