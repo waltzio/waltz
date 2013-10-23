@@ -1,0 +1,86 @@
+{
+	"*://*.facebook.com/*": {
+		"logout": {
+			"cookies": [
+				"c_user"
+			]
+		},
+		"login": {
+			"url": "https://www.facebook.com/login.php?login_attempt=1",
+			"method": "POST",
+			"usernameField": "email",
+			"passwordField": "pass",
+			"check": "input[type='submit'][value='Log Out']"
+		}
+	},
+	"*://*.google.com/*": {
+		"logout": {
+			"cookies": [
+				"SID",
+				"GX"
+			]
+		},
+		"login": {
+			"url": "https://accounts.google.com/ServiceLoginAuth",
+			"method": "POST",
+			"usernameField": "Email",
+			"passwordField": "Passwd",
+			"redirectField": "continue",
+			"other": {
+				"url": "https://accounts.google.com/ServiceLoginAuth",
+				"fields": [
+					"GALX"
+				]
+			},
+			"check": "a#gb_71"
+		}
+	},
+	"*://news.ycombinator.com/*": {
+		"logout": {
+			"cookies": [
+				"user"
+			]
+		},
+		"login": {
+			"url": "https://news.ycombinator.com/y",
+			"method": "POST",
+			"usernameField": "u",
+			"passwordField": "p",
+			"other": {
+				"url": "https://news.ycombinator.com/newslogin",
+				"fields": [
+					"fnid"
+				]
+			},
+			"check": "a:contains('logout')"
+		}
+	},
+	"*://*.pivotaltracker.com/*": {
+		"logout": {
+			"cookies": [
+				"t_session"
+			]
+		},
+		"login": {
+			"url": "https://www.pivotaltracker.com/signin",
+			"method": "POST",
+			"usernameField": "credentials[username]",
+			"passwordField": "credentials[password]",
+			"check": "a#signout"
+		}
+	},
+	"*://trello.com/*": {
+		"logout": {
+			"cookies": [
+				"token"
+			]
+		},
+		"login": {
+			"url": "https://trello.com/authenticate",
+			"method": "POST",
+			"usernameField": "user",
+			"passwordField": "password",
+			"check": "a.js-logout"
+		}
+	}
+}
