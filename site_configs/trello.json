@@ -1,0 +1,14 @@
+{
+    "*://trello.com/*": {
+        "logout": {
+            "cookies": ["token"]
+        },
+        "login": {
+            "url": "https://trello.com/authenticate",
+            "method": "POST",
+            "usernameField": "user",
+            "passwordField": "password",
+            "check": "a:contains('logout')"
+        }
+    }
+}
