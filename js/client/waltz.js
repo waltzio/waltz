@@ -3,6 +3,7 @@
 	var Waltz = this.Waltz = function(opts) {
 		// situation where there is no domain
 		if (!opts) return;
+		if ($(opts.site.config.login.check).length != 0) return;
 
 		var _this = this;
 
@@ -364,7 +365,9 @@
 		method: "initialize",
 		location: document.location
 	}, function(options) {
-		var waltz = new Waltz(options);
+		$(document).ready(function() {
+			var waltz = new Waltz(options);
+		});
 	});
 
 }).call(this, jQuery);

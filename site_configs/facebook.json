@@ -11,11 +11,8 @@
             "method": "POST",
             "usernameField": "email",
             "passwordField": "pass",
-            "token": {
-                "url": "http://facebook.com/login",
-                "method": "GET",
-                "selector": "some xpath or css selector"
-            }
+            "otherFields": [],
+            "check": "input[type='submit'][value='Log Out']"
         }
     }
 }

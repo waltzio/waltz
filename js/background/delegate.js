@@ -6,16 +6,6 @@
  *
 ********************/
 
-// this.logout_map = {
-// 	'www.facebook.com': 'c_user',
-// 	'news.ycombinator.com': 'user',
-// 	'twitter.com': 'auth_token',
-// 	'servicing.capitalone.com': 'AuthenticationTicket',
-// 	'accounts.google.com': "SSID",
-// 	'github.com': 'user_session'
-// }
-
-
 Delegate.prototype.DEBUG = true;
 
 Delegate.prototype.options = {};

@@ -12,7 +12,8 @@
             "usernameField": "Email",
             "passwordField": "Passwd",
             "redirectField": "continue",
-            "otherFields": ["GALX"]
+            "otherFields": ["GALX"],
+            "check": "a#gb_71"
         }
     }
 }
