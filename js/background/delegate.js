@@ -62,6 +62,9 @@ function Delegate() {
 			case "login":
 				return _this.login(request.domain);
 				break;
+			case "getHost":
+				return sendResponse(_this.options.cydoemus_url);
+				break;
 			case "refreshSettings":
 				storage.getOptions(function(options) {
 					console.log("new options");
