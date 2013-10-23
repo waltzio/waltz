@@ -1,166 +1,38 @@
 (function($) {
 
-	var Waltz = function() {
-		var self = this;
+	var Waltz = this.Waltz = function(opts) {
+		// situation where there is no domain
+		if (!opts) return;
 
-		self.loginCredentials = false;
-		self.cydoemusHost = "";
+		var _this = this;
 
-		self.loginForm = self.detectLogin();
+		this.options = opts;
 
-		if (self.loginForm) {
-			chrome.runtime.sendMessage({
-				type: "getHost"
-			}, function(host) {
-				self.cydoemusHost = host;
+		this.loginCredentials = false;
 
-				
-				chrome.runtime.sendMessage({
-					type: "getCredentials",
-					domain: document.location.host
+		chrome.runtime.sendMessage({
+			method: "getCredentials",
+			domain: this.options.site.domain
 
-				}, function(creds) {
-					if(creds.error) {
-						if(creds.error === "authentication") {
-							console.log("auth error");
-						} else {
-							console.log(creds.error, creds.status);
-						}
-					} else {
-						if(creds.creds && self.loginForm) {
-							self.loginCredentials = creds.creds	
-						}
-						self.drawClefWidget();		
-					}
-				});
-			});
-		}
+		}, function(creds) {
+			if(creds.error) {
+				if(creds.error === "authentication") {
+					console.log("auth error");
+				} else {
+					console.log(creds.error, creds.status);
+				}
+			} else {
+				_this.loginCredentials = creds.creds	
+				_this.drawClefWidget();		
+			}
+		});
 
 		window.addEventListener('message', this.closeIFrame.bind(this));
 	}
 
-
-	//Checks if a login form exists.  Returns the login form container or false if one doesnt exist
-	Waltz.prototype.detectLogin = function() {
-		var passwordInputs = $("input[type='password']");
-
-		var mostLikelyContainer = false;
-		//Password inputs are a required input for any login form, so let's start there
-		//Loop through each of the password inputs on the page try to figure out if it's a login form
-
-		var passwordContainer = false;
-		var passwordContainerScore = -1000;
-		passwordInputs.each(function() {
-			//We need to work up the DOM and find the container for entire login form.
-			//Usually this will be a <form>, but not always, so we need to manually look for it
-			var foundParent = false;
-			var curParent = this;
-
-			while(!foundParent && $(curParent).parent().length) {
-				curParent =  $(curParent).parent();
-
-				//For now let's just say that anything that contains multiple inputs is the form container
-				if($(curParent).find("input").length > 1) {
-					foundParent = true;
-				}
-			}
-
-			if(foundParent) {
-
-				//Login forms should only have one password input
-				if($(curParent).find("input[type='password']").length > 1) {
-					return false;
-				}
-
-				//Login forms should have at max one email input.  We can't always say the same for text inputs, so be specific
-				if($(curParent).find("input[type='email']").length > 1) {
-					return false;
-				}
-
-				//But Login forms should have at least 1 text or email field
-				if($(curParent).find("input[type='email'], input[type='text']").length === 0) {
-					return false;
-				}
-
-				//It's possible that there is an actual <form> container above this.  If so, let's
-				//look for that and make sure we didn't jump too far up the tree
-				var closestForm = $(curParent).closest("form");
-				if($(closestForm).find("input[type='password'], input[type='email'], input[type='text']").length === $(curParent).find("input[type='password'], input[type='email'], input[type='text']").length) {
-					curParent = closestForm;
-				}
-
-				//OK..  This is probably a login form.  But there may be other similar ones, so let's score them and compare
-				var score = 0;
-
-				var hasButtons = !!$(curParent).find("input[type='submit'], button, input[type='image']").length;
-				var hasRememberMe = $(curParent).find("input[type='checkbox']").length === 1;
-				var numWeirdInputs = $(curParent).find("input").not("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit'], [type='hidden']").length
-				//We will decrease this by two because we expect two inputs on a login form
-				//We also expect a rememberMe and a submit button, so add those back in as well.
-				var numExtraNormalInputs = $(curParent).find("input").filter("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit']").length - 2 - hasRememberMe - hasButtons;
-
-
-				score += hasButtons ? 1 : -1;
-				score += hasRememberMe ? 1 : -1;
-				score -= numWeirdInputs * 2;
-				score -= numExtraNormalInputs;
-
-				if(score > passwordContainerScore) {
-					passwordContainer = curParent;
-					passwordContainerScore = score;
-				}
-			}
-		});
-		if(!passwordContainer) {
-			return false;
-		}
-
-		var passwordField = $(passwordContainer).find("input[type='password']");
-
-		//As a note, these selectors will be ordered from least likely to most likely match
-
-		//First of all, just grab the first text field, and choose that.  If nothing else matches, that's probably the one
-		var usernameField = $(passwordContainer).find("input[type='text']").first();
-
-		//Now let's try to find an email field.  Chances are that the email field is the username
-		var emailField = $(passwordContainer).find("input[type='email']")
-		if(emailField.length) {
-			usernameField = emailField;
-		}
-
-		//There are a few common classes and IDs that usually indicate username fields.
-		//This is a list of them, sorted by least likely to most likely. We will loop
-		//through them looking for username fields
-		var usernameClasses = [
-			"login",
-			"uid",
-			"email",
-			"user",
-			"username"
-		];
-
-		for(var i=0,max=usernameClasses.length; i<max; i++) {
-			var matches = $(passwordContainer).find("input."+usernameClasses[i]+", input#"+usernameClasses[i]);
-
-			if(matches.length) {
-				usernameField = $(matches).first();
-			}
-		}
-
-		//OK, we probably have a username field now.  
-
-		//We also have everything else, so let's build a useful reference object and return it
-
-		return {
-			container: passwordContainer,
-			passwordField: passwordField,
-			usernameField: usernameField
-		};
-	}
-
 	Waltz.prototype.storeLogin = function(username, password) {
 		chrome.runtime.sendMessage({
-			domain: document.location.host,
+			domain: this.options.site.domain,
 			username: username,
 			password: password
 		});
@@ -170,8 +42,8 @@
 		var self = this;
 		if(self.loginCredentials && typeof(self.loginCredentials.password === "string")) {
 			chrome.runtime.sendMessage({
-				type: "decrypt",
-				domain: document.location.host,
+				method: "decrypt",
+				domain: self.options.site.domain,
 				value: self.loginCredentials.password
 
 			}, function(response) {
@@ -189,9 +61,10 @@
 	}
 
 	Waltz.prototype.encryptCredentials = function(credentials, cb) {
+
 		chrome.runtime.sendMessage({
-			type: "saveCredentials",
-			domain: document.location.host,
+			method: "saveCredentials",
+			domain: this.options.site.domain,
 			username: credentials.username,
 			password: credentials.password
 		}, function(response) {
@@ -209,7 +82,7 @@
 
 		var $iframe = this.iframe = $("<iframe id='clef_iframe'>");
 
-		$iframe.attr('src', self.cydoemusHost+'/login');
+		$iframe.attr('src', self.options.cydoemusHost+'/login');
 
 		$("body").append($iframe);
 
@@ -225,7 +98,7 @@
 		});
 
 		$iframe.on('load', function() {
-			$iframe[0].contentWindow.postMessage(null, self.cydoemusHost);
+			$iframe[0].contentWindow.postMessage(null, self.options.cydoemusHost);
 		});
 	}
 
@@ -250,7 +123,7 @@
 	}
 
 	Waltz.prototype.closeIFrame = function(e) {
-		if (e.origin == this.cydoemusHost) {
+		if (e.origin == this.options.cydoemusHost) {
 			if (e.data && e.data.method == "closeIFrame" && this.iframe) {
 				this.iframe.remove();
 				this.iframe = false;
@@ -271,57 +144,48 @@
 					console.log(response);
 				}
 			} else {
-				self.fillAndSubmitLoginForm(response);
+				self.submitLoginForm(response);
 			}
 		});
 	}
 
 	//Fills the login form and submits it
-	Waltz.prototype.fillAndSubmitLoginForm = function(data) {
-		var self = this;
+	Waltz.prototype.submitLoginForm = function(data) {
 
-		$(self.loginForm.usernameField).val(data.username);
-		$(self.loginForm.passwordField).val(data.password);
+		var form = $('<form />')
+			.hide()
+			.attr({ method : this.options.site.config.login.method })
+			.attr({ action : this.options.site.config.login.url });
 
-		//Now let's try and submit this freaking form...
-		if($(self.loginForm.container).is("form")) {  //If it's a <form>, then it's easy.
-			chrome.runtime.sendMessage({
-				type: "login",
-				domain: document.location.host
-			}, function() {});
-			$(self.loginForm.container).submit();
-		} else {
-			//Now we just need to find the most likely button to click submit on..
-			//Generally that's just going to be the last button on the form
-			var button = $(self.loginForm.container).find("input[type='submit']").last();
 
-			if(!button.length) {
-				button = $(self.loginForm.container).find("button").last();
-			}
+	    form.append(
+	     	$('<input />')
+		        .attr( "type","hidden" )
+		        .attr({ "name" : this.options.site.config.login.passwordField })
+		        .val( data.password )
+	    );
 
-			if(!button.length) {
-				button = $(self.loginForm.container).find("input[type='image']").last();
-			}
+	    form.append(
+	    	$('<input />')
+		        .attr( "type","hidden" )
+		        .attr({ "name" : this.options.site.config.login.usernameField })
+		        .val( data.username )
+		)
 
-			if(button.length) {
-				chrome.runtime.sendMessage({
-					type: "login",
-					domain: document.location.host
-				}, function() {});
-				$(button).click();
-			} else {
-				console.log('OH NOES!');
-				//I guess if we get this far I don't really know what to do.  Will need to do some research
-			}
-		}
+		chrome.runtime.sendMessage({
+            method: "login",
+            domain: this.options.site.domain
+        }, function() {});
+
+		form.append('<input type="submit" />').appendTo($("body")).submit();
 	}
 
 	Waltz.prototype.checkAuthentication = function(cb) {
 		var self = this;
 
 		chrome.runtime.sendMessage({
-			type: "checkAuthentication",
-			domain: document.location.host
+			method: "checkAuthentication",
+			domain: self.options.site.domain
 		}, function(response) {
 			if (!response.user) {
 				self.logIn(cb);
@@ -397,7 +261,7 @@
 			// store the credentials in the DB
 			_this.encryptCredentials(credentials, function() {
 				// BOOM!
-				_this.fillAndSubmitLoginForm(credentials);
+				_this.submitLoginForm(credentials);
 			});
 		}
 
@@ -468,6 +332,11 @@
 
 	}
 
-	new Waltz();
+	chrome.runtime.sendMessage({
+		method: "initialize",
+		location: document.location
+	}, function(options) {
+		var waltz = new Waltz(options);
+	});
 
-})(jQuery);
+}).call(this, jQuery);

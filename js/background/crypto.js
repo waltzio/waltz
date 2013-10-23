@@ -39,7 +39,7 @@ WaltzCrypto.prototype.encrypt = function(pre, identifier, cb) {
 		}
 	}
 
-	xhr.open("GET", delegate.options.cydoemus_url+"/api/v0/keys/"+identifier, true);
+	xhr.open("GET", delegate.options.cydoemus_url+"/api/v0/keys/"+encodeURIComponent(identifier), true);
 	xhr.send();
 }
 
@@ -73,7 +73,7 @@ WaltzCrypto.prototype.decrypt = function(pre, identifier, cb) {
 		}
 	}
 
-	xhr.open("GET", delegate.options.cydoemus_url+"/api/v0/keys/"+identifier, true);
+	xhr.open("GET", delegate.options.cydoemus_url+"/api/v0/keys/"+encodeURIComponent(identifier), true);
 	xhr.send();
 }
 

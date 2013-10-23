@@ -6,17 +6,40 @@
  *
 ********************/
 
-function Delegate() {
-	var self = this;
+// this.logout_map = {
+// 	'www.facebook.com': 'c_user',
+// 	'news.ycombinator.com': 'user',
+// 	'twitter.com': 'auth_token',
+// 	'servicing.capitalone.com': 'AuthenticationTicket',
+// 	'accounts.google.com': "SSID",
+// 	'github.com': 'user_session'
+// }
 
-	this.logout_map = {
-		'www.facebook.com': 'c_user',
-		'news.ycombinator.com': 'user',
-		'twitter.com': 'auth_token',
-		'servicing.capitalone.com': 'AuthenticationTicket',
-		'accounts.google.com': "SSID",
-		'github.com': 'user_session'
-	}
+
+Delegate.prototype.DEBUG = true;
+
+Delegate.prototype.options = {};
+
+if (!Delegate.prototype.DEBUG) {
+	Delegate.prototype.options.configURL = "https://raw.github.com/waltzio/waltz/master/deploy/site_configs.json";
+} else {
+	Delegate.prototype.options.configURL = chrome.extension.getURL("build/site_configs.json");
+}
+
+function Delegate() {
+	var _this = this;
+
+	this.configLoaded = $.getJSON(this.options.configURL, function(data) {
+		_this.siteConfigs = data;
+		var domains = [];
+		for (var key in data) {
+			if(data.hasOwnProperty(key)) {
+				domains.push(key);
+			}
+		}
+		var parsed = domains.map(parse_match_pattern).filter(function(pattern) { return pattern !== null });
+		_this.includedDomainRegex = new RegExp(parsed.join('|'));
+	});
 
 	this.pubnub = PUBNUB.init({
         subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
@@ -26,47 +49,48 @@ function Delegate() {
 	this.backgrounded = false;
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		if(typeof(request.type) === "undefined") {
+		if(typeof(request.method) === "undefined") {
 			return false;
 		}
 
-		switch(request.type) {
+		switch(request.method) {
 			case "saveCredentials":
-				return self.saveCredentials(request.domain, request.username, request.password, sendResponse);
+				return _this.saveCredentials(request.domain, request.username, request.password, sendResponse);
 				break;
 			case "deleteCredentials":
-				return self.deleteCredentials(request.domain, sendResponse);
+				return _this.deleteCredentials(request.domain, sendResponse);
 				break;
 			case "getCredentials":
-				return self.getCredentials(request.domain, sendResponse);
+				return _this.getCredentials(request.domain, sendResponse);
 				break;
 			case "decrypt":
-				return self.decrypt(request.value, request.domain, sendResponse);
+				return _this.decrypt(request.value, request.domain, sendResponse);
 				break;
 			case "checkAuthentication":
-				return self.checkAuthentication(sendResponse);
+				return _this.checkAuthentication(sendResponse);
 				break;
 			case "login":
-				return self.login(request.domain);
-				break;
-			case "getHost":
-				sendResponse(self.options.cydoemus_url);
+				return _this.login(request.domain);
 				break;
 			case "refreshSettings":
 				storage.getOptions(function(options) {
 					console.log("new options");
-					self.options = options;
+					_this.options = options;
 				});
+				break;
+			default:
+				_this[request.method](request, sendResponse);
 				break;
 		}
 	});
 
 	storage.getOptions(function(options) {
-		self.options = options;
+		_this.options = options;
 	});
 
 	this.focusChanged = this.focusChanged.bind(this);
 	chrome.windows.onFocusChanged.addListener(this.focusChanged);
+
 }
 
 Delegate.prototype.login = function(domain) {
@@ -101,45 +125,33 @@ Delegate.prototype.pubnubUnsubscribe = function(channel) {
 
 Delegate.prototype.logout = function() {
 	var _this = this;
+
 	storage.getLogins(function(data) {
 		var sitesCompleted = [],
 			promise;
+
 		for (domain in data) {
-			var url = 'https://' + domain;
+			var siteConfig = _this.siteConfigs[domain];
 
-			if (_this.logout_map[domain]) {
-				var promise = $.Deferred();
+			var promise = $.Deferred();
+
+			(function() {
+				// this is ugly
+				var p = promise;
+
 				chrome.cookies.remove({
-					url: url,
-					name: _this.logout_map[domain]
-				}, function() { promise.resolve(); })
-				sitesCompleted.push(promise);
-			} else {
-				// if we haven't manually set a user cookie name,
-				// REMOVE ALL THE COOKIES (wuh wuh)
-				chrome.cookies.getAll({
-					url: url
-				}, function(cookies) {
+					url: siteConfig.logout.cookies[0].url,
+					name: siteConfig.logout.cookies[0].name
+				}, function() { p.resolve(); })
+			})();
 
-					$.each(cookies, function(i, cookie) {
-						var promise = $.Deferred();
-
-						chrome.cookies.remove({
-							url: url,
-							name: cookie.name
-						}, function() { promise.resolve(); });
-
-						sitesCompleted.push(promise);
-					});
-
-				})
-			}
+			sitesCompleted.push(promise);
 		}
 
 		$.when(sitesCompleted).then(function() {
 			for (domain in data) {
 				chrome.tabs.query(
-					{ url: '*://' + domain + '/*'}, 
+					{ url: domain }, 
 					function(data) { 
 						for (var i = 0; i < data.length; i++) {
 							chrome.tabs.reload(data[i].id);
@@ -154,7 +166,7 @@ Delegate.prototype.logout = function() {
 					type: "basic",
 					title: "You've been logged out of Waltz.",
 					message: "You've been logged out of all of your Waltz sites",
-					iconUrl: "img/clef48.png"
+					iconUrl: "img/waltz-48.png"
 				},
 				function() {});
 			_this.pubnubUnsubscribe(_this.user);
@@ -249,4 +261,63 @@ Delegate.prototype.checkAuthentication = function(cb) {
 	return true;
 }
 
+Delegate.prototype.initialize = function(data, callback) {
+	var url = data.location.href.split('#')[0];
+	if (this.includedDomainRegex.test(url)) {
+		var options;
+		for (site in this.siteConfigs) {
+			if (url.match(parse_match_pattern(site))) {
+				options = {
+					site: {
+						domain: site,
+						config: this.siteConfigs[site]
+					},
+					cydoemusHost: this.options.cydoemus_url
+
+				};
+				callback(options);
+				return;
+			}
+		}
+	} else {
+		callback(false);
+	}
+}
+
 var delegate = new Delegate();
+
+
+/**
+  * @param String input  A match pattern
+  * @returns  null if input is invalid
+  * @returns  String to be passed to the RegExp constructor */
+function parse_match_pattern(input) {
+    if (typeof input !== 'string') return null;
+    var match_pattern = '(?:^'
+      , regEscape = function(s) {return s.replace(/[[^$.|?*+(){}\\]/g, '\\$&');}
+      , result = /^(\*|https?|file|ftp|chrome-extension):\/\//.exec(input);
+
+    // Parse scheme
+    if (!result) return null;
+    input = input.substr(result[0].length);
+    match_pattern += result[1] === '*' ? 'https?://' : result[1] + '://';
+
+    // Parse host if scheme is not `file`
+    if (result[1] !== 'file') {
+        if (!(result = /^(?:\*|(\*\.)?([^\/*]+))(?=\/)/.exec(input))) return null;
+        input = input.substr(result[0].length);
+        if (result[0] === '*') {    // host is '*'
+            match_pattern += '[^/]+';
+        } else {
+            if (result[1]) {         // Subdomain wildcard exists
+                match_pattern += '(?:[^/]+\\.)?';
+            }
+            // Append host (escape special regex characters)
+            match_pattern += regEscape(result[2]);
+        }
+    }
+    // Add remainder (path)
+    match_pattern += input.split('*').map(regEscape).join('.*');
+    match_pattern += '$)';
+    return match_pattern;
+}
