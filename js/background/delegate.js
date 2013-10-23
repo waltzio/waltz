@@ -130,12 +130,12 @@ Delegate.prototype.logout = function() {
 				var p = promise
 
 				chrome.cookies.getAll(
-					{ domain: siteConfig.logout.cookies.domain },
+					{ domain: extrapolateDomainFromMatchURL(domain) },
 					function(cookies) {
 						var cookie;
 						for (i = 0; i < cookies.length; i++) {
 							cookie = cookies[i];
-							if (siteConfig.logout.cookies.names.indexOf(cookie.name) != -1) {
+							if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
 								chrome.cookies.remove({
 									url: extrapolateUrlFromCookie(cookie),
 									name: cookie.name
@@ -330,4 +330,11 @@ function extrapolateUrlFromCookie(cookie) {
         prefix += "www";
 
     return prefix + cookie.domain + cookie.path;
+}
+
+function extrapolateDomainFromMatchURL(matchURL) {
+	var matches = matchURL.match(".*://(.*)/.*");
+	var domain = matches[1];
+	if (domain[0] === "*") domain = domain.slice(2);
+	return domain;
 }

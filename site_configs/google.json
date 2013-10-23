@@ -1,10 +1,7 @@
 {
     "*://*.google.com/*": {
         "logout": {
-            "cookies": {
-                "domain": "google.com",
-                "names": ["SID", "GX"]
-            }
+            "cookies": ["SID", "GX"]
         },
         "login": {
             "url": "https://accounts.google.com/ServiceLoginAuth",
