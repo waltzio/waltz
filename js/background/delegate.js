@@ -123,11 +123,9 @@ Delegate.prototype.logout = function() {
 			i;
 
 		for (domain in data) {
-			siteConfig = _this.siteConfigs[domain];
-			promise = $.Deferred();
-
 			(function() {
-				var p = promise
+				var promise = $.Deferred(),
+					siteConfig = _this.siteConfigs[domain];
 
 				chrome.cookies.getAll(
 					{ domain: extrapolateDomainFromMatchURL(domain) },
@@ -145,9 +143,9 @@ Delegate.prototype.logout = function() {
 						promise.resolve();
 					}
 				);
-			})();
 
-			sitesCompleted.push(promise);
+				sitesCompleted.push(promise);
+			})();
 		}
 
 		$.when(sitesCompleted).then(function() {

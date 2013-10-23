@@ -8,7 +8,6 @@
             "method": "POST",
             "usernameField": "email",
             "passwordField": "pass",
-            "otherFields": [],
             "check": "input[type='submit'][value='Log Out']"
         }
     }

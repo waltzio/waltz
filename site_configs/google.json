@@ -9,7 +9,10 @@
             "usernameField": "Email",
             "passwordField": "Passwd",
             "redirectField": "continue",
-            "otherFields": ["GALX"],
+            "other": {
+                "url": "https://accounts.google.com/ServiceLoginAuth",
+                "fields": ["GALX"]
+            },
             "check": "a#gb_71"
         }
     }

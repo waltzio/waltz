@@ -185,12 +185,12 @@
 			)
 		}
 
-		if (siteConfig.login.otherFields) {
-			$.get(siteConfig.login.url, function(data) {
+		if (siteConfig.login.other) {
+			$.get(siteConfig.login.other.url, function(data) {
 				var $data = $(data);
 
-				for (var i = 0; i < siteConfig.login.otherFields.length; i++) {
-					form.append($data.find('input[name="' + siteConfig.login.otherFields[i] + '"]').clone())
+				for (var i = 0; i < siteConfig.login.other.fields.length; i++) {
+					form.append($data.find('input[name="' + siteConfig.login.other.fields[i] + '"]').clone())
 				}
 				
 				submitForm();
@@ -204,6 +204,7 @@
 	            method: "login",
 	            domain: _this.options.site.domain
 	        }, function() {});
+
 
 			form.append('<input type="submit" />').appendTo($("body")).submit();
 		}

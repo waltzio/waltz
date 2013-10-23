@@ -1,0 +1,18 @@
+{
+    "*://news.ycombinator.com/*": {
+        "logout": {
+            "cookies": ["user"]
+        },
+        "login": {
+            "url": "https://news.ycombinator.com/y",
+            "method": "POST",
+            "usernameField": "u",
+            "passwordField": "p",
+            "other": {
+                "url": "https://news.ycombinator.com/newslogin",
+                "fields": ["fnid"]
+            },
+            "check": "a:contains('logout')"
+        }
+    }
+}
