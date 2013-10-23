@@ -8,7 +8,7 @@
             "method": "POST",
             "usernameField": "user",
             "passwordField": "password",
-            "check": "a:contains('logout')"
+            "check": "a.js-logout"
         }
     }
 }
