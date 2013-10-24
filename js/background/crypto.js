@@ -7,7 +7,7 @@
  *
 ********************/
 
-function WaltzCrypto() {
+function WaltzCrypto(options) {
 
 }
 
