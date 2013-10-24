@@ -234,32 +234,20 @@ Delegate.prototype.checkAuthentication = function(cb) {
 
 	var _this = this;
 
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function() {
-		if(xhr.readyState == 4) {
-			if(xhr.status == 200) {
-
-				var data = JSON.parse(xhr.responseText);
-
-				if(typeof(cb) === "function") {
-					
-
-					cb({
-						error: null,
-						user: data.user
-					});
-				}
-			} else {
-				cb({
-					error: "unknown",
-					status: xhr.status
-				});
-			}
+	$.ajax({
+		dataType: "json",
+		url: _this.options.cydoemus_url + "/check",
+		success: function (data) {
+			if (typeof(cb) === "function") cb({ user: data.user });
+		},
+		error: function(xhr, textStatus) {
+			if (xhr.status === 403) {
+				if (typeof(cb) === "function") cb({ user: false });
+			} // let's do nothing if we can't access the internet
+			else if (xhr.status === 0) {}
+			else {}
 		}
-	}
-
-	xhr.open("GET", _this.options.cydoemus_url+"/check", true);
-	xhr.send();
+	});
 
 	return true;
 }
