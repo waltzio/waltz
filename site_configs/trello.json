@@ -1,5 +1,5 @@
 {
-    "*://trello.com/*": {
+    "*://*.trello.com/*": {
         "logout": {
             "cookies": ["token"]
         },
