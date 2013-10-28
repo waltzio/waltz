@@ -1,0 +1,14 @@
+{
+    "*://*.helpscout.net/*": {
+        "logout": {
+            "cookies": ["PHPSESSID"]
+        },
+        "login": {
+            "url": "https://secure.helpscout.net/members/process/login",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "check": "a.js-logout"
+        }
+    }
+}

@@ -6,7 +6,7 @@
  *
 ********************/
 
-Delegate.prototype.DEBUG = false;
+Delegate.prototype.DEBUG = true;
 
 Delegate.prototype.options = {};
 
@@ -15,7 +15,7 @@ Delegate.prototype.options.configURL = "https://raw.github.com/waltzio/waltz/mas
 Delegate.prototype.options.backupConfigURL = chrome.extension.getURL("build/site_configs.json");
 
 if (Delegate.prototype.DEBUG) {
-	Delegate.prototype.options.configURL = Delegate.options.backupConfigURL;
+	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
 } 
 
 function Delegate(options) {
@@ -128,6 +128,7 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 		}
 	}
 	var parsed = domains.map(parse_match_pattern).filter(function(pattern) { return pattern !== null });
+	console.log(parsed);
 	this.includedDomainRegex = new RegExp(parsed.join('|'));
 	this.configsLoaded.resolve();
 }
