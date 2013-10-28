@@ -8,7 +8,7 @@
             "method": "POST",
             "usernameField": "user",
             "passwordField": "password",
-            "check": "a.js-logout"
+            "check": "a.header-auth.member"
         }
     }
 }

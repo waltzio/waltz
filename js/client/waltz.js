@@ -5,6 +5,8 @@
 		if (!opts) return;
 		if ($(opts.site.config.login.check).length != 0) return;
 
+		console.log($(opts.site.config.login.check));
+
 		var _this = this;
 
 		this.options = opts;

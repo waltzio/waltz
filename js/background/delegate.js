@@ -61,6 +61,7 @@ function Delegate(options) {
 			
 			if (data.user) {
 				_this.loggedIn = true;
+				_this.pubnubSubscribe(data);
 			} else {
 				_this.loggedIn = false;
 				_this.logout({ silent: true });
@@ -132,10 +133,16 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 	this.configsLoaded.resolve();
 }
 
-Delegate.prototype.pubnubSubscribe = function() {
+Delegate.prototype.pubnubSubscribe = function(data) {
 	var _this = this;
 
-	this.checkAuthentication(function(data) {
+	if (!data) {
+		this.checkAuthentication(handleData);
+	} else {
+		handleData(data);
+	}
+
+	function handleData(data) {
 		_this.user = data.user;
 		_this.pubnub.subscribe({
 			channel: data.user,
@@ -145,7 +152,7 @@ Delegate.prototype.pubnubSubscribe = function() {
 				}
 			}
 		})
-	});
+	}
 }
 
 Delegate.prototype.pubnubUnsubscribe = function(channel) {
