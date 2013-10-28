@@ -128,7 +128,6 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 		}
 	}
 	var parsed = domains.map(parse_match_pattern).filter(function(pattern) { return pattern !== null });
-	console.log(parsed);
 	this.includedDomainRegex = new RegExp(parsed.join('|'));
 	this.configsLoaded.resolve();
 }
