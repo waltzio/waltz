@@ -31,6 +31,8 @@ function Delegate(options) {
 
 	// load configs and fall back if cannot access Github
 	// TODO: fix race condition here
+	this.configsLoaded = $.Deferred();
+
 	$.ajax({
 		url: this.options.configURL,
 		dataType: 'json',
@@ -47,7 +49,7 @@ function Delegate(options) {
 	// check whether logged in, exponential backoff
 	// BOOM!
 	var n = 0;
-	(function kickOff() {
+	function kickOff() {
 		_this.checkAuthentication(function(data) {
 			if (data.error == "noconn") {
 				console.log('no connection, will retry in ' + Math.pow(2,n) + ' seconds.');
@@ -64,7 +66,10 @@ function Delegate(options) {
 				_this.logout({ silent: true });
 			}
 		});
-	})();
+	}
+
+	// when the configs are done loading, blast off, baby!
+	$.when(this.configsLoaded).then(kickOff);
 }
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
@@ -124,6 +129,7 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 	}
 	var parsed = domains.map(parse_match_pattern).filter(function(pattern) { return pattern !== null });
 	this.includedDomainRegex = new RegExp(parsed.join('|'));
+	this.configsLoaded.resolve();
 }
 
 Delegate.prototype.pubnubSubscribe = function() {
@@ -143,9 +149,11 @@ Delegate.prototype.pubnubSubscribe = function() {
 }
 
 Delegate.prototype.pubnubUnsubscribe = function(channel) {
-	this.pubnub.unsubscribe({
-		channel: channel
-	});
+	if (channel) {
+		this.pubnub.unsubscribe({
+			channel: channel
+		});
+	}
 }
 
 Delegate.prototype.logout = function(opts) {
