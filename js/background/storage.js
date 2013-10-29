@@ -71,7 +71,7 @@ Storage.prototype.getOptions = function(cb) {
 	chrome.storage.local.get("options", function(options) {
 		if(typeof(options.options) !== "object") {
 			var defaultOptions = {
-				cydoemus_url: "https://cydoemus.vault.tk"
+				cy_url: "https://api.waltz.io"
 			};
 
 			//We don't need to wait for this to finish, because we already have the default options defined.
