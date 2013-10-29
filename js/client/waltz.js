@@ -5,8 +5,6 @@
 		if (!opts) return;
 		if ($(opts.site.config.login.check).length != 0) return;
 
-		console.log($(opts.site.config.login.check));
-
 		var _this = this;
 
 		this.options = opts;
@@ -188,7 +186,11 @@
 		}
 
 		if (siteConfig.login.other) {
-			$.get(siteConfig.login.other.url, function(data) {
+
+			chrome.runtime.sendMessage({
+				method: "proxyRequest",
+				url: siteConfig.login.other.url
+			}, function(data) {
 				var $data = $(data);
 
 				for (var i = 0; i < siteConfig.login.other.fields.length; i++) {

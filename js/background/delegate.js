@@ -107,7 +107,7 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 			});
 			break;
 		default:
-			this[request.method](request, sendResponse);
+			return this[request.method](request, sendResponse);
 			break;
 	}
 }
@@ -264,8 +264,16 @@ Delegate.prototype.decrypt = function(value, domain, cb) {
 	return true;
 }
 
-Delegate.prototype.checkAuthentication = function(cb) {
+Delegate.prototype.proxyRequest = function(request, cb) {
+	$.get(request.url, function(data) {
+		console.log(data);
+		cb(data);
+	});
 
+	return true;
+}
+
+Delegate.prototype.checkAuthentication = function(cb) {
 	var _this = this;
 
 	$.ajax({
