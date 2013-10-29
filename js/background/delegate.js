@@ -266,7 +266,6 @@ Delegate.prototype.decrypt = function(value, domain, cb) {
 
 Delegate.prototype.proxyRequest = function(request, cb) {
 	$.get(request.url, function(data) {
-		console.log(data);
 		cb(data);
 	});
 
