@@ -1,0 +1,14 @@
+{
+    "*://*.reddit.com/*": {
+        "logout": {
+            "cookies": ["reddit_session"]
+        },
+        "login": {
+            "url": "https://ssl.reddit.com/r/pics/post/login",
+            "method": "POST",
+            "usernameField": "user",
+            "passwordField": "passwd",
+            "check": "a:contains('logout')"
+        }
+    }
+}

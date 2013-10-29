@@ -6,95 +6,143 @@
  *
 ********************/
 
-Delegate.prototype.DEBUG = false;
+Delegate.prototype.DEBUG = true;
 
 Delegate.prototype.options = {};
 
-if (!Delegate.prototype.DEBUG) {
-	Delegate.prototype.options.configURL = "https://raw.github.com/waltzio/waltz/master/deploy/site_configs.json";
-} else {
-	Delegate.prototype.options.configURL = chrome.extension.getURL("build/site_configs.json");
-}
 
-function Delegate() {
+Delegate.prototype.options.configURL = "https://raw.github.com/waltzio/waltz/master/deploy/site_configs.json";
+Delegate.prototype.options.backupConfigURL = chrome.extension.getURL("build/site_configs.json");
+
+if (Delegate.prototype.DEBUG) {
+	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
+} 
+
+function Delegate(options) {
 	var _this = this;
 
-	this.configLoaded = $.getJSON(this.options.configURL, function(data) {
-		_this.siteConfigs = data;
-		var domains = [];
-		for (var key in data) {
-			if(data.hasOwnProperty(key)) {
-				domains.push(key);
-			}
-		}
-		var parsed = domains.map(parse_match_pattern).filter(function(pattern) { return pattern !== null });
-		_this.includedDomainRegex = new RegExp(parsed.join('|'));
-	});
-
-	this.pubnub = PUBNUB.init({
+	this.options = $.extend(this.options, options);
+	_this.pubnub = PUBNUB.init({
         subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
     });
 
-	this.logged_in = false;
-	this.backgrounded = false;
+	// bind the router
+	chrome.runtime.onMessage.addListener(this.router.bind(this));
 
-	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		if(typeof(request.method) === "undefined") {
-			return false;
-		}
+	// load configs and fall back if cannot access Github
+	// TODO: fix race condition here
+	this.configsLoaded = $.Deferred();
 
-		switch(request.method) {
-			case "saveCredentials":
-				return _this.saveCredentials(request.domain, request.username, request.password, sendResponse);
-				break;
-			case "deleteCredentials":
-				return _this.deleteCredentials(request.domain, sendResponse);
-				break;
-			case "getCredentials":
-				return _this.getCredentials(request.domain, sendResponse);
-				break;
-			case "decrypt":
-				return _this.decrypt(request.value, request.domain, sendResponse);
-				break;
-			case "checkAuthentication":
-				return _this.checkAuthentication(sendResponse);
-				break;
-			case "login":
-				return _this.login(request.domain);
-				break;
-			case "refreshSettings":
-				storage.getOptions(function(options) {
-					console.log("new options");
-					_this.options = options;
-				});
-				break;
-			default:
-				_this[request.method](request, sendResponse);
-				break;
+	$.ajax({
+		url: this.options.configURL,
+		dataType: 'json',
+		success: this.updateSiteConfigs.bind(this),
+		error:function() {
+			$.ajax({
+				url: _this.options.backupConfigURL,
+				dataType: 'json',
+				success: _this.updateSiteConfigs.bind(_this)
+			});
 		}
 	});
 
-	storage.getOptions(function(options) {
-		_this.options = options;
-	});
+	// check whether logged in, exponential backoff
+	// BOOM!
+	var n = 0;
+	function kickOff() {
+		_this.checkAuthentication(function(data) {
+			if (data.error == "noconn") {
+				console.log('no connection, will retry in ' + Math.pow(2,n) + ' seconds.');
+				// exponential backoff, hooray!
+				setTimeout(kickOff, Math.pow(2, n) * 1000);
+				n = n + 1;
+				return;
+			}
+			
+			if (data.user) {
+				_this.loggedIn = true;
+				_this.pubnubSubscribe(data);
+			} else {
+				_this.loggedIn = false;
+				_this.logout({ silent: true });
+			}
+		});
+	}
 
-	this.focusChanged = this.focusChanged.bind(this);
-	chrome.windows.onFocusChanged.addListener(this.focusChanged);
+	// when the configs are done loading, blast off, baby!
+	$.when(this.configsLoaded).then(kickOff);
+}
 
+Delegate.prototype.router = function(request, sender, sendResponse) {
+	if(typeof(request.method) === "undefined") {
+		return false;
+	}
+
+	switch(request.method) {
+		case "saveCredentials":
+			return this.saveCredentials(request.domain, request.username, request.password, sendResponse);
+			break;
+		case "deleteCredentials":
+			return this.deleteCredentials(request.domain, sendResponse);
+			break;
+		case "getCredentials":
+			return this.getCredentials(request.domain, sendResponse);
+			break;
+		case "decrypt":
+			return this.decrypt(request.value, request.domain, sendResponse);
+			break;
+		case "checkAuthentication":
+			return this.checkAuthentication(sendResponse);
+			break;
+		case "login":
+			return this.login(request.domain);
+			break;
+		case "getHost":
+			return sendResponse(this.options.cy_url);
+			break;
+		case "refreshSettings":
+			storage.getOptions(function(options) {
+				console.log("new options");
+				this.options = options;
+			});
+			break;
+		default:
+			return this[request.method](request, sendResponse);
+			break;
+	}
 }
 
 Delegate.prototype.login = function(domain) {
-	if (!this.logged_in) {
-		this.logged_in = true;
+	if (!this.loggedIn) {
+		this.loggedIn = true;
 		this.pubnubSubscribe();
 	}
 	storage.addLogin(domain);
 }
 
-Delegate.prototype.pubnubSubscribe = function() {
+Delegate.prototype.updateSiteConfigs = function(data) {
+	this.siteConfigs = data;
+	var domains = [];
+	for (var key in data) {
+		if(data.hasOwnProperty(key)) {
+			domains.push(key);
+		}
+	}
+	var parsed = domains.map(parse_match_pattern).filter(function(pattern) { return pattern !== null });
+	this.includedDomainRegex = new RegExp(parsed.join('|'));
+	this.configsLoaded.resolve();
+}
+
+Delegate.prototype.pubnubSubscribe = function(data) {
 	var _this = this;
 
-	this.checkAuthentication(function(data) {
+	if (!data) {
+		this.checkAuthentication(handleData);
+	} else {
+		handleData(data);
+	}
+
+	function handleData(data) {
 		_this.user = data.user;
 		_this.pubnub.subscribe({
 			channel: data.user,
@@ -104,17 +152,20 @@ Delegate.prototype.pubnubSubscribe = function() {
 				}
 			}
 		})
-	});
+	}
 }
 
 Delegate.prototype.pubnubUnsubscribe = function(channel) {
-	this.pubnub.unsubscribe({
-		channel: channel
-	});
+	if (channel) {
+		this.pubnub.unsubscribe({
+			channel: channel
+		});
+	}
 }
 
-Delegate.prototype.logout = function() {
-	var _this = this;
+Delegate.prototype.logout = function(opts) {
+	var _this = this,
+		opts = opts || {};
 
 	storage.getLogins(function(data) {
 		var sitesCompleted = [],
@@ -160,37 +211,23 @@ Delegate.prototype.logout = function() {
 				);
 			}
 			storage.clearLogins();
-			chrome.notifications.create(
-				"", 
-				{
-					type: "basic",
-					title: "You've been logged out of Waltz.",
-					message: "You've been logged out of all of your Waltz sites",
-					iconUrl: "img/waltz-48.png"
-				},
-				function() {});
+			if (!opts.silent) {
+				chrome.notifications.create(
+					"", 
+					{
+						type: "basic",
+						title: "You've been logged out of Waltz.",
+						message: "You've been logged out of all of your Waltz sites",
+						iconUrl: "img/waltz-48.png"
+					},
+					function() {}
+				);
+			}
 			_this.pubnubUnsubscribe(_this.user);
 			_this.user = false;
-			_this.logged_in = false;
+			_this.loggedIn = false;
 		});
 	});
-}
-
-Delegate.prototype.focusChanged = function(windowID) {
-	if (windowID == chrome.windows.WINDOW_ID_NONE) {
-		this.backgrounded = true;
-	} else if (this.backgrounded) {
-		if (this.logged_in) {
-			var _this = this;
-			this.checkAuthentication(function(data) {
-				if (!data.user) {
-					this.logged_in = false;
-					_this.logout();
-				}
-			});
-		}
-		this.backgrounded = false;
-	}
 }
 
 Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
@@ -227,36 +264,35 @@ Delegate.prototype.decrypt = function(value, domain, cb) {
 	return true;
 }
 
-Delegate.prototype.checkAuthentication = function(cb) {
+Delegate.prototype.proxyRequest = function(request, cb) {
+	$.get(request.url, function(data) {
+		cb(data);
+	});
 
+	return true;
+}
+
+Delegate.prototype.checkAuthentication = function(cb) {
 	var _this = this;
 
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function() {
-		if(xhr.readyState == 4) {
-			if(xhr.status == 200) {
-
-				var data = JSON.parse(xhr.responseText);
-
-				if(typeof(cb) === "function") {
-					
-
-					cb({
-						error: null,
-						user: data.user
-					});
-				}
-			} else {
-				cb({
-					error: "unknown",
-					status: xhr.status
-				});
+	$.ajax({
+		dataType: "json",
+		url: _this.options.cy_url + "/check",
+		success: function (data) {
+			if (typeof(cb) === "function") cb({ user: data.user });
+		},
+		error: function(xhr, textStatus) {
+			if (xhr.status === 403) {
+				if (typeof(cb) === "function") cb({ user: false });
+			} // let's do nothing if we can't access the internet
+			else if (xhr.status === 0) {
+				cb({ error: "noconn" });
+			}
+			else {
+				cb({ error: "noconn" });
 			}
 		}
-	}
-
-	xhr.open("GET", _this.options.cydoemus_url+"/check", true);
-	xhr.send();
+	});
 
 	return true;
 }
@@ -272,7 +308,7 @@ Delegate.prototype.initialize = function(data, callback) {
 						domain: site,
 						config: this.siteConfigs[site]
 					},
-					cydoemusHost: this.options.cydoemus_url
+					cyHost: this.options.cy_url
 
 				};
 				callback(options);
@@ -284,7 +320,10 @@ Delegate.prototype.initialize = function(data, callback) {
 	}
 }
 
-var delegate = new Delegate();
+
+storage.getOptions(function(options) {
+	delegate = new Delegate(options);
+});
 
 
 /**

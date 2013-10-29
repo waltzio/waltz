@@ -1,10 +1,10 @@
 (function($) {
-	var cydoemusHost = "";
+	var cyHost = "";
 
 	chrome.runtime.sendMessage({
-		type: "getHost"
+		method: "getHost"
 	}, function(host) {
-		cydoemusHost = host;
+		cyHost = host;
 	});
 
 	$(document).ready(function() {
@@ -27,7 +27,6 @@
 				var self = this;
 				var parent = $(self).parent();
 
-
 				var domain = $(parent).data('domain');
 				var username = $(parent).data('username');
 				var password = $(parent).data('password');
@@ -35,7 +34,7 @@
 				checkAuthentication(function(authed) {
 					if(authed) {
 						chrome.runtime.sendMessage({
-							type: "decrypt",
+							method: "decrypt",
 							domain: domain,
 							value: password
 
@@ -71,7 +70,7 @@
 				if(typeof(data.options) === "object") {
 					options = data.options;
 
-					$("#cydoemus-url").val(data.options.cydoemus_url);
+					$("#cy-url").val(data.options.cy_url);
 				}
 			});
 
@@ -79,7 +78,7 @@
 				options[$(this).attr('name')] = $(this).val();
 
 				chrome.storage.local.set({options: options});
-				chrome.runtime.sendMessage({type: "refreshSettings"});
+				chrome.runtime.sendMessage({method: "refreshSettings"});
 			});
 
 			$(document).on('click', '.togglePass', function() {
@@ -100,7 +99,7 @@
 				var self = this;
 
 				chrome.runtime.sendMessage({
-					type: "saveCredentials",
+					method: "saveCredentials",
 					domain: $(self).parent().data('domain'),
 					username: $(self).siblings(".username").val(),
 					password: $(self).siblings(".password").val()
@@ -116,7 +115,7 @@
 				var self = this;
 
 				chrome.runtime.sendMessage({
-					type: "deleteCredentials",
+					method: "deleteCredentials",
 					domain: $(self).parent().data('domain')
 				});
 				$(self).parent().remove();
@@ -132,8 +131,7 @@
 
 	function checkAuthentication(cb) {
 		chrome.runtime.sendMessage({
-			type: "checkAuthentication",
-			domain: document.location.host
+			method: "checkAuthentication"
 		}, function(response) {
 			if (!response.user) {
 				if (typeof(cb) == "function") {
@@ -155,10 +153,10 @@
 			width: '100%'
 		});
 
-		$(iFrame).attr('src', cydoemusHost+'/login');
+		$(iFrame).attr('src', cyHost+'/login');
 
 		$(iFrame).on('load', function() {
-			$(iFrame)[0].contentWindow.postMessage(null, cydoemusHost);
+			$(iFrame)[0].contentWindow.postMessage(null, cyHost);
 		});
 
 		$("body").append(iFrame);

@@ -1,0 +1,18 @@
+{
+    "*://*.github.com/*": {
+        "logout": {
+            "cookies": ["user_session"]
+        },
+        "login": {
+            "url": "https://github.com/session",
+            "method": "POST",
+            "usernameField": "login",
+            "passwordField": "password",
+            "other": {
+                "url": "https://github.com/login",
+                "fields": ["authenticity_token"]
+            },
+            "check": "a#logout"
+        }
+    }
+}

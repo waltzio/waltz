@@ -83,7 +83,7 @@
 
 		var $iframe = this.iframe = $("<iframe id='clef_iframe'>");
 
-		$iframe.attr('src', self.options.cydoemusHost+'/login');
+		$iframe.attr('src', self.options.cyHost+'/login');
 
 		$("body").append($iframe);
 
@@ -99,7 +99,7 @@
 		});
 
 		$iframe.on('load', function() {
-			$iframe[0].contentWindow.postMessage(null, self.options.cydoemusHost);
+			$iframe[0].contentWindow.postMessage(null, self.options.cyHost);
 		});
 	}
 
@@ -124,7 +124,7 @@
 	}
 
 	Waltz.prototype.closeIFrame = function(e) {
-		if (e.origin == this.options.cydoemusHost) {
+		if (e.origin == this.options.cyHost) {
 			if (e.data && e.data.method == "closeIFrame" && this.iframe) {
 				this.iframe.remove();
 				this.iframe = false;
@@ -186,7 +186,11 @@
 		}
 
 		if (siteConfig.login.other) {
-			$.get(siteConfig.login.other.url, function(data) {
+
+			chrome.runtime.sendMessage({
+				method: "proxyRequest",
+				url: siteConfig.login.other.url
+			}, function(data) {
 				var $data = $(data);
 
 				for (var i = 0; i < siteConfig.login.other.fields.length; i++) {
