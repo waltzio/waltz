@@ -41,11 +41,17 @@
 #waltz-credential-form.slide-in {
   top: 0;
 }
-#waltz-credential-form #waltz-credential-username, #waltz-credential-form #waltz-credential-password {
+#waltz-credential-form #waltz-credential-username, #waltz-credential-form #waltz-credential-password, #waltz-credential-form #waltz-credential-alert {
   font-size: 24px;
   width: 400px;
   margin-left: 50px;
   padding: 5px 10px;
+}
+#waltz-credential-form #waltz-credential-alert {
+  margin-top: 10px;
+  font-size: 14px;
+  background-color: #f65058;
+  color: white;
 }
 #waltz-credential-form #waltz-credential-username {
   margin-bottom: 20px;
