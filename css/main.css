@@ -1,0 +1,18 @@
+@import url("http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic");
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+header {
+  *zoom: 1;
+  max-width: 68em;
+  margin-left: auto;
+  margin-right: auto; }
+  header:before, header:after {
+    content: " ";
+    display: table; }
+  header:after {
+    clear: both; }
+  header .logo {
+    width: 300px; }

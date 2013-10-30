@@ -1,0 +1,7 @@
+header {
+    @include outer-container;
+
+    .logo {
+        width: 300px;
+    }
+}
