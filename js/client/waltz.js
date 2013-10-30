@@ -1,9 +1,14 @@
 (function($) {
 
 	var Waltz = this.Waltz = function(opts) {
-		// situation where there is no domain
+        // If there are no opts, Waltz is not supported on this site
 		if (!opts) return;
-		if ($(opts.site.config.login.check).length != 0) return;
+        // If the 'check' selector exists, then we're logged in, 
+        // so don't show Waltz
+		if ($(opts.site.config.login.check).length != 0) {
+            chrome.runtime.sendMessage({ method: "acknowledgeLogin" });
+            return;
+        };
 
 		var _this = this;
 
@@ -25,6 +30,19 @@
 			} else {
 				_this.loginCredentials = creds.creds	
 				_this.drawClefWidget();		
+
+                console.log("Loaded credentials");
+                chrome.runtime.sendMessage({
+                    method: "checkTransition"
+                }, function(inTransition) {
+                    if (inTransition) {
+                        _this.checkAuthentication(function() {
+                            var errorMessage = "Invalid username and password. Please try entering your credentials again.";
+                            _this.requestCredentials(errorMessage); 
+                        });
+                    }
+                    chrome.runtime.sendMessage({ method: "acknowledgeLogin" });
+                });
 			}
 		});
 
@@ -210,7 +228,7 @@
 	        }, function() {});
 
 
-			form.append('<input type="submit" />').appendTo($("body")).submit();
+            form.append('<input type="submit" />').appendTo($("body")).submit();
 		}
 	}
 
@@ -231,13 +249,14 @@
 		});
 	}
 
-	Waltz.prototype.requestCredentials = function(form) {
+	Waltz.prototype.requestCredentials = function(errorMessage) {
 		var _this = this,
 			OVERLAY_ID = "waltz-credential-overlay",
 			USERNAME_ID = "waltz-credential-username",
 			PASSWORD_ID = "waltz-credential-password",
 			SUBMIT_ID = "waltz-credential-submit",
 			FORM_ID = "waltz-credential-form",
+            ALERT_ID = "waltz-credential-alert",
 			SLIDE_IN_CLASS = "slide-in"
 
 		// set up templates for tutorial
@@ -250,8 +269,13 @@
 
 		// add tutorial templates
 		$body.append($overlay);
-		$form.append($usernameField).append($passwordField).append($submitButton);
-		$body.append($form)
+		$form.append($usernameField).append($passwordField);
+        if (errorMessage) {
+            $form.append($("<p id='" + ALERT_ID + "'>" + errorMessage + "</p>"));
+        }		
+
+        $form.append($submitButton);
+        $body.append($form)
 
 		//Put this on a timeout, because we need the class to be added after the initial draw
 		setTimeout(function() {
