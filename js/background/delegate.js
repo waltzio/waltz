@@ -8,6 +8,7 @@
 
 Delegate.prototype.DEBUG = true;
 
+
 Delegate.prototype.options = {};
 
 
@@ -30,7 +31,6 @@ function Delegate(options) {
 	chrome.runtime.onMessage.addListener(this.router.bind(this));
 
 	// load configs and fall back if cannot access Github
-	// TODO: fix race condition here
 	this.configsLoaded = $.Deferred();
 
 	$.ajax({
@@ -112,11 +112,21 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 	}
 }
 
+Delegate.prototype.acknowledgeLogin = function(request) {
+    this.transitioningToLoggedIn = false;
+}
+
+Delegate.prototype.checkTransition = function(request, cb) {
+    cb(this.transitioningToLoggedIn);
+}
+
 Delegate.prototype.login = function(domain) {
 	if (!this.loggedIn) {
 		this.loggedIn = true;
 		this.pubnubSubscribe();
 	}
+
+    this.transitioningToLoggedIn = true;
 	storage.addLogin(domain);
 }
 
@@ -178,22 +188,19 @@ Delegate.prototype.logout = function(opts) {
 				var promise = $.Deferred(),
 					siteConfig = _this.siteConfigs[domain];
 
-				chrome.cookies.getAll(
-					{ domain: extrapolateDomainFromMatchURL(domain) },
-					function(cookies) {
-						var cookie;
-						for (i = 0; i < cookies.length; i++) {
-							cookie = cookies[i];
-							if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
-								chrome.cookies.remove({
-									url: extrapolateUrlFromCookie(cookie),
-									name: cookie.name
-								}, function() {});
-							}
-						}
-						promise.resolve();
-					}
-				);
+                getCookiesForDomain(domain, function(cookies) {
+                    var cookie;
+                    for (i = 0; i < cookies.length; i++) {
+                        cookie = cookies[i];
+                        if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
+                            chrome.cookies.remove({
+                                url: extrapolateUrlFromCookie(cookie),
+                                name: cookie.name
+                            }, function() {});
+                        }
+                    }
+                    promise.resolve();
+                });
 
 				sitesCompleted.push(promise);
 			})();
@@ -265,9 +272,13 @@ Delegate.prototype.decrypt = function(value, domain, cb) {
 }
 
 Delegate.prototype.proxyRequest = function(request, cb) {
-	$.get(request.url, function(data) {
-		cb(data);
-	});
+    $.ajax({
+        url: request.url, 
+        data: request.data,
+        type: request.type || 'GET'
+    }).done(function(data) {
+        cb(data); 
+    });
 
 	return true;
 }
@@ -374,4 +385,13 @@ function extrapolateDomainFromMatchURL(matchURL) {
 	var domain = matches[1];
 	if (domain[0] === "*") domain = domain.slice(2);
 	return domain;
+}
+
+function getCookiesForDomain(domain, cb) {
+    chrome.cookies.getAll(
+        { domain: extrapolateDomainFromMatchURL(domain) },
+        function(cookies) {
+            cb(cookies)
+        }
+    );
 }

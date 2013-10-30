@@ -25,7 +25,7 @@
 
 #waltz-credential-form {
   width: 500px;
-  height: 190px;
+  height: 220px;
   background-color: white;
   box-shadow: 0 0px 10px #000;
   position: absolute;
@@ -37,13 +37,19 @@
   -webkit-transition: top .5s; }
   #waltz-credential-form.slide-in {
     top: 0; }
-  #waltz-credential-form #waltz-credential-username, #waltz-credential-form #waltz-credential-password {
+  #waltz-credential-form #waltz-credential-username, #waltz-credential-form #waltz-credential-password, #waltz-credential-alert {
     font-size: 24px;
     width: 400px;
     margin-left: 50px;
     padding: 5px 10px; }
   #waltz-credential-form #waltz-credential-username {
     margin-bottom: 20px; }
+  #waltz-credential-alert {
+    margin-top: 10px;
+    font-size: 14px;
+    background-color: #f65058;
+    color: white;   
+  }
   #waltz-credential-form #waltz-credential-submit {
     height: 50px;
     width: 100%;
