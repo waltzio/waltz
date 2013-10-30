@@ -19,9 +19,11 @@
   background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
   /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33000000', endColorstr='#b3000000',GradientType=1 );
-  -webkit-transition: opacity .5s; }
-  #waltz-credential-overlay.slide-in {
-    opacity: 1; }
+  -webkit-transition: opacity .5s;
+}
+#waltz-credential-overlay.slide-in {
+  opacity: 1;
+}
 
 #waltz-credential-form {
   width: 500px;
@@ -34,38 +36,39 @@
   left: 50%;
   margin-left: -250px;
   padding-top: 30px;
-  -webkit-transition: top .5s; }
-  #waltz-credential-form.slide-in {
-    top: 0; }
-  #waltz-credential-form #waltz-credential-username, #waltz-credential-form #waltz-credential-password, #waltz-credential-alert {
-    font-size: 24px;
-    width: 400px;
-    margin-left: 50px;
-    padding: 5px 10px; }
-  #waltz-credential-form #waltz-credential-username {
-    margin-bottom: 20px; }
-  #waltz-credential-alert {
-    margin-top: 10px;
-    font-size: 14px;
-    background-color: #f65058;
-    color: white;   
-  }
-  #waltz-credential-form #waltz-credential-submit {
-    height: 50px;
-    width: 100%;
-    background-color: #0d9ddb;
-    border: none;
-    color: white;
-    font-size: 24px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    cursor: pointer; }
-    #waltz-credential-form #waltz-credential-submit:hover {
-      background-color: #087db0; }
+  -webkit-transition: top .5s;
+}
+#waltz-credential-form.slide-in {
+  top: 0;
+}
+#waltz-credential-form #waltz-credential-username, #waltz-credential-form #waltz-credential-password {
+  font-size: 24px;
+  width: 400px;
+  margin-left: 50px;
+  padding: 5px 10px;
+}
+#waltz-credential-form #waltz-credential-username {
+  margin-bottom: 20px;
+}
+#waltz-credential-form #waltz-credential-submit {
+  height: 50px;
+  width: 100%;
+  background-color: #0d9ddb;
+  border: none;
+  color: white;
+  font-size: 24px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  cursor: pointer;
+}
+#waltz-credential-form #waltz-credential-submit:hover {
+  background-color: #087db0;
+}
 
 .waltz-clear {
-  clear: both; }
+  clear: both;
+}
 
 #clef-waltz-login-wrapper {
   background-repeat: no-repeat;
@@ -80,52 +83,64 @@
   overflow: visible;
   padding: 20px;
   background-position: center;
-  z-index: 9999; }
-  #clef-waltz-login-wrapper:hover {
-    -webkit-transition: -webkit-transform .5s;
-    -webkit-transform: rotateX(0deg) rotateZ(359deg);
-    opacity: 1; }
-    #clef-waltz-login-wrapper:hover .waltz-button {
-      height: 15px;
-      width: 15px;
-      -webkit-transform: rotateZ(360deg);
-      opacity: 1; }
-      #clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss {
-        left: -19px;
-        top: 15px; }
-        #clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss:hover {
-          background-color: #db070a; }
-      #clef-waltz-login-wrapper:hover .waltz-button.waltz-edit {
-        left: -12px;
-        top: 34px; }
-        #clef-waltz-login-wrapper:hover .waltz-button.waltz-edit:hover {
-          background-color: #19b008; }
-  #clef-waltz-login-wrapper.waltz-remove {
-    -webkit-animation: none !important;
-    -webkit-transition: opacity 1s, -webkit-transform 1s !important;
-    opacity: 0 !important;
-    -webkit-transform: rotateX(360deg) rotateZ(359deg) !important; }
-  #clef-waltz-login-wrapper.waltz-loading {
-    -webkit-animation: spin-clef-logo 1s linear infinite; }
-  #clef-waltz-login-wrapper .waltz-button {
-    height: 0px;
-    width: 0px;
-    border-radius: 25px;
-    display: block;
-    background-size: 50%;
-    background-repeat: no-repeat;
-    background-position: 4px 4px;
-    opacity: 0;
-    -webkit-transform: rotateZ(0deg);
-    -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
-    -webkit-transition-delay: .1s;
-    position: relative;
-    top: 25px;
-    left: 25px;
-    border: none;
-    cursor: pointer; }
-    #clef-waltz-login-wrapper .waltz-button.waltz-dismiss {
-      background-color: #db4c53; }
-    #clef-waltz-login-wrapper .waltz-button.waltz-edit {
-      -webkit-transition-delay: .2s;
-      background-color: #7fe26c; }
+  z-index: 9999;
+}
+#clef-waltz-login-wrapper:hover {
+  -webkit-transition: -webkit-transform .5s;
+  -webkit-transform: rotateX(0deg) rotateZ(359deg);
+  opacity: 1;
+}
+#clef-waltz-login-wrapper:hover .waltz-button {
+  height: 15px;
+  width: 15px;
+  -webkit-transform: rotateZ(360deg);
+  opacity: 1;
+}
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss {
+  left: -19px;
+  top: 15px;
+}
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss:hover {
+  background-color: #db070a;
+}
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-edit {
+  left: -12px;
+  top: 34px;
+}
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-edit:hover {
+  background-color: #19b008;
+}
+#clef-waltz-login-wrapper.waltz-remove {
+  -webkit-animation: none !important;
+  -webkit-transition: opacity 1s, -webkit-transform 1s !important;
+  opacity: 0 !important;
+  -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
+}
+#clef-waltz-login-wrapper.waltz-loading {
+  -webkit-animation: spin-clef-logo 1s linear infinite;
+}
+#clef-waltz-login-wrapper .waltz-button {
+  height: 0px;
+  width: 0px;
+  border-radius: 25px;
+  display: block;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: 4px 4px;
+  opacity: 0;
+  -webkit-transform: rotateZ(0deg);
+  -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
+  -webkit-transition-delay: .1s;
+  position: relative;
+  top: 25px;
+  left: 25px;
+  border: none;
+  cursor: pointer;
+}
+#clef-waltz-login-wrapper .waltz-button.waltz-dismiss {
+  background-color: #db4c53;
+}
+#clef-waltz-login-wrapper .waltz-button.waltz-edit {
+  -webkit-transition-delay: .2s;
+  background-color: #7fe26c;
+}

@@ -1,10 +1,10 @@
 (function($) {
-	var cydoemusHost = "";
+	var cyHost = "";
 
 	chrome.runtime.sendMessage({
 		method: "getHost"
 	}, function(host) {
-		cydoemusHost = host;
+		cyHost = host;
 	});
 
 	$(document).ready(function() {
@@ -70,7 +70,7 @@
 				if(typeof(data.options) === "object") {
 					options = data.options;
 
-					$("#cydoemus-url").val(data.options.cydoemus_url);
+					$("#cy-url").val(data.options.cy_url);
 				}
 			});
 
@@ -153,10 +153,10 @@
 			width: '100%'
 		});
 
-		$(iFrame).attr('src', cydoemusHost+'/login');
+		$(iFrame).attr('src', cyHost+'/login');
 
 		$(iFrame).on('load', function() {
-			$(iFrame)[0].contentWindow.postMessage(null, cydoemusHost);
+			$(iFrame)[0].contentWindow.postMessage(null, cyHost);
 		});
 
 		$("body").append(iFrame);

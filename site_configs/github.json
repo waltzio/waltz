@@ -12,7 +12,7 @@
                 "url": "https://github.com/login",
                 "fields": ["authenticity_token"]
             },
-            "check": "a:contains('logout')"
+            "check": "a#logout"
         }
     }
 }

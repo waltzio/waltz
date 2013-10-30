@@ -98,7 +98,7 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 			return this.login(request.domain);
 			break;
 		case "getHost":
-			return sendResponse(this.options.cydoemus_url);
+			return sendResponse(this.options.cy_url);
 			break;
 		case "refreshSettings":
 			storage.getOptions(function(options) {
@@ -288,7 +288,7 @@ Delegate.prototype.checkAuthentication = function(cb) {
 
 	$.ajax({
 		dataType: "json",
-		url: _this.options.cydoemus_url + "/check",
+		url: _this.options.cy_url + "/check",
 		success: function (data) {
 			if (typeof(cb) === "function") cb({ user: data.user });
 		},
@@ -319,7 +319,7 @@ Delegate.prototype.initialize = function(data, callback) {
 						domain: site,
 						config: this.siteConfigs[site]
 					},
-					cydoemusHost: this.options.cydoemus_url
+					cyHost: this.options.cy_url
 
 				};
 				callback(options);
