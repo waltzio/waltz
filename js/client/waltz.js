@@ -31,7 +31,6 @@
 				_this.loginCredentials = creds.creds	
 				_this.drawClefWidget();		
 
-                console.log("Loaded credentials");
                 chrome.runtime.sendMessage({
                     method: "checkTransition"
                 }, function(inTransition) {
