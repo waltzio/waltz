@@ -126,7 +126,7 @@
 
 
 		if (!this.iframe) {
-			this.loadIframe();
+			this.loadIFrame();
 		}
 
 		this.iframe.fadeIn();
