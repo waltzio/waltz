@@ -17,6 +17,7 @@
 					var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-domain='"+domain+"'>"
 							   +"	<h3>"+domain+"</h3>"
 							   +"	<button class='decrypt styled'>Decrypt</button>"
+							   +"	<button class='deleteAccount styled'>Forget</button>";
 							   +"	</li>"
 
 					$(".sites-list").find("ul").append(html);
@@ -51,10 +52,9 @@
 												+"<label for='password'>Password:</label> "
 												+"<input type='password' class='toggle password' value='"+response.output+"' />"
 												+"<button class='togglePass closed'></button>"
-												+"<button class='savePass styled'>Save</button>"
-												+"<button class='deleteAccount styled'>Forget</button>";
+												+"<button class='savePass styled'>Save</button>";
 
-							$(parent).append(decryptedHTML);
+							$(parent).find(".deleteAccount").before(decryptedHTML);
 
 						});
 					} else{
