@@ -8,7 +8,25 @@
 		if ($(opts.site.config.login.check).length != 0) {
             chrome.runtime.sendMessage({ method: "acknowledgeLogin" });
             return;
-        };
+        } else {
+        	var checks = 0;
+        	var loginCheckInterval = setInterval(function() {
+        		if(checks > 20) {
+        			clearInterval(loginCheckInterval);
+        			return;
+        		}
+
+        		if($(opts.site.config.login.check).length != 0) {
+        			chrome.runtime.sendMessage({method: "acknowledgeLogin"});
+        			clearInterval(loginCheckInterval);
+
+        			$(".waltz-dismiss").click();
+        			$("#waltz-credential-overlay").click();
+        		}
+
+        		checks++;
+        	}, 500);
+        }
 
 		var _this = this;
 
