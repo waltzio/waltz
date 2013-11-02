@@ -8,7 +8,7 @@
             "method": "POST",
             "usernameField": "credentials[username]",
             "passwordField": "credentials[password]",
-            "check": "a#signout"
+            "check": "li.person_name"
         }
     }
 }

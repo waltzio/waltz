@@ -116,10 +116,6 @@ Delegate.prototype.acknowledgeLogin = function(request) {
     this.transitioningToLoggedIn = false;
 }
 
-Delegate.prototype.checkTransition = function(request, cb) {
-    cb(this.transitioningToLoggedIn);
-}
-
 Delegate.prototype.login = function(domain) {
 	if (!this.loggedIn) {
 		this.loggedIn = true;
@@ -319,8 +315,8 @@ Delegate.prototype.initialize = function(data, callback) {
 						domain: site,
 						config: this.siteConfigs[site]
 					},
-					cyHost: this.options.cy_url
-
+					cyHost: this.options.cy_url,
+                    inTransition: this.transitioningToLoggedIn
 				};
 				callback(options);
 				return;
