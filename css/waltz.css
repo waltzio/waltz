@@ -1,3 +1,4 @@
+@charset "UTF-8";
 #waltz-credential-overlay {
   position: absolute;
   top: 0;
@@ -20,56 +21,112 @@
   /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33000000', endColorstr='#b3000000',GradientType=1 );
   -webkit-transition: opacity .5s;
+  cursor: default;
 }
 #waltz-credential-overlay.slide-in {
   opacity: 1;
 }
+#waltz-credential-overlay::after {
+  position: absolute;
+  color: white;
+  content: "×";
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+  line-height: 20px;
+  margin: 0;
+  opacity: .5;
+  cursor: pointer;
+  z-index: 9999;
+}
+#waltz-credential-overlay::after:hover {
+  opacity: 1;
+}
 
 #waltz-credential-form {
-  width: 500px;
-  height: 220px;
-  background-color: white;
+  width: 250px;
+  background-color: black;
+  background-repeat: no-repeat;
+  background-position: 50% 15px;
+  background-size: 50px;
   box-shadow: 0 0px 10px #000;
-  position: absolute;
-  z-index: 9999;
-  top: -220px;
-  left: 50%;
-  margin-left: -250px;
-  padding-top: 30px;
-  -webkit-transition: top .5s;
+  margin: auto;
+  margin-top: -500px;
+  padding-top: 65px;
+  padding-bottom: 1px;
+  -webkit-transition: .2s;
+  position: relative;
 }
 #waltz-credential-form.slide-in {
-  top: 0;
+  margin-top: 0;
 }
-#waltz-credential-form #waltz-credential-username, #waltz-credential-form #waltz-credential-password, #waltz-credential-form #waltz-credential-alert {
-  font-size: 24px;
-  width: 400px;
-  margin-left: 50px;
-  padding: 5px 10px;
+#waltz-credential-form #waltz-credential-username,
+#waltz-credential-form #waltz-credential-password,
+#waltz-credential-form #waltz-credential-submit,
+#waltz-credential-form #waltz-credential-alert {
+  font-family: "Gill Sans", "Helvetica Neue", "Helvetica", serif;
+  font-weight: 300;
+  font-size: 18px;
+  padding: 5px;
+  margin: 15px;
+  border-radius: 0px;
+  display: block;
+}
+#waltz-credential-form #waltz-credential-username:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-password:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-submit:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-alert:not(#waltz-credential-submit) {
+  -webkit-transition: .5s;
+  -webkit-box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.54);
+}
+#waltz-credential-form #waltz-credential-username:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-password:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-submit:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-alert:not(#waltz-credential-submit):focus {
+  outline: none;
+  border-color: #fe93ca;
+  -webkit-box-shadow: 0 0 10px #fe93ca;
+}
+#waltz-credential-form #waltz-credential-username {
+  width: 210px;
+}
+#waltz-credential-form #waltz-credential-password {
+  display: inline-block;
+  width: 170px;
+  margin-left: 15px;
+  margin-right: 0;
+  margin-top: 0;
+}
+#waltz-credential-form #waltz-credential-submit {
+  border: none;
+  color: white;
+  cursor: pointer;
+  background: white;
+  color: black;
+  width: 30px;
+  display: inline-block;
+  -webkit-transition: .5s;
+  margin: 0;
+  margin-left: 10px;
+  color: white;
+  background: transparent;
+  background-position: center center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  -webkit-border-radius: 20px;
+}
+#waltz-credential-form #waltz-credential-submit:hover {
+  background-color: #f50380;
+}
+#waltz-credential-form #waltz-credential-submit:after {
+  display: block;
+  clear: both;
 }
 #waltz-credential-form #waltz-credential-alert {
-  margin-top: 10px;
+  margin-top: 15px;
   font-size: 14px;
   background-color: #f65058;
   color: white;
-}
-#waltz-credential-form #waltz-credential-username {
-  margin-bottom: 20px;
-}
-#waltz-credential-form #waltz-credential-submit {
-  height: 50px;
-  width: 100%;
-  background-color: #0d9ddb;
-  border: none;
-  color: white;
-  font-size: 24px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  cursor: pointer;
-}
-#waltz-credential-form #waltz-credential-submit:hover {
-  background-color: #087db0;
 }
 
 .waltz-clear {
@@ -90,6 +147,7 @@
   padding: 20px;
   background-position: center;
   z-index: 9999;
+  -webkit-transition: .5s;
 }
 #clef-waltz-login-wrapper:hover {
   -webkit-transition: -webkit-transform .5s;
@@ -117,10 +175,8 @@
   background-color: #19b008;
 }
 #clef-waltz-login-wrapper.waltz-remove {
-  -webkit-animation: none !important;
-  -webkit-transition: opacity 1s, -webkit-transform 1s !important;
-  opacity: 0 !important;
-  -webkit-transform: rotateX(360deg) rotateZ(359deg) !important;
+  -webkit-transition: .5s;
+  right: -200px;
 }
 #clef-waltz-login-wrapper.waltz-loading {
   -webkit-animation: spin-clef-logo 1s linear infinite;
@@ -142,6 +198,10 @@
   left: 25px;
   border: none;
   cursor: pointer;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  min-height: 0px;
 }
 #clef-waltz-login-wrapper .waltz-button.waltz-dismiss {
   background-color: #db4c53;

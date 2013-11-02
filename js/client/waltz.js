@@ -96,7 +96,7 @@
 
                     if (_this.options.inTransition) {
                         _this.checkAuthentication(function() {
-                            var errorMessage = "Invalid username and password. Please try entering your credentials again.";
+                            var errorMessage = "Invalid username and password.";
                             _this.requestCredentials(errorMessage); 
                         });
                     }
@@ -329,21 +329,21 @@
 
 		// set up templates for tutorial
 		var $overlay = $("<div id='" + OVERLAY_ID + "''></div>")
-			$form = $("<div id='"+ FORM_ID + "'></div>")
-			$usernameField = $("<input type='text' placeholder='Username' id='" + USERNAME_ID + "' />");
-			$passwordField = $("<input type='password' placeholder='Password' id='" + PASSWORD_ID + "' />");
-			$submitButton = $("<input type='submit' value='Submit' id='" + SUBMIT_ID + "' />");
+			$form = $("<div id='"+ FORM_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/waltz-transparent-128.png") + ")'></div>")
+			$usernameField = $("<input type='text' placeholder='type your username' id='" + USERNAME_ID + "' />");
+			$passwordField = $("<input type='password' placeholder='type your password' id='" + PASSWORD_ID + "' />");
+			$submitButton = $("<input type='submit' value=' ' id='" + SUBMIT_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/next.png") + ")'/>");
 			$body = $('body');
 
 		// add tutorial templates
-		$body.append($overlay);
 		$form.append($usernameField).append($passwordField);
         if (errorMessage) {
-            $form.append($("<p id='" + ALERT_ID + "'>" + errorMessage + "</p>"));
+            $form.prepend($("<p id='" + ALERT_ID + "'>" + errorMessage + "</p>"));
         }		
 
         $form.append($submitButton);
-        $body.append($form)
+		$overlay.append($form);
+        $body.append($overlay)
 
 		//Put this on a timeout, because we need the class to be added after the initial draw
 		setTimeout(function() {
@@ -360,11 +360,14 @@
 
 		$submitButton.click(submitForm);
 
-		$overlay.click(function() {
-			$.merge($overlay, $form).removeClass(SLIDE_IN_CLASS);
-			setTimeout(function() {
-				$.merge($overlay, $form).remove();
-			}, 500);
+		$overlay.click(function(e) {
+			if ($(e.target).attr('id') === $overlay.attr('id')) {
+				$('#clef-waltz-login-wrapper').removeClass('waltz-remove');
+				$.merge($overlay, $form).removeClass(SLIDE_IN_CLASS);
+				setTimeout(function() {
+					$.merge($overlay, $form).remove();
+				}, 500);
+			}
 		});
 
 
@@ -447,14 +450,11 @@
 		$(clefCircle).find(".waltz-edit").click(function(e) {
 			e.stopPropagation();
 
+			$(this).parent().addClass("waltz-remove");
 			self.checkAuthentication(function() {
 				self.requestCredentials();
 			});
 		});
-
-		$(clefCircle).on('destroyed', function() {
-			console.log('removed!!!');
-		})
 
 		$("body").append(clefCircle);
 
