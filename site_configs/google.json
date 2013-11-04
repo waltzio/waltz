@@ -15,5 +15,22 @@
             },
             "check": "a#gb_71"
         }
+    },
+    "*://*.youtube.com/*": {
+        "logout": {
+            "cookies": ["SID", "GX"]
+        },
+        "login": {
+            "url": "https://accounts.google.com/ServiceLoginAuth",
+            "method": "POST",
+            "usernameField": "Email",
+            "passwordField": "Passwd",
+            "redirectField": "continue",
+            "other": {
+                "url": "https://accounts.google.com/ServiceLoginAuth",
+                "fields": ["GALX"]
+            },
+            "check": "a#gb_71"
+        }
     }
 }
