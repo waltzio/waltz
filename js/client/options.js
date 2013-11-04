@@ -103,7 +103,7 @@
 					domain: $(self).parent().data('domain'),
 					username: $(self).siblings(".username").val(),
 					password: $(self).siblings(".password").val()
-				});
+				}, function() {});
 
 				$(self).addClass('success');
 				setTimeout(function() {
