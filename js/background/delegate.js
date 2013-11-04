@@ -80,16 +80,16 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 
 	switch(request.method) {
 		case "saveCredentials":
-			return this.saveCredentials(request.domain, request.username, request.password, sendResponse);
+			return this.saveCredentials(request.key, request.username, request.password, sendResponse);
 			break;
 		case "deleteCredentials":
-			return this.deleteCredentials(request.domain, sendResponse);
+			return this.deleteCredentials(request.key, sendResponse);
 			break;
 		case "getCredentials":
-			return this.getCredentials(request.domain, sendResponse);
+			return this.getCredentials(request.key, sendResponse);
 			break;
 		case "decrypt":
-			return this.decrypt(request.value, request.domain, sendResponse);
+			return this.decrypt(request.value, request.key, sendResponse);
 			break;
 		case "checkAuthentication":
 			return this.checkAuthentication(sendResponse);
@@ -233,9 +233,9 @@ Delegate.prototype.logout = function(opts) {
 	});
 }
 
-Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
-	waltzCrypto.encrypt(password, domain, function(encrypted) {
-		storage.storeCredentialsForDomain(domain, username, encrypted.output, function() {
+Delegate.prototype.saveCredentials = function(domain_key, username, password, cb) {
+	waltzCrypto.encrypt(password, domain_key, function(encrypted) {
+		storage.storeCredentialsForDomain(domain_key, username, encrypted.output, function() {
 			cb(true);
 		});
 	});
@@ -243,13 +243,13 @@ Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
 	return true;
 }
 
-Delegate.prototype.deleteCredentials = function(domain, cb) {
-	storage.deleteCredentialsForDomain(domain, cb);
+Delegate.prototype.deleteCredentials = function(domain_key, cb) {
+	storage.deleteCredentialsForDomain(domain_key, cb);
 	return true;
 }
 
-Delegate.prototype.getCredentials = function(domain, cb) {
-	storage.getCredentialsForDomain(domain, function(creds) {
+Delegate.prototype.getCredentials = function(domain_key, cb) {
+	storage.getCredentialsForDomain(domain_key, function(creds) {
 		cb({
 			error: false,
 			creds: creds
@@ -259,8 +259,8 @@ Delegate.prototype.getCredentials = function(domain, cb) {
 	return true;
 }
 
-Delegate.prototype.decrypt = function(value, domain, cb) {
-	waltzCrypto.decrypt(value, domain, function(decrypted) {
+Delegate.prototype.decrypt = function(value, domain_key, cb) {
+	waltzCrypto.decrypt(value, domain_key, function(decrypted) {
 		cb(decrypted);
 	});
 

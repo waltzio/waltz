@@ -81,7 +81,7 @@
 
 			chrome.runtime.sendMessage({
 				method: "getCredentials",
-				domain: _this.options.site.domain
+				key: _this.options.site.config.key
 
 			}, function(creds) {
 				if(creds.error) {
@@ -110,7 +110,7 @@
 
 	Waltz.prototype.storeLogin = function(username, password) {
 		chrome.runtime.sendMessage({
-			domain: this.options.site.domain,
+			key: this.options.site.config.key,
 			username: username,
 			password: password
 		});
@@ -121,7 +121,7 @@
 		if(self.loginCredentials && typeof(self.loginCredentials.password === "string")) {
 			chrome.runtime.sendMessage({
 				method: "decrypt",
-				domain: self.options.site.domain,
+				key: self.options.site.config.key,
 				value: self.loginCredentials.password
 
 			}, function(response) {
@@ -139,10 +139,9 @@
 	}
 
 	Waltz.prototype.encryptCredentials = function(credentials, cb) {
-
 		chrome.runtime.sendMessage({
 			method: "saveCredentials",
-			domain: this.options.site.domain,
+			key: this.options.site.config.key,
 			username: credentials.username,
 			password: credentials.password
 		}, function(response) {
@@ -304,8 +303,7 @@
 		var self = this;
 
 		chrome.runtime.sendMessage({
-			method: "checkAuthentication",
-			domain: self.options.site.domain
+			method: "checkAuthentication"
 		}, function(response) {
 			if (!response.user) {
 				self.logIn(cb);

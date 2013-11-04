@@ -9,13 +9,13 @@
 
 	$(document).ready(function() {
 		chrome.storage.local.get(null, function(sites) {
-			for(domain in sites) {
-				var site = sites[domain];
+			for(key in sites) {
+				var site = sites[key];
 
-				if(domain != "options" && domain != "waltz_logins"){ //Options and Waltz_logins don't have username/password pairs
+				if(key != "options" && key != "waltz_logins"){ //Options and Waltz_logins don't have username/password pairs
 
-					var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-domain='"+domain+"'>"
-							   +"	<h3>"+domain+"</h3>"
+					var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-key='"+key+"'>"
+							   +"	<h3>"+key+"</h3>"
 							   +"	<button class='decrypt styled'>Decrypt</button>"
 							   +"	<button class='deleteAccount styled'>Forget</button>";
 							   +"	</li>"
@@ -28,7 +28,7 @@
 				var self = this;
 				var parent = $(self).parent();
 
-				var domain = $(parent).data('domain');
+				var key = $(parent).data('key');
 				var username = $(parent).data('username');
 				var password = $(parent).data('password');
 
@@ -36,7 +36,7 @@
 					if(authed) {
 						chrome.runtime.sendMessage({
 							method: "decrypt",
-							domain: domain,
+							key: key,
 							value: password
 
 						}, function(response) {
@@ -100,7 +100,7 @@
 
 				chrome.runtime.sendMessage({
 					method: "saveCredentials",
-					domain: $(self).parent().data('domain'),
+					domain_key: $(self).parent().data('key'),
 					username: $(self).siblings(".username").val(),
 					password: $(self).siblings(".password").val()
 				}, function() {});
@@ -116,7 +116,7 @@
 
 				chrome.runtime.sendMessage({
 					method: "deleteCredentials",
-					domain: $(self).parent().data('domain')
+					domain_key: $(self).parent().data('key')
 				});
 				$(self).parent().remove();
 			});
