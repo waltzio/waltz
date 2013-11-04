@@ -3,50 +3,109 @@
 	var Waltz = this.Waltz = function(opts) {
         // If there are no opts, Waltz is not supported on this site
 		if (!opts) return;
-        // If the 'check' selector exists, then we're logged in, 
-        // so don't show Waltz
-		if ($(opts.site.config.login.check).length != 0) {
-            chrome.runtime.sendMessage({ method: "acknowledgeLogin" });
-            return;
-        };
-
-		var _this = this;
 
 		this.options = opts;
+		var _this = this,
+			page = this.checkPage();
+        
+		if (page == "logged_in") {
+			// If the 'check' selector exists, then we're logged in, 
+        	// so don't show Waltz
+            chrome.runtime.sendMessage({ method: "acknowledgeLogin" });
+            return;
+        } else {
+        	// the 'check' selector doesn't exit yet, but it may exist in the 
+        	// near future. 
+        	var checks = 0,
+        		MAX_CHECKS = 20,
+        		CHECK_INTERVAL = 300,
+        		loginCheckInterval;
 
-		this.loginCredentials = false;
+        	if (!this.options.inTransition) {
+        		// If we're not inTransition, let's assume that we need to log
+        		// in. So, kickOff then check to see if we need to hide.
+        		kickOff();
+        		loginCheckInterval = setInterval(function() {
+        			if (checks > MAX_CHECKS) {
+	        			clearInterval(loginCheckInterval);
+	        			return;
+	        		}
 
-		chrome.runtime.sendMessage({
-			method: "getCredentials",
-			domain: this.options.site.domain
+	        		page = _this.checkPage();
+	        		if (page === "logged_in") {
+        				$(".waltz-dismiss").click();
+	        			chrome.runtime.sendMessage({method: "acknowledgeLogin"});
+	        			clearInterval(loginCheckInterval);
+	        			return;
+	        		} else if (page == "login") {
+	        			clearInterval(loginCheckInterval);
+	        		} else {
+	        			checks++;
+	        		}
 
-		}, function(creds) {
-			if(creds.error) {
-				if(creds.error === "authentication") {
-					console.log("auth error");
+        		}, CHECK_INTERVAL);
+
+        	} else {
+	        	// if we are inTransition, let's keep on looking for a login 
+	        	// field. We can do this because the bad password page will
+	        	// almost certainly contain the field to put in a new password.
+	        	// ya feel me?
+	        	if (page === "login") {
+	        		kickOff();
+	        	} else {
+	        		loginCheckInterval = setInterval(function() {
+	        			if (checks > MAX_CHECKS) {
+	        				clearInterval(loginCheckInterval);
+	        				return;
+	        			}
+
+	        			page = _this.checkPage();
+	        			if (page === "logged_in") {
+		        			chrome.runtime.sendMessage({method: "acknowledgeLogin"});
+		        			clearInterval(loginCheckInterval);
+		        			return;
+	        			} else if (page === "login") {
+	        				kickOff();
+	        				clearInterval(loginCheckInterval);
+	        				return;
+	        			} else {
+	        				checks++;
+	        			}
+	        		}, CHECK_INTERVAL);
+	        	}
+        	}
+        }
+
+        function kickOff() {
+        	_this.loginCredentials = false;
+
+			chrome.runtime.sendMessage({
+				method: "getCredentials",
+				domain: _this.options.site.domain
+
+			}, function(creds) {
+				if(creds.error) {
+					if(creds.error === "authentication") {
+						console.log("auth error");
+					} else {
+						console.log(creds.error, creds.status);
+					}
 				} else {
-					console.log(creds.error, creds.status);
-				}
-			} else {
-				_this.loginCredentials = creds.creds	
-				_this.drawClefWidget();		
+					_this.loginCredentials = creds.creds	
+					_this.drawClefWidget();		
 
-                console.log("Loaded credentials");
-                chrome.runtime.sendMessage({
-                    method: "checkTransition"
-                }, function(inTransition) {
-                    if (inTransition) {
+                    if (_this.options.inTransition) {
                         _this.checkAuthentication(function() {
-                            var errorMessage = "Invalid username and password. Please try entering your credentials again.";
+                            var errorMessage = "Invalid username and password.";
                             _this.requestCredentials(errorMessage); 
                         });
                     }
                     chrome.runtime.sendMessage({ method: "acknowledgeLogin" });
-                });
-			}
-		});
+				}
 
-		window.addEventListener('message', this.closeIFrame.bind(this));
+				window.addEventListener('message', _this.closeIFrame.bind(_this));
+			});
+        }
 	}
 
 	Waltz.prototype.storeLogin = function(username, password) {
@@ -204,19 +263,28 @@
 		}
 
 		if (siteConfig.login.other) {
+			var appendInputs = function(data) {
+				var $data = $(data),
+					inputs = $data.find('input');
 
-			chrome.runtime.sendMessage({
-				method: "proxyRequest",
-				url: siteConfig.login.other.url
-			}, function(data) {
-				var $data = $(data);
+				inputs = inputs.filter(function(input) { 
+					return $(this).attr('name') != siteConfig.login.passwordField &&
+						$(this).attr('name') != siteConfig.login.usernameField;
+				});
 
-				for (var i = 0; i < siteConfig.login.other.fields.length; i++) {
-					form.append($data.find('input[name="' + siteConfig.login.other.fields[i] + '"]').clone())
-				}
+				form.append(inputs);
 				
 				submitForm();
-			});
+			}
+
+			if (window.location.href.match(siteConfig.login.other.url)) {
+				appendInputs(document);
+			} else {
+				chrome.runtime.sendMessage({
+					method: "proxyRequest",
+					url: siteConfig.login.other.url
+				}, appendInputs);
+			}
 		} else {
 			submitForm();
 		}
@@ -261,21 +329,21 @@
 
 		// set up templates for tutorial
 		var $overlay = $("<div id='" + OVERLAY_ID + "''></div>")
-			$form = $("<div id='"+ FORM_ID + "'></div>")
-			$usernameField = $("<input type='text' placeholder='Username' id='" + USERNAME_ID + "' />");
-			$passwordField = $("<input type='password' placeholder='Password' id='" + PASSWORD_ID + "' />");
-			$submitButton = $("<input type='submit' value='Submit' id='" + SUBMIT_ID + "' />");
+			$form = $("<div id='"+ FORM_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/waltz-transparent-128.png") + ")'></div>")
+			$usernameField = $("<input type='text' placeholder='type your username' id='" + USERNAME_ID + "' />");
+			$passwordField = $("<input type='password' placeholder='type your password' id='" + PASSWORD_ID + "' />");
+			$submitButton = $("<input type='submit' value=' ' id='" + SUBMIT_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/next.png") + ")'/>");
 			$body = $('body');
 
 		// add tutorial templates
-		$body.append($overlay);
 		$form.append($usernameField).append($passwordField);
         if (errorMessage) {
-            $form.append($("<p id='" + ALERT_ID + "'>" + errorMessage + "</p>"));
+            $form.prepend($("<p id='" + ALERT_ID + "'>" + errorMessage + "</p>"));
         }		
 
         $form.append($submitButton);
-        $body.append($form)
+		$overlay.append($form);
+        $body.append($overlay)
 
 		//Put this on a timeout, because we need the class to be added after the initial draw
 		setTimeout(function() {
@@ -292,11 +360,14 @@
 
 		$submitButton.click(submitForm);
 
-		$overlay.click(function() {
-			$.merge($overlay, $form).removeClass(SLIDE_IN_CLASS);
-			setTimeout(function() {
-				$.merge($overlay, $form).remove();
-			}, 500);
+		$overlay.click(function(e) {
+			if ($(e.target).attr('id') === $overlay.attr('id')) {
+				$('#clef-waltz-login-wrapper').removeClass('waltz-remove');
+				$.merge($overlay, $form).removeClass(SLIDE_IN_CLASS);
+				setTimeout(function() {
+					$.merge($overlay, $form).remove();
+				}, 500);
+			}
 		});
 
 
@@ -350,7 +421,6 @@
 
 		$(document).ready(this.loadIFrame.bind(this));
 
-
 		$(clefCircle).click(function() {
 			$(this).addClass("waltz-loading");
 
@@ -380,14 +450,26 @@
 		$(clefCircle).find(".waltz-edit").click(function(e) {
 			e.stopPropagation();
 
+			$(this).parent().addClass("waltz-remove");
 			self.checkAuthentication(function() {
 				self.requestCredentials();
 			});
 		});
 
-
 		$("body").append(clefCircle);
 
+	}
+
+	Waltz.prototype.checkPage = function() {
+		if ($(this.options.site.config.login.check).length != 0) {
+			return "logged_in";
+		}
+
+		if ($("input[name='" + this.options.site.config.login.passwordField + "']").length > 0) {
+			return "login";
+		}
+
+		return "unknown";
 	}
 
 	chrome.runtime.sendMessage({
