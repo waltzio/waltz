@@ -84,7 +84,11 @@ section.body {
       background-color: white;
       background-repeat: no-repeat;
       background-position: center center;
-      background-size: 75%; }
+      background-size: 75%;
+      cursor: pointer;
+      transition: background-color .5s;
+      -webkit-transition: background-color .5s;
+      -moz-transition: background-color .5s; }
       section.body .features .feature .circle.github {
         background-image: url(../images/github.png); }
       section.body .features .feature .circle.local {
@@ -99,8 +103,48 @@ section.body {
       section.body .features .feature .circle.sync {
         background-image: url(../images/wave.png);
         background-size: 90%; }
+      section.body .features .feature .circle:hover {
+        background-color: #f50380; }
     section.body .features .feature .description {
       text-align: center;
       color: white;
       margin-top: 10px;
       font-size: 20px; }
+
+section.features {
+  margin-top: 3%; }
+  section.features .feature-detail {
+    height: 500px; }
+    section.features .feature-detail.sync .icon:before {
+      background-image: url(../images/wave.png); }
+    section.features .feature-detail.sign-out .icon:before {
+      background-image: url(../images/sign_out.png); }
+    section.features .feature-detail.github .icon:before {
+      background-image: url(../images/github.png); }
+    section.features .feature-detail.local .icon:before {
+      background-image: url(../images/local.png); }
+    section.features .feature-detail.two-factor .icon:before {
+      background-image: url(../images/2-factor.png); }
+    section.features .feature-detail p {
+      color: white;
+      font-size: 2em;
+      position: relative;
+      top: 75px; }
+    section.features .feature-detail div.icon {
+      height: 500px;
+      font-size: 2em;
+      color: white;
+      text-align: center; }
+      section.features .feature-detail div.icon:before {
+        content: '';
+        display: block;
+        height: 300px;
+        width: 300px;
+        border-radius: 300px;
+        background-color: white;
+        background-size: 90%;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        left: 50px;
+        top: -20px; }
