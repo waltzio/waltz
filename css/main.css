@@ -23,17 +23,11 @@ header {
   header:after {
     clear: both; }
   header .logo-container {
-    display: block;
-    float: left;
-    margin-right: 2.35765%;
-    width: 48.82117%; }
-    header .logo-container:last-child {
-      margin-right: 0; }
+    margin-top: 10px; }
     header .logo-container .logo {
-      width: 150px;
-      margin-bottom: 20px; }
+      width: 150px; }
     header .logo-container .logo-text {
-      width: 100%; }
+      position: absolute; }
   header .content-container {
     height: 100%;
     position: relative;
@@ -85,7 +79,6 @@ html, body {
     margin: 0; }
 
 section.container {
-  margin: 30px auto;
   padding: 40px 0;
   *zoom: 1;
   max-width: 68em;

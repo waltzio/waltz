@@ -6,14 +6,14 @@ header {
     position: relative;
 
     .logo-container {
-        @include span-columns(6);
+        margin-top: 10px;
+        
         .logo {
             width: 150px;
-            margin-bottom: 20px;
         }
 
         .logo-text {
-            width: 100%;
+            position: absolute;
         }
     }
 
