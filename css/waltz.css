@@ -21,23 +21,27 @@
   /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33000000', endColorstr='#b3000000',GradientType=1 );
   -webkit-transition: opacity .5s;
-  cursor: default; }
-  #waltz-credential-overlay.slide-in {
-    opacity: 1; }
-  #waltz-credential-overlay::after {
-    position: absolute;
-    color: white;
-    content: "×";
-    top: 10px;
-    left: 10px;
-    font-size: 30px;
-    line-height: 20px;
-    margin: 0;
-    opacity: .5;
-    cursor: pointer;
-    z-index: 9999; }
-    #waltz-credential-overlay::after:hover {
-      opacity: 1; }
+  cursor: default;
+}
+#waltz-credential-overlay.slide-in {
+  opacity: 1;
+}
+#waltz-credential-overlay::after {
+  position: absolute;
+  color: white;
+  content: "×";
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+  line-height: 20px;
+  margin: 0;
+  opacity: .5;
+  cursor: pointer;
+  z-index: 9999;
+}
+#waltz-credential-overlay::after:hover {
+  opacity: 1;
+}
 
 #waltz-credential-form {
   width: 280px;
@@ -51,72 +55,84 @@
   padding-top: 70px;
   padding-bottom: 1px;
   -webkit-transition: .2s;
-  position: relative; }
-  #waltz-credential-form.slide-in {
-    margin-top: 0; }
-  #waltz-credential-form #waltz-credential-username,
-  #waltz-credential-form #waltz-credential-password,
-  #waltz-credential-form #waltz-credential-submit,
-  #waltz-credential-form #waltz-credential-alert {
-    font-family: "Gill Sans", "Helvetica Neue", "Helvetica", serif;
-    font-weight: 300;
-    font-size: 18px;
-    padding: 5px;
-    margin: 20px;
-    border-radius: 0px;
-    display: block;
-    border: 1px solid black; }
-    #waltz-credential-form #waltz-credential-username:not(#waltz-credential-submit),
-    #waltz-credential-form #waltz-credential-password:not(#waltz-credential-submit),
-    #waltz-credential-form #waltz-credential-submit:not(#waltz-credential-submit),
-    #waltz-credential-form #waltz-credential-alert:not(#waltz-credential-submit) {
-      -webkit-transition: .5s;
-      -webkit-box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.54); }
-      #waltz-credential-form #waltz-credential-username:not(#waltz-credential-submit):focus,
-      #waltz-credential-form #waltz-credential-password:not(#waltz-credential-submit):focus,
-      #waltz-credential-form #waltz-credential-submit:not(#waltz-credential-submit):focus,
-      #waltz-credential-form #waltz-credential-alert:not(#waltz-credential-submit):focus {
-        outline: none;
-        border-color: #fe93ca;
-        -webkit-box-shadow: 0 0 10px #fe93ca; }
-  #waltz-credential-form #waltz-credential-username {
-    width: 230px; }
-  #waltz-credential-form #waltz-credential-password {
-    display: inline-block;
-    width: 190px;
-    margin-left: 20px;
-    margin-right: 0;
-    margin-top: 0; }
-  #waltz-credential-form #waltz-credential-submit {
-    border: none;
-    color: white;
-    cursor: pointer;
-    background: white;
-    color: black;
-    width: 30px;
-    display: inline-block;
-    -webkit-transition: .5s;
-    margin: 0;
-    margin-left: 10px;
-    color: white;
-    background: transparent;
-    background-position: center center;
-    background-size: 80%;
-    background-repeat: no-repeat;
-    -webkit-border-radius: 20px; }
-    #waltz-credential-form #waltz-credential-submit:hover {
-      background-color: #f50380; }
-    #waltz-credential-form #waltz-credential-submit:after {
-      display: block;
-      clear: both; }
-  #waltz-credential-form #waltz-credential-alert {
-    margin-top: 20px;
-    font-size: 14px;
-    background-color: #f65058;
-    color: white; }
+  position: relative;
+}
+#waltz-credential-form.slide-in {
+  margin-top: 0;
+}
+#waltz-credential-form #waltz-credential-username,
+#waltz-credential-form #waltz-credential-password,
+#waltz-credential-form #waltz-credential-submit,
+#waltz-credential-form #waltz-credential-alert {
+  font-family: "Gill Sans", "Helvetica Neue", "Helvetica", serif;
+  font-weight: 300;
+  font-size: 18px;
+  padding: 5px;
+  margin: 20px;
+  border-radius: 0px;
+  display: block;
+  border: 1px solid black;
+}
+#waltz-credential-form #waltz-credential-username:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-password:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-submit:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-alert:not(#waltz-credential-submit) {
+  -webkit-transition: .5s;
+  -webkit-box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.54);
+}
+#waltz-credential-form #waltz-credential-username:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-password:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-submit:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-alert:not(#waltz-credential-submit):focus {
+  outline: none;
+  border-color: #fe93ca;
+  -webkit-box-shadow: 0 0 10px #fe93ca;
+}
+#waltz-credential-form #waltz-credential-username {
+  width: 230px;
+}
+#waltz-credential-form #waltz-credential-password {
+  display: inline-block;
+  width: 190px;
+  margin-left: 20px;
+  margin-right: 0;
+  margin-top: 0;
+}
+#waltz-credential-form #waltz-credential-submit {
+  border: none;
+  color: white;
+  cursor: pointer;
+  background: white;
+  color: black;
+  width: 30px;
+  display: inline-block;
+  -webkit-transition: .5s;
+  margin: 0;
+  margin-left: 10px;
+  color: white;
+  background: transparent;
+  background-position: center center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  -webkit-border-radius: 20px;
+}
+#waltz-credential-form #waltz-credential-submit:hover {
+  background-color: #f50380;
+}
+#waltz-credential-form #waltz-credential-submit:after {
+  display: block;
+  clear: both;
+}
+#waltz-credential-form #waltz-credential-alert {
+  margin-top: 20px;
+  font-size: 14px;
+  background-color: #f65058;
+  color: white;
+}
 
 .waltz-clear {
-  clear: both; }
+  clear: both;
+}
 
 #clef-waltz-login-wrapper {
   background-repeat: no-repeat;
@@ -132,54 +148,66 @@
   padding: 20px;
   background-position: center;
   z-index: 9999;
-  -webkit-transition: .5s; }
-  #clef-waltz-login-wrapper:hover {
-    -webkit-transition: -webkit-transform .5s;
-    -webkit-transform: rotateX(0deg) rotateZ(359deg);
-    opacity: 1; }
-    #clef-waltz-login-wrapper:hover .waltz-button {
-      height: 20px;
-      width: 20px;
-      -webkit-transform: rotateZ(360deg);
-      opacity: 1; }
-      #clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss {
-        top: 63px;
-        left: 50px; }
-        #clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss:hover {
-          background-color: #db070a; }
-      #clef-waltz-login-wrapper:hover .waltz-button.waltz-edit {
-        top: 43px;
-        left: -6px; }
-        #clef-waltz-login-wrapper:hover .waltz-button.waltz-edit:hover {
-          background-color: #f50380; }
-  #clef-waltz-login-wrapper.waltz-remove {
-    -webkit-transition: .5s;
-    right: -200px; }
-  #clef-waltz-login-wrapper.waltz-loading {
-    -webkit-animation: spin-clef-logo 1s linear infinite; }
-  #clef-waltz-login-wrapper .waltz-button {
-    height: 0px;
-    width: 0px;
-    border-radius: 25px;
-    display: block;
-    background-size: 50%;
-    background-repeat: no-repeat;
-    background-position: 5px 5px;
-    opacity: 0;
-    -webkit-transform: rotateZ(0deg);
-    -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
-    -webkit-transition-delay: .1s;
-    position: relative;
-    top: 25px;
-    left: 25px;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    height: auto;
-    min-height: 0px; }
-    #clef-waltz-login-wrapper .waltz-button.waltz-dismiss {
-      background-color: #db4c53; }
-    #clef-waltz-login-wrapper .waltz-button.waltz-edit {
-      -webkit-transition-delay: .2s;
-      background-color: #f774b8; }
+  -webkit-transition: .5s;
+}
+#clef-waltz-login-wrapper:hover {
+  -webkit-transition: -webkit-transform .5s;
+  -webkit-transform: rotateX(0deg) rotateZ(359deg);
+  opacity: 1;
+}
+#clef-waltz-login-wrapper:hover .waltz-button {
+  height: 20px;
+  width: 20px;
+  -webkit-transform: rotateZ(360deg);
+  opacity: 1;
+}
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss {
+  top: 63px;
+  left: 50px;
+}
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-dismiss:hover {
+  background-color: #db070a;
+}
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-edit {
+  top: 43px;
+  left: -6px;
+}
+#clef-waltz-login-wrapper:hover .waltz-button.waltz-edit:hover {
+  background-color: #f50380;
+}
+#clef-waltz-login-wrapper.waltz-remove {
+  -webkit-transition: .5s;
+  right: -200px;
+}
+#clef-waltz-login-wrapper.waltz-loading {
+  -webkit-animation: spin-clef-logo 1s linear infinite;
+}
+#clef-waltz-login-wrapper .waltz-button {
+  height: 0px;
+  width: 0px;
+  border-radius: 25px;
+  display: block;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  opacity: 0;
+  -webkit-transform: rotateZ(0deg);
+  -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
+  -webkit-transition-delay: .1s;
+  position: relative;
+  top: 25px;
+  left: 25px;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  min-height: 0px;
+}
+#clef-waltz-login-wrapper .waltz-button.waltz-dismiss {
+  background-color: #db4c53;
+}
+#clef-waltz-login-wrapper .waltz-button.waltz-edit {
+  -webkit-transition-delay: .2s;
+  background-color: #f774b8;
+}

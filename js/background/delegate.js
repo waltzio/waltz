@@ -29,6 +29,15 @@ function Delegate(options) {
 
 	// bind the router
 	chrome.runtime.onMessage.addListener(this.router.bind(this));
+    window.addEventListener('online', function() {
+        setTimeout(function() {
+            _this.checkAuthentication(function(data) {
+                if (!data.user) {
+                    _this.logout();
+                }
+            })
+        }, 2000);
+    })
 
 	//Add the context menu
 	chrome.contextMenus.create({
@@ -336,10 +345,20 @@ Delegate.prototype.initialize = function(data, callback) {
 	}
 }
 
+var blastOff = function() {
+    storage.getOptions(function(options) {
+        delegate = new Delegate(options);
+    });
+}
 
-storage.getOptions(function(options) {
-	delegate = new Delegate(options);
-});
+if (navigator.onLine) {
+    blastOff();
+} else {
+    window.addEventListener('online', function() {
+        window.removeEventListener('online');
+        blastOff();
+    });
+}
 
 
 /**
