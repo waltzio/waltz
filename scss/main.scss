@@ -1,6 +1,120 @@
+@import "settings";
+
 @import "bourbon/_bourbon";
 @import "neat/neat";
 
 @import "header";
 
 @import url("http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic");
+
+*, *:before, *:after {
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", sans-serif;
+    & > * {
+        font-family: inherit;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+    }
+}
+
+
+section.container {
+    margin: 30px auto;
+    padding: 40px 0;
+    @include outer-container;
+    background: $black;
+
+    .header {
+        @include row;
+        @include span-columns(12);
+        font-size: 24px;
+        .tagline, .sub-tagline {
+            text-align: center;
+            color: white;
+            margin: 10px 0;
+            a {
+                color: white;
+                position: relative;
+                &:after {
+                    content: " ";
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    background: $pink;
+                    height: 5px;
+                }
+                &:hover {
+                    color: $pink;
+                }
+            }
+            letter-spacing: .05em;
+        }
+
+        .sub-tagline {
+            font-size: 22px;
+            font-weight: normal;
+            opacity: .7;
+        }
+    }
+
+    .features {
+        @include row;
+        @include span-columns(12);
+        padding: 40px 0;
+        .feature {
+            &:first-child {
+                @include shift(1);
+            }
+            @include span-columns(2);
+            .circle {
+                $size: 100px;
+                width: $size;
+                height: $size;
+                border-radius: ($size / 2);
+                margin: auto;
+                background-color: white;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: 75%;
+                &.github {
+                    background-image: url(../images/github.png);
+                }
+                &.local {
+                    background-image: url(../images/local.png);
+                    background-size: 50%;
+                }
+                &.sign-out {
+                    background-image: url(../images/sign_out.png);
+                    background-size: 50%;
+                }
+                &.two-factor {
+                    background-image: url(../images/2-factor.png);
+                    background-size: 50%;
+                }
+                &.sync {
+                    background-image: url(../images/wave.png);
+                    background-size: 90%;
+                }
+            }
+
+            .description {
+                text-align: center;
+                color: white;
+                margin-top: 10px;
+                font-size: 20px;
+            }
+        }
+    }
+}

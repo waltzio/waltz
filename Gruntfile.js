@@ -20,14 +20,30 @@ module.exports = function(grunt) {
         },
  
         watch: {
-            css: {
+            connect: {
                 options: {
                     livereload: true
                 },
                 files: [
                     'scss/**/*.scss'
                 ],
-                tasks: ['sass']
+                tasks: ['sass'],
+            }
+        },
+
+        connect: {
+            all: {
+                options: {
+                    port: 3000,
+                    hostname: 'localhost',
+                    keepalive: true
+                }
+            }
+        },
+
+        open: {
+            all: {
+                path: 'http://localhost:<%= connect.all.options.port %>'
             }
         }
  
@@ -36,8 +52,11 @@ module.exports = function(grunt) {
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-open');
+    grunt.loadNpmTasks('grunt-concurrent');
  
     // Default task.
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['watch', 'connect', 'open']);
  
 };

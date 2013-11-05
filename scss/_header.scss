@@ -1,7 +1,39 @@
 header {
+    // $height: 350px;
+    // height: $height;
+    position: relative;
     @include outer-container;
+    position: relative;
 
-    .logo {
-        width: 300px;
+    .logo-container {
+        @include span-columns(6);
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .logo-text {
+            width: 100%;
+        }
+    }
+
+    .content-container {
+        height: 100%;
+        position: relative;
+        @include span-columns(6);
+        @include outer-container;
+        
+    }
+
+    a.button {
+        float: right;
+        background: $pink;
+        color: white;
+        @include span-columns(3);
+        @include shift(6);
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        right: 0;
     }
 }
