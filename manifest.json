@@ -23,7 +23,8 @@
     "storage",
     "cookies",
     "tabs",
-    "notifications"
+    "notifications",
+    "contextMenus"
   ],
   "icons": {
     "16": "/img/waltz-16.png",
