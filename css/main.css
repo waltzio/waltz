@@ -44,8 +44,9 @@ html, body {
     font-family: inherit; }
   html a, body a {
     text-decoration: none; }
-  html h1, html h2, html h3, html h4, html h5, html h6, body h1, body h2, body h3, body h4, body h5, body h6 {
-    margin: 0; }
+  html h1, html h2, html h3, html h4, html h5, html h6, html p, body h1, body h2, body h3, body h4, body h5, body h6, body p {
+    margin: 0;
+    font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", sans-serif; }
 
 section.body {
   padding: 40px 0;
@@ -56,6 +57,7 @@ section.body {
       text-align: center;
       color: white;
       margin: 10px 0;
+      font-weight: bold;
       letter-spacing: .05em; }
       section.body .header .tagline a, section.body .header .sub-tagline a {
         color: white;
@@ -69,7 +71,8 @@ section.body {
           background: #f50380;
           height: 5px; }
         section.body .header .tagline a:hover, section.body .header .sub-tagline a:hover {
-          color: #f50380; }
+          color: #f50380;
+          text-decoration: none; }
     section.body .header .sub-tagline {
       font-size: 22px;
       font-weight: normal;

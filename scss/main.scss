@@ -21,8 +21,9 @@ html, body {
         text-decoration: none;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2, h3, h4, h5, h6, p {
         margin: 0;
+        font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", sans-serif;
     }
 }
 
@@ -37,6 +38,7 @@ section.body {
             text-align: center;
             color: white;
             margin: 10px 0;
+            font-weight: bold;
             a {
                 color: white;
                 position: relative;
@@ -51,6 +53,7 @@ section.body {
                 }
                 &:hover {
                     color: $pink;
+                    text-decoration: none;
                 }
             }
             letter-spacing: .05em;
