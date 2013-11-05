@@ -30,6 +30,15 @@ function Delegate(options) {
 	// bind the router
 	chrome.runtime.onMessage.addListener(this.router.bind(this));
 
+	//Add the context menu
+	chrome.contextMenus.create({
+		id: 'waltz-main',
+		title: 'Waltz',
+		onclick: function(info, tab) {
+			chrome.tabs.create({url: "/html/options.html"});
+		}
+	});
+
 	// load configs and fall back if cannot access Github
 	this.configsLoaded = $.Deferred();
 
