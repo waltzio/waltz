@@ -1,0 +1,18 @@
+{
+    "*://*.crashlytics.com/*": {
+        "logout": {
+            "cookies": ["auth_token"]
+        },
+        "login": {
+            "url": "https://twitter.com/sessions",
+            "method": "POST",
+            "usernameField": "session[username_or_email]",
+            "passwordField": "session[password]",
+            "other": {
+                "url": "https://twitter.com/login",
+                "fields": ["authenticity_token"]
+            },
+            "check": "button:contains('Sign out')"
+        }
+    }
+}

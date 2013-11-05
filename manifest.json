@@ -23,7 +23,8 @@
     "storage",
     "cookies",
     "tabs",
-    "notifications"
+    "notifications",
+    "contextMenus"
   ],
   "icons": {
     "16": "/img/waltz-16.png",
@@ -34,6 +35,8 @@
   "homepage_url": "http://waltz.io",
   "web_accessible_resources": [
     "img/waltz-128.png",
+    "img/next.png",
+    "img/waltz-transparent-128.png",
     "img/waltz-full.png",
     "img/pencil.png",
     "img/x.png"

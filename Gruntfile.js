@@ -10,9 +10,9 @@ grunt.initConfig({
         debounceDelay: 500
       }
     },
-    'merge-json': {
+    'build-config': {
       files: ['site_configs/*.json'],
-      tasks: ['merge-json'],
+      tasks: ['build-config'],
       options: {
         debounceDelay: 500
       }
@@ -45,12 +45,54 @@ grunt.initConfig({
         ]
     }
   },
-      "merge-json": {
-        "en": {
-            src: [ "site_configs/*.json" ],
-            dest: "build/site_configs.json"
-        }
+  "build-config": {
+    "go": {
+      src: 'site_configs',
+      dest: 'build/site_configs.json'
     }
+  }
+});
+
+grunt.task.registerMultiTask('build-config', 'Concatenates site configs.', function() {
+  var len = this.filesSrc.length,
+      siteConfig,
+      outputDir = this.data.dest.split('/').slice(0, -1).join('/'),
+      merged = {};
+
+  var jsonMerge = function(object1, object2) {
+    var key, a1, a2;
+    for (key in object2) {
+      if (object2.hasOwnProperty(key)) {
+        object1[key] = object2[key];
+      }
+    }
+
+    return object1;
+  };
+
+  var iterateTroughFiles = function(abspath, rootdir, subdir, filename){
+    outputFile = outputDir + '/' + filename;
+
+    siteConfig = grunt.file.readJSON(abspath);
+
+    for (domain in siteConfig) {
+      siteConfig[domain]['key'] = filename.split('.')[0];
+    }
+
+    merged = jsonMerge(merged, siteConfig);
+  };
+
+
+  for (var x = 0; x < len; x++) {
+    grunt.file.recurse(this.data.src, iterateTroughFiles);
+  }
+
+  // If output dir doesnt exists, then create it
+  if (!grunt.file.exists(outputDir)) {
+    grunt.file.mkdir(outputDir);
+  }
+
+  grunt.file.write(this.data.dest, JSON.stringify(merged));
 });
 
 grunt.loadNpmTasks('grunt-contrib-sass');

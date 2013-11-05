@@ -28,9 +28,26 @@ function Delegate(options) {
 
 	// bind the router
 	chrome.runtime.onMessage.addListener(this.router.bind(this));
+    window.addEventListener('online', function() {
+        setTimeout(function() {
+            _this.checkAuthentication(function(data) {
+                if (!data.user) {
+                    _this.logout();
+                }
+            })
+        }, 2000);
+    })
+
+	//Add the context menu
+	chrome.contextMenus.create({
+		id: 'waltz-main',
+		title: 'Waltz',
+		onclick: function(info, tab) {
+			chrome.tabs.create({url: "/html/options.html"});
+		}
+	});
 
 	// load configs and fall back if cannot access Github
-	// TODO: fix race condition here
 	this.configsLoaded = $.Deferred();
 
 	$.ajax({
@@ -80,16 +97,16 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 
 	switch(request.method) {
 		case "saveCredentials":
-			return this.saveCredentials(request.domain, request.username, request.password, sendResponse);
+			return this.saveCredentials(request.key, request.username, request.password, sendResponse);
 			break;
 		case "deleteCredentials":
-			return this.deleteCredentials(request.domain, sendResponse);
+			return this.deleteCredentials(request.key, sendResponse);
 			break;
 		case "getCredentials":
-			return this.getCredentials(request.domain, sendResponse);
+			return this.getCredentials(request.key, sendResponse);
 			break;
 		case "decrypt":
-			return this.decrypt(request.value, request.domain, sendResponse);
+			return this.decrypt(request.value, request.key, sendResponse);
 			break;
 		case "checkAuthentication":
 			return this.checkAuthentication(sendResponse);
@@ -112,11 +129,17 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 	}
 }
 
+Delegate.prototype.acknowledgeLogin = function(request) {
+    this.transitioningToLoggedIn = false;
+}
+
 Delegate.prototype.login = function(domain) {
 	if (!this.loggedIn) {
 		this.loggedIn = true;
 		this.pubnubSubscribe();
 	}
+
+    this.transitioningToLoggedIn = true;
 	storage.addLogin(domain);
 }
 
@@ -178,22 +201,19 @@ Delegate.prototype.logout = function(opts) {
 				var promise = $.Deferred(),
 					siteConfig = _this.siteConfigs[domain];
 
-				chrome.cookies.getAll(
-					{ domain: extrapolateDomainFromMatchURL(domain) },
-					function(cookies) {
-						var cookie;
-						for (i = 0; i < cookies.length; i++) {
-							cookie = cookies[i];
-							if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
-								chrome.cookies.remove({
-									url: extrapolateUrlFromCookie(cookie),
-									name: cookie.name
-								}, function() {});
-							}
-						}
-						promise.resolve();
-					}
-				);
+                getCookiesForDomain(domain, function(cookies) {
+                    var cookie;
+                    for (i = 0; i < cookies.length; i++) {
+                        cookie = cookies[i];
+                        if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
+                            chrome.cookies.remove({
+                                url: extrapolateUrlFromCookie(cookie),
+                                name: cookie.name
+                            }, function() {});
+                        }
+                    }
+                    promise.resolve();
+                });
 
 				sitesCompleted.push(promise);
 			})();
@@ -230,9 +250,9 @@ Delegate.prototype.logout = function(opts) {
 	});
 }
 
-Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
-	waltzCrypto.encrypt(password, domain, function(encrypted) {
-		storage.storeCredentialsForDomain(domain, username, encrypted.output, function() {
+Delegate.prototype.saveCredentials = function(domain_key, username, password, cb) {
+	waltzCrypto.encrypt(password, domain_key, function(encrypted) {
+		storage.storeCredentialsForDomain(domain_key, username, encrypted.output, function() {
 			cb(true);
 		});
 	});
@@ -240,13 +260,13 @@ Delegate.prototype.saveCredentials = function(domain, username, password, cb) {
 	return true;
 }
 
-Delegate.prototype.deleteCredentials = function(domain, cb) {
-	storage.deleteCredentialsForDomain(domain, cb);
+Delegate.prototype.deleteCredentials = function(domain_key, cb) {
+	storage.deleteCredentialsForDomain(domain_key, cb);
 	return true;
 }
 
-Delegate.prototype.getCredentials = function(domain, cb) {
-	storage.getCredentialsForDomain(domain, function(creds) {
+Delegate.prototype.getCredentials = function(domain_key, cb) {
+	storage.getCredentialsForDomain(domain_key, function(creds) {
 		cb({
 			error: false,
 			creds: creds
@@ -256,8 +276,8 @@ Delegate.prototype.getCredentials = function(domain, cb) {
 	return true;
 }
 
-Delegate.prototype.decrypt = function(value, domain, cb) {
-	waltzCrypto.decrypt(value, domain, function(decrypted) {
+Delegate.prototype.decrypt = function(value, domain_key, cb) {
+	waltzCrypto.decrypt(value, domain_key, function(decrypted) {
 		cb(decrypted);
 	});
 
@@ -265,9 +285,13 @@ Delegate.prototype.decrypt = function(value, domain, cb) {
 }
 
 Delegate.prototype.proxyRequest = function(request, cb) {
-	$.get(request.url, function(data) {
-		cb(data);
-	});
+    $.ajax({
+        url: request.url, 
+        data: request.data,
+        type: request.type || 'GET'
+    }).done(function(data) {
+        cb(data); 
+    });
 
 	return true;
 }
@@ -308,8 +332,8 @@ Delegate.prototype.initialize = function(data, callback) {
 						domain: site,
 						config: this.siteConfigs[site]
 					},
-					cyHost: this.options.cy_url
-
+					cyHost: this.options.cy_url,
+                    inTransition: this.transitioningToLoggedIn
 				};
 				callback(options);
 				return;
@@ -321,9 +345,21 @@ Delegate.prototype.initialize = function(data, callback) {
 }
 
 
-storage.getOptions(function(options) {
-	delegate = new Delegate(options);
-});
+var blastOff = function() {
+    storage.getOptions(function(options) {
+        delegate = new Delegate(options);
+    });
+}
+
+if (navigator.onLine) {
+    blastOff();
+} else {
+    window.addEventListener('online', function() {
+        window.removeEventListener('online');
+        blastOff();
+    });
+}
+
 
 
 /**
@@ -374,4 +410,13 @@ function extrapolateDomainFromMatchURL(matchURL) {
 	var domain = matches[1];
 	if (domain[0] === "*") domain = domain.slice(2);
 	return domain;
+}
+
+function getCookiesForDomain(domain, cb) {
+    chrome.cookies.getAll(
+        { domain: extrapolateDomainFromMatchURL(domain) },
+        function(cookies) {
+            cb(cookies)
+        }
+    );
 }
