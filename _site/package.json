@@ -1,0 +1,14 @@
+{
+  "name": "Waltz",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-sass": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-connect": "*"
+  },
+  "dependencies": {
+    "grunt-open": "~0.2.2",
+    "grunt-concurrent": "~0.4.1"
+  }
+}
