@@ -20,7 +20,7 @@ header {
     header .header-container .content-container {
       height: 100%;
       position: relative; }
-    header .header-container a.button {
+    header .header-container .button {
       float: right;
       background: #f50380;
       color: white;

@@ -23,7 +23,12 @@
                         <img class="logo" src="images/waltz-full.png" alt="waltz"><img class="logo-text" src="images/logo-500.png" alt="waltz">
                     </div>
 
-                    <a class="button" onclick="chrome.webstore.install()" href="#">Add to Chrome</a>
+                    <button class="button install-button" onclick="chrome.webstore.install()" href="#">Add to Chrome</button>
+                    <script>
+                        if (chrome.app.isInstalled) {
+                          document.getElementById('install-button').style.display = 'none';
+                        }
+                    </script>
                 </div>
             </header>
 
