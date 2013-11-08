@@ -29,6 +29,7 @@ html, body {
 
 
 section.body {
+    $line-width: 1px;
     padding: 40px 0;
     background: $black;
 
@@ -67,8 +68,62 @@ section.body {
     }
 
     .features {
-        padding: 40px 0;
+        padding: 60px 0;
         .feature {
+            position: relative;
+            &.selected {
+                .circle {
+                    @include inset-shadow(6px, rgba(0,0,0,.2));
+                }
+                &::after {
+                    opacity: 1;
+                }
+            }
+
+            &::after {
+                $height: 40px;
+                content: " ";
+                display: block;
+                height: $height;
+                width: $line-width;
+                background: white;
+                position: absolute;
+                bottom: -$height - 20px;
+                left: 49%;
+                opacity: 0;
+                transition: .5s;
+            }
+            &.github {
+                .circle {
+                    background-image: url(../images/github.png);
+                    background-size: 50%;
+                }
+            }
+            &.local {
+                .circle {
+                    background-image: url(../images/local.png);
+                    background-size: 40%;
+                }
+            }
+            &.sign-out {
+                .circle {
+                    background-image: url(../images/sign_out.png);
+                    background-size: 45%;
+                }
+            }
+            &.two-factor {
+                .circle {
+                    background-image: url(../images/2-factor.png);
+                    background-size: 45%;
+                }
+            }
+            &.sync {
+                .circle {
+                    background-image: url(../images/wave.png);
+                    background-size: 60%;
+                    background-position: 50% 60%;
+                }
+            }
             .circle {
                 $size: 100px;
                 width: $size;
@@ -78,109 +133,57 @@ section.body {
                 background-color: white;
                 background-repeat: no-repeat;
                 background-position: center center;
-                background-size: 75%;
                 cursor: pointer;
                 transition: background-color .5s;
                 -webkit-transition: background-color .5s;
                 -moz-transition: background-color .5s;
 
-                &.github {
-                    background-image: url(../images/github.png);
-                }
-                &.local {
-                    background-image: url(../images/local.png);
-                    background-size: 50%;
-                }
-                &.sign-out {
-                    background-image: url(../images/sign_out.png);
-                    background-size: 50%;
-                }
-                &.two-factor {
-                    background-image: url(../images/2-factor.png);
-                    background-size: 50%;
-                }
-                &.sync {
-                    background-image: url(../images/wave.png);
-                    background-size: 90%;
-                }
+                
 
                 &:hover {
-                    background-color: $pink;
+                    @include inset-shadow(6px, rgba(0,0,0,.2));
                 }
             }
 
-            .description {
+            .feature-name {
                 text-align: center;
                 color: white;
                 margin-top: 10px;
                 font-size: 20px;
+                font-weight: bold;
+                letter-spacing: .05em;
             }
         }
     }
-}
 
-section.features {
-    margin-top: 3%;
-
-    .feature-detail {
-        height: 500px;
-
-        &.sync {
-            .icon:before {
-                background-image: url(../images/wave.png);
-            }
-        }
-        &.sign-out {
-            .icon:before {
-                background-image: url(../images/sign_out.png);
-            }
-        }
-        &.github {
-            .icon:before {
-                background-image: url(../images/github.png);
-            }
-        }
-        &.local {
-            .icon:before {
-                background-image: url(../images/local.png);
-            }
-        }
-        &.two-factor {
-            .icon:before {
-                background-image: url(../images/2-factor.png);
-            }
-        }
-
-        p {
-            color: white;
-            font-size: 2em;
-            position: relative;
-            top: 75px;
-        }
-
-        div.icon {
-            height: 500px;    
-            font-size: 2em;
+    .descriptions {
+        margin-top: 80px;
+        position: relative;
+        overflow: hidden;
+        height: 550px;
+        h1, h3 {
+            margin: 0;
             color: white;
             text-align: center;
-
-
-            &:before {
-                content: '';
-                display: block;
-                height: 300px;
-                width: 300px;
-                border-radius: 300px;
-                background-color: white;
-                background-size: 90%;
-                background-position: center;
-                background-repeat: no-repeat;
-                position: relative;
-                left: 50px;
-                top: -20px;
-            }
         }
-
+        h1 {
+            padding-bottom: 20px;
+        }
+        h3 {
+            width: 50%;
+        }
+        .description {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            transition: .5s;
+            &.show {
+                opacity: 1;
+                top: 40px;
+            }
+            opacity: 0;
+            top: 1000px;
+        }
     }
-
 }

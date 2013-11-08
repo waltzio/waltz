@@ -1,11 +1,17 @@
 $(document).ready(function() {
-	$(".circle").on('click', function() {
-		var cls = $(this).attr('class').replace('circle ', '');
 
-		var top = $(".feature-detail."+cls).offset().top;
+    $('.video').fitVids();
+    $('.feature').click(function(e) {
+        var $this = $(this),
+            $selected = $('.feature.selected'),
+            $shown = $('.description.show'),
+            $toShow = $('.description.' + $this.data('feature'));
 
-		$("html, body").animate({
-			scrollTop: top - 50
-		}, 800);
-	});
+        $selected.removeClass('selected');
+        $this.addClass('selected');
+
+        $shown.removeClass('show');
+        $toShow.addClass('show');
+    });
+
 });
