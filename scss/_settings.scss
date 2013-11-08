@@ -7,3 +7,9 @@ $black: black;
     padding: 10px 20px;
     font-weight: bold;
 }
+
+@mixin inset-shadow($size:2px, $color:rgba(0,0,0,0)) {
+    -moz-box-shadow: inset 0 0 $size $size $color;
+    -webkit-box-shadow: inset 0 0 $size $size $color;
+    box-shadow: inset 0 0 $size $size $color;
+}

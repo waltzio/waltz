@@ -16,102 +16,129 @@
 
     <body>
 
-        <div class="container">
-            <header class="row">
-                <div class="header-container col-md-12">
-                    <div class="left logo-container">
-                        <img class="logo" src="images/waltz-full.png" alt="waltz"><img class="logo-text" src="images/logo-500.png" alt="waltz">
-                    </div>
-
-                    <button class="button install-button" onclick="chrome.webstore.install()" href="#">Add to Chrome</button>
-                    <script>
-                        if (chrome.app.isInstalled) {
-                          document.getElementById('install-button').style.display = 'none';
-                        }
-                    </script>
-                </div>
-            </header>
-
-            <section class="body row">
-                <div class="header col-md-12">
-                    <h1 class="tagline">use <a href="https://getclef.com">clef</a> anywhere on the web</h1>
-                    <h2 class="sub-tagline">
-                        an account manager that gives you more control with less trouble
-                    </h2>
-                </div>
-
-                <div class="features col-md-12 col-md-offset-1">
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle sync">
-                            
+        <header>
+            <div class="container">
+                <div class="row">
+                    <div class="header-container col-md-12">
+                        <div class="left logo-container">
+                            <img class="logo" src="images/waltz-full.png" alt="waltz"><img class="logo-text" src="images/logo-500.png" alt="waltz">
                         </div>
-                        <h4 class="description">sync to log in</h4>
-                    </div>
 
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle sign-out">
-                            
+                        <button class="button install-button" onclick="chrome.webstore.install()" href="#">Add to Chrome</button>
+                        <script>
+                            if (chrome.app.isInstalled) {
+                              document.getElementById('install-button').style.display = 'none';
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+        <section class="body ">
+            <div class="container">
+                <div class="row">
+                    <div class="header col-md-12">
+                        <h1 class="tagline">use <a href="https://getclef.com">clef</a> anywhere on the web</h1>
+                        <h2 class="sub-tagline">
+                            a password manager that gives you more control with less trouble
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="features col-md-12 col-md-offset-1">
+                        <div data-feature="sync" class="feature col-md-2 col-sm-4 col-xs-6 sync selected">
+                            <div class="circle"></div>
+                            <h4 class="feature-name">sync to log in</h4>
                         </div>
-                        <h4 class="description">sign out</h4>
-                    </div>
 
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle two-factor">
-                            
+                        <div data-feature="sign-out" class="feature col-md-2 col-sm-4 col-xs-6 sign-out">
+                            <div class="circle"></div>
+                            <h4 class="feature-name">sign out</h4>
                         </div>
-                        <h4 class="description">two factor</h4>
-                    </div>
 
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle local">
-                            
+                        <div data-feature="two-factor" class="feature col-md-2 col-sm-4 col-xs-6 two-factor">
+                            <div class="circle"></div>
+                            <h4 class="feature-name">two factor</h4>
                         </div>
-                        <h4 class="description">local storage</h4>
-                    </div>
 
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle github">
-                            
+                        <div data-feature="local" class="feature col-md-2 col-sm-4 col-xs-6 local">
+                            <div class="circle"></div>
+                            <h4 class="feature-name">local storage</h4>
                         </div>
-                        <h4 class="description">open source</h4>
+
+                        <div data-feature="github" class="feature col-md-2 col-sm-4 col-xs-6 github">
+                            <div class="circle"></div>
+                            <h4 class="feature-name">open source</h4>
+                        </div>
                     </div>
                 </div>
-            </section>
-            <section class="features">
-                <div class="feature-detail sync left row">
-                    <div class='icon col-md-4 col-md-offset-1'>Sync to Log In</div>
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
-                </div>
 
-                <div class="feature-detail sign-out right row">
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
-                    <div class="icon col-md-4 col-md-offset-1">Sign Out</div>
-                </div>
-
-                <div class="feature-detail two-factor left row">
-                    <div class='icon col-md-4 col-md-offset-1'>Two Factor</div>
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
-                </div>
-
-                <div class="feature-detail local right row">
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
-                    <div class="icon col-md-4 col-md-offset-1">Local Storage</div>
-                </div>
-
-                <div class="feature-detail github left row">
-                    <div class='icon col-md-4 col-md-offset-1'>Github</div>
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
-                </div>
-            </section>
-
-            <footer>
                 
-            </footer>
-        </div>
+                <div class="row">
+                    <div class="descriptions col-md-12">
+                        <div class="description show sync">
+                            <div class="row video">
+                                <h1>Never type a password again, just one sync and you're in.</h1>
+                                <div class="col-md-10 col-md-offset-1">
+                                    <iframe src="http://player.vimeo.com/video/77091221" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="description sign-out">
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <h1>Log out of all of your accounts with one click, <b>from anywhere</b>.</h1>
+                                    <h3>You control everything from your phone. If you walk away from your computer, just click the logout button and your accounts will be protected.</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="description two-factor">
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <h1>Your passwords are protected with two-factor authentication.</h1>
+                                    <h3>Stop worrying about the security of your passwords. By protecting them with two-factor authentication, you</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="description local">
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <h1>Your passwords are protected with two-factor authentication.</h1>
+                                    <h3>Stop worrying about the security of your passwords. By protecting them with two-factor authentication, you</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="description github">
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <h1>Your passwords are protected with two-factor authentication.</h1>
+                                    <h3>Stop worrying about the security of your passwords. By protecting them with two-factor authentication, you</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            
+        </footer>
         
         <script type="text/javascript" src="javascripts/jquery.min.js"></script>
         <script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
         <script type="text/javascript" src="javascripts/main.js"></script>
+        <script type="text/javascript" src="javascripts/jquery.fitvids.js"></script>
     </body>
 </html>

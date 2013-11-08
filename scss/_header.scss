@@ -3,6 +3,7 @@ header {
     // height: $height;
     position: relative;
     background: white;
+    padding-bottom: 40px;
 
     .header-container {
         position: relative;
@@ -35,7 +36,17 @@ header {
             position: absolute;
             bottom: 0;
             right: 0;
-            width: 200px;
+            width: 300px;
+            font-size: 18px;
+            &:hover {
+                background: darken($pink, 10%);
+            }
+            &:active, &:focus {
+                outline: none;
+                -moz-box-shadow: inset 0 0 2px 2px rgba(0,0,0,.2);
+                -webkit-box-shadow: inset 0 0 2px 2px rgba(0,0,0,.2);
+                box-shadow: inset 0 0 2px 2px rgba(0,0,0,.2);
+            }
         }
     }
 }
