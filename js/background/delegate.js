@@ -6,8 +6,7 @@
  *
 ********************/
 
-Delegate.prototype.DEBUG = true;
-
+Delegate.prototype.DEBUG = false;
 
 Delegate.prototype.options = {};
 
@@ -347,6 +346,7 @@ Delegate.prototype.initialize = function(data, callback) {
 	}
 }
 
+
 var blastOff = function() {
     storage.getOptions(function(options) {
         delegate = new Delegate(options);
@@ -361,6 +361,7 @@ if (navigator.onLine) {
         blastOff();
     });
 }
+
 
 
 /**

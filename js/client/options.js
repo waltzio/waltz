@@ -27,7 +27,6 @@
 			$(".sites-list").find(".decrypt").click(function() {
 				var self = this;
 				var parent = $(self).parent();
-
 				var key = $(parent).data('key');
 				var username = $(parent).data('username');
 				var password = $(parent).data('password');
