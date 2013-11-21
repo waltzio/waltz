@@ -33,11 +33,11 @@ function Delegate(options) {
         setTimeout(function() {
             _this.checkAuthentication(function(data) {
                 if (!data.user) {
-                    _this.logout();
+                    _this.logout({ silent: true });
                 }
-            })
+            });
         }, 2000);
-    })
+    });
 
 	//Add the context menu
 	chrome.contextMenus.create({
@@ -192,6 +192,8 @@ Delegate.prototype.logout = function(opts) {
 		opts = opts || {};
 
 	storage.getLogins(function(data) {
+        if (isEmpty(data)) return;
+        
 		var sitesCompleted = [],
 			promise,
 			siteConfig,
@@ -418,4 +420,13 @@ function getCookiesForDomain(domain, cb) {
             cb(cookies)
         }
     );
+}
+
+function isEmpty(obj) {
+    for(var key in map) {
+        if (map.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+    return true;
 }
