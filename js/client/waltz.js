@@ -11,7 +11,7 @@
 		if (page == "logged_in") {
 			// If the 'check' selector exists, then we're logged in, 
         	// so don't show Waltz
-            chrome.runtime.sendMessage({ method: "acknowledgeLogin" });
+    		this.acknowledgeLogin();
             return;
         } else {
         	// the 'check' selector doesn't exit yet, but it may exist in the 
@@ -21,7 +21,7 @@
         		CHECK_INTERVAL = 300,
         		loginCheckInterval;
 
-        	if (!this.options.inTransition) {
+        	if (!this.options.currentLogin) {
         		// If we're not inTransition, let's assume that we need to log
         		// in. So, kickOff then check to see if we need to hide.
         		kickOff();
@@ -34,7 +34,7 @@
 	        		page = _this.checkPage();
 	        		if (page === "logged_in") {
         				$(".waltz-dismiss").click();
-	        			chrome.runtime.sendMessage({method: "acknowledgeLogin"});
+			        	this.acknowledgeLogin();
 	        			clearInterval(loginCheckInterval);
 	        			return;
 	        		} else if (page == "login") {
@@ -61,7 +61,7 @@
 
 	        			page = _this.checkPage();
 	        			if (page === "logged_in") {
-		        			chrome.runtime.sendMessage({method: "acknowledgeLogin"});
+				        	this.acknowledgeLogin();
 		        			clearInterval(loginCheckInterval);
 		        			return;
 	        			} else if (page === "login") {
@@ -94,7 +94,7 @@
 					_this.loginCredentials = creds.creds	
 					_this.drawClefWidget();		
 
-                    if (_this.options.inTransition) {
+                    if (_this.options.currentLogin) {
                         _this.checkAuthentication(function() {
                             var errorMessage = "Invalid username and password.";
                             _this.requestCredentials(errorMessage); 
@@ -114,6 +114,13 @@
 			username: username,
 			password: password
 		});
+	}
+
+	Waltz.prototype.acknowledgeLogin = function() {
+		if (this.options.currentLogin) {
+        	chrome.runtime.sendMessage({ method: "acknowledgeLogin", domain: this.options.site.domain });
+			window.location = this.options.currentLogin;
+		}
 	}
 
 	Waltz.prototype.decryptCredentials = function(cb) {
@@ -291,7 +298,8 @@
 		function submitForm() {
 			chrome.runtime.sendMessage({
 	            method: "login",
-	            domain: _this.options.site.domain
+	            domain: _this.options.site.domain,
+	            location: window.location.href
 	        }, function() {});
 
 
