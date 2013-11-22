@@ -119,7 +119,6 @@
 	Waltz.prototype.acknowledgeLogin = function() {
 		if (this.options.currentLogin) {
         	chrome.runtime.sendMessage({ method: "acknowledgeLogin", domain: this.options.site.domain });
-			window.location = this.options.currentLogin;
 		}
 	}
 
@@ -239,72 +238,104 @@
 		var siteConfig = this.options.site.config,
 			_this = this;
 
-		var form = $('<form />')
-			.hide()
-			.attr({ method : siteConfig.login.method })
-			.attr({ action : siteConfig.login.url });
-
-
-	    form.append(
-	     	$('<input />')
-		        .attr( "type","hidden" )
-		        .attr({ "name" : siteConfig.login.passwordField })
-		        .val( data.password )
-	    );
-
-	    form.append(
-	    	$('<input />')
-		        .attr( "type","hidden" )
-		        .attr({ "name" : siteConfig.login.usernameField })
-		        .val( data.username )
-		)
-
-		if (siteConfig.login.redirectField) {
-			form.append(
-		    	$('<input />')
-			        .attr( "type", "hidden" )
-			        .attr({ "name" : siteConfig.login.redirectField })
-			        .val( window.location.href )
-			)
+		function findInput(name) {
+			return $('input[name="' + name + '"]');
 		}
 
-		if (siteConfig.login.other) {
-			var appendInputs = function(data) {
-				var $data = $(data),
-					inputs = $data.find('input');
+		if (findInput(siteConfig.login.passwordField).length > 0 && findInput(siteConfig.login.usernameField).length > 0) {
+			// we are on the login page!
 
-				inputs = inputs.filter(function(input) { 
-					return $(this).attr('name') != siteConfig.login.passwordField &&
-						$(this).attr('name') != siteConfig.login.usernameField;
-				});
+			var $login = findInput(siteConfig.login.usernameField),
+				$password = findInput(siteConfig.login.passwordField),
+				$form = $login.parent('form'),
+				$newLogin = $login.clone(),
+				$newPassword = $password.clone();
 
-				form.append(inputs);
-				
+			$newLogin.attr('type', 'hidden');
+			$newPassword.attr('type', 'hidden');
+			$newLogin.attr('id', '');
+			$newPassword.attr('id', '');
+			$newLogin.val(data.username);
+			$newPassword.val(data.password);
+
+			$password.attr('name', '');
+			$login.attr('name', '');
+
+			$form.append($newLogin);
+			$form.append($newPassword);
+
+			submitForm($form);
+		} else {
+			var form = $('<form />')
+				.hide()
+				.attr({ method : siteConfig.login.method })
+				.attr({ action : siteConfig.login.url });
+
+
+		    form.append(
+		     	$('<input />')
+			        .attr( "type","hidden" )
+			        .attr({ "name" : siteConfig.login.passwordField })
+			        .val( data.password )
+		    );
+
+		    form.append(
+		    	$('<input />')
+			        .attr( "type","hidden" )
+			        .attr({ "name" : siteConfig.login.usernameField })
+			        .val( data.username )
+			)
+
+			if (siteConfig.login.redirectField) {
+				form.append(
+			    	$('<input />')
+				        .attr( "type", "hidden" )
+				        .attr({ "name" : siteConfig.login.redirectField })
+				        .val( window.location.href )
+				)
+			}
+
+			if (siteConfig.login.other) {
+				var appendInputs = function(data) {
+					var $data = $(data),
+						inputs = $data.find('input');
+
+					inputs = inputs.filter(function(input) { 
+						return $(this).attr('name') != siteConfig.login.passwordField &&
+							$(this).attr('name') != siteConfig.login.usernameField;
+					});
+
+					form.append(inputs);
+					
+					submitForm();
+				}
+
+				if (window.location.href.match(siteConfig.login.other.url)) {
+					appendInputs(document);
+				} else {
+					chrome.runtime.sendMessage({
+						method: "proxyRequest",
+						url: siteConfig.login.other.url
+					}, appendInputs);
+				}
+			} else {
 				submitForm();
 			}
+		}	
 
-			if (window.location.href.match(siteConfig.login.other.url)) {
-				appendInputs(document);
-			} else {
-				chrome.runtime.sendMessage({
-					method: "proxyRequest",
-					url: siteConfig.login.other.url
-				}, appendInputs);
-			}
-		} else {
-			submitForm();
-		}
-
-		function submitForm() {
+		function submitForm($form) {
 			chrome.runtime.sendMessage({
 	            method: "login",
 	            domain: _this.options.site.domain,
 	            location: window.location.href
 	        }, function() {});
 
-
-            form.append('<input type="submit" />').appendTo($("body")).submit();
-		}
+			if (!$form) {
+            	form.append('<input type="submit" />').appendTo($("body")).submit();
+			} else {
+				$form.submit();
+			}
+		}	
 	}
 
 	Waltz.prototype.checkAuthentication = function(cb) {
