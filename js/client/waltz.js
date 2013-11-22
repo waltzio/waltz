@@ -327,12 +327,21 @@
 
 		// set up templates for tutorial
 		var $overlay = $("<div id='" + OVERLAY_ID + "''></div>")
-			$form = $("<div id='"+ FORM_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/waltz-transparent-128.png") + ")'></div>")
+			$form = $("<div id='"+ FORM_ID + "'></div>");
 			$usernameField = $("<input type='text' placeholder='type your username' id='" + USERNAME_ID + "' />");
 			$passwordField = $("<input type='password' placeholder='type your password' id='" + PASSWORD_ID + "' />");
 			$submitButton = $("<input type='submit' value=' ' id='" + SUBMIT_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/next.png") + ")'/>");
 			$body = $('body');
 
+		var logos = ["<div id='waltz-credential-logos'>",
+			"<img src='" + chrome.extension.getURL("/img/site_images/" + this.options.site.config.key + ".png" ) + "'/>",
+			"<img id='waltz-credential-arrow' src='" + chrome.extension.getURL("/img/arrow.png") + "'/>",
+			"<img src='" + chrome.extension.getURL("/img/waltz-transparent-128.png") + "'/>",
+		"</div>"].join("");
+
+
+		$form.append(logos);
+		$form.append("<p id='waltz-credential-message'>Securely encrypt your " + this.options.site.config.name + " password.</p>");
 		// add tutorial templates
 		$form.append($usernameField).append($passwordField);
         if (errorMessage) {

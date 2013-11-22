@@ -41,7 +41,7 @@ grunt.initConfig({
         buildDir: 'build',
         resources: [
             "js/**",
-            "images/**",
+            "img/**",
             "html/**",
 	          "css/**"
         ]

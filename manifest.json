@@ -1,6 +1,6 @@
 {
   "name": "Waltz",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "manifest_version": 2,
   "description": "Forget About Your Accounts",
   "background": {
@@ -35,11 +35,6 @@
   "options_page": "html/options.html",
   "homepage_url": "http://waltz.io",
   "web_accessible_resources": [
-    "img/waltz-128.png",
-    "img/next.png",
-    "img/waltz-transparent-128.png",
-    "img/waltz-full.png",
-    "img/pencil.png",
-    "img/x.png"
+    "img/*"
   ]
 }

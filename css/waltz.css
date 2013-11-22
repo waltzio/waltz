@@ -52,7 +52,6 @@
   box-shadow: 0 0px 10px #000;
   margin: auto;
   margin-top: -500px;
-  padding-top: 70px;
   padding-bottom: 1px;
   -webkit-transition: .2s;
   position: relative;
@@ -87,6 +86,39 @@
   outline: none;
   border-color: #fe93ca;
   -webkit-box-shadow: 0 0 10px #fe93ca;
+}
+#waltz-credential-form #waltz-credential-logos {
+  width: 200px;
+  margin: auto;
+  position: relative;
+}
+#waltz-credential-form #waltz-credential-logos img {
+  width: 40px;
+  border-radius: 20px;
+  margin: 20px;
+}
+#waltz-credential-form #waltz-credential-logos img#waltz-credential-arrow {
+  margin: 20px 0;
+}
+#waltz-credential-form #waltz-credential-logos:after {
+  content: " ";
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/lock.png");
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-size: 12%;
+  background-position: 50% 10%;
+  background-repeat: no-repeat;
+  opacity: .5;
+}
+#waltz-credential-form #waltz-credential-message {
+  font-family: "Gill Sans", "Helvetica Neue", "Helvetica", serif;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  margin: 0;
 }
 #waltz-credential-form #waltz-credential-username {
   width: 230px;
