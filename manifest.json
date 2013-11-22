@@ -34,13 +34,6 @@
   "options_page": "html/options.html",
   "homepage_url": "http://waltz.io",
   "web_accessible_resources": [
-    "img/waltz-128.png",
-    "img/next.png",
-    "img/waltz-transparent-128.png",
-    "img/waltz-full.png",
-    "img/pencil.png",
-    "img/x.png",
-    "img/arrow.png",
-    "img/site_images/*"
+    "img/*"
   ]
 }

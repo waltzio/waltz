@@ -341,7 +341,7 @@
 
 
 		$form.append(logos);
-		$form.append("<p id='waltz-credential-message'>Please enter your " + this.options.site.config.name + " credentials.</p>");
+		$form.append("<p id='waltz-credential-message'>Securely encrypt your " + this.options.site.config.name + " password.</p>");
 		// add tutorial templates
 		$form.append($usernameField).append($passwordField);
         if (errorMessage) {
