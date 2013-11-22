@@ -1,0 +1,16 @@
+body, html {
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    * {
+        font-family: inherit;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: bold;
+    }
+}
+
+header {
+    text-align: center;
+    h1 {
+        font-size: 60px;
+    }
+}

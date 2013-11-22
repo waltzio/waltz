@@ -10,7 +10,8 @@
       "/js/background/crypto.js", 
       "/js/background/storage.js",
       "/js/vendor/aes.js",
-      "/js/background/delegate.js"
+      "/js/background/delegate.js",
+      "/js/background/tutorial.js"
     ]
   },
   "content_scripts": [{
