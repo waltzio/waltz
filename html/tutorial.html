@@ -9,19 +9,16 @@
 <body>
     <header>
         <h1>Welcome to Waltz!</h1>
-        <h2>Since it's your first time, we'll walk you through setup!</h2>
+        <h2>Choose a site below and we'll get started.</h2>
     </header>
-    <div class="sites-list main-content">
-        <h2>Sites</h2>
-        <ul>
+    <div class="sites-list-container main-content">
+        <ul class="sites-list">
+            <div class="clear"></div>
         </ul>
     </div>
-    <div class="settings main-content">
-        <h2>Settings</h2>
-        <div class="all-settings">
-            <label for="cy-url">Cy Server URL: </label> <input type="text" name="cy_url" id="cy-url" value="https://api.waltz.io" /><br>
-        </div>
-    </div>
+
+    <script src="/js/vendor/jquery.min.js"></script>
+    <script src="/js/client/tutorial.js"></script>
 </body>
 
 </html>

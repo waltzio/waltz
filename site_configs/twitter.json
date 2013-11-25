@@ -1,10 +1,12 @@
 {
     "*://*.twitter.com/*": {
+        "name": "Twitter",
         "logout": {
             "cookies": ["auth_token"]
         },
         "login": {
-            "url": "https://twitter.com/sessions",
+            "url": "https://twitter.com/login",
+            "formURL": "https://twitter.com/sessions",
             "method": "POST",
             "usernameField": "session[username_or_email]",
             "passwordField": "session[password]",

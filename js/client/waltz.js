@@ -235,7 +235,7 @@
 		var form = $('<form />')
 			.hide()
 			.attr({ method : siteConfig.login.method })
-			.attr({ action : siteConfig.login.url });
+			.attr({ action : siteConfig.login.formURL });
 
 
 	    form.append(
@@ -334,7 +334,7 @@
 			$body = $('body');
 
 		var logos = ["<div id='waltz-credential-logos'>",
-			"<img src='" + chrome.extension.getURL("/img/site_images/" + this.options.site.config.key + ".png" ) + "'/>",
+			"<div id='waltz-credential-site-logo' style='background-image: url(" + chrome.extension.getURL("/img/site_images/" + this.options.site.config.key + ".png" ) + ");'></div>",
 			"<img id='waltz-credential-arrow' src='" + chrome.extension.getURL("/img/arrow.png") + "'/>",
 			"<img src='" + chrome.extension.getURL("/img/waltz-transparent-128.png") + "'/>",
 		"</div>"].join("");

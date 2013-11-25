@@ -7,10 +7,26 @@ body *, html * {
 body h1, body h2, body h3, body h4, body h5, body h6, html h1, html h2, html h3, html h4, html h5, html h6 {
   font-weight: bold;
 }
+body .clear, html .clear {
+  clear: both;
+}
 
 header {
   text-align: center;
 }
 header h1 {
   font-size: 60px;
+}
+header h2 {
+  color: #888;
+}
+
+.sites-list {
+  padding: 0;
+  text-align: center;
+}
+.sites-list li {
+  width: 25%;
+  float: left;
+  margin: 40px 0;
 }

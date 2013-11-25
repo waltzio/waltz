@@ -1,10 +1,12 @@
 {
     "*://*.google.com/*": {
+        "name": "Google",
         "logout": {
             "cookies": ["SID", "GX"]
         },
         "login": {
             "url": "https://accounts.google.com/ServiceLoginAuth",
+            "formURL": "https://accounts.google.com/ServiceLoginAuth",
             "method": "POST",
             "usernameField": "Email",
             "passwordField": "Passwd",
@@ -17,11 +19,13 @@
         }
     },
     "*://*.youtube.com/*": {
+        "name": "YouTube",
         "logout": {
             "cookies": ["SID", "GX"]
         },
         "login": {
             "url": "https://accounts.google.com/ServiceLoginAuth",
+            "formURL": "https://accounts.google.com/ServiceLoginAuth",
             "method": "POST",
             "usernameField": "Email",
             "passwordField": "Passwd",
@@ -30,7 +34,7 @@
                 "url": "https://accounts.google.com/ServiceLoginAuth",
                 "fields": ["GALX"]
             },
-            "check": "a#gb_71"
+            "check": "div#yt-masthead-user"
         }
     }
 }

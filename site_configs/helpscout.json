@@ -1,10 +1,12 @@
 {
     "*://*.helpscout.net/*": {
+        "name": "Help Scout",
         "logout": {
             "cookies": ["PHPSESSID"]
         },
         "login": {
-            "url": "https://secure.helpscout.net/members/process/login",
+            "url": "https://secure.helpscout.net/members/login",
+            "formURL": "https://secure.helpscout.net/members/process/login",
             "method": "POST",
             "usernameField": "email",
             "passwordField": "password",

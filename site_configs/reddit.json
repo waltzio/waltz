@@ -1,10 +1,12 @@
 {
     "*://*.reddit.com/*": {
+        "name": "Reddit",
         "logout": {
             "cookies": ["reddit_session"]
         },
         "login": {
-            "url": "https://ssl.reddit.com/r/pics/post/login",
+            "url": "http://www.reddit.com/",
+            "formURL": "https://ssl.reddit.com/r/pics/post/login",
             "method": "POST",
             "usernameField": "user",
             "passwordField": "passwd",

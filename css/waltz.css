@@ -92,13 +92,21 @@
   margin: auto;
   position: relative;
 }
-#waltz-credential-form #waltz-credential-logos img {
+#waltz-credential-form #waltz-credential-logos img, #waltz-credential-form #waltz-credential-logos div#waltz-credential-site-logo {
   width: 40px;
   border-radius: 20px;
   margin: 20px;
+  display: inline-block;
 }
-#waltz-credential-form #waltz-credential-logos img#waltz-credential-arrow {
+#waltz-credential-form #waltz-credential-logos img#waltz-credential-arrow, #waltz-credential-form #waltz-credential-logos div#waltz-credential-site-logo#waltz-credential-arrow {
   margin: 20px 0;
+}
+#waltz-credential-form #waltz-credential-logos div#waltz-credential-site-logo {
+  height: 40px;
+  background: white;
+  background-size: 65% 65%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 #waltz-credential-form #waltz-credential-logos:after {
   content: " ";

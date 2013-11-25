@@ -36,5 +36,6 @@
   "homepage_url": "http://waltz.io",
   "web_accessible_resources": [
     "img/*"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' chrome-extension://; object-src 'self'"
 }

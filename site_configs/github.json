@@ -1,10 +1,12 @@
 {
     "*://*.github.com/*": {
+        "name": "GitHub",
         "logout": {
             "cookies": ["user_session"]
         },
         "login": {
-            "url": "https://github.com/session",
+            "url": "https://github.com/login",
+            "formURL": "https://github.com/session",
             "method": "POST",
             "usernameField": "login",
             "passwordField": "password",

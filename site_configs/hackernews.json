@@ -1,10 +1,12 @@
 {
     "*://news.ycombinator.com/*": {
+        "name": "Hacker News",
         "logout": {
             "cookies": ["user"]
         },
         "login": {
-            "url": "https://news.ycombinator.com/y",
+            "url": "https://news.ycombinator.com/newslogin",
+            "formURL": "https://news.ycombinator.com/y",
             "method": "POST",
             "usernameField": "u",
             "passwordField": "p",
