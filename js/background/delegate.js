@@ -9,7 +9,7 @@
 Delegate.prototype.DEBUG = true;
 
 Delegate.prototype.options = {};
-
+Delegate.prototype.currentLogins = {};
 
 Delegate.prototype.options.configURL = "https://raw.github.com/waltzio/waltz/master/deploy/site_configs.json";
 Delegate.prototype.options.backupConfigURL = chrome.extension.getURL("build/site_configs.json");
@@ -111,9 +111,6 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 		case "checkAuthentication":
 			return this.checkAuthentication(sendResponse);
 			break;
-		case "login":
-			return this.login(request.domain);
-			break;
 		case "getHost":
 			return sendResponse(this.options.cy_url);
 			break;
@@ -130,17 +127,17 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 }
 
 Delegate.prototype.acknowledgeLogin = function(request) {
-    this.transitioningToLoggedIn = false;
+    this.currentLogins[request.domain] = false;
 }
 
-Delegate.prototype.login = function(domain) {
+Delegate.prototype.login = function(request) {
 	if (!this.loggedIn) {
 		this.loggedIn = true;
 		this.pubnubSubscribe();
 	}
 
-    this.transitioningToLoggedIn = true;
-	storage.addLogin(domain);
+    this.currentLogins[request.domain] = request.location;
+	storage.addLogin(request.domain);
 }
 
 Delegate.prototype.updateSiteConfigs = function(data) {
@@ -335,7 +332,7 @@ Delegate.prototype.initialize = function(data, callback) {
 						config: this.siteConfigs[site]
 					},
 					cyHost: this.options.cy_url,
-                    inTransition: this.transitioningToLoggedIn
+                    currentLogin: this.currentLogins[site]
 				};
 				callback(options);
 				return;
