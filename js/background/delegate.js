@@ -343,7 +343,7 @@ Delegate.prototype.initialize = function(data, callback) {
 					cyHost: this.options.cy_url,
                     currentLogin: this.currentLogins[site],
                     inTransition: this.transitioningToLoggedIn,
-                    tutorialStep: 0
+                    tutorialStep: this.options.tutorialStep
 				};
 				callback(options);
 				return;
