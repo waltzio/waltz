@@ -47,6 +47,45 @@ function Delegate(options) {
 		}
 	});
 
+    // Listens to requests, so we can redirect to the original page 
+    // after a successful login.
+    chrome.webRequest.onCompleted.addListener(
+        function(details) {
+            var domain;
+            for (site in _this.currentLogins) {
+                if (details.url.match(parse_match_pattern(site))) {
+                    domain = site;
+                    break;
+                }
+            }
+            if (domain) {
+                var siteConfig = _this.siteConfigs[domain];
+
+                var domainUrl = new URL(details.url);
+                var loginUrl = new URL(siteConfig.login.url);
+                var redirectUrl = new URL(_this.currentLogins[domain]);
+                var shouldRedirect = 
+                    // If the next URL is the login URL, there's probably an error
+                    (domainUrl.hostname !== loginUrl.hostname || 
+                     domainUrl.pathname !== loginUrl.pathname) &&
+                    // If the redirect URL is the login URL, let the 
+                    // site handle directing the user to the right place
+                    (redirectUrl.hostname !== loginUrl.hostname || 
+                     redirectUrl.pathname !== loginUrl.pathname);
+
+                redirectUrl = redirectUrl.toString();
+                if (shouldRedirect) {
+                    chrome.tabs.update(details.tabId, {url: redirectUrl});
+                    delete(_this.currentLogins[domain]);
+                }
+            }
+        },
+        {
+            urls: Object.keys(this.currentLogins), 
+            types: ["main_frame"]
+        }
+    );
+
 	// load configs and fall back if cannot access Github
 	this.configsLoaded = $.Deferred();
 
@@ -121,7 +160,7 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 }
 
 Delegate.prototype.acknowledgeLogin = function(request) {
-    this.currentLogins[request.domain] = false;
+    delete(this.currentLogins[request.domain]);
 }
 
 Delegate.prototype.login = function(request) {
