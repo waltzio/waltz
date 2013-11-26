@@ -66,12 +66,20 @@ function Delegate(options) {
                 var redirectUrl = new URL(_this.currentLogins[domain]);
                 var shouldRedirect = 
                     // If the next URL is the login URL, there's probably an error
-                    (domainUrl.hostname !== loginUrl.hostname || 
-                     domainUrl.pathname !== loginUrl.pathname) &&
+                    ((domainUrl.hostname !== loginUrl.hostname || 
+                      domainUrl.pathname !== loginUrl.pathname)) &&
                     // If the redirect URL is the login URL, let the 
                     // site handle directing the user to the right place
-                    (redirectUrl.hostname !== loginUrl.hostname || 
-                     redirectUrl.pathname !== loginUrl.pathname);
+                    ((redirectUrl.hostname !== loginUrl.hostname || 
+                      redirectUrl.pathname !== loginUrl.pathname));
+                if (siteConfig.login.twoFactor) {
+                    $.map(siteConfig.login.twoFactor, function(twoFactor) {
+                        var twoFactorUrl = new URL(twoFactor.url); 
+                        shouldRedirect &= 
+                            (domainUrl.hostname !== twoFactorUrl.hostname || 
+                             domainUrl.pathname !== twoFactorUrl.pathname);
+                    });
+                }
 
                 redirectUrl = redirectUrl.toString();
                 if (shouldRedirect) {
