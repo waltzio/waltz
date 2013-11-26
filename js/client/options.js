@@ -12,7 +12,7 @@
 			for(key in sites) {
 				var site = sites[key];
 
-				if(key != "options" && key != "waltz_logins"){ //Options and Waltz_logins don't have username/password pairs
+				if(key != "options" && key != "waltz_logins" && key != "waltz_tutorial_complete"){ //Options and Waltz_logins don't have username/password pairs
 
 					var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-key='"+key+"'>"
 							   +"	<h3>"+key+"</h3>"

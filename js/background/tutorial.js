@@ -1,4 +1,4 @@
-Tutorial.prototype.TUTORIAL_KEY = "clef_tutorial_completed";
+Tutorial.prototype.TUTORIAL_KEY = "walts_tutorial_completed";
 function Tutorial() {
     var _this = this;
     chrome.storage.local.get(this.TUTORIAL_KEY, function(opt) {

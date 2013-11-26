@@ -4,7 +4,11 @@
         // If there are no opts, Waltz is not supported on this site
 		if (!opts) return;
 
+		this.storage = new Storage();
+
 		this.options = opts;
+		this.onboarder = new Onboarder(this);
+
 		var _this = this,
 			page = this.checkPage();
         
@@ -79,37 +83,31 @@
         function kickOff() {
         	_this.loginCredentials = false;
 
-			chrome.runtime.sendMessage({
-				method: "getCredentials",
-				key: _this.options.site.config.key
+        	_this.storage.getCredentialsForDomain(_this.options.site.config.key, function (creds) {
+        		if (!creds) {
+        			console.log("Error retrieving credentials");
+        			return;
+        		}
 
-			}, function(creds) {
-				if(creds.error) {
-					if(creds.error === "authentication") {
-						console.log("auth error");
-					} else {
-						console.log(creds.error, creds.status);
-					}
+        		console.log(creds);
+        		_this.loginCredentials = creds;
+				_this.drawClefWidget();		
+
+				if (_this.options.tutorialStep >= 0) {
+					_this.startTutorial();
+					_this.router.trigger('tutorial');
 				} else {
-					_this.loginCredentials = creds.creds	
-					_this.drawClefWidget();		
-
-					if (_this.options.tutorialStep >= 0) {
-						_this.startTutorial();
-						_this.router.trigger('tutorial');
-					} else {
-	                    if (_this.options.inTransition) {
-	                        _this.checkAuthentication(function() {
-	                            var errorMessage = "Invalid username and password.";
-	                            _this.requestCredentials(errorMessage); 
-	                        });
-	                    }
-	                    _this.acknowledgeLogin();
-					}
+                    if (_this.options.currentLogin) {
+                        _this.checkAuthentication(function() {
+                            var errorMessage = "Invalid username and password.";
+                            _this.requestCredentials(errorMessage); 
+                        });
+                    }
+                    _this.acknowledgeLogin();
 				}
 
 				window.addEventListener('message', _this.closeIFrame.bind(_this));
-			});
+        	});
         }
 	}
 
@@ -146,56 +144,12 @@
 		this.router.on('tutorial', this.tutorialStep.bind(this));
 	}
 
-	Waltz.prototype.tutorialStep = function(e) {
-		var _this = this,
-			$message = $('#' + this.TUTORIAL_MESSAGE_ID),
-			$overlay = $('#' + this.TUTORIAL_OVERLAY_ID),
-			OFFSET = 40;
-
-		if ($message.length == 0) {
-			$message = $("<div id='" + this.TUTORIAL_MESSAGE_ID + "'></div>");
-			$('body').append($message);
-		}
-
-		if (this.options.tutorialStep === 0) {
-			var $message = $message.text("Click this to set up Waltz for " + this.options.site.config.name),
-				$mainButton = $('#' + this.MAIN_BUTTON_ID);
-
-			$message.attr('class', '');
-			$message.addClass('right-arrow');
-
-			$overlay.append($message);
-			$message.css({
-				left: $mainButton.offset().left - ($message.width() + OFFSET),
-				top: $mainButton.offset().top + $message.height() / 2
-			});
-
-		} else if (this.options.tutorialStep === 1) {
-			var $credentialForm = $('#' + this.CREDENTIAL_FORM_ID);
-
-			$message.text("Type your username and password to securely store them with Waltz.");
-			$message.animate({
-				left: $credentialForm.offset().left,
-				top: $credentialForm.offset().top + $credentialForm.height() + OFFSET
-			});
-
-			$message.attr('class', '');
-			$message.addClass('top-arrow');
-		}
-
-		this.options.tutorialStep++;
-	}
-
-	Waltz.prototype.completeTutorial = function() {
-		$('#'+this.TUTORIAL_OVERLAY_ID).remove();
-		chrome.runtime.sendMessage({ 
-    		method: "completeTutorial"
-    	});
-	}
-
 	Waltz.prototype.acknowledgeLogin = function() {
 		if (this.options.currentLogin) {
-        	chrome.runtime.sendMessage({ method: "acknowledgeLogin", domain: this.options.site.domain });
+        	chrome.runtime.sendMessage({ 
+        		method: "acknowledgeLogin", 
+        		domain: this.options.site.domain 
+        	});
 		}
 	}
 

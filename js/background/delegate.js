@@ -18,16 +18,26 @@ if (Delegate.prototype.DEBUG) {
 	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
 } 
 
-function Delegate(options) {
+function Delegate() {
 	var _this = this;
 
-	this.options = $.extend(this.options, options);
-	_this.pubnub = PUBNUB.init({
+    this.storage = new Storage();
+    this.storage.getOptions(function(options) {
+        _this.init(options);
+    });
+}
+
+Delegate.prototype.init = function(options) {
+    var _this = this;
+
+    this.options = $.extend(this.options, options);
+
+    this.pubnub = PUBNUB.init({
         subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
     });
 
-	// bind the router
-	chrome.runtime.onMessage.addListener(this.router.bind(this));
+    // bind the router
+    chrome.runtime.onMessage.addListener(this.router.bind(this));
     window.addEventListener('online', function() {
         setTimeout(function() {
             _this.checkAuthentication(function(data) {
@@ -38,56 +48,56 @@ function Delegate(options) {
         }, 2000);
     });
 
-	//Add the context menu
-	chrome.contextMenus.create({
-		id: 'waltz-main',
-		title: 'Waltz',
-		onclick: function(info, tab) {
-			chrome.tabs.create({url: "/html/options.html"});
-		}
-	});
+    //Add the context menu
+    chrome.contextMenus.create({
+        id: 'waltz-main',
+        title: 'Waltz',
+        onclick: function(info, tab) {
+            chrome.tabs.create({url: "/html/options.html"});
+        }
+    });
 
-	// load configs and fall back if cannot access Github
-	this.configsLoaded = $.Deferred();
+    // load configs and fall back if cannot access Github
+    this.configsLoaded = $.Deferred();
 
-	$.ajax({
-		url: this.options.configURL,
-		dataType: 'json',
-		success: this.updateSiteConfigs.bind(this),
-		error:function() {
-			$.ajax({
-				url: _this.options.backupConfigURL,
-				dataType: 'json',
-				success: _this.updateSiteConfigs.bind(_this)
-			});
-		}
-	});
+    $.ajax({
+        url: this.options.configURL,
+        dataType: 'json',
+        success: this.updateSiteConfigs.bind(this),
+        error:function() {
+            $.ajax({
+                url: _this.options.backupConfigURL,
+                dataType: 'json',
+                success: _this.updateSiteConfigs.bind(_this)
+            });
+        }
+    });
 
-	// check whether logged in, exponential backoff
-	// BOOM!
-	var n = 0;
-	function kickOff() {
-		_this.checkAuthentication(function(data) {
-			if (data.error == "noconn") {
-				console.log('no connection, will retry in ' + Math.pow(2,n) + ' seconds.');
-				// exponential backoff, hooray!
-				setTimeout(kickOff, Math.pow(2, n) * 1000);
-				n = n + 1;
-				return;
-			}
-			
-			if (data.user) {
-				_this.loggedIn = true;
-				_this.pubnubSubscribe(data);
-			} else {
-				_this.loggedIn = false;
-				_this.logout({ silent: true });
-			}
-		});
-	}
+    // check whether logged in, exponential backoff
+    // BOOM!
+    var n = 0;
+    function kickOff() {
+        _this.checkAuthentication(function(data) {
+            if (data.error == "noconn") {
+                console.log('no connection, will retry in ' + Math.pow(2,n) + ' seconds.');
+                // exponential backoff, hooray!
+                setTimeout(kickOff, Math.pow(2, n) * 1000);
+                n = n + 1;
+                return;
+            }
+            
+            if (data.user) {
+                _this.loggedIn = true;
+                _this.pubnubSubscribe(data);
+            } else {
+                _this.loggedIn = false;
+                _this.logout({ silent: true });
+            }
+        });
+    }
 
-	// when the configs are done loading, blast off, baby!
-	$.when(this.configsLoaded).then(kickOff);
+    // when the configs are done loading, blast off, baby!
+    $.when(this.configsLoaded).then(kickOff);
 }
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
@@ -115,7 +125,7 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 			return sendResponse(this.options.cy_url);
 			break;
 		default:
-			return this[request.method](request, sendResponse);
+			return this[request.method].bind(this)(request, sendResponse);
 			break;
 	}
 }
@@ -131,7 +141,7 @@ Delegate.prototype.login = function(request) {
 	}
 
     this.currentLogins[request.domain] = request.location;
-	storage.addLogin(request.domain);
+	this.storage.addLogin(request.domain);
 
     if (this.options.tutorialStep != -1) {
         this.completeTutorial();
@@ -139,12 +149,12 @@ Delegate.prototype.login = function(request) {
 }
 
 Delegate.prototype.completeTutorial =  function(request) {
-    storage.completeTutorial(this.refreshOptions);
+    this.storage.completeTutorial(this.refreshOptions);
 }
 
 Delegate.prototype.refreshOptions = function(request) {
     var _this = this;
-    storage.getOptions(function(options) {
+    this.storage.getOptions(function(options) {
         _this.options = options;
     });
 }
@@ -196,7 +206,7 @@ Delegate.prototype.logout = function(opts) {
 	var _this = this,
 		opts = opts || {};
 
-	storage.getLogins(function(data) {
+	this.storage.getLogins(function(data) {
         if (isEmpty(data)) return;
         
 		var sitesCompleted = [],
@@ -238,7 +248,7 @@ Delegate.prototype.logout = function(opts) {
 					}
 				);
 			}
-			storage.clearLogins();
+			this.storage.clearLogins();
 			if (!opts.silent) {
 				chrome.notifications.create(
 					"", 
@@ -259,25 +269,10 @@ Delegate.prototype.logout = function(opts) {
 }
 
 Delegate.prototype.saveCredentials = function(domain_key, username, password, cb) {
+    var _this = this;
 	waltzCrypto.encrypt(password, domain_key, function(encrypted) {
-		storage.storeCredentialsForDomain(domain_key, username, encrypted.output, function() {
+		_this.storage.setCredentialsForDomain(domain_key, username, encrypted.output, function() {
 			cb(true);
-		});
-	});
-
-	return true;
-}
-
-Delegate.prototype.deleteCredentials = function(domain_key, cb) {
-	storage.deleteCredentialsForDomain(domain_key, cb);
-	return true;
-}
-
-Delegate.prototype.getCredentials = function(domain_key, cb) {
-	storage.getCredentialsForDomain(domain_key, function(creds) {
-		cb({
-			error: false,
-			creds: creds
 		});
 	});
 
@@ -342,8 +337,8 @@ Delegate.prototype.initialize = function(data, callback) {
 					},
 					cyHost: this.options.cy_url,
                     currentLogin: this.currentLogins[site],
-                    inTransition: this.transitioningToLoggedIn,
                     tutorialStep: this.options.tutorialStep
+                    // tutorialStep: 0
 				};
 				callback(options);
 				return;
@@ -356,9 +351,7 @@ Delegate.prototype.initialize = function(data, callback) {
 
 
 var blastOff = function() {
-    storage.getOptions(function(options) {
-        delegate = new Delegate(options);
-    });
+    delegate = new Delegate();
 }
 
 if (navigator.onLine) {
@@ -368,74 +361,4 @@ if (navigator.onLine) {
         window.removeEventListener('online');
         blastOff();
     });
-}
-
-
-
-/**
-  * @param String input  A match pattern
-  * @returns  null if input is invalid
-  * @returns  String to be passed to the RegExp constructor */
-function parse_match_pattern(input) {
-    if (typeof input !== 'string') return null;
-    var match_pattern = '(?:^'
-      , regEscape = function(s) {return s.replace(/[[^$.|?*+(){}\\]/g, '\\$&');}
-      , result = /^(\*|https?|file|ftp|chrome-extension):\/\//.exec(input);
-
-    // Parse scheme
-    if (!result) return null;
-    input = input.substr(result[0].length);
-    match_pattern += result[1] === '*' ? 'https?://' : result[1] + '://';
-
-    // Parse host if scheme is not `file`
-    if (result[1] !== 'file') {
-        if (!(result = /^(?:\*|(\*\.)?([^\/*]+))(?=\/)/.exec(input))) return null;
-        input = input.substr(result[0].length);
-        if (result[0] === '*') {    // host is '*'
-            match_pattern += '[^/]+';
-        } else {
-            if (result[1]) {         // Subdomain wildcard exists
-                match_pattern += '(?:[^/]+\\.)?';
-            }
-            // Append host (escape special regex characters)
-            match_pattern += regEscape(result[2]);
-        }
-    }
-    // Add remainder (path)
-    match_pattern += input.split('*').map(regEscape).join('.*');
-    match_pattern += '$)';
-    return match_pattern;
-}
-
-function extrapolateUrlFromCookie(cookie) {
-    var prefix = cookie.secure ? "https://" : "http://";
-    if (cookie.domain.charAt(0) == ".")
-        prefix += "www";
-
-    return prefix + cookie.domain + cookie.path;
-}
-
-function extrapolateDomainFromMatchURL(matchURL) {
-	var matches = matchURL.match(".*://(.*)/.*");
-	var domain = matches[1];
-	if (domain[0] === "*") domain = domain.slice(2);
-	return domain;
-}
-
-function getCookiesForDomain(domain, cb) {
-    chrome.cookies.getAll(
-        { domain: extrapolateDomainFromMatchURL(domain) },
-        function(cookies) {
-            cb(cookies)
-        }
-    );
-}
-
-function isEmpty(obj) {
-    for(var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            return false;
-        }
-    }
-    return true;
 }
