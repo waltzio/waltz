@@ -130,6 +130,7 @@
   color: white;
   font-size: 14px;
   margin: 0;
+  padding: 0 10px;
 }
 #waltz-credential-form #waltz-credential-username {
   width: 230px;

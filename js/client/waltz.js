@@ -174,7 +174,7 @@
 			var $credentialForm = $('#' + this.CREDENTIAL_FORM_ID);
 
 			$message.text("Type your username and password to securely store them with Waltz.");
-			$message.css({
+			$message.animate({
 				left: $credentialForm.offset().left,
 				top: $credentialForm.offset().top + $credentialForm.height() + OFFSET
 			});
