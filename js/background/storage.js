@@ -67,11 +67,17 @@ Storage.prototype.clearLogins = function() {
 	chrome.storage.local.remove(this.LOGIN_KEY);
 }
 
+Storage.prototype.completeTutorial = function(cb) {
+	this.setOption("tutorialStep", -1);
+	if (typeof cb === "function") cb();
+}
+
 Storage.prototype.getOptions = function(cb) {
 	chrome.storage.local.get("options", function(options) {
 		if(typeof(options.options) !== "object") {
 			var defaultOptions = {
-				cy_url: "https://api.waltz.io"
+				cy_url: "https://api.waltz.io",
+				tutorialStep: -1
 			};
 
 			//We don't need to wait for this to finish, because we already have the default options defined.
@@ -81,6 +87,13 @@ Storage.prototype.getOptions = function(cb) {
 		} else {
 			cb(options.options);
 		}
+	});
+}
+
+Storage.prototype.setOption = function(key, value) {
+	this.getOptions(function(options) {
+		options[key] = value;
+		chrome.storage.local.set({options: options});
 	});
 }
 

@@ -94,13 +94,18 @@
 					_this.loginCredentials = creds.creds	
 					_this.drawClefWidget();		
 
-                    if (_this.options.currentLogin) {
-                        _this.checkAuthentication(function() {
-                            var errorMessage = "Invalid username and password.";
-                            _this.requestCredentials(errorMessage); 
-                        });
-                    }
-                    chrome.runtime.sendMessage({ method: "acknowledgeLogin" });
+					if (_this.options.tutorialStep >= 0) {
+						_this.startTutorial();
+						_this.router.trigger('tutorial');
+					} else {
+	                    if (_this.options.inTransition) {
+	                        _this.checkAuthentication(function() {
+	                            var errorMessage = "Invalid username and password.";
+	                            _this.requestCredentials(errorMessage); 
+	                        });
+	                    }
+	                    _this.acknowledgeLogin();
+					}
 				}
 
 				window.addEventListener('message', _this.closeIFrame.bind(_this));
@@ -108,12 +113,84 @@
         }
 	}
 
-	Waltz.prototype.storeLogin = function(username, password) {
-		chrome.runtime.sendMessage({
-			key: this.options.site.config.key,
-			username: username,
-			password: password
-		});
+	Waltz.prototype.router = $({});
+
+	Waltz.prototype.MAIN_BUTTON_ID = 'clef-waltz-login-wrapper';
+
+	Waltz.prototype.CREDENTIAL_OVERLAY_ID = "waltz-credential-overlay",
+	Waltz.prototype.CREDENTIAL_USERNAME_ID = "waltz-credential-username",
+	Waltz.prototype.CREDENTIAL_PASSWORD_ID = "waltz-credential-password",
+	Waltz.prototype.CREDENTIAL_SUBMIT_ID = "waltz-credential-submit",
+	Waltz.prototype.CREDENTIAL_FORM_ID = "waltz-credential-form",
+    Waltz.prototype.CREDENTIAL_ALERT_ID = "waltz-credential-alert",
+	Waltz.prototype.CREDENTIAL_SLIDE_IN_CLASS = "slide-in";
+	Waltz.prototype.CREDENTIAL_LOGOS_ID = "waltz-credential-logos";
+
+	Waltz.prototype.TUTORIAL_OVERLAY_ID = 'waltz-tutorial-overlay';
+	Waltz.prototype.TUTORIAL_MESSAGE_ID = 'waltz-tutorial-message';
+	Waltz.prototype.TUTORIAL_CLOSE_ID = 'waltz-tutorial-close';
+
+	Waltz.prototype.startTutorial = function() {
+		var _this = this;
+		this.activeTutorial = true;
+
+		var $overlay = $("<div id='" + this.TUTORIAL_OVERLAY_ID + "'></div>");
+		$overlay.click(function() {
+			if(confirm("Are you sure you want to close the tutorial?")) {
+				_this.completeTutorial();
+			}
+		})
+
+		$('body').append($overlay);
+
+		this.router.on('tutorial', this.tutorialStep.bind(this));
+	}
+
+	Waltz.prototype.tutorialStep = function(e) {
+		var _this = this,
+			$message = $('#' + this.TUTORIAL_MESSAGE_ID),
+			$overlay = $('#' + this.TUTORIAL_OVERLAY_ID),
+			OFFSET = 40;
+
+		if ($message.length == 0) {
+			$message = $("<div id='" + this.TUTORIAL_MESSAGE_ID + "'></div>");
+			$('body').append($message);
+		}
+
+		if (this.options.tutorialStep === 0) {
+			var $message = $message.text("Click this to set up Waltz for " + this.options.site.config.name),
+				$mainButton = $('#' + this.MAIN_BUTTON_ID);
+
+			$message.attr('class', '');
+			$message.addClass('right-arrow');
+
+			$overlay.append($message);
+			$message.css({
+				left: $mainButton.offset().left - ($message.width() + OFFSET),
+				top: $mainButton.offset().top + $message.height() / 2
+			});
+
+		} else if (this.options.tutorialStep === 1) {
+			var $credentialForm = $('#' + this.CREDENTIAL_FORM_ID);
+
+			$message.text("Type your username and password to securely store them with Waltz.");
+			$message.css({
+				left: $credentialForm.offset().left,
+				top: $credentialForm.offset().top + $credentialForm.height() + OFFSET
+			});
+
+			$message.attr('class', '');
+			$message.addClass('top-arrow');
+		}
+
+		this.options.tutorialStep++;
+	}
+
+	Waltz.prototype.completeTutorial = function() {
+		$('#'+this.TUTORIAL_OVERLAY_ID).remove();
+		chrome.runtime.sendMessage({ 
+    		method: "completeTutorial"
+    	});
 	}
 
 	Waltz.prototype.acknowledgeLogin = function() {
@@ -177,7 +254,7 @@
 			left: 0,
 			border: 'none',
 			display: 'none',
-			"z-index": 999999999
+			"z-index": 9999
 		});
 
 		$iframe.on('load', function() {
@@ -355,45 +432,46 @@
 	}
 
 	Waltz.prototype.requestCredentials = function(errorMessage) {
-		var _this = this,
-			OVERLAY_ID = "waltz-credential-overlay",
-			USERNAME_ID = "waltz-credential-username",
-			PASSWORD_ID = "waltz-credential-password",
-			SUBMIT_ID = "waltz-credential-submit",
-			FORM_ID = "waltz-credential-form",
-            ALERT_ID = "waltz-credential-alert",
-			SLIDE_IN_CLASS = "slide-in"
+		var _this = this;
 
 		// set up templates for tutorial
-		var $overlay = $("<div id='" + OVERLAY_ID + "''></div>")
-			$form = $("<div id='"+ FORM_ID + "'></div>");
-			$usernameField = $("<input type='text' placeholder='type your username' id='" + USERNAME_ID + "' />");
-			$passwordField = $("<input type='password' placeholder='type your password' id='" + PASSWORD_ID + "' />");
-			$submitButton = $("<input type='submit' value=' ' id='" + SUBMIT_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/next.png") + ")'/>");
+		var $overlay = $("<div id='" + this.CREDENTIAL_OVERLAY_ID + "'></div>")
+			$form = $("<div id='"+ this.CREDENTIAL_FORM_ID + "'></div>");
+			$usernameField = $("<input type='text' placeholder='type your username' id='" + this.CREDENTIAL_USERNAME_ID + "' />");
+			$passwordField = $("<input type='password' placeholder='type your password' id='" + this.CREDENTIAL_PASSWORD_ID + "' />");
+			$submitButton = $("<input type='submit' value=' ' id='" + this.CREDENTIAL_SUBMIT_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/next.png") + ")'/>");
 			$body = $('body');
 
-		var logos = ["<div id='waltz-credential-logos'>",
+		var logos = ["<div id='" + this.CREDENTIAL_LOGOS_ID + "'>",
 			"<div id='waltz-credential-site-logo' style='background-image: url(" + chrome.extension.getURL("/img/site_images/" + this.options.site.config.key + ".png" ) + ");'></div>",
 			"<img id='waltz-credential-arrow' src='" + chrome.extension.getURL("/img/arrow.png") + "'/>",
 			"<img src='" + chrome.extension.getURL("/img/waltz-transparent-128.png") + "'/>",
 		"</div>"].join("");
-
 
 		$form.append(logos);
 		$form.append("<p id='waltz-credential-message'>Securely encrypt your " + this.options.site.config.name + " password.</p>");
 		// add tutorial templates
 		$form.append($usernameField).append($passwordField);
         if (errorMessage) {
-            $form.prepend($("<p id='" + ALERT_ID + "'>" + errorMessage + "</p>"));
+            $form.prepend($("<p id='" + this.CREDENTIAL_ALERT_ID + "'>" + errorMessage + "</p>"));
         }		
 
         $form.append($submitButton);
 		$overlay.append($form);
-        $body.append($overlay)
+        $body.append($overlay);
+
+				
+		if (_this.activeTutorial) {
+			$overlay.addClass('tutorial');
+		}
+
 
 		//Put this on a timeout, because we need the class to be added after the initial draw
 		setTimeout(function() {
-			$.merge($overlay, $form).addClass(SLIDE_IN_CLASS);
+			$.merge($overlay, $form).addClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
+			setTimeout(function() {
+				_this.router.trigger('tutorial');
+			}, 200)
 		}, 0);
 
 		$usernameField.focus();
@@ -409,12 +487,16 @@
 		$overlay.click(function(e) {
 			if ($(e.target).attr('id') === $overlay.attr('id')) {
 				$('#clef-waltz-login-wrapper').removeClass('waltz-remove');
-				$.merge($overlay, $form).removeClass(SLIDE_IN_CLASS);
+				$.merge($overlay, $form).removeClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
+				if (_this.activeTutorial) {
+					_this.completeTutorial();
+				}
 				setTimeout(function() {
 					$.merge($overlay, $form).remove();
 				}, 500);
 			}
 		});
+
 
 
 		// capture the form submit, save our credentials, and then continue
@@ -454,7 +536,7 @@
 
 
 		//Build HTML for clef widget
-		var clefCircle = $("<div id='clef-waltz-login-wrapper' class='spinning'></div>");
+		var clefCircle = $("<div id='" + this.MAIN_BUTTON_ID + "' class='spinning'></div>");
 		var waltzActions = $(
 			"<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
 			+"<button style='background-image:url("+pSource+");' class='waltz-button waltz-edit'></button>"

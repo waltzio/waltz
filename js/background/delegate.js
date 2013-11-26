@@ -114,12 +114,6 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 		case "getHost":
 			return sendResponse(this.options.cy_url);
 			break;
-		case "refreshSettings":
-			storage.getOptions(function(options) {
-				console.log("new options");
-				this.options = options;
-			});
-			break;
 		default:
 			return this[request.method](request, sendResponse);
 			break;
@@ -138,6 +132,21 @@ Delegate.prototype.login = function(request) {
 
     this.currentLogins[request.domain] = request.location;
 	storage.addLogin(request.domain);
+
+    if (this.options.tutorialStep != -1) {
+        this.completeTutorial();
+    } 
+}
+
+Delegate.prototype.completeTutorial =  function(request) {
+    storage.completeTutorial(this.refreshOptions);
+}
+
+Delegate.prototype.refreshOptions = function(request) {
+    var _this = this;
+    storage.getOptions(function(options) {
+        _this.options = options;
+    });
 }
 
 Delegate.prototype.updateSiteConfigs = function(data) {
@@ -332,7 +341,9 @@ Delegate.prototype.initialize = function(data, callback) {
 						config: this.siteConfigs[site]
 					},
 					cyHost: this.options.cy_url,
-                    currentLogin: this.currentLogins[site]
+                    currentLogin: this.currentLogins[site],
+                    inTransition: this.transitioningToLoggedIn,
+                    tutorialStep: 0
 				};
 				callback(options);
 				return;
@@ -421,8 +432,8 @@ function getCookiesForDomain(domain, cb) {
 }
 
 function isEmpty(obj) {
-    for(var key in map) {
-        if (map.hasOwnProperty(key)) {
+    for(var key in obj) {
+        if (obj.hasOwnProperty(key)) {
             return false;
         }
     }

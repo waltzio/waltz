@@ -77,7 +77,7 @@
 				options[$(this).attr('name')] = $(this).val();
 
 				chrome.storage.local.set({options: options});
-				chrome.runtime.sendMessage({method: "refreshSettings"});
+				chrome.runtime.sendMessage({method: "refreshOptions"});
 			});
 
 			$(document).on('click', '.togglePass', function() {

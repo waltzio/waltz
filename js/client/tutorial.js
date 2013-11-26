@@ -7,14 +7,16 @@ function Tutorial() {
     $.getJSON(configURL, function(data) {
         for (k in data) {
             site = data[k];
-            siteHTML = [
-            "<a href='" + site.login.url + "'>",
-                "<li>",
-                    "<h4 class='name'>" + site.name + "</h4>",
-                    "<img src='/img/site_images/" + site.key + ".png'/>",
-                "</li>",
-            "</a>"].join("");
-            $siteContainer.prepend(siteHTML);
+            if (!site.ignore) {
+                siteHTML = [
+                "<a href='" + site.login.url + "'>",
+                    "<li>",
+                        "<h4 class='name'>" + site.name + "</h4>",
+                        "<img src='/img/site_images/" + site.key + ".png'/>",
+                    "</li>",
+                "</a>"].join("");
+                $siteContainer.prepend(siteHTML);
+            }
         }
     })
 }

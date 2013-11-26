@@ -9,6 +9,7 @@
             "usernameField": "username",
             "passwordField": "password",
             "check": "#logged_in"
-        }
+        },
+        "ignore": true
     }
 }
