@@ -208,7 +208,6 @@
 				value: self.loginCredentials.password
 
 			}, function(response) {
-
 				if(typeof(cb) === "function") {
 					cb({
 						username: self.loginCredentials.username,
@@ -294,17 +293,17 @@
 
 
 	Waltz.prototype.decryptAndLogIn = function() {
-		var self = this;
+		var _this = this;
 
-		self.decryptCredentials(function(response) {
+		this.decryptCredentials(function(response) {
 			if(response.error) {
 				if(response.error === "authentication") {
-					self.login(this);
+					_this.login(_this);
 				} else {
 					console.log(response);
 				}
 			} else {
-				self.submitLoginForm(response);
+				_this.submitLoginForm(response);
 			}
 		});
 	}
@@ -324,7 +323,7 @@
 
 			var $login = findInput(siteConfig.login.usernameField),
 				$password = findInput(siteConfig.login.passwordField),
-				$form = $login.parent('form'),
+				$form = $login.parents('form'),
 				$newLogin = $login.clone(),
 				$newPassword = $password.clone();
 
