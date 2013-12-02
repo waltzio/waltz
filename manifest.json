@@ -39,7 +39,8 @@
     "cookies",
     "tabs",
     "notifications",
-    "contextMenus"
+    "contextMenus",
+    "webRequest"
   ],
   "icons": {
     "16": "/img/waltz-16.png",

@@ -14,7 +14,13 @@
                 "url": "https://github.com/login",
                 "fields": ["authenticity_token"]
             },
-            "check": "a#logout"
+            "check": "a#logout",
+            "twoFactor": [
+                {
+                    "url": "https://github.com/session",
+                    "check": "input[name='otp']"
+                }
+            ]
         }
     }
 }

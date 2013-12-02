@@ -12,14 +12,15 @@
 		var _this = this,
 			page = this.checkPage();
         
+        // First, we need to figure out if the Waltz icon should be displayed.
 		if (page == "logged_in") {
 			// If the 'check' selector exists, then we're logged in, 
         	// so don't show Waltz
     		this.acknowledgeLogin();
             return;
         } else {
-        	// the 'check' selector doesn't exit yet, but it may exist in the 
-        	// near future. 
+        	// the 'check' selector doesn't exist yet, but it may be loaded 
+            // dynamically by the page.
         	var checks = 0,
         		MAX_CHECKS = 20,
         		CHECK_INTERVAL = 300,
