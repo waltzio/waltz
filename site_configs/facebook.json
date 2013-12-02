@@ -10,7 +10,13 @@
             "method": "POST",
             "usernameField": "email",
             "passwordField": "pass",
-            "check": "input[type='submit'][value='Log Out']"
+            "check": "input[type='submit'][value='Log Out']",
+            "twoFactor": [
+                {
+                    "url": "https://www.facebook.com/checkpoint/",
+                    "check": "input[name]='approvals_code'"
+                }     
+            ]
         }
     }
 }

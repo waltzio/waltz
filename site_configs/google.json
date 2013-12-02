@@ -15,7 +15,13 @@
                 "url": "https://accounts.google.com/ServiceLoginAuth",
                 "fields": ["GALX"]
             },
-            "check": "a#gb_71"
+            "check": "a#gb_71",
+            "twoFactor": [
+                {
+                    "url": "https://accounts.google.com/SecondFactor",
+                    "check": "form[action='SecondFactor']"
+                }
+            ]
         }
     },
     "*://*.youtube.com/*": {
@@ -34,7 +40,13 @@
                 "url": "https://accounts.google.com/ServiceLoginAuth",
                 "fields": ["GALX"]
             },
-            "check": "div#yt-masthead-user"
+            "check": "div#yt-masthead-user",
+            "twoFactor": [
+                {
+                    "url": "https://accounts.google.com/SecondFactor",
+                    "check": "form[action='SecondFactor']"
+                }
+            ]
         }
     }
 }
