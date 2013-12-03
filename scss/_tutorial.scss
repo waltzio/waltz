@@ -31,6 +31,19 @@
     $color: white;
     display: none;
     z-index: 9999;
+    color: #111;
+    background: $color;
+    font-family: $font-family;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 100;
+    width: 240px;
+    border: 1px solid $color;
+    line-height: 1.1em;
+
+    p {
+        margin: 0;
+    }
 
     &.floating {
         position: absolute;
@@ -58,29 +71,29 @@
             }
         }
     }
-    color: #111;
-    background: $color;
-    font-family: $font-family;
-    padding: 20px;
-    font-size: 20px;
-    font-weight: 100;
-    width: 240px;
-    border: 1px solid $color;
-    line-height: 1.1em;
+
+    &.bottom {
+        position: fixed;
+        background: white;
+        color: #111;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
 
     #waltz-onboarding-dismiss {
+        top: 0;
+        left: 3px;
         position: absolute;
-        bottom: 0;
-        right: 3px;
         color: #CCC;
-        font-size: 24px;
+        font-size: 20px;
+        text-align: center;
         cursor: pointer;
 
         &:hover {
             color: #AAA;
         }
     }
-    
 }
 
 

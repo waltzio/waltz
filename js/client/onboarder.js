@@ -1,7 +1,7 @@
 Onboarder.prototype.defaults = {};
 Onboarder.prototype.siteOnboardingObject = {
     loginAttempts: {
-        succeed: 0,
+        success: 0,
         fail: 0
     },
     updatedAt: null,
@@ -40,21 +40,7 @@ Onboarder.prototype.init = function(data) {
         this.commitSiteData();
     }
 
-    // check whether we'll need the content later
-    if (this.shouldRenderContent()) {
-        var $dismisser = $("<div id='" + this.DISMISS_ID + "'>&times;</div>");
-
-        this.$message = $("<div id='" + this.MESSAGE_ID + "'></div>")
-
-        $('body').append(this.$message.append("<p></p>", $dismisser));
-        $dismisser.click(this.dismiss.bind(this));
-    }
-
     this.initialized.resolve();
-}
-
-Onboarder.prototype.shouldRenderContent = function() {
-    return true;
 }
 
 Onboarder.prototype.attachHandlers = function() {
@@ -77,12 +63,20 @@ Onboarder.prototype.attachHandlers = function() {
     this.router.sOn('login.failure', this.loginFailure);
     this.router.sOn('show.widget', this.showWidget);
     this.router.sOn('show.credentialOverlay', this.showCredentialOverlay);
-    this.router.sOn('remove.widget remove.credentialOverlay', this.hideToolTips);
+    this.router.sOn('remove.credentialOverlay', this.hideToolTips);
 }
 
 Onboarder.prototype.loginSuccess = function() {
-    this.siteData.loginAttempts.succeed++;
+    this.siteData.loginAttempts.success++;
     this.commitSiteData();
+
+    if (this.siteData.loginAttempts.success == 1) {
+        var $message = this.getMessage();
+        $message.find('p').text("Nice job! Now log out and try logging in again.");
+        $message.attr('class', 'bottom');
+
+        $message.slideDown();
+    }
 }
 
 Onboarder.prototype.loginFailure = function() {
@@ -94,22 +88,24 @@ Onboarder.prototype.loginFailure = function() {
 Onboarder.prototype.showWidget = function() {
     if (this.failMode) return;
 
-    var $widget = $('#' + this.waltz.MAIN_BUTTON_ID);
+    var $widget = $('#' + this.waltz.MAIN_BUTTON_ID),
+        $message = this.getMessage();
 
-    this.$message.find('p').text("Click this to set up Waltz for " + this.options.site.config.name);
+    $message.find('p').text("Click this to set up Waltz for " + this.options.site.config.name);
 
-    this.$message.attr('class', 'right-arrow floating');
+    $message.attr('class', 'right-arrow floating');
 
-    this.$message.css({
-        left: $widget.offset().left - (this.$message.width() + this.MESSAGE_OFFSET),
-        top: $widget.offset().top + this.$message.height() / 2
+    $message.css({
+        left: $widget.offset().left - ($message.width() + this.MESSAGE_OFFSET),
+        top: $widget.offset().top + $message.height() / 2
     });
 
-    this.$message.fadeIn();
+    $message.fadeIn();
 }
 
 Onboarder.prototype.showCredentialOverlay = function() {
     var $credentialForm = $('#' + this.waltz.CREDENTIAL_FORM_ID),
+        $message = this.getMessage(),
         text;
 
     if (this.failMode) {
@@ -118,26 +114,43 @@ Onboarder.prototype.showCredentialOverlay = function() {
         text = "Type your username and password to securely store them with Waltz."
     }
 
-    this.$message.find('p').text(text);
+    $message.find('p').text(text);
 
-    this.$message.attr('class', 'top-arrow floating');
+    $message.attr('class', 'top-arrow floating');
 
-    this.$message.animate({
+    $message.css({
         left: $credentialForm.offset().left,
         top: $credentialForm.offset().top + $credentialForm.height() + this.MESSAGE_OFFSET
     });
 
-    this.$message.fadeIn();
+    $message.fadeIn();
 }
 
 Onboarder.prototype.hideToolTips = function() {
-    this.$message.fadeOut();
+    if (this.$message) {
+        this.$message.fadeOut();
+    }
 };
 
 Onboarder.prototype.dismiss = function() {
     this.hideToolTips();
     this.dismissed = true;
 };
+
+Onboarder.prototype.getMessage = function() {
+    if (this.$message) return this.$message; 
+
+    var $dismisser = $("<div id='" + this.DISMISS_ID + "'>&times;</div>");
+
+    this.$message = $("<div id='" + this.MESSAGE_ID + "'></div>");
+    this.$message.append("<p></p>", $dismisser);
+
+    $('body').append(this.$message);
+
+    $dismisser.click(this.dismiss.bind(this));
+
+    return this.$message;
+}
 
 Onboarder.prototype.commitSiteData = function(cb) {
     this.siteData.updatedAt = new Date().getTime();

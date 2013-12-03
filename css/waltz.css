@@ -219,6 +219,9 @@
   border: 1px solid white;
   line-height: 1.1em;
 }
+#waltz-onboarding-message p {
+  margin: 0;
+}
 #waltz-onboarding-message.floating {
   position: absolute;
   -webkit-animation: wiggle 1s 3;
@@ -239,12 +242,21 @@
   top: -20px;
   border-bottom: 10px solid white;
 }
-#waltz-onboarding-message #waltz-onboarding-dismiss {
-  position: absolute;
+#waltz-onboarding-message.bottom {
+  position: fixed;
+  background: white;
+  color: #111;
+  width: 100%;
   bottom: 0;
-  right: 3px;
+  left: 0;
+}
+#waltz-onboarding-message #waltz-onboarding-dismiss {
+  top: 0;
+  left: 3px;
+  position: absolute;
   color: #CCC;
-  font-size: 24px;
+  font-size: 20px;
+  text-align: center;
   cursor: pointer;
 }
 #waltz-onboarding-message #waltz-onboarding-dismiss:hover {
