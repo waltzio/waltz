@@ -211,17 +211,21 @@
 			this.loadIFrame();
 		}
 
-		this.iframe.fadeIn();
-		this.trigger('show.iframe');
+        this.iframe.ready(function() {
+            _this.iframe.contentWindow.postMessage({ method: "loadClef"}, _this.options.cyHost);
 
-		addEventListener("message", function(e) {
-			if(e.data.auth) {
-				_this.iframe.remove();
-				if (typeof cb == "function") {
-					cb();
-				}
-			}
-		});
+            this.iframe.fadeIn();
+            this.trigger('show.iframe');
+
+            addEventListener("message", function(e) {
+                if(e.data.auth) {
+                    _this.iframe.remove();
+                    if (typeof cb == "function") {
+                        cb();
+                    }
+                }
+            });
+        });
 	}
 
 	Waltz.prototype.closeIFrame = function(e) {
