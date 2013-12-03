@@ -1,7 +1,8 @@
 (function($) {
 	Waltz.prototype.router = $({});
 
-	Waltz.prototype.MAIN_BUTTON_ID = 'clef-waltz-login-wrapper';
+	Waltz.prototype.MAIN_BUTTON_CONTAINER_ID = 'waltz-login-wrapper';
+	Waltz.prototype.MAIN_BUTTON_ID = 'waltz-login-button';
 
 	Waltz.prototype.CREDENTIAL_OVERLAY_ID = "waltz-credential-overlay",
 	Waltz.prototype.CREDENTIAL_USERNAME_ID = "waltz-credential-username",
@@ -106,11 +107,11 @@
                     _this.checkAuthentication(function() {
                         var errorMessage = "Invalid username and password.";
                         _this.acknowledgeLoginAttempt({ success: false });
-						_this.drawWaltzWidget();	
+						_this.showWidget();	
                         _this.requestCredentials(errorMessage); 
                     });
                 } else {
-					_this.drawWaltzWidget();	
+					_this.showWidget();	
                 }
 	
 
@@ -203,6 +204,7 @@
 		}
 
 		this.iframe.fadeIn();
+		this.trigger('show.iframe');
 
 		addEventListener("message", function(e) {
 			if(e.data.auth) {
@@ -218,7 +220,9 @@
 		if (e.origin == this.options.cyHost) {
 			if (e.data && e.data.method == "closeIFrame" && this.iframe) {
 				this.iframe.remove();
+				this.trigger('hide.iframe');
 				this.iframe = false;
+				this.showWidget();
 				this.loadIFrame();
 			}
 		}
@@ -408,9 +412,7 @@
 		//Put this on a timeout, because we need the class to be added after the initial draw
 		setTimeout(function() {
 			$.merge($overlay, $form).addClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
-			setTimeout(function() {
-				_this.trigger('show.credentialOverlay');
-			}, 200)
+			_this.trigger('show.credentialOverlay');
 		}, 0);
 
 		$usernameField.focus();
@@ -428,6 +430,7 @@
 				$('#clef-waltz-login-wrapper').removeClass('waltz-remove');
 				$.merge($overlay, $form).removeClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
 				_this.trigger('hide.credentialOverlay');
+				_this.showWidget();
 
 				setTimeout(function() {
 					$.merge($overlay, $form).remove();
@@ -464,33 +467,38 @@
 	}
 
 	//Draws the waltz widget and binds the interactions
-	Waltz.prototype.drawWaltzWidget = function(form) {
+	Waltz.prototype.showWidget = function(form) {
+
+		if (this.$widget) {
+			this.$widget.removeClass('waltz-remove');
+			this.trigger('show.widget');
+			return;
+		} 
+
 		var _this = this;
 
 		//Grab image resource URLs from extensions API
 		var wSource = chrome.extension.getURL("/img/waltz-128.png");
-		var fSource = chrome.extension.getURL("/img/waltz-full.png");
 		var pSource = chrome.extension.getURL("/img/pencil.png");
 		var xSource = chrome.extension.getURL("/img/x.png");
 
-
 		//Build HTML for clef widget
-		var waltzCircle = $("<div id='" + this.MAIN_BUTTON_ID + "' class='spinning'></div>");
-		var waltzActions = $(
+		var $widget = $("<div id='" + this.MAIN_BUTTON_CONTAINER_ID + "'></div>");
+		var $waltzCircle = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
+		var $waltzActions = $(
 			"<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
 			+"<button style='background-image:url("+pSource+");' class='waltz-button waltz-edit'></button>"
 			);
 
+		$widget.append($waltzCircle, $waltzActions);
 		//Style the widget with the correct image resource
-		$(waltzCircle).css({
+		$waltzCircle.css({
 			"background-image": "url("+wSource+")"
-		}).append(waltzActions);
+		});
 
 		$(document).ready(this.loadIFrame.bind(this));
 
-		$(waltzCircle).click(function() {
-			$(this).addClass("waltz-loading");
-
+		$waltzCircle.click(function() {
 			_this.checkAuthentication(function() {
 				if (_this.loginCredentials) {
 					_this.decryptAndLogIn();
@@ -499,37 +507,42 @@
 				}
 			});
 
-			setTimeout(function() {
-				$(this).remove();
-				_this.trigger('remove.widget');
-			}, 1000)
+			setTimeout(_this.hideWidget.bind(_this), 0);
 		});
 
-		$(waltzCircle).find(".waltz-dismiss").click(function(e) {
+		$widget.find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
 
-			$(this).parent().addClass("waltz-remove");
-			_this.trigger('hide.widget');
-
-			setTimeout(function() {
-				$(this).remove();
-				_this.trigger('remove.widget');
-			});
+			_this.hideWidget({ remove: true });
 		});
 
-		$(waltzCircle).find(".waltz-edit").click(function(e) {
+		$widget.find(".waltz-edit").click(function(e) {
 			e.stopPropagation();
 
-			$(this).parent().addClass("waltz-remove");
-			_this.trigger('hide.widget');
+			_this.hideWidget();
 
 			_this.checkAuthentication(function() {
 				_this.requestCredentials();
 			});
 		});
 
-		$("body").append(waltzCircle);
+		$("body").append($widget);
+		this.$widget = $widget;
 		this.trigger('show.widget');
+	}
+
+	Waltz.prototype.hideWidget = function(opts) {
+		this.$widget.addClass("waltz-remove");
+		this.trigger('hide.widget');
+
+		if (opts && opts.remove) {
+			var _this = this;
+			setTimeout(function() {
+				_this.$widget.remove();
+				_this.$widget = false;
+				_this.trigger('remove.widget');
+			}, 1000);
+		}
 	}
 
 	Waltz.prototype.checkPage = function() {

@@ -3,86 +3,66 @@
 @import "_credentials";
 @import "_tutorial";
 
-#clef-waltz-login-wrapper {
-    background-repeat: no-repeat;
-    width: 64px;
-    height: 64px;
-    background-size: 64px;
-    overflow: hidden;
+#waltz-login-wrapper {
+    $size: 64px;
+
     position: fixed;
     bottom: 25px;
     right: 25px;
-    cursor: pointer;
-    overflow: visible;
-    padding: 20px;
-    background-position: center;
-    z-index: 9999;
+
+    width: $size;
+    height: $size;
+    
     -webkit-transition: .5s;
 
-    &:hover {
-        -webkit-transition: -webkit-transform .5s;
-        -webkit-transform: rotateX(0deg) rotateZ(359deg);
-        opacity: 1;
-
-        .waltz-button {
-            height: 20px;
-            width: 20px;
-            -webkit-transform: rotateZ(360deg);
-            opacity: 1;
-
-            &.waltz-dismiss {
-                top: 63px;
-                left: 50px;
-
-                &:hover {
-                    background-color: $red;
-                }
-            }
-            &.waltz-edit {
-                top: 43px;
-                left: -6px;
-
-                &:hover {
-                    background-color: $pink;
-                }
-            }
-        }
-    }
     &.waltz-remove {
-        -webkit-transition: .5s;
-        right: -200px;
+        right: -($size + 50);
     }
-    &.waltz-loading {
-        -webkit-animation: spin-clef-logo 1s linear infinite;
+    
+    #waltz-login-button {
+        height: 100%;
+        width: 100%;
+        background-repeat: no-repeat;
+        border-radius: 32px;
+        background-size: 64px;
+        cursor: pointer;
+        background-position: center;
+        z-index: 9999;
+
+        &:hover {
+            background-color: black;
+        }
     }
 
     .waltz-button {
-        height: 0px;
-        width: 0px;
-        border-radius: 25px;
+        $offset: 10px;
+        height: 20px;
+        width: 20px;
+        border-radius: 10px;
         display: block;
         background-size: 50%;
         background-repeat: no-repeat;
         background-position: 5px 5px;
-        opacity: 0;
-        -webkit-transform: rotateZ(0deg);
-        -webkit-transition: height .5s, width .5s, -webkit-transform .5s, opacity .5s, top .5s, left .5s;
-        -webkit-transition-delay: .1s;
-        position: relative;
-        top: 25px;
-        left: 25px;
+        position: absolute;
         border: none;
         cursor: pointer;
         padding: 0;
         margin: 0;
-        height: auto;
-        min-height: 0px;
 
         &.waltz-dismiss {
-            background-color: $red-off;
+            background-size: 100%;
+            background-position: center center;
+            background-color: transparent;
+            top: -$offset;
+            right: -$offset;
+            &:hover {
+                background-color: $red;
+            }
         }
 
         &.waltz-edit {
+            top: -$offset;
+            left: -$offset;
             -webkit-transition-delay: .2s;
             background-color: $pink-off;
         }

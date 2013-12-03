@@ -11,7 +11,7 @@ Onboarder.prototype.siteOnboardingObject = {
 Onboarder.prototype.MESSAGE_ID = 'waltz-onboarding-message';
 Onboarder.prototype.MESSAGE_CONTAINER_ID = 'waltz-onboarding-message-container';
 Onboarder.prototype.DISMISS_ID = 'waltz-onboarding-dismiss';
-Onboarder.prototype.MESSAGE_OFFSET = 40;
+Onboarder.prototype.MESSAGE_OFFSET = 20;
 
 function Onboarder(waltz) {
     this.waltz = waltz;
@@ -63,7 +63,8 @@ Onboarder.prototype.attachHandlers = function() {
     this.router.sOn('login.failure', this.loginFailure);
     this.router.sOn('show.widget', this.showWidget);
     this.router.sOn('show.credentialOverlay', this.showCredentialOverlay);
-    this.router.sOn('remove.credentialOverlay', this.hideToolTips);
+    this.router.sOn('show.iframe', this.showIFrame);
+    this.router.sOn('hide.widget hide.credentialOverlay', this.hideToolTips);
 }
 
 Onboarder.prototype.loginSuccess = function() {
@@ -88,23 +89,28 @@ Onboarder.prototype.loginFailure = function() {
 Onboarder.prototype.showWidget = function() {
     if (this.failMode) return;
 
-    var $widget = $('#' + this.waltz.MAIN_BUTTON_ID),
+    var _this = this,
+        $widget = $('#' + this.waltz.MAIN_BUTTON_CONTAINER_ID),
         $message = this.getMessage();
 
-    $message.find('p').text("Click this to set up Waltz for " + this.options.site.config.name);
+    onFinishedTransitioning($widget, "right", function() {
+        $message.find('p').text("Click this to set up Waltz for " + _this.options.site.config.name);
 
-    $message.attr('class', 'right-arrow floating');
+        $message.attr('class', 'right-arrow floating fixed');
+        $message.attr('style', '');
 
-    $message.css({
-        left: $widget.offset().left - ($message.width() + this.MESSAGE_OFFSET),
-        top: $widget.offset().top + $message.height() / 2
-    });
+        $message.css({
+            right: parseInt($widget.css('right')) + $widget.width() + _this.MESSAGE_OFFSET,
+            bottom: parseInt($widget.css('bottom')) - $message.height() / 2
+        });
 
-    $message.fadeIn();
+        $message.fadeIn();
+    })
 }
 
 Onboarder.prototype.showCredentialOverlay = function() {
-    var $credentialForm = $('#' + this.waltz.CREDENTIAL_FORM_ID),
+    var _this = this,
+        $credentialForm = $('#' + this.waltz.CREDENTIAL_FORM_ID),
         $message = this.getMessage(),
         text;
 
@@ -114,21 +120,40 @@ Onboarder.prototype.showCredentialOverlay = function() {
         text = "Type your username and password to securely store them with Waltz."
     }
 
-    $message.find('p').text(text);
+    onFinishedTransitioning($credentialForm, 'margin-top', function() {
+        $message.find('p').text(text);
 
-    $message.attr('class', 'top-arrow floating');
+        $message.attr('class', 'top-arrow floating');
+        $message.attr('style', '');
+
+        $message.css({
+            left: $credentialForm.offset().left,
+            top: $credentialForm.offset().top + $credentialForm.height() + _this.MESSAGE_OFFSET
+        });
+
+        $message.fadeIn();
+    });
+}
+
+Onboarder.prototype.showIFrame = function() {
+    var $message = this.getMessage();
+
+    $message.find('p').text("Sync with the wave to connect your Clef account");
+
+    $message.attr('class', 'bottom-arrow floating');
+    $message.attr('style', '');
 
     $message.css({
-        left: $credentialForm.offset().left,
-        top: $credentialForm.offset().top + $credentialForm.height() + this.MESSAGE_OFFSET
+        left: $(window).width() / 2 - $message.width() / 2,
+        top: '10px'
     });
 
     $message.fadeIn();
-}
+};
 
 Onboarder.prototype.hideToolTips = function() {
     if (this.$message) {
-        this.$message.fadeOut();
+        this.$message.fadeOut(100);
     }
 };
 
@@ -155,4 +180,22 @@ Onboarder.prototype.getMessage = function() {
 Onboarder.prototype.commitSiteData = function(cb) {
     this.siteData.updatedAt = new Date().getTime();
     this.storage.setOnboardingData(this.siteKey, this.siteData, cb);
+}
+
+
+// adds a 50 millisecond delay
+function onFinishedTransitioning(el, style, cb) {
+    var $el = el,
+        initialValue = el.css(style);
+
+    setTimeout(function() {
+        if ($el.css(style) !== initialValue) {
+            $el.on('transitionend', function() {
+                $el.off('transitionend');
+                cb();
+            })
+        } else {
+            cb();
+        }
+    }, 50);
 }

@@ -50,6 +50,12 @@
         -webkit-animation: wiggle 1s 3;
         animation: wiggle 1s 3;
 
+
+        &.fixed {
+            position: fixed;
+        }
+
+
         $arrow-size: 10px;
         &:after {
             content: " ";
@@ -68,6 +74,13 @@
                 right: 50%;
                 top: -$arrow-size - 10px;
                 border-bottom: $arrow-size solid $color;
+            }
+        }
+        &.bottom-arrow {
+            &:after {
+                right: 50%;
+                bottom: -$arrow-size - 10px;
+                border-top: $arrow-size solid $color;
             }
         }
     }
