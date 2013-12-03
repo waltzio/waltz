@@ -29,7 +29,7 @@
 		if (page == "logged_in") {
 			// If the 'check' selector exists, then we're logged in, 
         	// so don't show Waltz
-    		this.acknowledgeLoginAttempt({ successful: true });
+    		this.acknowledgeLoginAttempt({ success: true });
             return;
         } else {
         	// the 'check' selector doesn't exist yet, but it may be loaded 
@@ -120,13 +120,12 @@
 	}
 
 	Waltz.prototype.acknowledgeLoginAttempt = function(opts) {
-		if (opts.success) {
-			this.trigger('login.success');
-		} else {
-			this.trigger('login.failure');
-		}
-
 		if (this.options.currentLogin) {
+			if (opts.success) {
+				this.trigger('login.success');
+			} else {
+				this.trigger('login.failure');
+			}
         	chrome.runtime.sendMessage({ 
         		method: "acknowledgeLoginAttempt", 
         		domain: this.options.site.domain,
@@ -367,12 +366,25 @@
 	Waltz.prototype.requestCredentials = function(errorMessage) {
 		var _this = this;
 
-		var $overlay = $("<div id='" + this.CREDENTIAL_OVERLAY_ID + "'></div>")
-			$form = $("<div id='"+ this.CREDENTIAL_FORM_ID + "'></div>");
-			$usernameField = $("<input type='text' placeholder='type your username' id='" + this.CREDENTIAL_USERNAME_ID + "' />");
-			$passwordField = $("<input type='password' placeholder='type your password' id='" + this.CREDENTIAL_PASSWORD_ID + "' />");
-			$submitButton = $("<input type='submit' value=' ' id='" + this.CREDENTIAL_SUBMIT_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/next.png") + ")'/>");
+		var $overlay = $("<div id='" + this.CREDENTIAL_OVERLAY_ID + "'></div>"),
+			$form = $("<div id='"+ this.CREDENTIAL_FORM_ID + "'></div>"),
+			$usernameField = $("<input type='text' placeholder='type your username' id='" + this.CREDENTIAL_USERNAME_ID + "' />"),
+			$passwordField = $("<input type='password' placeholder='type your password' id='" + this.CREDENTIAL_PASSWORD_ID + "' />"),
+			$submitButton = $("<input type='submit' value=' ' id='" + this.CREDENTIAL_SUBMIT_ID + "' style='background-image: url(" + chrome.extension.getURL("/img/next.png") + ")'/>"),
 			$body = $('body');
+
+		// check if username and password fields exist on the page and if 
+		// they do, and they have values, set the credential fields
+		// to those values (purely for convenience)
+		var $potentialUsernameField = $("input[name='" + this.options.site.config.login.usernameField + "']");
+		if ($potentialUsernameField.length > 0) {
+			console.log($potentialUsernameField.val());
+        	$usernameField.val($potentialUsernameField.val());
+        }
+        var $potentialPasswordField = $("input[name='" + this.options.site.config.login.passwordField + "']");
+        if ($potentialPasswordField.length > 0) {
+        	$passwordField.val($potentialPasswordField.val());
+        }
 
 		var logos = ["<div id='" + this.CREDENTIAL_LOGOS_ID + "'>",
 			"<div id='waltz-credential-site-logo' style='background-image: url(" + chrome.extension.getURL("/img/site_images/" + this.options.site.config.key + ".png" ) + ");'></div>",
@@ -388,7 +400,6 @@
         }
 
 		$form.append($usernameField).append($passwordField);
-        		
 
         $form.append($submitButton);
 		$overlay.append($form);
