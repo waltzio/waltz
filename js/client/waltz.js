@@ -80,7 +80,7 @@
 
 	        			page = _this.checkPage();
 	        			if (page === "logged_in") {
-				        	this.acknowledgeLoginAttempt({ success: true });
+				        	_this.acknowledgeLoginAttempt({ success: true });
 		        			clearInterval(loginCheckInterval);
 		        			return;
 	        			} else if (page === "login") {
@@ -386,7 +386,7 @@
 		if (errorMessage) {
             $form.append($("<p id='" + this.CREDENTIAL_ALERT_ID + "'>" + errorMessage + "</p>"));
         }
-        
+
 		$form.append($usernameField).append($passwordField);
         		
 
