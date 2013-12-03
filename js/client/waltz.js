@@ -65,7 +65,7 @@
 	        			clearInterval(loginCheckInterval);
                         return;
                     } else {
-                        check++; 
+                        checks++; 
                     }
         		};
 
