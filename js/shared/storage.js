@@ -92,8 +92,11 @@ Storage.prototype.addLogin = function(domain) {
     this.getLogins(function(data) {
         if (data[_this.LOGIN_KEY]) data = data[_this.LOGIN_KEY];
         data[domain] = new Date().getTime();
+
+        var save = {};
+        save[_this.LOGIN_KEY] = data;
         
-        _this.set({ "waltz_logins": data }, function() {});
+        _this.set(save, function() {});
     })
 }
 

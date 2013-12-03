@@ -144,7 +144,7 @@ Onboarder.prototype.showIFrame = function() {
     $message.attr('style', '');
 
     $message.css({
-        left: $(window).width() / 2 - $message.width() / 2,
+        left: $(window).width() / 2 - $message.width() / 2 - parseInt($message.css('padding-left')),
         top: '10px'
     });
 

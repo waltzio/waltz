@@ -259,6 +259,7 @@ Delegate.prototype.logout = function(opts) {
 			siteConfig,
 			i;
 
+
 		for (domain in data) {
 			(function() {
 				var promise = $.Deferred(),
@@ -293,7 +294,7 @@ Delegate.prototype.logout = function(opts) {
 					}
 				);
 			}
-			this.storage.clearLogins();
+			_this.storage.clearLogins();
 			if (!opts.silent) {
 				chrome.notifications.create(
 					"", 
