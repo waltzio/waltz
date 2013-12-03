@@ -5,7 +5,7 @@
             "cookies": ["auth_token"]
         },
         "login": {
-            "url": "https://twitter.com/login",
+            "urls": ["https://twitter.com/login"],
             "formURL": "https://twitter.com/sessions",
             "method": "POST",
             "usernameField": "session[username_or_email]",

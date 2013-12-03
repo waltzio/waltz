@@ -5,7 +5,7 @@
             "cookies": ["t_session"]
         },
         "login": {
-            "url": "https://www.pivotaltracker.com/signin",
+            "urls": ["https://www.pivotaltracker.com/signin"],
             "formURL": "https://www.pivotaltracker.com/signin",
             "method": "POST",
             "usernameField": "credentials[username]",

@@ -5,7 +5,7 @@
             "cookies": ["c_user"]
         },
         "login": {
-            "url": "https://www.facebook.com",
+            "urls": ["https://www.facebook.com"],
             "formURL": "https://www.facebook.com/login.php?login_attempt=1",
             "method": "POST",
             "usernameField": "email",

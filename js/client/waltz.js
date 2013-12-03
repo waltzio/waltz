@@ -24,13 +24,16 @@
 
 		var _this = this,
 			page = this.checkPage();
-        
         // First, we need to figure out if the Waltz icon should be displayed.
 		if (page == "logged_in") {
 			// If the 'check' selector exists, then we're logged in, 
         	// so don't show Waltz
     		this.acknowledgeLoginAttempt({ successful: true });
             return;
+        } else if (page == "unknown" && this.options.site.config.login.formOnly) {
+            return;
+        } else if (page == "two_factor") {
+            return; 
         } else {
         	// the 'check' selector doesn't exist yet, but it may be loaded 
             // dynamically by the page.
@@ -44,7 +47,7 @@
         		// in. So, kickOff then check to see if we need to hide.
         		kickOff();
 
-        		loginCheckInterval = setInterval(function() {
+                var checkFunction = function() {
         			if (checks > MAX_CHECKS) {
 	        			clearInterval(loginCheckInterval);
 	        			return;
@@ -53,16 +56,21 @@
 	        		page = _this.checkPage();
 	        		if (page === "logged_in") {
         				$(".waltz-dismiss").click();
-			        	_this.acknowledgeLoginAttempt({ success: true });
 	        			clearInterval(loginCheckInterval);
 	        			return;
 	        		} else if (page == "login") {
 	        			clearInterval(loginCheckInterval);
-	        		} else {
-	        			checks++;
-	        		}
+	        		} else if (page == "unknown" && _this.options.site.config.login.formOnly) {
+        				$(".waltz-dismiss").click();
+	        			clearInterval(loginCheckInterval);
+                        return;
+                    } else {
+                        check++; 
+                    }
+        		};
 
-        		}, CHECK_INTERVAL);
+                checkFunction();
+        		loginCheckInterval = setInterval(checkFunction, CHECK_INTERVAL);
 
         	} else {
 	        	// if we are inTransition, let's keep on looking for a login 
@@ -296,15 +304,6 @@
 			        .val( data.username )
 			)
 
-			if (siteConfig.login.redirectField) {
-				form.append(
-			    	$('<input />')
-				        .attr( "type", "hidden" )
-				        .attr({ "name" : siteConfig.login.redirectField })
-				        .val( window.location.href )
-				)
-			}
-
 			if (siteConfig.login.other) {
 				var appendInputs = function(data) {
 					var $data = $(data),
@@ -522,11 +521,31 @@
 	}
 
 	Waltz.prototype.checkPage = function() {
+        var siteConfig = this.options.site.config;
+        var isTwoFactor = false;
+        if (siteConfig.login.twoFactor) {
+            $.map(siteConfig.login.twoFactor, function(twoFactor) {
+                var twoFactorUrl = new URL(twoFactor.url); 
+                isTwoFactor |= 
+                    (window.location.hostname === twoFactorUrl.hostname &&
+                     window.location.pathname === twoFactorUrl.pathname);
+            });
+        }
+        if (isTwoFactor) {
+            return "two_factor"; 
+        }
+
 		if ($(this.options.site.config.login.check).length != 0) {
 			return "logged_in";
 		}
 
-		if ($("input[name='" + this.options.site.config.login.passwordField + "']").length > 0) {
+        var isLoginPage = ($("input[name='" + this.options.site.config.login.passwordField + "']").length > 0);
+        this.options.site.config.login.urls.map(function(url) {
+            var loginUrl = new URL(url);
+            isLoginPage |= (window.location.hostname === loginUrl.hostname && 
+                            window.location.pathname === loginUrl.pathname);
+        });
+		if (isLoginPage) {
 			return "login";
 		}
 

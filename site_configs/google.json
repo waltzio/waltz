@@ -5,12 +5,15 @@
             "cookies": ["SID", "GX"]
         },
         "login": {
-            "url": "https://accounts.google.com/ServiceLoginAuth",
+            "urls": [
+                "https://accounts.google.com/ServiceLoginAuth",
+                "https://accounts.google.com/ServiceLogin"
+            ],
             "formURL": "https://accounts.google.com/ServiceLoginAuth",
+            "formOnly": true,
             "method": "POST",
             "usernameField": "Email",
             "passwordField": "Passwd",
-            "redirectField": "continue",
             "other": {
                 "url": "https://accounts.google.com/ServiceLoginAuth",
                 "fields": ["GALX"]
@@ -30,12 +33,14 @@
             "cookies": ["SID", "GX"]
         },
         "login": {
-            "url": "https://accounts.google.com/ServiceLoginAuth",
+            "urls": [
+                "https://accounts.google.com/ServiceLoginAuth",
+                "https://accounts.google.com/ServiceLogin"
+            ],
             "formURL": "https://accounts.google.com/ServiceLoginAuth",
             "method": "POST",
             "usernameField": "Email",
             "passwordField": "Passwd",
-            "redirectField": "continue",
             "other": {
                 "url": "https://accounts.google.com/ServiceLoginAuth",
                 "fields": ["GALX"]

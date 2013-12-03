@@ -5,7 +5,7 @@
             "cookies": ["user_session"]
         },
         "login": {
-            "url": "https://github.com/login",
+            "urls": ["https://github.com/login"],
             "formURL": "https://github.com/session",
             "method": "POST",
             "usernameField": "login",

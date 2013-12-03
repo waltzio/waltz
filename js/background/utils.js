@@ -33,6 +33,14 @@ function parse_match_pattern(input) {
     return match_pattern;
 }
 
+function urlsAreEqual(urlString1, urlString2) {
+    var url1 = new URL(urlString1);
+    var url2 = new URL(urlString2);
+
+    return url1.hostname === url2.hostname && 
+           url1.pathname === url2.pathname;
+}
+
 function extrapolateUrlFromCookie(cookie) {
     var prefix = cookie.secure ? "https://" : "http://";
     if (cookie.domain.charAt(0) == ".")
