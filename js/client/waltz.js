@@ -184,7 +184,7 @@
 		var _this = this,
 			$iframe = this.iframe = $("<iframe id='clef_iframe'>");
 
-		$iframe.attr('src', this.options.cyHost+'/login');
+		$iframe.attr('src', this.options.cyHost + '/v1/login');
 
 		$("body").append($iframe);
 
@@ -212,10 +212,10 @@
 		}
 
         this.iframe.ready(function() {
-            _this.iframe.contentWindow.postMessage({ method: "loadClef"}, _this.options.cyHost);
+            _this.iframe[0].contentWindow.postMessage({ method: "loadClef"}, _this.options.cyHost);
 
-            this.iframe.fadeIn();
-            this.trigger('show.iframe');
+            _this.iframe.fadeIn();
+            _this.trigger('show.iframe');
 
             addEventListener("message", function(e) {
                 if(e.data.auth) {
