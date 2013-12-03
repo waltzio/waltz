@@ -1,6 +1,19 @@
 (function($) {
+	Waltz.prototype.router = $({});
 
-	var Waltz = this.Waltz = function(opts) {
+	Waltz.prototype.MAIN_BUTTON_ID = 'clef-waltz-login-wrapper';
+
+	Waltz.prototype.CREDENTIAL_OVERLAY_ID = "waltz-credential-overlay",
+	Waltz.prototype.CREDENTIAL_USERNAME_ID = "waltz-credential-username",
+	Waltz.prototype.CREDENTIAL_PASSWORD_ID = "waltz-credential-password",
+	Waltz.prototype.CREDENTIAL_SUBMIT_ID = "waltz-credential-submit",
+	Waltz.prototype.CREDENTIAL_FORM_ID = "waltz-credential-form",
+    Waltz.prototype.CREDENTIAL_ALERT_ID = "waltz-credential-alert",
+	Waltz.prototype.CREDENTIAL_SLIDE_IN_CLASS = "slide-in";
+	Waltz.prototype.CREDENTIAL_LOGOS_ID = "waltz-credential-logos";
+
+
+	function Waltz(opts) {
         // If there are no opts, Waltz is not supported on this site
 		if (!opts) return;
 
@@ -16,7 +29,7 @@
 		if (page == "logged_in") {
 			// If the 'check' selector exists, then we're logged in, 
         	// so don't show Waltz
-    		this.acknowledgeLogin();
+    		this.acknowledgeLoginAttempt({ successful: true });
             return;
         } else {
         	// the 'check' selector doesn't exist yet, but it may be loaded 
@@ -30,6 +43,7 @@
         		// If we're not inTransition, let's assume that we need to log
         		// in. So, kickOff then check to see if we need to hide.
         		kickOff();
+
         		loginCheckInterval = setInterval(function() {
         			if (checks > MAX_CHECKS) {
 	        			clearInterval(loginCheckInterval);
@@ -39,7 +53,7 @@
 	        		page = _this.checkPage();
 	        		if (page === "logged_in") {
         				$(".waltz-dismiss").click();
-			        	this.acknowledgeLogin();
+			        	_this.acknowledgeLoginAttempt({ success: true });
 	        			clearInterval(loginCheckInterval);
 	        			return;
 	        		} else if (page == "login") {
@@ -66,7 +80,7 @@
 
 	        			page = _this.checkPage();
 	        			if (page === "logged_in") {
-				        	this.acknowledgeLogin();
+				        	this.acknowledgeLoginAttempt({ success: true });
 		        			clearInterval(loginCheckInterval);
 		        			return;
 	        			} else if (page === "login") {
@@ -85,87 +99,54 @@
         	_this.loginCredentials = false;
 
         	_this.storage.getCredentialsForDomain(_this.options.site.config.key, function (creds) {
-        		if (!creds) {
-        			console.log("Error retrieving credentials");
-        			return;
-        		}
 
-        		console.log(creds);
         		_this.loginCredentials = creds;
-				_this.drawClefWidget();		
 
-				if (_this.options.tutorialStep >= 0) {
-					_this.startTutorial();
-					_this.router.trigger('tutorial');
-				} else {
-                    if (_this.options.currentLogin) {
-                        _this.checkAuthentication(function() {
-                            var errorMessage = "Invalid username and password.";
-                            _this.requestCredentials(errorMessage); 
-                        });
-                    }
-                    _this.acknowledgeLogin();
-				}
+        		if (_this.options.currentLogin) {
+                    _this.checkAuthentication(function() {
+                        var errorMessage = "Invalid username and password.";
+                        _this.acknowledgeLoginAttempt({ success: false });
+						_this.drawWaltzWidget();	
+                        _this.requestCredentials(errorMessage); 
+                    });
+                } else {
+					_this.drawWaltzWidget();	
+                }
+	
 
 				window.addEventListener('message', _this.closeIFrame.bind(_this));
         	});
         }
 	}
 
-	Waltz.prototype.router = $({});
+	Waltz.prototype.acknowledgeLoginAttempt = function(opts) {
+		if (opts.success) {
+			this.trigger('login.success');
+		} else {
+			this.trigger('login.failure');
+		}
 
-	Waltz.prototype.MAIN_BUTTON_ID = 'clef-waltz-login-wrapper';
-
-	Waltz.prototype.CREDENTIAL_OVERLAY_ID = "waltz-credential-overlay",
-	Waltz.prototype.CREDENTIAL_USERNAME_ID = "waltz-credential-username",
-	Waltz.prototype.CREDENTIAL_PASSWORD_ID = "waltz-credential-password",
-	Waltz.prototype.CREDENTIAL_SUBMIT_ID = "waltz-credential-submit",
-	Waltz.prototype.CREDENTIAL_FORM_ID = "waltz-credential-form",
-    Waltz.prototype.CREDENTIAL_ALERT_ID = "waltz-credential-alert",
-	Waltz.prototype.CREDENTIAL_SLIDE_IN_CLASS = "slide-in";
-	Waltz.prototype.CREDENTIAL_LOGOS_ID = "waltz-credential-logos";
-
-	Waltz.prototype.TUTORIAL_OVERLAY_ID = 'waltz-tutorial-overlay';
-	Waltz.prototype.TUTORIAL_MESSAGE_ID = 'waltz-tutorial-message';
-	Waltz.prototype.TUTORIAL_CLOSE_ID = 'waltz-tutorial-close';
-
-	Waltz.prototype.startTutorial = function() {
-		var _this = this;
-		this.activeTutorial = true;
-
-		var $overlay = $("<div id='" + this.TUTORIAL_OVERLAY_ID + "'></div>");
-		$overlay.click(function() {
-			if(confirm("Are you sure you want to close the tutorial?")) {
-				_this.completeTutorial();
-			}
-		})
-
-		$('body').append($overlay);
-
-		this.router.on('tutorial', this.tutorialStep.bind(this));
-	}
-
-	Waltz.prototype.acknowledgeLogin = function() {
 		if (this.options.currentLogin) {
         	chrome.runtime.sendMessage({ 
-        		method: "acknowledgeLogin", 
-        		domain: this.options.site.domain 
+        		method: "acknowledgeLoginAttempt", 
+        		domain: this.options.site.domain,
+        		successful: opts.success 
         	});
 		}
 	}
 
 	Waltz.prototype.decryptCredentials = function(cb) {
-		var self = this;
-		if(self.loginCredentials && typeof(self.loginCredentials.password === "string")) {
+		var _this = this;
+		if(this.loginCredentials && typeof(this.loginCredentials.password === "string")) {
 			chrome.runtime.sendMessage({
 				method: "decrypt",
-				key: self.options.site.config.key,
-				value: self.loginCredentials.password
+				key: this.options.site.config.key,
+				value: this.loginCredentials.password
 
 			}, function(response) {
 				if(typeof(cb) === "function") {
 					cb({
-						username: self.loginCredentials.username,
+						username: _this.loginCredentials.username,
 						password: response.output,
 						error: response.error
 					});
@@ -192,11 +173,10 @@
 	Waltz.prototype.loadIFrame = function() {
 		if (this.iframe) return;
 
-		var self = this;
+		var _this = this,
+			$iframe = this.iframe = $("<iframe id='clef_iframe'>");
 
-		var $iframe = this.iframe = $("<iframe id='clef_iframe'>");
-
-		$iframe.attr('src', self.options.cyHost+'/login');
+		$iframe.attr('src', this.options.cyHost+'/login');
 
 		$("body").append($iframe);
 
@@ -212,13 +192,12 @@
 		});
 
 		$iframe.on('load', function() {
-			$iframe[0].contentWindow.postMessage(null, self.options.cyHost);
+			$iframe[0].contentWindow.postMessage(null, _this.options.cyHost);
 		});
 	}
 
 	Waltz.prototype.logIn = function(cb) {
-		var self = this;
-
+		var _this = this;
 
 		if (!this.iframe) {
 			this.loadIFrame();
@@ -228,7 +207,7 @@
 
 		addEventListener("message", function(e) {
 			if(e.data.auth) {
-				self.iframe.remove();
+				_this.iframe.remove();
 				if (typeof cb == "function") {
 					cb();
 				}
@@ -370,13 +349,13 @@
 	}
 
 	Waltz.prototype.checkAuthentication = function(cb) {
-		var self = this;
+		var _this = this;
 
 		chrome.runtime.sendMessage({
 			method: "checkAuthentication"
 		}, function(response) {
 			if (!response.user) {
-				self.logIn(cb);
+				_this.logIn(cb);
 			} else {
 				if (typeof(cb) == "function") {
 					cb();
@@ -388,7 +367,6 @@
 	Waltz.prototype.requestCredentials = function(errorMessage) {
 		var _this = this;
 
-		// set up templates for tutorial
 		var $overlay = $("<div id='" + this.CREDENTIAL_OVERLAY_ID + "'></div>")
 			$form = $("<div id='"+ this.CREDENTIAL_FORM_ID + "'></div>");
 			$usernameField = $("<input type='text' placeholder='type your username' id='" + this.CREDENTIAL_USERNAME_ID + "' />");
@@ -404,27 +382,23 @@
 
 		$form.append(logos);
 		$form.append("<p id='waltz-credential-message'>Securely encrypt your " + this.options.site.config.name + " password.</p>");
-		// add tutorial templates
+
+		if (errorMessage) {
+            $form.append($("<p id='" + this.CREDENTIAL_ALERT_ID + "'>" + errorMessage + "</p>"));
+        }
+        
 		$form.append($usernameField).append($passwordField);
-        if (errorMessage) {
-            $form.prepend($("<p id='" + this.CREDENTIAL_ALERT_ID + "'>" + errorMessage + "</p>"));
-        }		
+        		
 
         $form.append($submitButton);
 		$overlay.append($form);
         $body.append($overlay);
 
-				
-		if (_this.activeTutorial) {
-			$overlay.addClass('tutorial');
-		}
-
-
 		//Put this on a timeout, because we need the class to be added after the initial draw
 		setTimeout(function() {
 			$.merge($overlay, $form).addClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
 			setTimeout(function() {
-				_this.router.trigger('tutorial');
+				_this.trigger('show.credentialOverlay');
 			}, 200)
 		}, 0);
 
@@ -442,11 +416,11 @@
 			if ($(e.target).attr('id') === $overlay.attr('id')) {
 				$('#clef-waltz-login-wrapper').removeClass('waltz-remove');
 				$.merge($overlay, $form).removeClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
-				if (_this.activeTutorial) {
-					_this.completeTutorial();
-				}
+				_this.trigger('hide.credentialOverlay');
+
 				setTimeout(function() {
 					$.merge($overlay, $form).remove();
+					_this.trigger('remove.credentialOverlay');
 				}, 500);
 			}
 		});
@@ -478,9 +452,9 @@
 
 	}
 
-	//Draws the clef widget and binds the interactions
-	Waltz.prototype.drawClefWidget = function(form) {
-		var self = this;
+	//Draws the waltz widget and binds the interactions
+	Waltz.prototype.drawWaltzWidget = function(form) {
+		var _this = this;
 
 		//Grab image resource URLs from extensions API
 		var wSource = chrome.extension.getURL("/img/waltz-128.png");
@@ -490,56 +464,61 @@
 
 
 		//Build HTML for clef widget
-		var clefCircle = $("<div id='" + this.MAIN_BUTTON_ID + "' class='spinning'></div>");
+		var waltzCircle = $("<div id='" + this.MAIN_BUTTON_ID + "' class='spinning'></div>");
 		var waltzActions = $(
 			"<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
 			+"<button style='background-image:url("+pSource+");' class='waltz-button waltz-edit'></button>"
 			);
 
 		//Style the widget with the correct image resource
-		$(clefCircle).css({
+		$(waltzCircle).css({
 			"background-image": "url("+wSource+")"
 		}).append(waltzActions);
 
 		$(document).ready(this.loadIFrame.bind(this));
 
-		$(clefCircle).click(function() {
+		$(waltzCircle).click(function() {
 			$(this).addClass("waltz-loading");
 
-			self.checkAuthentication(function() {
-				if (self.loginCredentials) {
-					self.decryptAndLogIn();
+			_this.checkAuthentication(function() {
+				if (_this.loginCredentials) {
+					_this.decryptAndLogIn();
 				} else {
-					self.requestCredentials();
+					_this.requestCredentials();
 				}
 			});
 
 			setTimeout(function() {
-				$(self).remove();
+				$(this).remove();
+				_this.trigger('remove.widget');
 			}, 1000)
 		});
 
-		$(clefCircle).find(".waltz-dismiss").click(function(e) {
+		$(waltzCircle).find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
 
 			$(this).parent().addClass("waltz-remove");
+			_this.trigger('hide.widget');
 
 			setTimeout(function() {
-				$(self).remove();
+				$(this).remove();
+				_this.trigger('remove.widget');
 			});
 		});
 
-		$(clefCircle).find(".waltz-edit").click(function(e) {
+		$(waltzCircle).find(".waltz-edit").click(function(e) {
 			e.stopPropagation();
 
 			$(this).parent().addClass("waltz-remove");
-			self.checkAuthentication(function() {
-				self.requestCredentials();
+			_this.trigger('hide.widget');
+
+			_this.checkAuthentication(function() {
+				_this.requestCredentials();
 			});
 		});
 
-		$("body").append(clefCircle);
-
+		$("body").append(waltzCircle);
+		this.trigger('show.widget');
 	}
 
 	Waltz.prototype.checkPage = function() {
@@ -552,6 +531,10 @@
 		}
 
 		return "unknown";
+	}
+
+	Waltz.prototype.trigger = function(eventName, data) {
+		this.router.trigger(eventName, data);
 	}
 
 	chrome.runtime.sendMessage({

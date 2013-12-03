@@ -10,6 +10,7 @@
 Storage.prototype.LOGIN_KEY = "logins";
 Storage.prototype.CREDENTIALS_KEY = "credentials";
 Storage.prototype.OPTIONS_KEY = "options";
+Storage.prototype.ONBOARDING_KEY = "onboarding";
 
 Storage.prototype.defaults = {
     cy_url: "https://api.waltz.io",
@@ -118,12 +119,31 @@ Storage.prototype.setOptions = function(options, cb) {
     this.set(data, cb);
 }
 
-Storage.prototype.setOption = function(key, value) {
+Storage.prototype.setOption = function(key, value, cb) {
     this.getOptions(function(options) {
         options[key] = value;
-        chrome.storage.local.set({options: options});
+        chrome.storage.local.set({options: options}, cb);
     });
 }
+
+Storage.prototype.getOnboardingData = function(cb) {
+    var _this = this;
+    this.get(this.ONBOARDING_KEY, function(data) {
+        var ret = data[_this.ONBOARDING_KEY] || {};
+        cb(ret);
+    })
+}
+
+Storage.prototype.setOnboardingData = function(key, value, cb) {
+    var _this = this;
+    this.getOnboardingData(function(data) {
+        data[key] = value;
+        var save = {};
+        save[_this.ONBOARDING_KEY] = data;
+        _this.set(save, cb);
+    });
+}
+ 
 
 Storage.prototype.completeTutorial = function(cb) {
     this.setOption("tutorialStep", -1);

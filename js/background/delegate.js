@@ -177,7 +177,7 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 	}
 }
 
-Delegate.prototype.acknowledgeLogin = function(request) {
+Delegate.prototype.acknowledgeLoginAttempt = function(request) {
     delete(this.currentLogins[request.domain]);
 }
 
@@ -384,8 +384,6 @@ Delegate.prototype.initialize = function(data, callback) {
 					},
 					cyHost: this.options.cy_url,
                     currentLogin: this.currentLogins[site],
-                    tutorialStep: this.options.tutorialStep
-                    // tutorialStep: 0
 				};
 				callback(options);
 				return;

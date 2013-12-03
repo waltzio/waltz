@@ -1,11 +1,11 @@
-#waltz-tutorial-overlay {
+#waltz-onboarding-overlay {
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 9998;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0, .7);
     -webkit-transition: opacity .5s;
     cursor: default;
     &::after {
@@ -24,20 +24,20 @@
             opacity: 1;
         }
     }
+}
 
-    #waltz-tutorial-message {
-        $color: white;
-        $arrow-size: 10px;
-        z-index: 9999;
+
+#waltz-onboarding-message {
+    $color: white;
+    display: none;
+    z-index: 9999;
+
+    &.floating {
         position: absolute;
-        color: white;
-        font-family: $font-family;
-        padding: 20px;
-        font-size: 20px;
-        font-weight: 100;
-        width: 240px;
-        border: 1px solid $color;
-        line-height: 1.1em;
+        -webkit-animation: wiggle 1s 3;
+        animation: wiggle 1s 3;
+
+        $arrow-size: 10px;
         &:after {
             content: " ";
             position: absolute;
@@ -58,4 +58,43 @@
             }
         }
     }
+    color: #111;
+    background: $color;
+    font-family: $font-family;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 100;
+    width: 240px;
+    border: 1px solid $color;
+    line-height: 1.1em;
+
+    #waltz-onboarding-dismiss {
+        position: absolute;
+        bottom: 0;
+        right: 3px;
+        color: #CCC;
+        font-size: 24px;
+        cursor: pointer;
+
+        &:hover {
+            color: #AAA;
+        }
+    }
+    
+}
+
+
+$wiggle-size: .5deg;
+/* safari and chrome */
+@-webkit-keyframes wiggle {
+    0% {-webkit-transform:rotate($wiggle-size);}
+    50% {-webkit-transform:rotate(-$wiggle-size);}
+    100% {-webkit-transform:rotate($wiggle-size);}
+}
+ 
+/* anyone brave enough to implement the ideal method */
+@keyframes wiggle {
+    0% {transform:rotate($wiggle-size);}
+    50% {transform:rotate(-$wiggle-size);}
+    100% {transform:rotate($wiggle-size);}
 }
