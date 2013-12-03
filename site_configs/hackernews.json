@@ -5,7 +5,7 @@
             "cookies": ["user"]
         },
         "login": {
-            "url": "https://news.ycombinator.com/newslogin",
+            "urls": ["https://news.ycombinator.com/newslogin"],
             "formURL": "https://news.ycombinator.com/y",
             "method": "POST",
             "usernameField": "u",

@@ -5,7 +5,7 @@
             "cookies": ["token"]
         },
         "login": {
-            "url": "https://trello.com/login",
+            "urls": ["https://trello.com/login"],
             "formURL": "https://trello.com/authenticate",
             "method": "POST",
             "usernameField": "user",

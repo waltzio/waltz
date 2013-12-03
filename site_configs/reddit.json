@@ -5,7 +5,7 @@
             "cookies": ["reddit_session"]
         },
         "login": {
-            "url": "http://www.reddit.com/",
+            "urls": ["http://www.reddit.com/"],
             "formURL": "https://ssl.reddit.com/r/pics/post/login",
             "method": "POST",
             "usernameField": "user",

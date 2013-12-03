@@ -5,7 +5,7 @@
             "cookies": ["pfu"]
         },
         "login": {
-            "url": "https://www.tumblr.com/login",
+            "urls": ["https://www.tumblr.com/login"],
             "formURL": "https://www.tumblr.com/login",
             "method": "POST",
             "usernameField": "user[email]",

@@ -71,30 +71,28 @@ Delegate.prototype.init = function(options) {
             if (domain) {
                 var siteConfig = _this.siteConfigs[domain];
 
-                var domainUrl = new URL(details.url);
-                var loginUrl = new URL(siteConfig.login.url);
-                var redirectUrl = new URL(_this.currentLogins[domain]);
-                var shouldRedirect = 
+                var nextUrl = details.url;
+                var redirectUrl = _this.currentLogins[domain];
+                var shouldNotRedirect = false;
+                $.map(siteConfig.login.urls, function(loginUrl) {
                     // If the next URL is the login URL, there's probably an error
-                    ((domainUrl.hostname !== loginUrl.hostname || 
-                      domainUrl.pathname !== loginUrl.pathname)) &&
-                    // If the redirect URL is the login URL, let the 
-                    // site handle directing the user to the right place
-                    ((redirectUrl.hostname !== loginUrl.hostname || 
-                      redirectUrl.pathname !== loginUrl.pathname));
+                    shouldNotRedirect |= urlsAreEqual(nextUrl, loginUrl);
+                    // If the URL which we are trying to force a redirect to 
+                    // is the login URL, let the  site handle directing the 
+                    // user to the right place
+                    shouldNotRedirect |= urlsAreEqual(loginUrl, redirectUrl);
+                    // If the next URL is the redirect URL, then we do not 
+                    // want to redirect, to prevent a redirect loop
+                    shouldNotRedirect |= urlsAreEqual(nextUrl, redirectUrl);
+                });
                 if (siteConfig.login.twoFactor) {
                     $.map(siteConfig.login.twoFactor, function(twoFactor) {
-                        var twoFactorUrl = new URL(twoFactor.url); 
-                        shouldRedirect &= 
-                            (domainUrl.hostname !== twoFactorUrl.hostname || 
-                             domainUrl.pathname !== twoFactorUrl.pathname);
+                        shouldNotRedirect |= urlsAreEqual(details.url, twoFactor.url)
                     });
                 }
 
-                redirectUrl = redirectUrl.toString();
-                if (shouldRedirect) {
+                if (!shouldNotRedirect) {
                     chrome.tabs.update(details.tabId, {url: redirectUrl});
-                    delete(_this.currentLogins[domain]);
                 }
             }
         },
