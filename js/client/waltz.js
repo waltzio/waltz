@@ -184,7 +184,7 @@
 		var _this = this,
 			$iframe = this.iframe = $("<iframe id='clef_iframe'>");
 
-		$iframe.attr('src', this.options.cyHost+'/login');
+		$iframe.attr('src', this.options.cyHost + '/v1/login');
 
 		$("body").append($iframe);
 
@@ -211,17 +211,21 @@
 			this.loadIFrame();
 		}
 
-		this.iframe.fadeIn();
-		this.trigger('show.iframe');
+        this.iframe.ready(function() {
+            _this.iframe[0].contentWindow.postMessage({ method: "loadClef"}, _this.options.cyHost);
 
-		addEventListener("message", function(e) {
-			if(e.data.auth) {
-				_this.iframe.remove();
-				if (typeof cb == "function") {
-					cb();
-				}
-			}
-		});
+            _this.iframe.fadeIn();
+            _this.trigger('show.iframe');
+
+            addEventListener("message", function(e) {
+                if(e.data.auth) {
+                    _this.iframe.remove();
+                    if (typeof cb == "function") {
+                        cb();
+                    }
+                }
+            });
+        });
 	}
 
 	Waltz.prototype.closeIFrame = function(e) {
