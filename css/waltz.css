@@ -303,6 +303,7 @@
 
 #waltz-login-wrapper {
   position: fixed;
+  z-index: 9990;
   bottom: 25px;
   right: 25px;
   width: 64px;

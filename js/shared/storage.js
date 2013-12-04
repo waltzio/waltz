@@ -12,10 +12,20 @@ Storage.prototype.CREDENTIALS_KEY = "credentials";
 Storage.prototype.OPTIONS_KEY = "options";
 Storage.prototype.ONBOARDING_KEY = "onboarding";
 
-Storage.prototype.defaults = {
+Storage.prototype.optionsDefaults = {
     cy_url: "https://api.waltz.io",
     tutorialStep: -1
 };
+
+Storage.prototype.siteOnboardingDefaults = {
+    loginAttempts: {
+        success: 0,
+        fail: 0
+    },
+    forceTutorial: false,
+    updatedAt: null,
+    createdAt: null
+}
 
 function Storage() {}
 
@@ -110,8 +120,8 @@ Storage.prototype.getOptions = function(cb) {
         if(options[_this.OPTIONS_KEY]) {
             cb(options[_this.OPTIONS_KEY]);
         } else {
-            _this.setOptions(_this.defaults);
-            cb(_this.defaults);
+            _this.setOptions(_this.optionsDefaults);
+            cb(_this.optionsDefaults);
         }
     });
 }
@@ -141,9 +151,22 @@ Storage.prototype.setOnboardingData = function(key, value, cb) {
     var _this = this;
     this.getOnboardingData(function(data) {
         data[key] = value;
+
         var save = {};
         save[_this.ONBOARDING_KEY] = data;
+
         _this.set(save, cb);
+    });
+}
+
+Storage.prototype.setOnboardingSiteData = function(siteKey, key, value, cb) {
+    var _this = this;
+    this.getOnboardingData(function(data) {
+        if (!data[siteKey]) {
+            data[siteKey] = _this.siteOnboardingDefaults;
+        }
+        data[siteKey][key] = value;
+        _this.setOnboardingData(siteKey, data[siteKey], cb);
     });
 }
  

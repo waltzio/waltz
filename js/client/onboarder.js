@@ -1,12 +1,4 @@
 Onboarder.prototype.defaults = {};
-Onboarder.prototype.siteOnboardingObject = {
-    loginAttempts: {
-        success: 0,
-        fail: 0
-    },
-    updatedAt: null,
-    createdAt: null
-}
 
 Onboarder.prototype.MESSAGE_ID = 'waltz-onboarding-message';
 Onboarder.prototype.MESSAGE_CONTAINER_ID = 'waltz-onboarding-message-container';
@@ -35,15 +27,20 @@ Onboarder.prototype.init = function(data) {
     // had a kickoff of waltz on this site yet
     // let's initialize the data so we have it next time :)
     if (!this.siteData) {
-        this.siteData = this.data[this.siteKey] = this.siteOnboardingObject;
+        this.siteData = this.data[this.siteKey] = this.storage.siteOnboardingDefaults;
         this.siteData.createdAt = new Date().getTime();
         this.commitSiteData();
     }
 
-
-    if (this.siteData.loginAttempts.success > 1) {
-        this.dismissed = true;
+    if (this.siteData.forceTutorial) {
+        this.siteData.forceTutorial = false;
+        this.commitSiteData();
+    } else {
+        if (this.siteData.loginAttempts.success > 1) {
+            this.dismissed = true;
+        }
     }
+
 
     this.initialized.resolve();
 }
