@@ -13,21 +13,28 @@ Tutorial.prototype.init = function(data) {
 
     this.siteConfigs = data;
 
-    for (k in data) {
-        site = data[k];
-        if (!site.ignore) {
-            siteHTML = [
-            "<a class='go-to-site' data-site-key='" + site.key + "' href='" + site.login.urls[0] + "'>",
-                "<li>",
-                    "<h4 class='name'>" + site.name + "</h4>",
-                    "<img src='/img/site_images/" + site.key + ".png'/>",
-                "</li>",
-            "</a>"].join("");
-            $siteContainer.prepend(siteHTML);
-        }
-    }
+    this.storage.getOnboardingData(function(onboardingData) {
+        for (k in data) {
+            site = data[k];
+            if (!site.ignore) {
+                $siteHTML = $([
+                "<a class='go-to-site' data-site-key='" + site.key + "' href='" + site.login.urls[0] + "'>",
+                    "<li>",
+                        "<h4 class='name'>" + site.name + "</h4>",
+                        "<img src='/img/site_images/" + site.key + ".png'/>",
+                    "</li>",
+                "</a>"].join(""));
 
-    this.attachHandlers();
+                if (onboardingData[site.key] && onboardingData[site.key].loginAttempts.success > 1) {
+                    $siteHTML.addClass('completed');
+                }
+
+                $siteContainer.prepend($siteHTML);
+            }
+        }
+
+        this.attachHandlers();
+    })
 };
 
 Tutorial.prototype.attachHandlers = function() {
