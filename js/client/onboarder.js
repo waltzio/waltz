@@ -32,15 +32,18 @@ Onboarder.prototype.init = function(data) {
         this.commitSiteData();
     }
 
+    if (this.siteData.loginAttempts.success > 1 || this.data.dismissed) {
+        this.dismissed = true;
+    }
+
     if (this.siteData.forceTutorial) {
+        this.dismissed = false;
+        this.storage.setOnboardingData("dismissed", false);
         this.forceTutorial = true;
         this.siteData = this.storage.siteOnboardingDefaults;
         this.commitSiteData();
     }
 
-    if (this.siteData.loginAttempts.success > 1) {
-        this.dismissed = true;
-    }
 
     this.initialized.resolve();
 }
@@ -99,11 +102,30 @@ Onboarder.prototype.loginSuccess = function() {
 
     if (this.siteData.loginAttempts.success == 1) {
         var $message = this.getMessage();
+
         $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to log out and get some practice.");
+
         $message.attr('class', 'bottom');
 
         $message.slideDown();
+    } else {
+        var $message = this.getMessage();
+
+        $message.find('p').html("Wooo! You're all set up on " + this.options.site.config.name + ". <b>Click me to setup some more sites</b>!");
+
+        $message.attr('class', 'bottom click');
+
+        $message.click(function() {
+            $message.off('click');
+            chrome.runtime.sendMessage({
+                method: "openNewTab",
+                url: chrome.extension.getURL("html/tutorial.html")
+            });
+        });
+
+        $message.slideDown();
     }
+
 }
 
 Onboarder.prototype.loginFailure = function() {
@@ -209,6 +231,7 @@ Onboarder.prototype.hideToolTips = function() {
 
 Onboarder.prototype.dismiss = function() {
     this.hideToolTips();
+    this.storage.setOnboardingData("dismissed", true);
     this.dismissed = true;
 };
 

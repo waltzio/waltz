@@ -375,6 +375,11 @@ Delegate.prototype.checkAuthentication = function(cb) {
 	return true;
 }
 
+Delegate.prototype.openNewTab = function(request, cb) {
+    chrome.tabs.create({url: request.url});
+    if (typeof cb === "function") cb();
+};
+
 Delegate.prototype.initialize = function(data, callback) {
 	var url = data.location.href.split('#')[0];
 	if (this.includedDomainRegex.test(url)) {
