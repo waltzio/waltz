@@ -7,7 +7,8 @@ function Tutorial() {
 }
 
 Tutorial.prototype.init = function(data) {
-    var $siteContainer = $('.sites-list'),
+    var _this = this,
+        $siteContainer = $('.sites-list'),
         site,
         siteHTML;
 
@@ -33,7 +34,7 @@ Tutorial.prototype.init = function(data) {
             }
         }
 
-        this.attachHandlers();
+        _this.attachHandlers();
     })
 };
 
