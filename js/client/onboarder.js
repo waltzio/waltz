@@ -40,6 +40,11 @@ Onboarder.prototype.init = function(data) {
         this.commitSiteData();
     }
 
+
+    if (this.siteData.loginAttempts.success > 1) {
+        this.dismissed = true;
+    }
+
     this.initialized.resolve();
 }
 
@@ -73,7 +78,7 @@ Onboarder.prototype.loginSuccess = function() {
 
     if (this.siteData.loginAttempts.success == 1) {
         var $message = this.getMessage();
-        $message.find('p').text("Nice job! Now log out and try logging in again.");
+        $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to log out and try again.");
         $message.attr('class', 'bottom');
 
         $message.slideDown();
@@ -91,10 +96,18 @@ Onboarder.prototype.showWidget = function() {
 
     var _this = this,
         $widget = $('#' + this.waltz.MAIN_BUTTON_CONTAINER_ID),
-        $message = this.getMessage();
+        $message = this.getMessage(),
+        text;
+
+    if (_this.siteData.loginAttempts.success === 0) {
+        text = "Click this to set up Waltz for " + _this.options.site.config.name;
+    } else {
+        text = "Click this button to log in from now on!";
+    }
 
     onFinishedTransitioning($widget, "right", function() {
-        $message.find('p').text("Click this to set up Waltz for " + _this.options.site.config.name);
+
+        $message.find('p').text(text);
 
         $message.attr('class', 'right-arrow floating fixed');
         $message.attr('style', '');
@@ -136,7 +149,8 @@ Onboarder.prototype.showCredentialOverlay = function() {
 }
 
 Onboarder.prototype.showIFrame = function() {
-    var $message = this.getMessage();
+    var $message = this.getMessage(),
+        text;
 
     $message.find('p').text("Sync with the wave to connect your Clef account");
 

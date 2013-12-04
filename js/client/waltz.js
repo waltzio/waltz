@@ -196,7 +196,7 @@
 			left: 0,
 			border: 'none',
 			display: 'none',
-			"z-index": 9999
+			"z-index": 9995
 		});
 
 		$iframe.on('load', function() {
