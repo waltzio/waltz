@@ -258,6 +258,12 @@
   bottom: 0;
   left: 0;
 }
+#waltz-onboarding-message.click {
+  cursor: pointer;
+}
+#waltz-onboarding-message.click:hover {
+  background: #DDD;
+}
 #waltz-onboarding-message #waltz-onboarding-dismiss {
   top: 0;
   left: 3px;

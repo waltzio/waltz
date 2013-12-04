@@ -94,6 +94,13 @@
         left: 0;
     }
 
+    &.click {
+        cursor: pointer;
+        &:hover {
+            background: #DDD;
+        }
+    }
+
     #waltz-onboarding-dismiss {
         top: 0;
         left: 3px;
