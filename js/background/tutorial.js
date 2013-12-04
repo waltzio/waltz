@@ -1,4 +1,5 @@
 Tutorial.prototype.TUTORIAL_KEY = "tutorial_completed";
+
 function Tutorial() {
     var _this = this;
     chrome.storage.local.get(this.TUTORIAL_KEY, function(opt) {
@@ -8,7 +9,6 @@ function Tutorial() {
             var opt = {};
             opt[_this.TUTORIAL_KEY] = true;
 
-            console.log(opt);
             chrome.storage.local.set(opt, function() {});
         }
     })

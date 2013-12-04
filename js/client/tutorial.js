@@ -14,28 +14,30 @@ Tutorial.prototype.init = function(data) {
 
     this.siteConfigs = data;
 
-    this.storage.getOnboardingData(function(onboardingData) {
-        for (k in data) {
-            site = data[k];
-            if (!site.ignore) {
-                $siteHTML = $([
-                "<a class='go-to-site' data-site-key='" + site.key + "' href='" + site.login.urls[0] + "'>",
-                    "<li>",
-                        "<h4 class='name'>" + site.name + "</h4>",
-                        "<img src='/img/site_images/" + site.key + ".png'/>",
-                    "</li>",
-                "</a>"].join(""));
+    for (k in data) {
+        site = data[k];
+        if (!site.ignore) {
+            $siteHTML = $([
+            "<a class='go-to-site' data-site-key='" + site.key + "' href='" + site.login.urls[0] + "'>",
+                "<li>",
+                    "<h4 class='name'>" + site.name + "</h4>",
+                    "<img src='/img/site_images/" + site.key + ".png'/>",
+                "</li>",
+            "</a>"].join(""));
 
-                if (onboardingData[site.key] && onboardingData[site.key].loginAttempts.success > 1) {
+            _this.storage.getOnboardingSiteData(site.key, function(data) {
+                console.log(data);
+                if (data.loginAttempts.success >= 1) {
                     $siteHTML.addClass('completed');
                 }
+            });
 
-                $siteContainer.prepend($siteHTML);
-            }
+
+            $siteContainer.prepend($siteHTML);
         }
+    }
 
-        _this.attachHandlers();
-    })
+    _this.attachHandlers();
 };
 
 Tutorial.prototype.attachHandlers = function() {
@@ -48,7 +50,7 @@ Tutorial.prototype.redirectToSite = function(e) {
     var $a = $(e.currentTarget), 
         siteKey = $a.data('site-key');
 
-    this.storage.setOnboardingSiteData(siteKey, 'forceTutorial', true, function() {
+    this.storage.setOnboardingSiteKey(siteKey, 'forceTutorial', true, function() {
         window.location = $a.attr('href');
     })
 };

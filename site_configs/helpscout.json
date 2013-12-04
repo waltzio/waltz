@@ -2,7 +2,7 @@
     "*://*.helpscout.net/*": {
         "name": "Help Scout",
         "logout": {
-            "cookies": ["PHPSESSID"]
+            "cookies": ["PHPSESSID", "PL-TOKEN"]
         },
         "login": {
             "urls": ["https://secure.helpscout.net/members/login"],

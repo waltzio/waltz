@@ -11,6 +11,7 @@ Storage.prototype.LOGIN_KEY = "logins";
 Storage.prototype.CREDENTIALS_KEY = "credentials";
 Storage.prototype.OPTIONS_KEY = "options";
 Storage.prototype.ONBOARDING_KEY = "onboarding";
+Storage.prototype.ONBOARDING_SITES_KEY = "sites";
 
 Storage.prototype.optionsDefaults = {
     cy_url: "https://api.waltz.io",
@@ -139,6 +140,10 @@ Storage.prototype.setOption = function(key, value, cb) {
     });
 }
 
+// Allows you to get the entire onboarding data blob
+// This blog includes
+// * global onboarding settings
+// * site specific onboarding data
 Storage.prototype.getOnboardingData = function(cb) {
     var _this = this;
     this.get(this.ONBOARDING_KEY, function(data) {
@@ -147,29 +152,68 @@ Storage.prototype.getOnboardingData = function(cb) {
     })
 }
 
-Storage.prototype.setOnboardingData = function(key, value, cb) {
+// Allows you to set *all* the onboarding data
+Storage.prototype.setOnboardingData = function(data, cb) {
+    var save = {};
+    save[this.ONBOARDING_KEY] = data;
+    this.set(save, cb);
+}
+
+// Allows you to set a *key* in the onboarding data (not overwrite
+// all the data).
+Storage.prototype.setOnboardingKey = function(key, value, cb) {
     var _this = this;
     this.getOnboardingData(function(data) {
         data[key] = value;
 
-        var save = {};
-        save[_this.ONBOARDING_KEY] = data;
-
-        _this.set(save, cb);
+        _this.setOnboardingData(data, cb);
     });
 }
 
-Storage.prototype.setOnboardingSiteData = function(siteKey, key, value, cb) {
+// Allows you to get the onboarding data for a specific site
+Storage.prototype.getOnboardingSiteData = function(siteKey, cb) {
     var _this = this;
+
     this.getOnboardingData(function(data) {
-        if (!data[siteKey]) {
-            data[siteKey] = _this.siteOnboardingDefaults;
+        if (data[_this.ONBOARDING_SITES_KEY] && data[_this.ONBOARDING_SITES_KEY][siteKey]) {
+            cb(data[_this.ONBOARDING_SITES_KEY][siteKey]);
+        } else {
+            cb(_this.siteOnboardingDefaults);
         }
-        data[siteKey][key] = value;
-        _this.setOnboardingData(siteKey, data[siteKey], cb);
     });
 }
- 
+
+// Allows you to set *all* the onboarding data for a specific site
+Storage.prototype.setOnboardingSiteData = function(siteKey, data, cb) {
+    var _this = this;
+
+    this.getOnboardingData(function(onboardingData) {
+        if (!onboardingData[_this.ONBOARDING_SITES_KEY]) {
+            onboardingData[_this.ONBOARDING_SITES_KEY] = {};
+        }
+
+        var siteSpecificOnboardingData = onboardingData[_this.ONBOARDING_SITES_KEY];
+
+        if (!siteSpecificOnboardingData[siteKey]) {
+            siteSpecificOnboardingData[siteKey] = _this.siteOnboardingDefaults;
+        }
+
+        siteSpecificOnboardingData[siteKey] = data;
+
+        _this.setOnboardingKey(_this.ONBOARDING_SITES_KEY, siteSpecificOnboardingData, cb);
+    });
+}
+
+// Allows you to set a *key* in the onboarding in the onboarding data
+// for a specific
+Storage.prototype.setOnboardingSiteKey = function(siteKey, key, value, cb) {
+    var _this = this;
+    this.getOnboardingSiteData(siteKey, function(data) {
+        data[key] = value;
+        _this.setOnboardingSiteData(siteKey, data, cb);
+    });
+}
+
 
 Storage.prototype.completeTutorial = function(cb) {
     this.setOption("tutorialStep", -1);

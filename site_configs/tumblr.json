@@ -14,7 +14,7 @@
                 "url": "https://www.tumblr.com/login",
                 "fields": ["form_key"]
             },
-            "check": "button:contains('Sign out')"
+            "check": "button:contains('Sign out'), #logout_button"
         }
     }
 }

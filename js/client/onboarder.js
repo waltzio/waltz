@@ -21,13 +21,14 @@ Onboarder.prototype.init = function(data) {
     var _this = this;
 
     this.data = data;
-    this.siteData = this.data[this.siteKey];
+    this.siteSpecificOnboardingData = this.data[this.storage.ONBOARDING_SITES_KEY] || {};
+    this.siteData = this.siteSpecificOnboardingData[this.siteKey];
 
     // if there's no siteData, that means we haven't 
     // had a kickoff of waltz on this site yet
     // let's initialize the data so we have it next time :)
     if (!this.siteData) {
-        this.siteData = this.data[this.siteKey] = this.storage.siteOnboardingDefaults;
+        this.siteData = this.storage.siteOnboardingDefaults;
         this.siteData.createdAt = new Date().getTime();
         this.commitSiteData();
     }
@@ -38,7 +39,7 @@ Onboarder.prototype.init = function(data) {
 
     if (this.siteData.forceTutorial) {
         this.dismissed = false;
-        this.storage.setOnboardingData("dismissed", false);
+        this.storage.setOnboardingKey("dismissed", false);
         this.forceTutorial = true;
         this.siteData = this.storage.siteOnboardingDefaults;
         this.commitSiteData();
@@ -100,7 +101,9 @@ Onboarder.prototype.loginSuccess = function() {
     this.siteData.loginAttempts.success++;
     this.commitSiteData();
 
-    if (this.siteData.loginAttempts.success == 1) {
+    if (this.siteData.loginAttempts.success == 1 && this.totalSuccessfulLogins() < 2) {
+        // case where the user is going through the tutorial for the first time
+        // PRACTICE, yo!
         var $message = this.getMessage();
 
         $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to log out and get some practice.");
@@ -117,6 +120,7 @@ Onboarder.prototype.loginSuccess = function() {
 
         $message.click(function() {
             $message.off('click');
+            $message.slideUp();
             chrome.runtime.sendMessage({
                 method: "openNewTab",
                 url: chrome.extension.getURL("html/tutorial.html")
@@ -231,7 +235,7 @@ Onboarder.prototype.hideToolTips = function() {
 
 Onboarder.prototype.dismiss = function() {
     this.hideToolTips();
-    this.storage.setOnboardingData("dismissed", true);
+    this.storage.setOnboardingKey("dismissed", true);
     this.dismissed = true;
 };
 
@@ -252,7 +256,15 @@ Onboarder.prototype.getMessage = function() {
 
 Onboarder.prototype.commitSiteData = function(cb) {
     this.siteData.updatedAt = new Date().getTime();
-    this.storage.setOnboardingData(this.siteKey, this.siteData, cb);
+    this.storage.setOnboardingSiteData(this.siteKey, this.siteData, cb);
+}
+
+Onboarder.prototype.totalSuccessfulLogins = function() {
+    var total = 0;
+    for (var site in this.siteSpecificOnboardingData) {
+        total += this.siteSpecificOnboardingData[site].loginAttempts.success;
+    }
+    return total;
 }
 
 
