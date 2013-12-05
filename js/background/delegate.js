@@ -68,11 +68,11 @@ Delegate.prototype.init = function(options) {
                     break;
                 }
             }
-            if (domain) {
+            if (domain && _this.currentLogins[domain]['state'] !== 'redirected') {
                 var siteConfig = _this.siteConfigs[domain];
 
                 var nextUrl = details.url;
-                var redirectUrl = _this.currentLogins[domain];
+                var redirectUrl = _this.currentLogins[domain]['redirectUrl'];
                 var shouldNotRedirect = false;
                 $.map(siteConfig.login.urls, function(loginUrl) {
                     // If the next URL is the login URL, there's probably an error
@@ -93,6 +93,10 @@ Delegate.prototype.init = function(options) {
 
                 if (!shouldNotRedirect) {
                     chrome.tabs.update(details.tabId, {url: redirectUrl});
+                    // We set the currentLogin to true b/c its existence is 
+                    // used elsewhere, but we don't want to match on 
+                    _this.currentLogins[domain]['state'] = 'redirected';
+                    _this.currentLogins[domain]['modified'] = new Date();
                 }
             }
         },
@@ -185,7 +189,11 @@ Delegate.prototype.login = function(request) {
 		this.pubnubSubscribe();
 	}
 
-    this.currentLogins[request.domain] = request.location;
+    this.currentLogins[request.domain] = {
+        redirectUrl: request.location,
+        state: 'attempted',
+        modified: new Date()
+    }
 	this.storage.addLogin(request.domain);
 
     if (this.options.tutorialStep != -1) {
