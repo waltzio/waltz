@@ -92,7 +92,7 @@ Delegate.prototype.init = function(options) {
                     var others = siteConfig.login.exclude.nextURLs || [];
                     $.merge(excludedNextUrls, others);
                 }
-                $.merge(excludedNextUrls, siteConfig.login.twoFactor || []);
+                $.merge(excludedNextUrls, _.pluck(siteConfig.login.twoFactor, 'url'));
 
                 var orEqual = function(aUrl) {
                     return function(acc, currentUrl) {
@@ -110,11 +110,11 @@ Delegate.prototype.init = function(options) {
                 // redirect, to prevent a redirect loop.
                 shouldNotRedirect |= urlsAreEqual(nextUrl, forcedRedirectUrl);
 
-                // We set the state so it doesn't keep redirecting.
-                _this.currentLogins[domain]['state'] = 'redirected';
-                _this.currentLogins[domain]['modified'] = new Date();
                 if (!shouldNotRedirect) {
                     chrome.tabs.update(details.tabId, {url: forcedRedirectUrl});
+                    // We set the state so it doesn't keep redirecting.
+                    _this.currentLogins[domain]['state'] = 'redirected';
+                    _this.currentLogins[domain]['modified'] = new Date();
                 }
             }
         },
