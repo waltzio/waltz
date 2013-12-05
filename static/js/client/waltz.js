@@ -260,7 +260,7 @@
 		});
 	}
 
-	//Fills the login form and submits it
+	// Fills the login form and submits it
 	Waltz.prototype.submitLoginForm = function(data) {
 
 		var siteConfig = this.options.site.config,
@@ -270,13 +270,13 @@
 			return $('input[name="' + name + '"]');
 		}
 
-		if (findInput(siteConfig.login.passwordField).length > 0 && findInput(siteConfig.login.usernameField).length > 0) {
-			// we are on the login page!
+        var $login = findInput(siteConfig.login.usernameField),
+            $password = findInput(siteConfig.login.passwordField);
+            $form = $login.parents('form');
 
-			var $login = findInput(siteConfig.login.usernameField),
-				$password = findInput(siteConfig.login.passwordField),
-				$form = $login.parents('form'),
-				$newLogin = $login.clone(),
+        // We are on the login page!
+        if ($login.length > 0 && $password.length > 0 && $form.attr('action') === siteConfig.login.formURL) {
+			var $newLogin = $login.clone(),
 				$newPassword = $password.clone();
 
 			$newLogin.attr('type', 'hidden');

@@ -57,10 +57,10 @@ grunt.initConfig({
 });
 
 grunt.task.registerMultiTask('build-config', 'Concatenates site configs.', function() {
-  var len = this.filesSrc.length,
-      siteConfig,
+  var siteConfig,
       outputDir = this.data.dest.split('/').slice(0, -1).join('/'),
-      merged = {};
+      merged = {},
+      _this = this;
 
   var jsonMerge = function(object1, object2) {
     var key, a1, a2;
@@ -73,10 +73,9 @@ grunt.task.registerMultiTask('build-config', 'Concatenates site configs.', funct
     return object1;
   };
 
-  var iterateTroughFiles = function(abspath, rootdir, subdir, filename){
-    outputFile = outputDir + '/' + filename;
-
-    siteConfig = grunt.file.readJSON(abspath);
+  var iterateThroughFiles = function(filename){
+    var relativePath = _this.data.src + '/' + filename;
+    siteConfig = grunt.file.readJSON(relativePath);
 
     for (domain in siteConfig) {
       siteConfig[domain]['key'] = filename.split('.')[0];
@@ -85,10 +84,7 @@ grunt.task.registerMultiTask('build-config', 'Concatenates site configs.', funct
     merged = jsonMerge(merged, siteConfig);
   };
 
-
-  for (var x = 0; x < len; x++) {
-    grunt.file.recurse(this.data.src, iterateTroughFiles);
-  }
+  grunt.file.expand({ matchBase: true, cwd: this.data.src }, ['*.json']).map(iterateThroughFiles);
 
   // If output dir doesnt exists, then create it
   if (!grunt.file.exists(outputDir)) {
