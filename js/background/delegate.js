@@ -72,27 +72,49 @@ Delegate.prototype.init = function(options) {
                 var siteConfig = _this.siteConfigs[domain];
 
                 var nextUrl = details.url;
-                var redirectUrl = _this.currentLogins[domain];
+                var forcedRedirectUrl = _this.currentLogins[domain]['redirectUrl'];
                 var shouldNotRedirect = false;
-                $.map(siteConfig.login.urls, function(loginUrl) {
-                    // If the next URL is the login URL, there's probably an error
-                    shouldNotRedirect |= urlsAreEqual(nextUrl, loginUrl);
-                    // If the URL which we are trying to force a redirect to 
-                    // is the login URL, let the  site handle directing the 
-                    // user to the right place
-                    shouldNotRedirect |= urlsAreEqual(loginUrl, redirectUrl);
-                    // If the next URL is the redirect URL, then we do not 
-                    // want to redirect, to prevent a redirect loop
-                    shouldNotRedirect |= urlsAreEqual(nextUrl, redirectUrl);
-                });
-                if (siteConfig.login.twoFactor) {
-                    $.map(siteConfig.login.twoFactor, function(twoFactor) {
-                        shouldNotRedirect |= urlsAreEqual(details.url, twoFactor.url)
-                    });
+
+                // If the URL which we are trying to force a redirect to 
+                // is the login URL, let the  site handle directing the 
+                // user to the right place
+                var excludedForcedRedirectUrls = $.merge([], siteConfig.login.urls);
+                // Also include the explicitly defined ones in the site config
+                if (siteConfig.login.exclude) {
+                    var others = siteConfig.login.exclude.forcedRedirectURLs || [];
+                    $.merge(excludedForcedRedirectUrls, others);
                 }
 
+                // If the next URL is the login URL, there's probably an error
+                var excludedNextUrls = $.merge([], siteConfig.login.urls);
+                // Also include the explicitly defined ones in the site config
+                if (siteConfig.login.exclude) {
+                    var others = siteConfig.login.exclude.nextURLs || [];
+                    $.merge(excludedNextUrls, others);
+                }
+                $.merge(excludedNextUrls, siteConfig.login.twoFactor || []);
+
+                var orEqual = function(aUrl) {
+                    return function(acc, currentUrl) {
+                        return acc || urlsAreEqual(currentUrl, aUrl);
+                    };
+                } 
+
+                // Don't redirect if the forced redirect url is one of the
+                // excluded ones, as defined above.
+                var shouldNotRedirect = excludedForcedRedirectUrls.reduce(orEqual(forcedRedirectUrl), false);
+                // Don't redirect if the default next url is one of the
+                // excluded ones, as defined above.
+                shouldNotRedirect |= excludedNextUrls.reduce(orEqual(nextUrl), shouldNotRedirect);
+                // If the next URL is the redirect URL, then we do not want to
+                // redirect, to prevent a redirect loop.
+                shouldNotRedirect |= urlsAreEqual(nextUrl, forcedRedirectUrl);
+
+                // We set the state so it doesn't keep redirecting.
+                _this.currentLogins[domain]['state'] = 'redirected';
+                _this.currentLogins[domain]['modified'] = new Date();
                 if (!shouldNotRedirect) {
-                    chrome.tabs.update(details.tabId, {url: redirectUrl});
+                    chrome.tabs.update(details.tabId, {url: forcedRedirectUrl});
                 }
             }
         },
