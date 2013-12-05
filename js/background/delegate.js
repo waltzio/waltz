@@ -261,39 +261,10 @@ Delegate.prototype.logout = function(opts) {
 
 
 		for (domain in data) {
-			(function() {
-				var promise = $.Deferred(),
-					siteConfig = _this.siteConfigs[domain];
-
-                getCookiesForDomain(domain, function(cookies) {
-                    var cookie;
-                    for (i = 0; i < cookies.length; i++) {
-                        cookie = cookies[i];
-                        if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
-                            chrome.cookies.remove({
-                                url: extrapolateUrlFromCookie(cookie),
-                                name: cookie.name
-                            }, function() {});
-                        }
-                    }
-                    promise.resolve();
-                });
-
-				sitesCompleted.push(promise);
-			})();
+            sitesCompleted.push(_this.logOutOfSite({ domain: domain, refresh: true }));
 		}
 
 		$.when(sitesCompleted).then(function() {
-			for (domain in data) {
-				chrome.tabs.query(
-					{ url: domain }, 
-					function(data) { 
-						for (var i = 0; i < data.length; i++) {
-							chrome.tabs.reload(data[i].id);
-						}
-					}
-				);
-			}
 			_this.storage.clearLogins();
 			if (!opts.silent) {
 				chrome.notifications.create(
@@ -313,6 +284,40 @@ Delegate.prototype.logout = function(opts) {
 		});
 	});
 }
+
+Delegate.prototype.logOutOfSite = function(opts) {
+    var promise = $.Deferred(),
+        domain = opts.domain,
+        siteConfig = this.siteConfigs[domain];
+
+    getCookiesForDomain(domain, function(cookies) {
+        var cookie;
+        for (i = 0; i < cookies.length; i++) {
+            cookie = cookies[i];
+            if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
+                chrome.cookies.remove({
+                    url: extrapolateUrlFromCookie(cookie),
+                    name: cookie.name
+                }, function() {});
+            }
+        }
+
+        if (opts.refresh) {
+            chrome.tabs.query(
+                { url: domain }, 
+                function(data) { 
+                    for (var i = 0; i < data.length; i++) {
+                        chrome.tabs.reload(data[i].id);
+                    }
+                }
+            );
+        }
+
+        promise.resolve();
+    });
+
+    return promise;
+};
 
 Delegate.prototype.saveCredentials = function(domain_key, username, password, cb) {
     var _this = this;
@@ -369,6 +374,11 @@ Delegate.prototype.checkAuthentication = function(cb) {
 
 	return true;
 }
+
+Delegate.prototype.openNewTab = function(request, cb) {
+    chrome.tabs.create({url: request.url});
+    if (typeof cb === "function") cb();
+};
 
 Delegate.prototype.initialize = function(data, callback) {
 	var url = data.location.href.split('#')[0];

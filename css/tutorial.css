@@ -25,8 +25,19 @@ header h2 {
   padding: 0;
   text-align: center;
 }
-.sites-list li {
+.sites-list a {
+  display: block;
+  position: relative;
+}
+.sites-list a.completed {
+  opacity: .3;
+}
+.sites-list a li {
   width: 25%;
   float: left;
   margin: 40px 0;
+  padding-bottom: 20px;
+}
+.sites-list a li:hover {
+  background: #EEE;
 }
