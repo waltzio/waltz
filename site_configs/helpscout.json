@@ -5,12 +5,16 @@
             "cookies": ["PHPSESSID", "PL-TOKEN"]
         },
         "login": {
-            "urls": ["https://secure.helpscout.net/members/login"],
+            "urls": ["https://secure.helpscout.net/members/login/"],
             "formURL": "https://secure.helpscout.net/members/process/login",
             "method": "POST",
             "usernameField": "email",
             "passwordField": "password",
-            "check": "a:contains(Logout)"
+            "check": "a:contains(Logout)",
+            "exclude": {
+                "forcedRedirectURLs" : ["https://www.helpscout.net"],
+                "nextURLs": []
+            }
         }
     }
 }

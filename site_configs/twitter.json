@@ -24,7 +24,11 @@
                     "url": "https://twitter.com/account/login_verification/sms",
                     "check": "input[name]='token'"
                 }
-            ]
+            ],
+            "exclude": {
+                "forcedRedirectURLs" : ["https://about.twitter.com/download"],
+                "nextURLs": ["https://twitter.com/login/captcha", "https://twitter.com/login/error"]
+            }
         }
     }
 }
