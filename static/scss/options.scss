@@ -1,0 +1,107 @@
+@import "_settings.scss";
+@import "../foundation/scss/foundation.scss";
+/** Vars **/
+$blueBG: #cadde2;
+$lightBlueBG: #d8eef3;
+$cellBorder: #c1d4d9;
+$cellBackground: #b6c7cc;
+
+
+/** Styles **/
+.header {
+	border-bottom: 1px solid #EEE;
+}
+
+.nav-bar {
+	padding: 0;
+	ul {
+		padding: 0;
+	}
+	li {
+		margin: 0;
+		a {
+			padding: 20px 20px;
+		}
+		&:hover {
+			background: #EEE;
+		}
+	}
+}
+
+.main-content {
+	h2 {
+		text-align: center;
+		margin-top: 0;
+		padding-top: 20px;
+		padding-bottom: 20px;
+		border-bottom: 2px solid $cellBorder;
+	}
+
+	&.settings {
+		display: none;
+
+		.all-settings {
+			padding: 5px 0 5px 50px;
+
+			#api-url {
+				width: 500px;
+			}
+		}
+	}
+
+	&.sites-list {
+
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+
+			li {
+				background-color: $cellBackground;
+				border-bottom: 2px solid $cellBorder;
+				padding: 5px 0 5px 50px;
+				h3 {
+					display: inline;
+					font-weight: normal;
+				}
+
+				.styled {
+					border: 2px solid #d7d8dd;
+					background-color: #c9cbd0;
+					padding: 5px;
+					border-radius: 3px;
+					box-shadow: 0 0 10px -3px #333;
+					cursor: pointer;
+
+					&.success {
+						background-color: green;
+					}
+				}
+
+				.togglePass {
+					border: none;
+					background-color: transparent;
+					height: 25px;
+					width: 25px;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: bottom;
+					cursor: pointer;
+
+					&.closed {
+						background-image: url(/static/img/eye_open.png);
+					}
+
+					&.open {
+						background-image: url(/static/img/eye_closed.png);
+					}
+				}
+
+				label {
+					color: #444;
+					margin-left: 20px;
+				}
+			}
+		}
+	}
+}

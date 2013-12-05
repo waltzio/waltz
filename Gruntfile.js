@@ -4,7 +4,7 @@ var grunt = require('grunt'),
 grunt.initConfig({
   watch: {
     sass: {
-      files: ['scss/*.scss'],
+      files: ['static/scss/*.scss'],
       tasks: ['sass'],
       options: {
         debounceDelay: 500
@@ -24,10 +24,10 @@ grunt.initConfig({
         style: 'expanded'
       },
       files: {                         // Dictionary of files
-        'css/waltz.css': 'scss/waltz.scss',
-        'css/options.css': 'scss/options.scss',
-        'css/tutorial.css': 'scss/tutorial.scss',
-        'css/popup.css': 'scss/popup.scss'
+        'static/css/waltz.css': 'static/scss/waltz.scss',
+        'static/css/options.css': 'static/scss/options.scss',
+        'static/css/tutorial.css': 'static/scss/tutorial.scss',
+        'static/css/popup.css': 'static/scss/popup.scss'
       }
     }
   },
