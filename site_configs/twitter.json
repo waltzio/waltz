@@ -14,7 +14,7 @@
                 "url": "https://twitter.com/login",
                 "fields": ["authenticity_token"]
             },
-            "check": "button:contains('Sign out')",
+            "check": "button:contains('Sign out'), input:contains('Sign out')",
             "twoFactor": [
                 {
                     "url": "https://twitter.com/account/login_verification/push",

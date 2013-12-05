@@ -1,5 +1,6 @@
 (function($) {
-	var cyHost = "";
+	var cyHost = "",
+		storage = new Storage();
 
 	chrome.runtime.sendMessage({
 		method: "getHost"
@@ -8,7 +9,7 @@
 	});
 
 	$(document).ready(function() {
-		chrome.storage.local.get(null, function(sites) {
+		storage.getCredentials(function(sites) {
 			for(key in sites) {
 				var site = sites[key];
 
