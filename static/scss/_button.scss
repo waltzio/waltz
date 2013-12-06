@@ -50,6 +50,29 @@ $button-pusher-width: 1200px;
         }
     }
 
+
+    &.green {
+        $dark-color: darken($green, 10%);
+        background: $green;
+        box-shadow: $box-shadow-size $box-shadow-size 0 0 $dark-color;
+
+        &:hover {
+            box-shadow: $box-shadow-size - 1 $box-shadow-size - 1 0 0 $dark-color;
+        }
+
+        &:active {
+            box-shadow: $box-shadow-size - 2 $box-shadow-size - 2 0 0 $dark-color;
+        }
+
+        &.pushed-in {
+            &:before {
+                background: $green;
+            }
+            &:after {
+                background: $green;
+            }
+        }
+    }
     &.pushed-in {
         position: relative;
 
@@ -96,44 +119,42 @@ $button-pusher-width: 1200px;
     }
 }
 
-.loaded {
-    .button {
-        &.pushed-in.from-left {
-            transition: right 1s 0s;
-            right: 0px;
+.loaded .button, .not-animated.button {
+    &.pushed-in.from-left {
+        transition: right 1s 0s;
+        right: 0px;
 
-            &.pull-out {
-                &:before, &:after {
-                    transition: left 1s 1s linear;
-                }
-
-                &:before {
-                    left: -$button-pusher-width * 2;
-                }
-
-                &:after {
-                    left: -$button-pusher-width * 1;
-                }
-            } 
-        }
-        &.pushed-in.from-right {
-            transition: left 1s 0s;
-            left: 0px;
-
-            &.pull-out {
-                &:before, &:after {
-                    transition: right 1s 1s linear;
-                }
-
-                &:before {
-                    right: -$button-pusher-width * 2;
-                }
-
-                &:after {
-                    right: -$button-pusher-width * 1;
-                }
+        &.pull-out {
+            &:before, &:after {
+                transition: left 1s 1s linear;
             }
-            
+
+            &:before {
+                left: -$button-pusher-width * 2;
+            }
+
+            &:after {
+                left: -$button-pusher-width * 1;
+            }
+        } 
+    }
+    &.pushed-in.from-right {
+        transition: left 1s 0s;
+        left: 0px;
+
+        &.pull-out {
+            &:before, &:after {
+                transition: right 1s 1s linear;
+            }
+
+            &:before {
+                right: -$button-pusher-width * 2;
+            }
+
+            &:after {
+                right: -$button-pusher-width * 1;
+            }
         }
+        
     }
 }

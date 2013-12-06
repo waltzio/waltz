@@ -5358,6 +5358,17 @@ header {
     background: #0291d6; }
   .button.blue.pushed-in:after {
     background: #0291d6; }
+.button.green {
+  background: #00c279;
+  box-shadow: 3px 3px 0 0 #008f59; }
+  .button.green:hover {
+    box-shadow: 2px 2px 0 0 #008f59; }
+  .button.green:active {
+    box-shadow: 1px 1px 0 0 #008f59; }
+  .button.green.pushed-in:before {
+    background: #00c279; }
+  .button.green.pushed-in:after {
+    background: #00c279; }
 .button.pushed-in {
   position: relative; }
   .button.pushed-in.from-left {
@@ -5390,23 +5401,23 @@ header {
     content: " ";
     display: block; }
 
-.loaded .button.pushed-in.from-left {
+.loaded .button.pushed-in.from-left, .not-animated.button.pushed-in.from-left {
   transition: right 1s 0s;
   right: 0px; }
-  .loaded .button.pushed-in.from-left.pull-out:before, .loaded .button.pushed-in.from-left.pull-out:after {
+  .loaded .button.pushed-in.from-left.pull-out:before, .loaded .button.pushed-in.from-left.pull-out:after, .not-animated.button.pushed-in.from-left.pull-out:before, .not-animated.button.pushed-in.from-left.pull-out:after {
     transition: left 1s 1s linear; }
-  .loaded .button.pushed-in.from-left.pull-out:before {
+  .loaded .button.pushed-in.from-left.pull-out:before, .not-animated.button.pushed-in.from-left.pull-out:before {
     left: -2400px; }
-  .loaded .button.pushed-in.from-left.pull-out:after {
+  .loaded .button.pushed-in.from-left.pull-out:after, .not-animated.button.pushed-in.from-left.pull-out:after {
     left: -1200px; }
-.loaded .button.pushed-in.from-right {
+.loaded .button.pushed-in.from-right, .not-animated.button.pushed-in.from-right {
   transition: left 1s 0s;
   left: 0px; }
-  .loaded .button.pushed-in.from-right.pull-out:before, .loaded .button.pushed-in.from-right.pull-out:after {
+  .loaded .button.pushed-in.from-right.pull-out:before, .loaded .button.pushed-in.from-right.pull-out:after, .not-animated.button.pushed-in.from-right.pull-out:before, .not-animated.button.pushed-in.from-right.pull-out:after {
     transition: right 1s 1s linear; }
-  .loaded .button.pushed-in.from-right.pull-out:before {
+  .loaded .button.pushed-in.from-right.pull-out:before, .not-animated.button.pushed-in.from-right.pull-out:before {
     right: -2400px; }
-  .loaded .button.pushed-in.from-right.pull-out:after {
+  .loaded .button.pushed-in.from-right.pull-out:after, .not-animated.button.pushed-in.from-right.pull-out:after {
     right: -1200px; }
 
 .barsy {
@@ -5531,8 +5542,7 @@ body {
   overflow-x: hidden; }
 
 .hero {
-  margin: 50px auto 0 auto;
-  overflow: hidden; }
+  margin: 50px auto 0 auto; }
   .hero .button {
     float: right;
     margin-top: 15px; }
@@ -5626,7 +5636,11 @@ body {
     margin: auto; }
   .why .table table .fi-x {
     background: #d4384b; }
-.why .cta {
-  margin: 20px auto; }
 .why .content h3 {
   margin-bottom: 30px; }
+.why .github .writing {
+  margin-top: 30px;
+  overflow: hidden; }
+.why .github .button {
+  margin-top: 40px;
+  float: right; }

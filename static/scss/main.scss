@@ -38,7 +38,6 @@ body {
 
 .hero {
     margin: 50px auto 0 auto;
-    overflow: hidden;
 
     .button {
         float: right;
@@ -166,14 +165,20 @@ body {
         }
     }
 
-    .cta {
-        margin: 20px auto;
-    }
-
-
     .content {
         h3 {
             margin-bottom: 30px;
+        }
+    }
+
+    .github {
+        .writing {
+            margin-top: 30px;
+            overflow: hidden;
+        }
+        .button {
+            margin-top: 40px;
+            float: right;
         }
     }
 }
