@@ -1,14 +1,19 @@
 $button-pusher-offset: 10px;
-$button-pusher-width: 1000px;
+$button-pusher-width: 1200px;
 
 .button {
     $box-shadow-size: 3px;
     &.pink {
         $dark-color: darken($pink, 10%);
         background: $pink;
+        box-shadow: $box-shadow-size $box-shadow-size 0 0 $dark-color;
+
         &:hover {
-            background: $dark-color;
-            box-shadow: none;
+            box-shadow: $box-shadow-size - 1 $box-shadow-size - 1 0 0 $dark-color;
+        }
+
+        &:active {
+            box-shadow: $box-shadow-size - 2 $box-shadow-size - 2 0 0 $dark-color;
         }
 
         &.pushed-in {
@@ -20,16 +25,20 @@ $button-pusher-width: 1000px;
             }
         }
 
-        box-shadow: $box-shadow-size $box-shadow-size 0 0 $dark-color;
     }
 
     &.blue {
         $dark-color: darken($blue, 10%);
         background: $blue;
-        &:hover {
-            background: $dark-color;
-        }
         box-shadow: $box-shadow-size $box-shadow-size 0 0 $dark-color;
+
+        &:hover {
+            box-shadow: $box-shadow-size - 1 $box-shadow-size - 1 0 0 $dark-color;
+        }
+
+        &:active {
+            box-shadow: $box-shadow-size - 2 $box-shadow-size - 2 0 0 $dark-color;
+        }
 
         &.pushed-in {
             &:before {

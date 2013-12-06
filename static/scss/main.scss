@@ -38,6 +38,7 @@ body {
 
 .hero {
     margin: 50px auto 0 auto;
+    overflow: hidden;
 
     .button {
         float: right;
@@ -49,7 +50,7 @@ body {
             display: none;
         }
         position: relative;
-        overflow:hidden;
+        z-index: 1;
         .computer {
             width: 450px;
             position: relative;
@@ -98,10 +99,13 @@ body {
 }
 
 .quote {
+    position: relative;
+    z-index: 2;
     margin-bottom: 50px;
     background: #8A7BAC;
     .photo {
         img {
+            width: 100px;
             margin-top: -30px;
         }
     }

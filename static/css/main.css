@@ -5340,8 +5340,9 @@ header {
   background: #f50380;
   box-shadow: 3px 3px 0 0 #c30266; }
   .button.pink:hover {
-    background: #c30266;
-    box-shadow: none; }
+    box-shadow: 2px 2px 0 0 #c30266; }
+  .button.pink:active {
+    box-shadow: 1px 1px 0 0 #c30266; }
   .button.pink.pushed-in:before {
     background: #f50380; }
   .button.pink.pushed-in:after {
@@ -5350,7 +5351,9 @@ header {
   background: #0291d6;
   box-shadow: 3px 3px 0 0 #026fa3; }
   .button.blue:hover {
-    background: #026fa3; }
+    box-shadow: 2px 2px 0 0 #026fa3; }
+  .button.blue:active {
+    box-shadow: 1px 1px 0 0 #026fa3; }
   .button.blue.pushed-in:before {
     background: #0291d6; }
   .button.blue.pushed-in:after {
@@ -5358,20 +5361,20 @@ header {
 .button.pushed-in {
   position: relative; }
   .button.pushed-in.from-left {
-    right: 1000px; }
+    right: 1200px; }
     .button.pushed-in.from-left:before {
-      left: -1010px; }
+      left: -1210px; }
     .button.pushed-in.from-left:after {
       left: -10px; }
   .button.pushed-in.from-right {
-    left: 1000px; }
+    left: 1200px; }
     .button.pushed-in.from-right:before {
-      right: -1013px; }
+      right: -1213px; }
     .button.pushed-in.from-right:after {
       right: -13px;
       top: 3px; }
   .button.pushed-in:before {
-    width: 1000px;
+    width: 1200px;
     height: 4px;
     background: #0291d6;
     content: " ";
@@ -5393,18 +5396,18 @@ header {
   .loaded .button.pushed-in.from-left.pull-out:before, .loaded .button.pushed-in.from-left.pull-out:after {
     transition: left 1s 1s linear; }
   .loaded .button.pushed-in.from-left.pull-out:before {
-    left: -2000px; }
+    left: -2400px; }
   .loaded .button.pushed-in.from-left.pull-out:after {
-    left: -1000px; }
+    left: -1200px; }
 .loaded .button.pushed-in.from-right {
   transition: left 1s 0s;
   left: 0px; }
   .loaded .button.pushed-in.from-right.pull-out:before, .loaded .button.pushed-in.from-right.pull-out:after {
     transition: right 1s 1s linear; }
   .loaded .button.pushed-in.from-right.pull-out:before {
-    right: -2000px; }
+    right: -2400px; }
   .loaded .button.pushed-in.from-right.pull-out:after {
-    right: -1000px; }
+    right: -1200px; }
 
 .barsy {
   clear: both;
@@ -5528,13 +5531,14 @@ body {
   overflow-x: hidden; }
 
 .hero {
-  margin: 50px auto 0 auto; }
+  margin: 50px auto 0 auto;
+  overflow: hidden; }
   .hero .button {
     float: right;
     margin-top: 15px; }
   .hero .animation-container {
     position: relative;
-    overflow: hidden; }
+    z-index: 1; }
     .hero .animation-container .video {
       display: none; }
     .hero .animation-container .computer {
@@ -5576,9 +5580,12 @@ body {
         color: #777; }
 
 .quote {
+  position: relative;
+  z-index: 2;
   margin-bottom: 50px;
   background: #8A7BAC; }
   .quote .photo img {
+    width: 100px;
     margin-top: -30px; }
   .quote blockquote {
     color: white;
