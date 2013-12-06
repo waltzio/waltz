@@ -518,6 +518,12 @@
 
 		$widget.find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
+            storage.getOptionsForDomain(_this.options.site.config.key, function(options) {
+                options = options || { dismissals: 1};
+                options.dismissals += 1;
+                storage.setOptionsForDomain(_this.options.site.config.key, options);
+                _this.trigger('dismiss.widget', { dismissals: options.dismissals });
+            });
 
 			_this.hideWidget({ remove: true });
 		});

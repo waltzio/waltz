@@ -61,11 +61,7 @@ Storage.prototype.setCredentials = function(credentials, cb) {
 
 Storage.prototype.getCredentialsForDomain = function(domain, cb) {
     this.getCredentials(function(credentials) {
-        if(credentials[domain]) {
-            cb(credentials[domain]);
-        } else {
-            cb(false);
-        }
+        cb(credentials[domain] || false);
     });
 }
 
@@ -132,6 +128,17 @@ Storage.prototype.setOptions = function(options, cb) {
     var data = {};
     data[this.OPTIONS_KEY] = options;
     this.set(data, cb);
+}
+
+Storage.prototype.getOptionsForDomain = function(domain, cb) {
+    this.getOptions(function(options) {
+        cb(options[domain] || false);
+    });
+}
+
+Storage.prototype.setOptionsForDomain = function(domain, newOptions, cb) {
+    var _this = this;
+    this.setOption(domain, newOptions, cb);
 }
 
 Storage.prototype.setOption = function(key, value, cb) {
@@ -214,7 +221,6 @@ Storage.prototype.setOnboardingSiteKey = function(siteKey, key, value, cb) {
         _this.setOnboardingSiteData(siteKey, data, cb);
     });
 }
-
 
 Storage.prototype.completeTutorial = function(cb) {
     this.setOption("tutorialStep", -1);
