@@ -1,0 +1,36 @@
+header {
+    $height: 100px;
+    $margin: 10px;
+    background: $black;
+    height: $height;
+    margin: 50px auto;
+
+    .logo-container {
+        img {
+            height: $height - $margin * 2;
+            margin-top: $margin;
+            float: left;
+        }
+    } 
+
+    .icon-container {
+        img {
+            $icon-height: 140px;
+            height: $icon-height;
+            width: $icon-height;
+            border-radius: $height;
+            border: 5px solid white;
+            margin: auto;
+            display: block;
+            margin-top: ($height - $icon-height) / 2;
+        }
+    }
+
+    .button-container {
+        .button {
+            float: right;
+            margin: 0;
+            margin-top: $margin * 1.7;
+        }
+    }
+}

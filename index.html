@@ -8,110 +8,100 @@
         <meta name="google-site-verification" content="C6BSEZC-E6Mw3b7vttCyqfroVvCHoxPD2O3X7KtaRhM" />
         <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/obhibkfopclldmnoohabnbimocpgdine">
 
-        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="/static/css/foundation-icons.css">    
+        <link rel="stylesheet" type="text/css" media="screen" href="/static/css/main.css">
 
         <title>Waltz</title>
     </head>
 
     <body>
 
-        <div class="container">
-            <header class="row">
-                <div class="header-container col-md-12">
-                    <div class="left logo-container">
-                        <img class="logo" src="images/waltz-full.png" alt="waltz"><img class="logo-text" src="images/logo-500.png" alt="waltz">
-                    </div>
 
-                    <button class="button install-button" onclick="chrome.webstore.install()" href="#">Add to Chrome</button>
-                    <script>
-                        if (chrome.app.isInstalled) {
-                          document.getElementById('install-button').style.display = 'none';
-                        }
-                    </script>
+        <header>
+            <div class="row">
+                <div class="small-4 columns logo-container">
+                    <img src="/static/img/logo-white-1000.png" alt="">
                 </div>
-            </header>
+                <div class="small-4 columns icon-container">
+                    <img src="/static/img/waltz-full.png" alt="Waltz">
+                </div>
+                <div class="small-4 columns button-container">
+                    <div class="button pink large pushed-in from-right">Use Waltz For Free</div>
+                </div>
+            </div>
+        </header>
 
-            <section class="body row">
-                <div class="header col-md-12">
-                    <h1 class="tagline">use <a href="https://getclef.com">clef</a> anywhere on the web</h1>
-                    <h2 class="sub-tagline">
-                        an account manager that gives you more control with less trouble
-                    </h2>
+        <div class="main">
+            <div class="row hero">
+                <div class="small-5 columns">
+                    <h1>Passwords are Passé</h1>
+                    <h3 class="subheader">Waltz uses Clef to log you in to all of your favorite sites without a password.</h3>
+                    <a href="#" class="button large blue pushed-in from-left">Try Waltz Now</a>
                 </div>
 
-                <div class="features col-md-12 col-md-offset-1">
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle sync">
-                            
+                <div class="small-7 columns animation-container">
+                    <div class="animation">
+                        <div class="computer">
+                            <img class="computer" src="/static/img/computer.png" alt="compuyer">
+                            <video preload autoplay>
+                                <source src="/static/video/screen.mp4"  type="video/mp4" />
+                                <source src="/static/video/screen.ogv"  type="video/ogg" />
+                                <object width="640" height="360" type="application/x-shockwave-flash" data="/static/video/screen.swf">
+                                    <param name="movie" value="/static/video/screen.swf" />
+                                    <param name="flashvars" value="autostart=true&amp;file=/static/video/screen.mp4" />
+                                </object>
+                            </video>
                         </div>
-                        <h4 class="description">sync to log in</h4>
-                    </div>
-
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle sign-out">
-                            
+                        <div class="phone">
+                            <div class="barsy"></div>
+                            <img class='hand' src="/static/img/hand.png" alt="hand">
                         </div>
-                        <h4 class="description">sign out</h4>
+                        <div class="refresh fi-refresh"></div>
                     </div>
-
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle two-factor">
-                            
-                        </div>
-                        <h4 class="description">two factor</h4>
-                    </div>
-
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle local">
-                            
-                        </div>
-                        <h4 class="description">local storage</h4>
-                    </div>
-
-                    <div class="feature col-md-2 col-sm-4 col-xs-6">
-                        <div class="circle github">
-                            
-                        </div>
-                        <h4 class="description">open source</h4>
+                    <div class="video">
+                        <iframe src="//player.vimeo.com/video/77091221?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                     </div>
                 </div>
-            </section>
-            <section class="features">
-                <div class="feature-detail sync left row">
-                    <div class='icon col-md-4 col-md-offset-1'>Sync to Log In</div>
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
-                </div>
+            </div>
 
-                <div class="feature-detail sign-out right row">
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
-                    <div class="icon col-md-4 col-md-offset-1">Sign Out</div>
+            <div class="row quote">
+                <div class="small-2 columns photo">
+                    <img src="/static/img/quote-photo.png" alt="Faye Johnson">
                 </div>
-
-                <div class="feature-detail two-factor left row">
-                    <div class='icon col-md-4 col-md-offset-1'>Two Factor</div>
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
+                <div class="small-10 columns">
+                    <blockquote>
+                        "Waltz has spoiled me. I love logging in without passwords. It's so much faster and easier, but it also keeps me better protected."
+                        <cite>Faye Johnson</cite>
+                    </blockquote>
                 </div>
+            </div>
 
-                <div class="feature-detail local right row">
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
-                    <div class="icon col-md-4 col-md-offset-1">Local Storage</div>
+            <div class="why">
+                <div class="row header">
+                    <div class="small-12 columns">
+                        <h2 class="text-center">Waltz is a modern account manager for the web.</h2>
+                    </div>
                 </div>
-
-                <div class="feature-detail github left row">
-                    <div class='icon col-md-4 col-md-offset-1'>Github</div>
-                    <p class='col-md-5 col-md-offset-1'>Utilize the power of Clef to log in using your phone.  Simply initiate Waltz, unlock your phone, and sync with the <a href="#">Clef Wave</a></p>
+                <div class="row content">
+                    <div class="small-4 columns">
+                        <h3>Single-sign-off</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, impedit, maxime vitae voluptates repellendus similique fugiat velit eligendi illum inventore temporibus minima dolor repellat doloremque libero minus eveniet dolorem voluptatem!</p>
+                    </div>
+                    <div class="small-4 columns">
+                        <h3>No more passwords</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, impedit, maxime vitae voluptates repellendus similique fugiat velit eligendi illum inventore temporibus minima dolor repellat doloremque libero minus eveniet dolorem voluptatem!</p>
+                    </div>
+                    <div class="small-4 columns">
+                        <h3>Log in anywhere</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, impedit, maxime vitae voluptates repellendus similique fugiat velit eligendi illum inventore temporibus minima dolor repellat doloremque libero minus eveniet dolorem voluptatem!</p>
+                    </div>
                 </div>
-            </section>
-
-            <footer>
-                
-            </footer>
+            </div>
         </div>
 
-        
-        <script type="text/javascript" src="javascripts/jquery.min.js"></script>
-        <script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
-        <script type="text/javascript" src="javascripts/main.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.transit.js"></script>
+        <script type="text/javascript" src="/static/js/barsy.js"></script>
+        <script type="text/javascript" src="/static/js/main.js"></script>
     </body>
 </html>

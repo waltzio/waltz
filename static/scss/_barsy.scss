@@ -1,0 +1,45 @@
+.barsy {
+    clear:both;
+    padding: 0 10px; /*quiet zone*/
+    overflow: visible;
+    width: 247px;
+}
+.barsy + * { clear:both; }
+.barsy div {
+    float:left;
+    height: 0px; /*size*/
+    position: relative;
+    z-index: 100;
+}
+.barsy .bar1 { border-left:2px solid black; }
+.barsy .bar2 { border-left:4px solid black; }
+.barsy .bar3 { border-left:6px solid black; }
+.barsy .bar4 { border-left:8px solid black; }
+.barsy .space0 { margin-right:0 }
+.barsy .space1 { margin-right:2px }
+.barsy .space2 { margin-right:4px }
+.barsy .space3 { margin-right:6px }
+.barsy .space4 { margin-right:8px }
+
+.barsy .reverse { position: relative; z-index: 3; }
+.barsy .reverse.bar1 { border-left: none; margin-left:2px; margin-right: 0; }
+.barsy .reverse.bar2 { border-left: none; margin-left:4px; margin-right: 0; }
+.barsy .reverse.bar3 { border-left: none; margin-left:6px; margin-right: 0; }
+.barsy .reverse.bar4 { border-left: none; margin-left:8px; margin-right: 0; }
+.barsy .reverse.space0 { border-right: 0px solid black; margin-right: 0; }
+.barsy .reverse.space1 { border-right: 2px solid black; margin-right: 0; }
+.barsy .reverse.space2 { border-right: 4px solid black; margin-right: 0; }
+.barsy .reverse.space3 { border-right: 6px solid black; margin-right: 0; }
+.barsy .reverse.space4 { border-right: 8px solid black; margin-right: 0; }
+.barsy.mock {
+    overflow: visible;
+    width: auto;
+    & > div {
+        width: 2px;
+        margin-left: 2px;
+        background: $blue;
+        opacity: .9;
+        float: left;
+        position: relative;
+    }
+}

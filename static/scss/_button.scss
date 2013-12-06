@@ -1,0 +1,105 @@
+$button-pusher-offset: 10px;
+$button-pusher-width: 1000px;
+
+.button {
+    $box-shadow-size: 3px;
+    &.pink {
+        $dark-color: darken($pink, 10%);
+        background: $pink;
+        &:hover {
+            background: $dark-color;
+            box-shadow: none;
+        }
+
+        &.pushed-in {
+            &:before {
+                background: $pink;
+            }
+            &:after {
+                background: $pink;
+            }
+        }
+
+        box-shadow: $box-shadow-size $box-shadow-size 0 0 $dark-color;
+    }
+
+    &.blue {
+        $dark-color: darken($blue, 10%);
+        background: $blue;
+        &:hover {
+            background: $dark-color;
+        }
+        box-shadow: $box-shadow-size $box-shadow-size 0 0 $dark-color;
+
+        &.pushed-in {
+            &:before {
+                background: $blue;
+            }
+            &:after {
+                background: $blue;
+            }
+        }
+    }
+
+    &.pushed-in {
+        position: relative;
+
+        &.from-left {
+            right: $button-pusher-width;
+            &:before {
+                left: -$button-pusher-width - $button-pusher-offset;
+            }
+            &:after {
+                left: -$button-pusher-offset;
+            }
+        }
+
+        &.from-right {
+            $extra-offset: 3px;
+            left: $button-pusher-width;
+            &:before {
+                right: -$button-pusher-width - $button-pusher-offset - $extra-offset;
+            }
+            &:after {
+                right: -$button-pusher-offset - $extra-offset;
+                top: 3px;
+            }
+        }
+        
+        &:before {
+            width: $button-pusher-width;
+            height: 4px;
+            background: $blue;
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 50%;
+        }
+        &:after {
+            height: 100%;
+            width: 4px;
+            position: absolute;
+            top: 0;
+            background: $blue;
+            content: " ";
+            display: block;
+        }
+    }
+}
+
+.loaded {
+    .button {
+        &.pushed-in.from-left {
+            transition: right 1s 0s;
+            right: 0px; 
+        }
+        &.pushed-in.from-right {
+            transition: left 1s 0s;
+            left: 0px;
+            // &:before, &:after {
+            //     transition: right 1s 2s;
+            //     right: -$button-pusher-width * 2;
+            // }
+        }
+    }
+}

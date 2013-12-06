@@ -14,7 +14,7 @@ module.exports = function(grunt) {
         sass: {
             dist: {
                 files: {
-                    'css/main.css': 'scss/main.scss'
+                    'static/css/main.css': 'static/scss/main.scss'
                 }
             }
         },
@@ -25,7 +25,7 @@ module.exports = function(grunt) {
                     livereload: true
                 },
                 files: [
-                    'scss/**/*.scss'
+                    'static/scss/**/*.scss'
                 ],
                 tasks: ['sass'],
             }
@@ -57,6 +57,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-concurrent');
  
     // Default task.
-    grunt.registerTask('default', ['watch', 'connect', 'open']);
+    grunt.registerTask('default', ['watch']);
  
 };

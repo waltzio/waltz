@@ -1,0 +1,117 @@
+@import "_settings";
+@import "../foundation/scss/foundation";
+@import "_header";
+@import "_button";
+@import "_animations";
+@import "_barsy";
+
+
+*, *:before, *:after {
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
+html, body {
+    background: #EEE;
+    margin: 0;
+    padding: 0;
+
+    a {
+        text-decoration: none;
+    }
+
+    background: #EEE;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.hero {
+    margin: 50px auto 0 auto;
+
+    .button {
+        float: right;
+        margin-top: 20px;
+    }
+
+    .animation-container {
+        .video {
+            display: none;
+        }
+        position: relative;
+        overflow:hidden;
+        .computer {
+            width: 450px;
+            position: relative;
+            float: right;
+            margin-bottom: 40px;
+            margin-top: 10px;
+            video {
+                position: absolute;
+                left: 66px;
+                top: 35px;
+                width: 310px;
+            }
+        }
+        .phone {
+            position: absolute;
+            top: 15px;
+            right: 40%;
+            width: 300px;
+            -webkit-transform: rotate(-10deg);
+            overflow: hidden;
+            img {
+                position: relative;
+                z-index: 2;
+            }
+            .barsy {
+                z-index: 1;
+                position: absolute;
+                left: 75px;
+                top: 100px;
+                width: 100px;
+            }
+        }
+        .refresh {
+            position: absolute;
+            top: 0px;
+            right: 30px;
+            font-size: 30px;
+            color: #CCC;
+            cursor: pointer;
+            display: none;
+            &:hover {
+                color: #777;
+            }
+        }
+    }
+}
+
+.quote {
+    margin-bottom: 50px;
+    background: #8A7BAC;
+    .photo {
+        img {
+            margin-top: -30px;
+        }
+    }
+
+    blockquote {
+        color: white;
+        border: none;
+        font-weight: bold;
+        font-size: 1.4em;
+        line-height: 1.3em;
+        padding: 20px 0;
+        margin: 0;
+        position: relative;
+        cite {
+            position: absolute;
+            right: 0;
+            bottom: -30px;
+            font-size: 20px;
+            color: $purple;
+        }
+    }
+}
+
