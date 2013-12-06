@@ -20,6 +20,16 @@ html, body {
     }
 
     background: #EEE;
+
+    .container {
+        background: white;
+        overflow: hidden;
+    }
+
+    .row .row {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 body {
