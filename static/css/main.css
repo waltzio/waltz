@@ -5551,7 +5551,7 @@ body {
     .hero .animation-container .phone {
       position: absolute;
       top: 15px;
-      right: 40%;
+      right: 51%;
       width: 300px;
       -webkit-transform: rotate(-10deg);
       overflow: hidden; }
@@ -5597,7 +5597,7 @@ body {
       color: #8a7bac; }
 
 .why > .row {
-  margin: 50px auto; }
+  margin: 40px auto; }
 .why .header {
   margin-top: 100px; }
 .why .table table {
@@ -5619,5 +5619,7 @@ body {
     margin: auto; }
   .why .table table .fi-x {
     background: #d4384b; }
+.why .cta {
+  margin: 20px auto; }
 .why .content h3 {
-  text-align: center; }
+  margin-bottom: 30px; }
