@@ -71,7 +71,7 @@ $(document).ready(function() {
     addClassToRows();
     $(window).on('scroll', function() {
         clearTimeout($.data(this, 'scrollTimer'));
-        $.data(this, 'scrollTimer', setTimeout(addClassToRows, 50)); 
+        $.data(this, 'scrollTimer', setTimeout(addClassToRows, 20)); 
     });
 
     function addClassToRows() {
