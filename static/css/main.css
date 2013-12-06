@@ -5358,20 +5358,20 @@ header {
 .button.pushed-in {
   position: relative; }
   .button.pushed-in.from-left {
-    right: 1000px; }
+    right: 2000px; }
     .button.pushed-in.from-left:before {
-      left: -1010px; }
+      left: -2010px; }
     .button.pushed-in.from-left:after {
       left: -10px; }
   .button.pushed-in.from-right {
-    left: 1000px; }
+    left: 2000px; }
     .button.pushed-in.from-right:before {
-      right: -1013px; }
+      right: -2013px; }
     .button.pushed-in.from-right:after {
       right: -13px;
       top: 3px; }
   .button.pushed-in:before {
-    width: 1000px;
+    width: 2000px;
     height: 4px;
     background: #0291d6;
     content: " ";
@@ -5390,9 +5390,21 @@ header {
 .loaded .button.pushed-in.from-left {
   transition: right 1s 0s;
   right: 0px; }
+  .loaded .button.pushed-in.from-left.pull-out:before, .loaded .button.pushed-in.from-left.pull-out:after {
+    transition: left 1s 1s linear; }
+  .loaded .button.pushed-in.from-left.pull-out:before {
+    left: -4000px; }
+  .loaded .button.pushed-in.from-left.pull-out:after {
+    left: -2000px; }
 .loaded .button.pushed-in.from-right {
   transition: left 1s 0s;
   left: 0px; }
+  .loaded .button.pushed-in.from-right.pull-out:before, .loaded .button.pushed-in.from-right.pull-out:after {
+    transition: right 1s 1s linear; }
+  .loaded .button.pushed-in.from-right.pull-out:before {
+    right: -4000px; }
+  .loaded .button.pushed-in.from-right.pull-out:after {
+    right: -2000px; }
 
 .barsy {
   clear: both;
@@ -5513,7 +5525,7 @@ body {
   margin: 50px auto 0 auto; }
   .hero .button {
     float: right;
-    margin-top: 20px; }
+    margin-top: 15px; }
   .hero .animation-container {
     position: relative;
     overflow: hidden; }
@@ -5577,3 +5589,29 @@ body {
       bottom: -30px;
       font-size: 20px;
       color: #8a7bac; }
+
+.why > .row {
+  margin: 50px auto; }
+.why .header {
+  margin-top: 100px; }
+.why .table table {
+  width: 100%; }
+  .why .table table th {
+    text-align: center; }
+  .why .table table .feature-name {
+    font-weight: bold; }
+  .why .table table .fi-check, .why .table table .fi-x {
+    background: #00c279;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    display: block;
+    text-align: center;
+    line-height: 30px;
+    font-size: 20px;
+    margin: auto; }
+  .why .table table .fi-x {
+    background: #d4384b; }
+.why .content h3 {
+  text-align: center; }

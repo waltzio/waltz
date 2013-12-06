@@ -1,5 +1,7 @@
 $(document).ready(function() {
-    $('body').addClass('loaded');
+
+    
+
 	$(".circle").on('click', function() {
 		var cls = $(this).attr('class').replace('circle ', '');
 
@@ -65,4 +67,29 @@ $(document).ready(function() {
         height: 60,
         mock: true
     });
+
+    addClassToRows();
+    $(window).on('scroll', function() {
+        clearTimeout($.data(this, 'scrollTimer'));
+        $.data(this, 'scrollTimer', setTimeout(addClassToRows, 50)); 
+    });
+
+    function addClassToRows() {
+        $('.row').each(function() {
+            if (isScrolledIntoView(this)) {
+                $(this).addClass('loaded');
+            }
+        });
+    }
 });
+
+function isScrolledIntoView(elem)
+{
+    var docViewTop = $(window).scrollTop();
+    var docViewBottom = docViewTop + $(window).height();
+
+    var elemTop = $(elem).offset().top;
+    var elemBottom = elemTop + $(elem).height();
+
+    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+}

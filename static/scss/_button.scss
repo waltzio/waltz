@@ -1,5 +1,5 @@
 $button-pusher-offset: 10px;
-$button-pusher-width: 1000px;
+$button-pusher-width: 2000px;
 
 .button {
     $box-shadow-size: 3px;
@@ -91,15 +91,40 @@ $button-pusher-width: 1000px;
     .button {
         &.pushed-in.from-left {
             transition: right 1s 0s;
-            right: 0px; 
+            right: 0px;
+
+            &.pull-out {
+                &:before, &:after {
+                    transition: left 1s 1s linear;
+                }
+
+                &:before {
+                    left: -$button-pusher-width * 2;
+                }
+
+                &:after {
+                    left: -$button-pusher-width * 1;
+                }
+            } 
         }
         &.pushed-in.from-right {
             transition: left 1s 0s;
             left: 0px;
-            // &:before, &:after {
-            //     transition: right 1s 2s;
-            //     right: -$button-pusher-width * 2;
-            // }
+
+            &.pull-out {
+                &:before, &:after {
+                    transition: right 1s 1s linear;
+                }
+
+                &:before {
+                    right: -$button-pusher-width * 2;
+                }
+
+                &:after {
+                    right: -$button-pusher-width * 1;
+                }
+            }
+            
         }
     }
 }

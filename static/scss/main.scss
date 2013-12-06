@@ -31,7 +31,7 @@ body {
 
     .button {
         float: right;
-        margin-top: 20px;
+        margin-top: 15px;
     }
 
     .animation-container {
@@ -111,6 +111,51 @@ body {
             bottom: -30px;
             font-size: 20px;
             color: $purple;
+        }
+    }
+}
+
+.why {
+    & > .row {
+        margin: 50px auto;
+    }
+    .header {
+        margin-top: 100px;
+    }
+
+    .table {
+        table {
+            th {
+                text-align: center;
+            }
+            width: 100%;
+            .feature-name {
+                font-weight: bold;
+            }
+            $icon-size: 30px;
+            .fi-check, .fi-x {
+                background: $green;
+                color: white;
+                width: $icon-size;
+                height: $icon-size;
+                border-radius: $icon-size;
+                display: block;
+                text-align: center;
+                line-height: $icon-size;
+                font-size: 20px;
+                margin: auto;
+            }
+
+            .fi-x {
+                background: $red;
+            }
+        }
+    }
+
+
+    .content {
+        h3 {
+            text-align: center;
         }
     }
 }
