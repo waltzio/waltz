@@ -314,7 +314,7 @@
 			        .val( data.username )
 			)
 
-			if (siteConfig.login.other) {
+			if (siteConfig.login.hasHiddenInputs) {
 				var appendInputs = function(data) {
 					var $data = $(data),
 						inputs = $data.find('input');
@@ -329,12 +329,16 @@
 					submitForm();
 				}
 
-				if (window.location.href.match(siteConfig.login.other.url)) {
+                var onLoginPage = _.reduce(siteConfig.login.urls, function(memo, url) {
+                    return memo || window.location.href.match(url);
+                }, false);
+
+				if (onLoginPage) {
 					appendInputs(document);
 				} else {
 					chrome.runtime.sendMessage({
 						method: "proxyRequest",
-						url: siteConfig.login.other.url
+						url: siteConfig.login.urls[0]
 					}, appendInputs);
 				}
 			} else {

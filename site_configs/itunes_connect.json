@@ -8,14 +8,7 @@
             "method": "POST",
             "usernameField": "theAccountName",
             "passwordField": "theAccountPW",
-            "other": {
-                "url": "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa",
-                "fields": ["theAuxValue", "1.Continue.x", "1.Continue.y"],
-                "dynamic": {
-                    "1.Continue.x": 67,
-                    "1.Continue.y": 26
-                }     
-            },
+            "hasHiddenInputs": true,
             "check": "a:contains('Sign Out')"
         },
         "ignore": true

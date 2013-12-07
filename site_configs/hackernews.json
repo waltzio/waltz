@@ -10,10 +10,7 @@
             "method": "POST",
             "usernameField": "u",
             "passwordField": "p",
-            "other": {
-                "url": "https://news.ycombinator.com/newslogin",
-                "fields": ["fnid"]
-            },
+            "hasHiddenInputs": true,
             "check": "a:contains('logout')"
         }
     }
