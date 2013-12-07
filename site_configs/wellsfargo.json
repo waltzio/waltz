@@ -10,10 +10,7 @@
             "method": "POST",
             "usernameField": "userid",
             "passwordField": "password",
-            "other": {
-                "url": "https://www.wellsfargo.com/",
-                "fields": ["authenticity_token"]
-            },
+            "hasHiddenInputs": true,
             "check": "a:contains('Sign Off')",
             "exclude": {
                 "forcedRedirectURLs" : ["https://www.wellsfargo.com/"],
