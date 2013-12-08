@@ -11,7 +11,11 @@
             "usernameField": "u",
             "passwordField": "p",
             "hasHiddenInputs": true,
-            "check": "a:contains('logout')"
+            "check": "a:contains('logout')",
+            "exclude": {
+                "forcedRedirectURLs": ["https://news.ycombinator.com/x"],
+                "nextURLs": ["https://news.ycombinator.com/x"]
+            }
         }
     }
 }
