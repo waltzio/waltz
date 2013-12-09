@@ -10,6 +10,7 @@
             "method": "POST",
             "usernameField": "user",
             "passwordField": "password",
+            "hasHiddenInputs": true,
             "check": "a.header-auth.member"
         }
     }
