@@ -1,4 +1,29 @@
 @charset "UTF-8";
+@-webkit-keyframes slide-behind {
+  0% {
+    left: 0;
+    top: 0;
+  }
+
+  50% {
+    left: -700px;
+    top: -50px;
+  }
+
+  70% {
+    z-index: 0;
+    opacity: 1;
+  }
+
+  100% {
+    left: 0;
+    top: 0;
+    z-index: 0;
+    background: #DDD;
+    opacity: 0;
+  }
+}
+
 #waltz-credential-overlay {
   position: absolute;
   top: 0;
@@ -211,7 +236,6 @@
   z-index: 9999;
   color: #111;
   background: white;
-  font-family: "Gill Sans", "Helvetica Neue", "Helvetica", serif;
   padding: 20px;
   font-size: 20px;
   font-weight: 100;

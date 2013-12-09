@@ -2336,8 +2336,8 @@ select {
 
 button, .button {
   cursor: pointer;
-  font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  font-weight: normal;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
   line-height: normal;
   margin: 0 0 1.25rem;
   position: relative;
@@ -2360,7 +2360,7 @@ button, .button {
   padding-bottom: 1rem;
   -webkit-appearance: none;
   border: none;
-  font-weight: normal !important;
+  font-weight: 700 !important;
 }
 button:hover, button:focus, .button:hover, .button:focus {
   background-color: #0079a1;

@@ -2336,8 +2336,8 @@ select {
 
 button, .button {
   cursor: pointer;
-  font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  font-weight: normal;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
   line-height: normal;
   margin: 0 0 1.25rem;
   position: relative;
@@ -2360,7 +2360,7 @@ button, .button {
   padding-bottom: 1rem;
   -webkit-appearance: none;
   border: none;
-  font-weight: normal !important;
+  font-weight: 700 !important;
 }
 button:hover, button:focus, .button:hover, .button:focus {
   background-color: #0079a1;
@@ -6528,6 +6528,31 @@ th.hide-for-touch {
   display: table-cell !important;
 }
 
+@-webkit-keyframes slide-behind {
+  0% {
+    left: 0;
+    top: 0;
+  }
+
+  50% {
+    left: -700px;
+    top: -50px;
+  }
+
+  70% {
+    z-index: 0;
+    opacity: 1;
+  }
+
+  100% {
+    left: 0;
+    top: 0;
+    z-index: 0;
+    background: #DDD;
+    opacity: 0;
+  }
+}
+
 body, html {
   font-family: "Open Sans", "Helvetica Neue", sans-serif;
 }
@@ -6549,6 +6574,168 @@ header h1 {
 }
 header h2 {
   color: #888;
+}
+
+.tutorial-slides {
+  width: 100%;
+  height: 100%;
+  background: #6586bf;
+  transition: 1s background;
+  display: block;
+}
+.tutorial-slides.site-setup {
+  background: #6586bf;
+}
+.tutorial-slides.text {
+  background: #00c377;
+}
+.tutorial-slides.phone-setup {
+  background: #8a7aad;
+}
+.tutorial-slides.welcome {
+  background: #6586bf;
+}
+.tutorial-slides .waltz-logo {
+  width: 100px;
+  margin: auto;
+  padding: 20px 0;
+  display: block;
+}
+.tutorial-slides .slides {
+  width: 600px;
+  height: 500px;
+  margin: auto;
+  position: relative;
+}
+.tutorial-slides .slides .previous {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: #DDD;
+}
+.tutorial-slides .slides .previous:before {
+  position: relative;
+  top: 1px;
+  margin-right: 5px;
+}
+.tutorial-slides .slides .previous:hover:before {
+  left: -2px;
+}
+.tutorial-slides .slide {
+  height: 100%;
+  width: 100%;
+  background: white;
+  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.3);
+  padding: 50px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.tutorial-slides .slide h1 {
+  font-weight: 100;
+  margin-bottom: 30px;
+}
+.tutorial-slides .slide p {
+  font-size: 1.9em;
+  font-weight: 100;
+  line-height: 1.1em;
+}
+.tutorial-slides .slide p:first-child {
+  margin-top: 30px;
+}
+.tutorial-slides .slide.removed {
+  -webkit-animation-name: slide-behind;
+  -webkit-animation-duration: 500ms;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: forwards;
+}
+.tutorial-slides .slide .have-app {
+  position: absolute;
+  bottom: 85px;
+  right: 50px;
+  color: #CCC;
+}
+.tutorial-slides .slide .have-app:hover {
+  color: #BBB;
+}
+.tutorial-slides .slide .button {
+  font-weight: 500;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  margin-bottom: 0;
+}
+.tutorial-slides .slide .button.blue {
+  background: #0d9dda;
+  box-shadow: 3px 3px 0 0 #0a7aaa;
+}
+.tutorial-slides .slide .button.blue:hover {
+  box-shadow: 2px 2px 0 0 #0a7aaa;
+}
+.tutorial-slides .slide .button.blue:active {
+  box-shadow: 1px 1px 0 0 #0a7aaa;
+}
+.tutorial-slides .slide .button:after {
+  content: " ";
+  position: absolute;
+  display: block;
+  border: 5px solid transparent;
+  right: 5px;
+  top: 43%;
+  border-left: 5px solid white;
+}
+.tutorial-slides .slide .site-start {
+  height: 150px;
+  width: 150px;
+  display: block;
+  float: left;
+  background: blue;
+  margin-top: 30px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 10px;
+  position: relative;
+}
+.tutorial-slides .slide .site-start:before {
+  display: block;
+  margin: auto;
+  font-size: 100px;
+}
+.tutorial-slides .slide .site-start.twitter {
+  background: #00bef9;
+  box-shadow: 3px 3px 0 0 #0097c6;
+}
+.tutorial-slides .slide .site-start.twitter:hover {
+  box-shadow: 2px 2px 0 0 #0097c6;
+}
+.tutorial-slides .slide .site-start.twitter:active {
+  box-shadow: 1px 1px 0 0 #0097c6;
+}
+.tutorial-slides .slide .site-start.facebook {
+  background: #43619f;
+  box-shadow: 3px 3px 0 0 #344b7b;
+}
+.tutorial-slides .slide .site-start.facebook:hover {
+  box-shadow: 2px 2px 0 0 #344b7b;
+}
+.tutorial-slides .slide .site-start.facebook:active {
+  box-shadow: 1px 1px 0 0 #344b7b;
+}
+.tutorial-slides .slide .site-start.github {
+  background: #201e1f;
+  box-shadow: 3px 3px 0 0 #060505;
+}
+.tutorial-slides .slide .site-start.github:hover {
+  box-shadow: 2px 2px 0 0 #060505;
+}
+.tutorial-slides .slide .site-start.github:active {
+  box-shadow: 1px 1px 0 0 #060505;
+}
+.tutorial-slides .slide iframe {
+  overflow: hidden;
 }
 
 .sites-list {
