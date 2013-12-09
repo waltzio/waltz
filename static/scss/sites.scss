@@ -1,223 +1,37 @@
-@import "_settings.scss";
-@import "../foundation/scss/foundation.scss";
-@import "_mixins";
-@import "_animations";
+@import "_settings";
 
-
-$background-color-one: #6586BF;
-$background-color-two: #8A7AAD;
-$background-color-three: #00C377;
-
-body, html {
-    font-family: "Open Sans", "Helvetica Neue", sans-serif;
-    * {
+#sites {
+    font-family: $font-family;
+    & > * {
         font-family: inherit;
     }
-    h1, h2, h3, h4, h5, h6 {
-        font-weight: bold;
-    }
 
-    .clear {
-        clear: both;
-    }
-}
-
-header {
-    text-align: center;
-    h1 {
-        font-size: 60px;
-    }
-    h2 {
-        color: #888;
-    }
-}
-
-.tutorial-slides {
-    width: 100%;
-    height: 100%;
-    background: $background-color-one;
-    transition: 1s background;
-    display: block;
-
-    &.site-setup {
-        background: $background-color-one;
-    }
-
-    &.text {
-        background: $background-color-three;
-    }
-
-    &.phone-setup {
-        background: $background-color-two;
-    }
-
-    &.welcome {
-        background: $background-color-one;
-    }
-
-
-    .waltz-logo {
-        width: 100px;
-        margin: auto;
-        padding: 20px 0;
-        display: block;
-    }
-
-
-    .slides {
-        width: $slide-height;
-        height: $slide-width;
-        margin: auto;
-        position: relative;
-
-        .previous {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            color: #DDD;
-            &:before {
-                position: relative;
-                top: 1px; 
-                margin-right: 5px;
-            }
-            &:hover {
-                &:before {
-                    left: -2px;
-                }
-            }
-        }
-    }
-
-    .slide {
-        height: 100%;
-        width: 100%;
-        background: white;
-        box-shadow: 5px 5px 0 0 rgba(0,0,0, .3);
-        padding: 50px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-
-        h1 {
-            font-weight: 100;
-            margin-bottom: 30px;
-        }
-
-        p {
-            font-size: 1.9em;
-            font-weight: 100;
-            line-height: 1.1em;
-            &:first-child {
-                margin-top: 30px;
-            }
-        }
-
-        &.removed {
-            -webkit-animation-name: slide-behind;
-            -webkit-animation-duration: 500ms;
-            -webkit-animation-iteration-count: 1;
-            -webkit-animation-timing-function: ease-in-out;
-            -webkit-animation-fill-mode: forwards;
-        }
-
-        .have-app {
-            position: absolute;
-            bottom: 85px;
-            right: 50px;
-            color: #CCC;
-            &:hover {
-                color: #BBB;
-            }
-        }
-
-        .button {
-            font-weight: 500;
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            margin-bottom: 0;
-            &.blue {
-                $color: #0D9DDA;
-                background: $color;
-                @include button-shadow($color);
-            }
-
-            &:after {
-                $arrow-size: 5px;
-                content: " ";
-                position: absolute;
-                display: block;
-                border: $arrow-size solid transparent;
-                right: 5px;
-                top: 43%;
-                border-left: $arrow-size solid white;
-            }
-        }
-
-        .site-start {
-            $size: 150px;
-            height: $size;
-            width: $size;
-            display: block;
-            float: left;
-            background: blue;
-            margin-top: 30px;
-
-            color: white;
+    header {
+        h1, h2 {
             text-align: center;
-            font-weight: bold;
-            padding-top: 10px;
+        }
+    }
+    
+
+    .sites-list {
+        padding: 0;
+        text-align: center;
+        a {
+            display: block;
             position: relative;
-
-            &:before {
-                display: block;
-                margin: auto;
-                font-size: 100px;
+            &.completed {
+                opacity: .3;
             }
-
-            &.twitter {
-                $color: #00BEF9;
-                background: $color;
-                @include button-shadow($color);
+            li {
+                width: 25%;
+                float: left;
+                margin: 40px 0;
+                &:hover {
+                    background: #EEE;
+                }
+                padding-bottom: 20px;
             }
-
-            &.facebook {
-                $color: #43619F;
-                background: $color;
-                @include button-shadow($color);
-            }
-
-            &.github {
-                $color: #201E1F;
-                background: $color;
-                @include button-shadow($color);
-            }
-        }
-
-        iframe {
-            overflow: hidden;
         }
     }
 }
 
-.sites-list {
-    padding: 0;
-    text-align: center;
-    a {
-        display: block;
-        position: relative;
-        &.completed {
-            opacity: .3;
-        }
-        li {
-            width: 25%;
-            float: left;
-            margin: 40px 0;
-            &:hover {
-                background: #EEE;
-            }
-            padding-bottom: 20px;
-        }
-    }
-}

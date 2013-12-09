@@ -49,9 +49,12 @@ Sites.prototype.redirectToSite = function(e) {
     var $a = $(e.currentTarget), 
         siteKey = $a.data('site-key');
 
-    this.storage.setOnboardingSiteKey(siteKey, 'forceTutorial', true, function() {
+    chrome.runtime.sendMessage({
+        method: 'forceTutorial',
+        key: siteKey
+    }, function() {
         window.location = $a.attr('href');
-    })
+    });
 };
 
 var sites = new Sites();

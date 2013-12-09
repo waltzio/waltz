@@ -203,7 +203,7 @@
 		});
 
 		$iframe.on('load', function() {
-			$iframe[0].contentWindow.postMessage(null, _this.options.cyHost);
+			$iframe[0].contentWindow.postMessage(null, '*');
 		});
 	}
 
@@ -514,7 +514,6 @@
 		var $waltzCircle = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
 		var $waltzActions = $(
 			"<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
-			+"<button style='background-image:url("+pSource+");' class='waltz-button waltz-edit'></button>"
 			);
 
 		$widget.append($waltzCircle, $waltzActions);
@@ -537,16 +536,6 @@
             });
 
 			_this.hideWidget({ remove: true });
-		});
-
-		$widget.find(".waltz-edit").click(function(e) {
-			e.stopPropagation();
-
-			_this.hideWidget();
-
-			_this.checkAuthentication(function() {
-				_this.requestCredentials();
-			});
 		});
 
 		$("body").append($widget);

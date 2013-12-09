@@ -1,0 +1,30 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
+#sites {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+}
+#sites > * {
+  font-family: inherit;
+}
+#sites header h1, #sites header h2 {
+  text-align: center;
+}
+#sites .sites-list {
+  padding: 0;
+  text-align: center;
+}
+#sites .sites-list a {
+  display: block;
+  position: relative;
+}
+#sites .sites-list a.completed {
+  opacity: .3;
+}
+#sites .sites-list a li {
+  width: 25%;
+  float: left;
+  margin: 40px 0;
+  padding-bottom: 20px;
+}
+#sites .sites-list a li:hover {
+  background: #EEE;
+}

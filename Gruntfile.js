@@ -26,8 +26,9 @@ grunt.initConfig({
       files: {                         // Dictionary of files
         'static/css/waltz.css': 'static/scss/waltz.scss',
         'static/css/options.css': 'static/scss/options.scss',
+        'static/css/popup.css': 'static/scss/popup.scss',
         'static/css/tutorial.css': 'static/scss/tutorial.scss',
-        'static/css/popup.css': 'static/scss/popup.scss'
+        'static/css/sites.css': 'static/scss/sites.scss'
       }
     }
   },

@@ -53,7 +53,10 @@
             var $a = $(e.currentTarget), 
                 siteKey = $a.text().toLowerCase();
 
-            this.storage.setOnboardingSiteKey(siteKey, 'forceTutorial', true, function() {
+            chrome.runtime.sendMessage({
+                method: 'forceTutorial',
+                key: siteKey
+            }, function() {
                 window.location = $a.attr('href');
             });
         }
