@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
 meta.foundation-mq-small {
   font-family: "/only screen and (max-width: 40em)/";
@@ -6549,7 +6550,16 @@ th.hide-for-touch {
     top: 0;
     z-index: 0;
     background: #DDD;
-    opacity: 0;
+  }
+}
+
+@-webkit-keyframes pulse {
+  0%, 10%, 20%, 30%, 100% {
+    -webkit-transform: scale(1, 1);
+  }
+
+  5%, 15%, 25% {
+    -webkit-transform: scale(1.15, 1.15);
   }
 }
 
@@ -6587,7 +6597,7 @@ header h2 {
   background: #6586bf;
 }
 .tutorial-slides.text {
-  background: #00c377;
+  background: #78cf7e;
 }
 .tutorial-slides.phone-setup {
   background: #8a7aad;
@@ -6736,25 +6746,4 @@ header h2 {
 }
 .tutorial-slides .slide iframe {
   overflow: hidden;
-}
-
-.sites-list {
-  padding: 0;
-  text-align: center;
-}
-.sites-list a {
-  display: block;
-  position: relative;
-}
-.sites-list a.completed {
-  opacity: .3;
-}
-.sites-list a li {
-  width: 25%;
-  float: left;
-  margin: 40px 0;
-  padding-bottom: 20px;
-}
-.sites-list a li:hover {
-  background: #EEE;
 }

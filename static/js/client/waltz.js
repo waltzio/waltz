@@ -526,7 +526,6 @@
 		var $waltzCircle = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
 		var $waltzActions = $(
 			"<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
-			+"<button style='background-image:url("+pSource+");' class='waltz-button waltz-edit'></button>"
 			);
 
 		$widget.append($waltzCircle, $waltzActions);
@@ -543,16 +542,6 @@
 			e.stopPropagation();
 
 			_this.hideWidget({ remove: true });
-		});
-
-		$widget.find(".waltz-edit").click(function(e) {
-			e.stopPropagation();
-
-			_this.hideWidget();
-
-			_this.checkAuthentication(function() {
-				_this.requestCredentials();
-			});
 		});
 
 		$("body").append($widget);
@@ -624,7 +613,7 @@
         var $message = Message.getMessage();
 
         var $widget = this.$widget;
-        var text = "<p>Waltz needs to set a cookie to log you in.</p><br /><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> using <code>[*.]waltz.io</code> as the domain.</p>";
+        var text = "<p>Waltz needs to set a cookie to log you in.</p><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> using <code>[*.]waltz.io</code> as the domain.</p>";
 
         $message.find('p').html(text);
 

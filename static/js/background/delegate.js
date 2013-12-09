@@ -311,10 +311,16 @@ Delegate.prototype.logout = function(opts) {
 	});
 }
 
-Delegate.prototype.logOutOfSite = function(opts) {
+Delegate.prototype.logOutOfSite = function(opts, cb) {
     var promise = $.Deferred(),
-        domain = opts.domain,
+        domain;
+
+    if (opts.key) {
+        siteConfig = this.getConfigForKey(opts.key);
+        domain = siteConfig.domain;
+    } else {
         siteConfig = this.siteConfigs[domain];
+    }
 
     getCookiesForDomain(domain, function(cookies) {
         var cookie;
@@ -340,9 +346,24 @@ Delegate.prototype.logOutOfSite = function(opts) {
         }
 
         promise.resolve();
+        if (typeof cb === "function") cb();
     });
 
     return promise;
+};
+
+Delegate.prototype.forceTutorial = function(opts, cb) {
+    var _this = this,
+        siteKey = opts.key;
+
+    this.logOutOfSite({
+        key: siteKey
+    }, function() {
+        _this.storage.setOnboardingSiteKey(siteKey, 'forceTutorial', true);
+        if (typeof cb === "function") cb(true);
+    });
+
+    return true;
 };
 
 Delegate.prototype.saveCredentials = function(domain_key, username, password, cb) {
@@ -405,6 +426,18 @@ Delegate.prototype.openNewTab = function(request, cb) {
     chrome.tabs.create({url: request.url});
     if (typeof cb === "function") cb();
 };
+
+Delegate.prototype.getConfigForKey = function(key) {
+    for (domain in this.siteConfigs) {
+        if (this.siteConfigs[domain].key === key) {
+            var config = this.siteConfigs[domain];
+            config['domain'] = domain;
+            return config;
+        }
+    }
+
+    return false;
+}
 
 Delegate.prototype.initialize = function(data, callback) {
 	var url = data.location.href.split('#')[0];

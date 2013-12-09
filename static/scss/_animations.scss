@@ -19,6 +19,17 @@ $slide-behind-top: -50px;
         top: 0;
         z-index: 0;
         background: #DDD;
-        opacity: 0;
+    }
+}
+
+
+$scale-size: 1.15;
+@-webkit-keyframes pulse {
+    0%, 10%, 20%, 30%, 100% {
+        -webkit-transform: scale(1, 1);
+    }
+
+    5%, 15%, 25% {
+        -webkit-transform: scale($scale-size, $scale-size);
     }
 }

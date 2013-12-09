@@ -1,7 +1,6 @@
 Onboarder.prototype.defaults = {};
 
-Onboarder.prototype.MESSAGE_CONTAINER_ID = 'waltz-onboarding-message-container';
-Onboarder.prototype.MESSAGE_OFFSET = 20;
+Onboarder.prototype.MESSAGE_OFFSET = 15;
 
 function Onboarder(waltz) {
     this.waltz = waltz;
@@ -110,22 +109,10 @@ Onboarder.prototype.loginSuccess = function() {
 
         $message.slideDown();
     } else {
-        var $message = this.getMessage();
-
-        $message.find('p').html("Wooo! You're all set up on " + this.options.site.config.name + ". <b>Click me to setup some more sites</b>!");
-
-        $message.attr('class', 'bottom click');
-
-        $message.click(function() {
-            $message.off('click');
-            $message.slideUp();
-            chrome.runtime.sendMessage({
-                method: "openNewTab",
-                url: chrome.extension.getURL("html/sites.html")
-            });
+        chrome.runtime.sendMessage({
+            method: "openNewTab",
+            url: chrome.extension.getURL("html/sites.html")
         });
-
-        $message.slideDown();
     }
 
 }
@@ -165,7 +152,7 @@ Onboarder.prototype.showWidget = function() {
 
         $message.css({
             right: parseInt($widget.css('right')) + $widget.width() + _this.MESSAGE_OFFSET,
-            bottom: parseInt($widget.css('bottom')) - $message.height() / 2
+            top: parseInt($widget.css('top')) - $message.height() / 2 + $widget.height() / 2
         });
 
         $message.fadeIn();
@@ -219,7 +206,7 @@ Onboarder.prototype.showIFrame = function() {
 
     $message.css({
         left: $(window).width() / 2 - $message.width() / 2 - parseInt($message.css('padding-left')),
-        top: '10px'
+        top: '5px'
     });
 
     $message.fadeIn();
