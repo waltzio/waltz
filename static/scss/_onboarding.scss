@@ -29,26 +29,27 @@
 
 #waltz-onboarding-message {
     $color: white;
+    $border-color: #111;
+    font-family: $font-family;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
     display: none;
     z-index: 9999;
     color: #111;
     background: $color;
-    padding: 20px;
-    font-size: 20px;
-    font-weight: 100;
-    width: 240px;
-    border: 1px solid $color;
-    line-height: 1.1em;
+    padding: 0;
+    width: 280px;
+    border: 2px solid $border-color;
+    border-radius: 5px;
 
     p {
-        margin: 0;
+        margin: 20px;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 1.2em;
     }
 
     &.floating {
         position: absolute;
-        -webkit-animation: wiggle 1s 3;
-        animation: wiggle 1s 3;
-
 
         &.fixed {
             position: fixed;
@@ -56,30 +57,70 @@
 
 
         $arrow-size: 10px;
-        &:after {
+        &:after, &:before {
             content: " ";
             position: absolute;
             border: $arrow-size solid transparent;
+            height: 0;
+            width: 0;
+            pointer-events: none;
         }
         &.right-arrow {
+            // &:after {
+            //     right: -$arrow-size - 10px;
+            //     top: 25%;
+            //     border-left: $arrow-size solid $color;
+            // }
+
+            &:after, &:before {
+                left: 100%;
+                top: 50%;
+            }
+
             &:after {
-                right: -$arrow-size - 10px;
-                top: 25%;
-                border-left: $arrow-size solid $color;
+                border-left-color: $color;
+                border-width: $arrow-size;
+                margin-top: -$arrow-size;
+            }
+            &:before {
+                border-left-color: $border-color;
+                border-width: $arrow-size + 3;
+                margin-top: -($arrow-size + 3);
             }
         }
         &.top-arrow {
+            &:after, &:before {
+                left: 50%;
+                bottom: 100%;
+            }
+
             &:after {
-                right: 50%;
-                top: -$arrow-size - 10px;
-                border-bottom: $arrow-size solid $color;
+                border-bottom-color: $color;
+                border-width: $arrow-size;
+                margin-left: -$arrow-size;
+            }
+            &:before {
+                border-bottom-color: $border-color;
+                border-width: $arrow-size + 3;
+                margin-left: -($arrow-size + 3);
             }
         }
         &.bottom-arrow {
+
+            &:after, &:before {
+                left: 50%;
+                top: 100%;
+            }
+
             &:after {
-                right: 50%;
-                bottom: -$arrow-size - 10px;
-                border-top: $arrow-size solid $color;
+                border-top-color: $color;
+                border-width: $arrow-size;
+                margin-left: -$arrow-size;
+            }
+            &:before {
+                border-top-color: $border-color;
+                border-width: $arrow-size + 3;
+                margin-left: -($arrow-size + 3);
             }
         }
     }
@@ -104,13 +145,15 @@
         top: 0;
         left: 3px;
         position: absolute;
-        color: #CCC;
+        color: #111;
         font-size: 20px;
         text-align: center;
         cursor: pointer;
+        font-weight: 700;
+        line-height: 1;
 
         &:hover {
-            color: #AAA;
+            color: #444;
         }
     }
 }

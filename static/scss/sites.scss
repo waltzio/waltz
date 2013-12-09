@@ -1,20 +1,37 @@
-.sites-list {
-    padding: 0;
-    text-align: center;
-    a {
-        display: block;
-        position: relative;
-        &.completed {
-            opacity: .3;
+@import "_settings";
+
+#sites {
+    font-family: $font-family;
+    & > * {
+        font-family: inherit;
+    }
+
+    header {
+        h1, h2 {
+            text-align: center;
         }
-        li {
-            width: 25%;
-            float: left;
-            margin: 40px 0;
-            &:hover {
-                background: #EEE;
+    }
+    
+
+    .sites-list {
+        padding: 0;
+        text-align: center;
+        a {
+            display: block;
+            position: relative;
+            &.completed {
+                opacity: .3;
             }
-            padding-bottom: 20px;
+            li {
+                width: 25%;
+                float: left;
+                margin: 40px 0;
+                &:hover {
+                    background: #EEE;
+                }
+                padding-bottom: 20px;
+            }
         }
     }
 }
+
