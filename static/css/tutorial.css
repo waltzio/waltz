@@ -6549,7 +6549,6 @@ th.hide-for-touch {
     top: 0;
     z-index: 0;
     background: #DDD;
-    opacity: 0;
   }
 }
 
@@ -6587,7 +6586,7 @@ header h2 {
   background: #6586bf;
 }
 .tutorial-slides.text {
-  background: #00c377;
+  background: #78cf7e;
 }
 .tutorial-slides.phone-setup {
   background: #8a7aad;
@@ -6736,25 +6735,4 @@ header h2 {
 }
 .tutorial-slides .slide iframe {
   overflow: hidden;
-}
-
-.sites-list {
-  padding: 0;
-  text-align: center;
-}
-.sites-list a {
-  display: block;
-  position: relative;
-}
-.sites-list a.completed {
-  opacity: .3;
-}
-.sites-list a li {
-  width: 25%;
-  float: left;
-  margin: 40px 0;
-  padding-bottom: 20px;
-}
-.sites-list a li:hover {
-  background: #EEE;
 }
