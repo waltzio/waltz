@@ -529,10 +529,10 @@
 
 		$widget.find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
-            storage.getOptionsForDomain(_this.options.site.config.key, function(options) {
-                options = options || { dismissals: 1};
+            _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(options) {
+                options = options || { dismissals: 0};
                 options.dismissals += 1;
-                storage.setOptionsForDomain(_this.options.site.config.key, options);
+                _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, options);
                 _this.trigger('dismiss.widget', { dismissals: options.dismissals });
             });
 
