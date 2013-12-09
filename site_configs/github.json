@@ -10,10 +10,7 @@
             "method": "POST",
             "usernameField": "login",
             "passwordField": "password",
-            "other": {
-                "url": "https://github.com/login",
-                "fields": ["authenticity_token"]
-            },
+            "hasHiddenInputs": true,
             "check": "a#logout",
             "twoFactor": [
                 {

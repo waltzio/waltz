@@ -10,10 +10,7 @@
             "method": "POST",
             "usernameField": "session[username_or_email]",
             "passwordField": "session[password]",
-            "other": {
-                "url": "https://twitter.com/login",
-                "fields": ["authenticity_token"]
-            },
+            "hasHiddenInputs": true,
             "check": "button:contains('Sign out'), input:contains('Sign out')",
             "twoFactor": [
                 {

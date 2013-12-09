@@ -1,0 +1,23 @@
+{
+    "*://*.linkedin.com/*": {
+        "name": "LinkedIn",
+        "logout": {
+            "cookies": ["li_at"]
+        },
+        "login": {
+            "urls": ["https://www.linkedin.com/", "https://www.linkedin.com/uas/login"],
+            "formURL": "https://www.linkedin.com/uas/login-submit",
+            "method": "POST",
+            "usernameField": "session_key",
+            "passwordField": "session_password",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Sign Out')",
+            "exclude": {
+                "forcedRedirectURLs" : [],
+                "nextURLs": []
+            }
+        }
+    }
+}
+
+

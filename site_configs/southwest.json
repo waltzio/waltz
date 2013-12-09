@@ -1,0 +1,22 @@
+{
+    "*://*.southwest.com/*": {
+        "name": "Southwest",
+        "logout": {
+            "cookies": ["token"]
+        },
+        "login": {
+            "urls": ["http://www.southwest.com/"],
+            "formURL": "https://www.southwest.com/flight/login?loginEntryPoint=RIGHT_NAV",
+            "method": "POST",
+            "usernameField": "credential",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "input[type='submit'][value='Logout']",
+            "exclude": {
+                "forcedRedirectURLs" : ["http://www.southwest.com/"],
+                "nextURLs": []
+            }
+        }
+    }
+}
+

@@ -14,10 +14,7 @@
             "method": "POST",
             "usernameField": "Email",
             "passwordField": "Passwd",
-            "other": {
-                "url": "https://accounts.google.com/ServiceLoginAuth",
-                "fields": ["GALX"]
-            },
+            "hasHiddenInputs": true,
             "check": "a#gb_71",
             "twoFactor": [
                 {
@@ -41,10 +38,7 @@
             "method": "POST",
             "usernameField": "Email",
             "passwordField": "Passwd",
-            "other": {
-                "url": "https://accounts.google.com/ServiceLoginAuth",
-                "fields": ["GALX"]
-            },
+            "hasHiddenInputs": true,
             "check": "div#yt-masthead-user",
             "twoFactor": [
                 {
