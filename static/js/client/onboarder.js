@@ -1,8 +1,6 @@
 Onboarder.prototype.defaults = {};
 
-Onboarder.prototype.MESSAGE_ID = 'waltz-onboarding-message';
 Onboarder.prototype.MESSAGE_CONTAINER_ID = 'waltz-onboarding-message-container';
-Onboarder.prototype.DISMISS_ID = 'waltz-onboarding-dismiss';
 Onboarder.prototype.MESSAGE_OFFSET = 20;
 
 function Onboarder(waltz) {
@@ -234,7 +232,6 @@ Onboarder.prototype.hideToolTips = function() {
 };
 
 Onboarder.prototype.dismiss = function() {
-    this.hideToolTips();
     this.storage.setOnboardingKey("dismissed", true);
     this.dismissed = true;
 };
@@ -242,14 +239,8 @@ Onboarder.prototype.dismiss = function() {
 Onboarder.prototype.getMessage = function() {
     if (this.$message) return this.$message; 
 
-    var $dismisser = $("<div id='" + this.DISMISS_ID + "'>&times;</div>");
-
-    this.$message = $("<div id='" + this.MESSAGE_ID + "'></div>");
-    this.$message.append("<p></p>", $dismisser);
-
-    $('body').append(this.$message);
-
-    $dismisser.click(this.dismiss.bind(this));
+    this.$message = Message.getMessage();
+    this.$message.on('dismiss', this.dismiss.bind(this)); 
 
     return this.$message;
 }

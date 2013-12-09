@@ -22,6 +22,7 @@
 
 		this.options = opts;
 		this.onboarder = new Onboarder(this);
+        this.thirdPartyCookiesChecked = $.Deferred();
 
 		var _this = this,
 			page = this.checkPage();
@@ -127,9 +128,11 @@
 	
 
 				window.addEventListener('message', _this.closeIFrame.bind(_this));
+				window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
         	});
         }
 	}
+
 
 	Waltz.prototype.acknowledgeLoginAttempt = function(opts) {
 		if (this.options.currentLogin) {
@@ -201,18 +204,10 @@
 			display: 'none',
 			"z-index": 9995
 		});
-
-		$iframe.on('load', function() {
-			$iframe[0].contentWindow.postMessage(null, _this.options.cyHost);
-		});
 	}
 
 	Waltz.prototype.logIn = function(cb) {
 		var _this = this;
-
-		if (!this.iframe) {
-			this.loadIFrame();
-		}
 
         this.iframe.ready(function() {
             _this.iframe[0].contentWindow.postMessage({ method: "loadClef"}, _this.options.cyHost);
@@ -243,6 +238,13 @@
 		}
 	}
 
+    Waltz.prototype.thirdPartyCookiesCheck = function(e) {
+        if (e.origin == this.options.cyHost) {
+			if (e.data && e.data.method == "thirdPartyCookies" && this.iframe) {
+               this.thirdPartyCookiesChecked.resolve(e.data.enabled);
+            }
+        }
+    }
 
 	Waltz.prototype.decryptAndLogIn = function() {
 		var _this = this;
@@ -482,15 +484,25 @@
 		var _this = this;
 
         var attemptLogin = function() {
-			_this.checkAuthentication(function() {
-				if (_this.loginCredentials) {
-					_this.decryptAndLogIn();
-				} else {
-					_this.requestCredentials();
-				}
-			});
-
-			setTimeout(_this.hideWidget.bind(_this), 0);
+            if (!_this.iframe) {
+                _this.loadIFrame();
+            }
+            $.when(_this.thirdPartyCookiesChecked).then(function(enabled) {
+                if (enabled) {
+                    _this.checkAuthentication(function() {
+                        if (_this.loginCredentials) {
+                            _this.decryptAndLogIn();
+                        } else {
+                            _this.requestCredentials();
+                        }
+                    });
+                    setTimeout(_this.hideWidget.bind(_this), 0);
+                }
+                else {
+                    _this.showThirdPartyCookieMessage();
+                    $waltzCircle.one('click', attemptLogin);
+                }
+            });
         }
 
 		if (this.$widget) {
@@ -606,5 +618,25 @@
 			var waltz = new Waltz(options);
 		});
 	});
+
+    Waltz.prototype.showThirdPartyCookieMessage = function() {
+        var _this = this;
+        var $message = Message.getMessage();
+
+        var $widget = this.$widget;
+        var text = "<p>Waltz needs to set a cookie to log you in.</p><br /><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> using <code>[*.]waltz.io</code> as the domain.</p>";
+
+        $message.find('p').html(text);
+
+        $message.attr('class', 'right-arrow floating fixed');
+        $message.attr('style', '');
+
+        $message.css({
+            right: parseInt($widget.css('right')) + $widget.width() + _this.onboarder.MESSAGE_OFFSET,
+            bottom: parseInt($widget.css('bottom')) 
+        });
+
+        $message.fadeIn();
+    }
 
 }).call(this, jQuery);
