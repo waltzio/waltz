@@ -10,11 +10,12 @@
             "method": "POST",
             "usernameField": "u",
             "passwordField": "p",
-            "other": {
-                "url": "https://news.ycombinator.com/newslogin",
-                "fields": ["fnid"]
-            },
-            "check": "a:contains('logout')"
+            "hasHiddenInputs": true,
+            "check": "a:contains('logout')",
+            "exclude": {
+                "forcedRedirectURLs": ["https://news.ycombinator.com/x"],
+                "nextURLs": ["https://news.ycombinator.com/x"]
+            }
         }
     }
 }

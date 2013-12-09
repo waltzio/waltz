@@ -1,23 +1,63 @@
 <html>
 <head>
   <title>Waltz Tutorial</title>
+  <link rel="stylesheet" href="/static/css/foundation-icons.css" type="text/css" />
   <link rel="stylesheet" href="/static/css/tutorial.css" type="text/css" />
 </head>
 
 <body>
+    <div class="tutorial-slides">
+        <img class="waltz-logo" src="/static/img/waltz-full.png" alt="Waltz">
+        <div class="slides">
+            <div class="slide" id="site-setup">
+                <h1>Awesome!</h1>
+                <p>Where do you want to Waltz first?</p>
+                <ul class="small-block-grid-3">
+                    <li><a href="http://facebook.com" class="site-start facebook fi-social-facebook">Facebook</a></li>
+                    <li><a href="http://twitter.com" class="site-start twitter fi-social-twitter">Twitter</a></li>
+                    <li><a href="http://github.com" class="site-start github fi-social-github">Github</a></li>
+                </ul>
+
+                <a href="#" class="previous fi-arrow-left">previous slide</a>
+            </div>
+            <div class="slide" id="text">
+                <h1>Text yourself a link</h1>
+                <iframe src="https://clef.io/iframes/text" frameborder="0" width="100%" height="200px"></iframe>
+                <a href="" class="button blue next">Okay, got it!</a>
+                <a href="#" class="previous fi-arrow-left">previous slide</a>
+            </div>
+            <div class="slide" id="phone-setup">
+                <h1>Setup your phone</h1>
+                <p>Waltz recognizes your phone with the Clef app instead of anything you remember or type.</p>
+                <p>First things first, we'll text you a link to download the Clef app.</p>
+                <a href="#" class="next have-app" data-next="site-setup">I have the app <span class="fi-check"></span></a>
+                <a href="#" class="button blue next">Get the app</a>
+                <a href="#" class="previous fi-arrow-left">previous slide</a>
+            </div>
+            <div class="slide" id="welcome">
+                <h1>Welcome to Waltz</h1>
+                <p>You're 90% of the way to getting rid of your passwords. </p>
+                <p>Let's finish that last 10%.</p>
+                <a href="#" class="button blue next">I'm ready</a>
+            </div>
+        </div>
+    </div>
+
+<!--     
     <header>
         <h1>Welcome to Waltz!</h1>
         <h2>Choose a site below and we'll get started.</h2>
     </header>
+
     <div class="sites-list-container main-content">
         <ul class="sites-list">
             <div class="clear"></div>
         </ul>
     </div>
-
+ -->
     <script src="/static/js/vendor/jquery.min.js"></script>
     <script src="/static/js/shared/storage.js"></script>
-    <script src="/static/js/client/tutorial.js"></script>
+    <script src="/static/js/client/slider.js"></script>
 </body>
 
 </html>

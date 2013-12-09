@@ -123,7 +123,7 @@ Onboarder.prototype.loginSuccess = function() {
             $message.slideUp();
             chrome.runtime.sendMessage({
                 method: "openNewTab",
-                url: chrome.extension.getURL("html/tutorial.html")
+                url: chrome.extension.getURL("html/sites.html")
             });
         });
 

@@ -1,0 +1,23 @@
+{
+    "*://*.wellsfargo.com/*": {
+        "name": "Wells Fargo",
+        "logout": {
+            "cookies": ["COOKIE_SID"]
+        },
+        "login": {
+            "urls": ["https://www.wellsfargo.com/"],
+            "formURL": "https://online.wellsfargo.com/signon",
+            "method": "POST",
+            "usernameField": "userid",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Sign Off')",
+            "exclude": {
+                "forcedRedirectURLs" : ["https://www.wellsfargo.com/"],
+                "nextURLs": []
+            }
+        }
+    }
+}
+
+

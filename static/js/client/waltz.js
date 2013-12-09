@@ -314,27 +314,32 @@
 			        .val( data.username )
 			)
 
-			if (siteConfig.login.other) {
+			if (siteConfig.login.hasHiddenInputs) {
 				var appendInputs = function(data) {
-					var $data = $(data),
-						inputs = $data.find('input');
+					var $data = $(data);
+                    var $login = $data.find('input[name="'+siteConfig.login.usernameField+'"]');
+                    var $inputs = $login.parents('form').find('input');
 
-					inputs = inputs.filter(function(input) { 
+					$inputs = $inputs.filter(function(input) { 
 						return $(this).attr('name') != siteConfig.login.passwordField &&
 							$(this).attr('name') != siteConfig.login.usernameField;
 					});
 
-					form.append(inputs);
+					form.append($inputs);
 					
 					submitForm();
 				}
 
-				if (window.location.href.match(siteConfig.login.other.url)) {
+                var onLoginPage = _.reduce(siteConfig.login.urls, function(memo, url) {
+                    return memo || window.location.href.match(url);
+                }, false);
+
+				if (onLoginPage) {
 					appendInputs(document);
 				} else {
 					chrome.runtime.sendMessage({
 						method: "proxyRequest",
-						url: siteConfig.login.other.url
+						url: siteConfig.login.urls[0]
 					}, appendInputs);
 				}
 			} else {
@@ -474,14 +479,30 @@
 
 	//Draws the waltz widget and binds the interactions
 	Waltz.prototype.showWidget = function(form) {
+		var _this = this;
+
+        var attemptLogin = function() {
+			_this.checkAuthentication(function() {
+				if (_this.loginCredentials) {
+					_this.decryptAndLogIn();
+				} else {
+					_this.requestCredentials();
+				}
+			});
+
+			setTimeout(_this.hideWidget.bind(_this), 0);
+        }
 
 		if (this.$widget) {
-			this.$widget.removeClass('waltz-remove');
-			this.trigger('show.widget');
+            if (this.$widget.hasClass('waltz-remove')) {
+                this.$widget.removeClass('waltz-remove');
+                var $waltzCircle = $('#'+this.MAIN_BUTTON_ID);
+                $waltzCircle.one('click', attemptLogin);
+                this.trigger('show.widget');
+            }
 			return;
 		} 
 
-		var _this = this;
 
 		//Grab image resource URLs from extensions API
 		var wSource = chrome.extension.getURL("/static/img/waltz-128.png");
@@ -504,17 +525,7 @@
 
 		$(document).ready(this.loadIFrame.bind(this));
 
-		$waltzCircle.click(function() {
-			_this.checkAuthentication(function() {
-				if (_this.loginCredentials) {
-					_this.decryptAndLogIn();
-				} else {
-					_this.requestCredentials();
-				}
-			});
-
-			setTimeout(_this.hideWidget.bind(_this), 0);
-		});
+        $waltzCircle.one('click', attemptLogin);
 
 		$widget.find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
