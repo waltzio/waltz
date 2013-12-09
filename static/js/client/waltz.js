@@ -316,15 +316,16 @@
 
 			if (siteConfig.login.hasHiddenInputs) {
 				var appendInputs = function(data) {
-					var $data = $(data),
-						inputs = $data.find('input');
+					var $data = $(data);
+                    var $login = $data.find('input[name="'+siteConfig.login.usernameField+'"]');
+                    var $inputs = $login.parents('form').find('input');
 
-					inputs = inputs.filter(function(input) { 
+					$inputs = $inputs.filter(function(input) { 
 						return $(this).attr('name') != siteConfig.login.passwordField &&
 							$(this).attr('name') != siteConfig.login.usernameField;
 					});
 
-					form.append(inputs);
+					form.append($inputs);
 					
 					submitForm();
 				}
