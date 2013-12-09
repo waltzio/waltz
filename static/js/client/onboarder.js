@@ -152,7 +152,7 @@ Onboarder.prototype.showWidget = function() {
 
         $message.css({
             right: parseInt($widget.css('right')) + $widget.width() + _this.MESSAGE_OFFSET,
-            top: parseInt($widget.css('top')) - $message.height() / 2 + $widget.height() / 2
+            top: parseInt($widget.css('top')) + $widget.height() / 2 - 20
         });
 
         $message.fadeIn();

@@ -613,7 +613,7 @@
         var $message = Message.getMessage();
 
         var $widget = this.$widget;
-        var text = "<p>Waltz needs to set a cookie to log you in.</p><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> using <code>[*.]waltz.io</code> as the domain.</p>";
+        var text = "<p>Waltz needs to set a cookie to log you in.</p><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> and add excpetions for <code>[*.]waltz.io</code> and <code>[*.]clef.io</code>.</p>";
 
         $message.find('p').html(text);
 
@@ -622,7 +622,7 @@
 
         $message.css({
             right: parseInt($widget.css('right')) + $widget.width() + _this.onboarder.MESSAGE_OFFSET,
-            bottom: parseInt($widget.css('bottom')) 
+            top: parseInt($widget.css('top')) + $widget.height() / 2 - 20
         });
 
         $message.fadeIn();

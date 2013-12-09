@@ -259,7 +259,7 @@
 #waltz-onboarding-message p {
   margin: 20px;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.2em;
 }
 #waltz-onboarding-message.floating {
@@ -278,7 +278,7 @@
 }
 #waltz-onboarding-message.floating.right-arrow:after, #waltz-onboarding-message.floating.right-arrow:before {
   left: 100%;
-  top: 50%;
+  top: 20px;
 }
 #waltz-onboarding-message.floating.right-arrow:after {
   border-left-color: white;
