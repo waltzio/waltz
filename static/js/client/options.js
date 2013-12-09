@@ -13,16 +13,13 @@
 			for(key in sites) {
 				var site = sites[key];
 
-				if(key != "options" && key != "waltz_logins" && key != "waltz_tutorial_complete"){ //Options and Waltz_logins don't have username/password pairs
+				var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-key='"+key+"'>"
+						   +"	<h3>"+ key +"</h3>"
+						   +"	<button class='decrypt styled'>Decrypt</button>"
+						   +"	<button class='deleteAccount styled'>Forget</button>";
+						   +"	</li>"
 
-					var html = "<li data-username='"+site.username+"' data-password='"+site.password+"' data-key='"+key+"'>"
-							   +"	<h3>"+key+"</h3>"
-							   +"	<button class='decrypt styled'>Decrypt</button>"
-							   +"	<button class='deleteAccount styled'>Forget</button>";
-							   +"	</li>"
-
-					$(".sites-list").find("ul").append(html);
-				}
+				$(".sites-list").find("ul").append(html);
 			}
 
 			$(".sites-list").find(".decrypt").click(function() {
@@ -34,33 +31,36 @@
 
 				checkAuthentication(function(authed) {
 					if(authed) {
-						chrome.runtime.sendMessage({
-							method: "decrypt",
-							key: key,
-							value: password
-
-						}, function(response) {
-							$(self).remove();
-
-							if(response.error) {
-								alert(response.error);
-								return false;
-							} 
-
-							var decryptedHTML =  "<label for='username'>Username:</label> "
-												+"<input type='text' class='username' value='"+username+"' />"
-												+"<label for='password'>Password:</label> "
-												+"<input type='password' class='toggle password' value='"+response.output+"' />"
-												+"<button class='togglePass closed'></button>"
-												+"<button class='savePass styled'>Save</button>";
-
-							$(parent).find(".deleteAccount").before(decryptedHTML);
-
-						});
+						decryptAndDisplay();
 					} else{
-						loginWithClef();
+						loginWithClef(decryptAndDisplay);
 					}
 				});
+
+				function decryptAndDisplay() {
+					chrome.runtime.sendMessage({
+						method: "decrypt",
+						key: key,
+						value: password
+
+					}, function(response) {
+						$(self).remove();
+
+						if(response.error) {
+							alert(response.error);
+							return false;
+						} 
+
+						var decryptedHTML =  "<label for='username'>Username:</label> "
+											+"<input type='text' class='username' value='"+username+"' />"
+											+"<label for='password'>Password:</label> "
+											+"<input type='password' class='toggle password' value='"+response.output+"' />"
+											+"<button class='togglePass closed'></button>"
+											+"<button class='savePass styled'>Save</button>";
+
+						$(parent).find(".deleteAccount").before(decryptedHTML);
+					});
+				}
 			});
 
 			var options;
@@ -149,7 +149,7 @@
 		});
 	}
 
-	function loginWithClef() {
+	function loginWithClef(callback) {
 		var iFrame = $("<iframe>");
 		$(iFrame).css({
 			position: 'absolute',
@@ -177,6 +177,7 @@
 		addEventListener("message", function(e) {
 			if(e.data.auth) {
 				$(iFrame).fadeOut(200, function() { $(this).remove(); });
+				if (typeof callback === "function") callback();
 			}
 		});
 	}

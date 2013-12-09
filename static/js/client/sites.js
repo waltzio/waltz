@@ -1,4 +1,4 @@
-function Tutorial() {
+function Sites() {
     var configURL = chrome.extension.getURL("build/site_configs.json")
 
     this.storage = new Storage();
@@ -6,7 +6,7 @@ function Tutorial() {
     $.getJSON(configURL, this.init.bind(this));
 }
 
-Tutorial.prototype.init = function(data) {
+Sites.prototype.init = function(data) {
     var _this = this,
         $siteContainer = $('.sites-list'),
         site,
@@ -39,11 +39,11 @@ Tutorial.prototype.init = function(data) {
     _this.attachHandlers();
 };
 
-Tutorial.prototype.attachHandlers = function() {
+Sites.prototype.attachHandlers = function() {
     $('a.go-to-site').click(this.redirectToSite.bind(this));
 };
 
-Tutorial.prototype.redirectToSite = function(e) {
+Sites.prototype.redirectToSite = function(e) {
     e.preventDefault();
 
     var $a = $(e.currentTarget), 
@@ -54,4 +54,4 @@ Tutorial.prototype.redirectToSite = function(e) {
     })
 };
 
-var tutorial = new Tutorial();
+var sites = new Sites();

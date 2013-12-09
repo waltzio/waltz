@@ -1,0 +1,9 @@
+@mixin button-shadow($color, $size:3px) {
+    box-shadow: $size $size 0 0 darken($color, 10%);
+    &:hover {
+        box-shadow: ($size - 1) ($size - 1) 0 0 darken($color, 10%);
+    }
+    &:active {
+        box-shadow: ($size - 2) ($size - 2) 0 0 darken($color, 10%);
+    }
+}

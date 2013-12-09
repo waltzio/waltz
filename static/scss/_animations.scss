@@ -1,0 +1,24 @@
+$slide-behind-padding: 200px;
+$slide-behind-top: -50px;
+@-webkit-keyframes slide-behind {
+    0% {
+        left: 0;
+        top: 0;
+    }
+    50% {
+        left: -$slide-width - $slide-behind-padding;
+        top: $slide-behind-top;
+    }
+    70% {
+        z-index: 0;
+        opacity: 1;
+    }
+
+    100% {
+        left: 0;
+        top: 0;
+        z-index: 0;
+        background: #DDD;
+        opacity: 0;
+    }
+}
