@@ -13,6 +13,8 @@
 	Waltz.prototype.CREDENTIAL_SLIDE_IN_CLASS = "slide-in";
 	Waltz.prototype.CREDENTIAL_LOGOS_ID = "waltz-credential-logos";
 
+	Waltz.prototype.DISMISSAL_THRESHOLD = 3;
+
 
 	function Waltz(opts) {
         // If there are no opts, Waltz is not supported on this site
@@ -131,8 +133,69 @@
 				window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
         	});
         }
+
+        this.on('dismiss.widget', this.widgetDismissed.bind(this));
 	}
 
+    Waltz.prototype.widgetDismissed = function(e, data) {
+        var _this = this;
+        if (data.dismissals > this.DISMISSAL_THRESHOLD) {
+            var $message = Message.getMessage();
+            var text = "Would you like to hide Waltz on " + this.options.site.config.name + " forever?";
+            
+            var $text = $message.find('p');
+            var $widget = this.$widget;
+            $text.html(text);
+
+            var $forever = $("<a class='button' href='#'>hide forever</a>");
+            var $page = $("<a class='button' href='#'>hide for this page</a>");
+            var $cancel = $("<a class='button' href='#'>cancel</a>");
+            $text.append($forever, $page, $cancel);
+
+            $forever.click(function(e) {
+                e.stopPropagation();
+                _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(settings) {
+                    settings.dismissedForever = true;
+                    settings.dismissals = 0;
+                    _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, settings);
+                    $message.find('#'+Message.DISMISS_ID).click();
+                });
+            })
+
+            $page.click(function(e) {
+                e.stopPropagation();
+                _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(settings) {
+                    var pathSettings = settings[window.location.pathname] || {};
+                    pathSettings.dismissed = true;
+                    settings.dismissals = 0;
+                    settings[window.location.pathname] = pathSettings;
+                    _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, settings);
+                    $message.find('#'+Message.DISMISS_ID).click();
+                });
+            })
+
+            $cancel.click(function(e) {
+                e.stopPropagation();
+                _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(settings) {
+                    // Reset dismissals to re-trigger message after
+                    // DISMISSAL_THRESHOLD more tries.
+                    settings.dismissals = 0;
+                    _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, settings);
+                    $message.find('#'+Message.DISMISS_ID).click();
+                });
+            })
+
+            $message.attr('class', 'floating fixed');
+            $message.attr('style', '');
+
+            $message.css({
+                right: this.onboarder.MESSAGE_OFFSET,
+                top: parseInt($widget.css('top')) + $widget.height() / 2 - 40
+            });
+
+            $message.fadeIn();
+        }
+    }
 
 	Waltz.prototype.acknowledgeLoginAttempt = function(opts) {
 		if (this.options.currentLogin) {
@@ -540,6 +603,12 @@
 
 		$widget.find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
+            _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(options) {
+                options = options || { dismissals: 0};
+                options.dismissals += 1;
+                _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, options);
+                _this.trigger('dismiss.widget', { dismissals: options.dismissals });
+            });
 
 			_this.hideWidget({ remove: true });
 		});
@@ -595,19 +664,6 @@
 		return "unknown";
 	}
 
-	Waltz.prototype.trigger = function(eventName, data) {
-		this.router.trigger(eventName, data);
-	}
-
-	chrome.runtime.sendMessage({
-		method: "initialize",
-		location: document.location
-	}, function(options) {
-		$(document).ready(function() {
-			var waltz = new Waltz(options);
-		});
-	});
-
     Waltz.prototype.showThirdPartyCookieMessage = function() {
         var _this = this;
         var $message = Message.getMessage();
@@ -627,5 +683,27 @@
 
         $message.fadeIn();
     }
+
+	Waltz.prototype.trigger = function(eventName, data) {
+		this.router.trigger(eventName, data);
+	}
+
+	Waltz.prototype.on = function(eventName, cb) {
+		this.router.on(eventName, cb);
+	}
+
+	chrome.runtime.sendMessage({
+		method: "initialize",
+		location: document.location
+	}, function(options) {
+		$(document).ready(function() {
+            new Storage().getPrivateSettingsForSite(options.site.config.key, function(settings) {
+                var pathSettings = settings[window.location.pathname];
+                if (!settings.dismissedForever && !(pathSettings && pathSettings.dismissed)) {
+                    var waltz = new Waltz(options);
+                }
+            });
+		});
+	});
 
 }).call(this, jQuery);

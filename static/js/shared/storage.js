@@ -12,10 +12,10 @@ Storage.prototype.CREDENTIALS_KEY = "credentials";
 Storage.prototype.OPTIONS_KEY = "options";
 Storage.prototype.ONBOARDING_KEY = "onboarding";
 Storage.prototype.ONBOARDING_SITES_KEY = "sites";
+Storage.prototype.PRIVATE_SETTINGS_KEY = "private";
 
 Storage.prototype.optionsDefaults = {
-    cy_url: "https://api.waltz.io",
-    tutorialStep: -1
+    cy_url: "https://api.waltz.io"
 };
 
 Storage.prototype.siteOnboardingDefaults = {
@@ -61,11 +61,7 @@ Storage.prototype.setCredentials = function(credentials, cb) {
 
 Storage.prototype.getCredentialsForDomain = function(domain, cb) {
     this.getCredentials(function(credentials) {
-        if(credentials[domain]) {
-            cb(credentials[domain]);
-        } else {
-            cb(false);
-        }
+        cb(credentials[domain] || false);
     });
 }
 
@@ -134,10 +130,60 @@ Storage.prototype.setOptions = function(options, cb) {
     this.set(data, cb);
 }
 
+Storage.prototype.getOptionsForDomain = function(domain, cb) {
+    this.getOptions(function(options) {
+        cb(options[domain] || false);
+    });
+}
+
+Storage.prototype.setOptionsForDomain = function(domain, newOptions, cb) {
+    var _this = this;
+    this.setOption(domain, newOptions, cb);
+}
+
 Storage.prototype.setOption = function(key, value, cb) {
     this.getOptions(function(options) {
         options[key] = value;
         chrome.storage.local.set({options: options}, cb);
+    });
+}
+
+Storage.prototype.getPrivateSettings = function(cb) {
+    var _this = this;
+    this.get(this.PRIVATE_SETTINGS_KEY, function(options) {
+        if(options[_this.PRIVATE_SETTINGS_KEY]) {
+            cb(options[_this.PRIVATE_SETTINGS_KEY]);
+        } else {
+            _this.setPrivateSettings({});
+            cb({});
+        }
+    });
+}
+
+Storage.prototype.setPrivateSettings = function(options, cb) {
+    var data = {};
+    data[this.PRIVATE_SETTINGS_KEY] = options;
+    this.set(data, cb);
+}
+
+Storage.prototype.getPrivateSettingsForSite = function(domain, cb) {
+    this.getPrivateSettings(function(options) {
+        cb(options[domain] || false);
+    });
+}
+
+Storage.prototype.setPrivateSettingsForSite = function(domain, newOptions, cb) {
+    var _this = this;
+    this.setPrivateSetting(domain, newOptions, cb);
+}
+
+Storage.prototype.setPrivateSetting = function(key, value, cb) {
+    var _this = this;
+    this.getPrivateSettings(function(options) {
+        options[key] = value;
+        var save = {};
+        save[_this.PRIVATE_SETTINGS_KEY] = options;
+        _this.set(save, cb);
     });
 }
 
@@ -214,7 +260,6 @@ Storage.prototype.setOnboardingSiteKey = function(siteKey, key, value, cb) {
         _this.setOnboardingSiteData(siteKey, data, cb);
     });
 }
-
 
 Storage.prototype.completeTutorial = function(cb) {
     this.setOption("tutorialStep", -1);
