@@ -6541,24 +6541,6 @@ html, body {
   margin: 0;
 }
 #waltz-popup a.sites {
-  cursor: pointer;
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  font-weight: 700;
-  line-height: normal;
-  margin: 0 0 1.25rem;
-  position: relative;
-  text-decoration: none;
-  text-align: center;
-  display: inline-block;
-  padding-top: 1rem;
-  padding-right: 2rem;
-  padding-bottom: 1.0625rem;
-  padding-left: 2rem;
-  font-size: 1rem;
-  /*     @else                            { font-size: $padding - rem-calc(2); } */
-  background-color: #008cba;
-  border-color: #0079a1;
-  color: white;
   box-shadow: 3px 3px 0 0 #026faa;
   width: 90%;
   margin: 5% auto;
@@ -6567,14 +6549,12 @@ html, body {
   background: #0390dc;
   text-align: left;
   padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
   position: relative;
   padding-left: 25%;
-}
-#waltz-popup a.sites:hover, #waltz-popup a.sites:focus {
-  background-color: #0079a1;
-}
-#waltz-popup a.sites:hover, #waltz-popup a.sites:focus {
-  color: white;
 }
 #waltz-popup a.sites:hover {
   box-shadow: 2px 2px 0 0 #026faa;
@@ -6599,24 +6579,6 @@ html, body {
   text-align: center;
 }
 #waltz-popup a.tutorial {
-  cursor: pointer;
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  font-weight: 700;
-  line-height: normal;
-  margin: 0 0 1.25rem;
-  position: relative;
-  text-decoration: none;
-  text-align: center;
-  display: inline-block;
-  padding-top: 1rem;
-  padding-right: 2rem;
-  padding-bottom: 1.0625rem;
-  padding-left: 2rem;
-  font-size: 1rem;
-  /*     @else                            { font-size: $padding - rem-calc(2); } */
-  background-color: #008cba;
-  border-color: #0079a1;
-  color: white;
   box-shadow: 3px 3px 0 0 #aa0004;
   width: 90%;
   margin: 5% auto;
@@ -6625,14 +6587,12 @@ html, body {
   background: #dd0005;
   text-align: left;
   padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
   position: relative;
   padding-left: 25%;
-}
-#waltz-popup a.tutorial:hover, #waltz-popup a.tutorial:focus {
-  background-color: #0079a1;
-}
-#waltz-popup a.tutorial:hover, #waltz-popup a.tutorial:focus {
-  color: white;
 }
 #waltz-popup a.tutorial:hover {
   box-shadow: 2px 2px 0 0 #aa0004;
@@ -6657,24 +6617,6 @@ html, body {
   text-align: center;
 }
 #waltz-popup a.settings {
-  cursor: pointer;
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  font-weight: 700;
-  line-height: normal;
-  margin: 0 0 1.25rem;
-  position: relative;
-  text-decoration: none;
-  text-align: center;
-  display: inline-block;
-  padding-top: 1rem;
-  padding-right: 2rem;
-  padding-bottom: 1.0625rem;
-  padding-left: 2rem;
-  font-size: 1rem;
-  /*     @else                            { font-size: $padding - rem-calc(2); } */
-  background-color: #008cba;
-  border-color: #0079a1;
-  color: white;
   box-shadow: 3px 3px 0 0 #b85100;
   width: 90%;
   margin: 5% auto;
@@ -6683,14 +6625,12 @@ html, body {
   background: #eb6800;
   text-align: left;
   padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
   position: relative;
   padding-left: 25%;
-}
-#waltz-popup a.settings:hover, #waltz-popup a.settings:focus {
-  background-color: #0079a1;
-}
-#waltz-popup a.settings:hover, #waltz-popup a.settings:focus {
-  color: white;
 }
 #waltz-popup a.settings:hover {
   box-shadow: 2px 2px 0 0 #b85100;
@@ -6715,24 +6655,6 @@ html, body {
   text-align: center;
 }
 #waltz-popup a.request {
-  cursor: pointer;
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  font-weight: 700;
-  line-height: normal;
-  margin: 0 0 1.25rem;
-  position: relative;
-  text-decoration: none;
-  text-align: center;
-  display: inline-block;
-  padding-top: 1rem;
-  padding-right: 2rem;
-  padding-bottom: 1.0625rem;
-  padding-left: 2rem;
-  font-size: 1rem;
-  /*     @else                            { font-size: $padding - rem-calc(2); } */
-  background-color: #008cba;
-  border-color: #0079a1;
-  color: white;
   box-shadow: 3px 3px 0 0 #008142;
   width: 90%;
   margin: 5% auto;
@@ -6741,14 +6663,12 @@ html, body {
   background: #00b45c;
   text-align: left;
   padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
   position: relative;
   padding-left: 25%;
-}
-#waltz-popup a.request:hover, #waltz-popup a.request:focus {
-  background-color: #0079a1;
-}
-#waltz-popup a.request:hover, #waltz-popup a.request:focus {
-  color: white;
 }
 #waltz-popup a.request:hover {
   box-shadow: 2px 2px 0 0 #008142;

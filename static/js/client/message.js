@@ -1,6 +1,6 @@
 Message =  {
-    DISMISS_ID: 'waltz-onboarding-dismiss',
-    MESSAGE_ID: 'waltz-onboarding-message',
+    DISMISS_ID: 'waltz-message-dismiss',
+    MESSAGE_ID: 'waltz-message',
     getMessage: function() {
         var $el = $('#'+this.MESSAGE_ID);
         var $dismisser = $('#'+this.DISMISS_ID);
