@@ -4,7 +4,8 @@
             "cookies": ["PHPSESSID"]
         },
         "login": {
-            "urls": ["http://localhost/loginTest.php"],
+            "urls": ["http://localhost/"],
+            "formURL": "http://localhost/test",
             "method": "POST",
             "usernameField": "username",
             "passwordField": "password",

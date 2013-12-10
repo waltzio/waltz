@@ -313,7 +313,7 @@ Delegate.prototype.logout = function(opts) {
 
 Delegate.prototype.logOutOfSite = function(opts, cb) {
     var promise = $.Deferred(),
-        domain;
+        domain = opts.domain;
 
     if (opts.key) {
         siteConfig = this.getConfigForKey(opts.key);

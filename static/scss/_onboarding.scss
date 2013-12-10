@@ -1,28 +1,19 @@
 #waltz-onboarding-overlay {
-    display: none;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 9998;
+    z-index: 9990;
     width: 100%;
     height: 100%;
-    -webkit-transition: opacity .5s;
+    -webkit-transition: background .5s;
     cursor: default;
-    &::after {
+    background: rgba(255, 255, 255, 0.7);
+
+    img {
         position: absolute;
-        color: white;
-        content: "×";
-        top: 10px;
-        left: 10px;
-        font-size: 30px;
-        line-height: 20px;
-        margin: 0;
-        opacity: .5;
-        cursor: pointer;
-        z-index: 9999;
-        &:hover {
-            opacity: 1;
-        }
+        width: 300px;
+        top: 50px;
+        left: 50px;
     }
 }
 
@@ -44,7 +35,7 @@
     p {
         margin: 20px;
         font-weight: 700;
-        font-size: 18px;
+        font-size: 16px;
         line-height: 1.2em;
     }
 
@@ -74,7 +65,7 @@
 
             &:after, &:before {
                 left: 100%;
-                top: 50%;
+                top: 20px;
             }
 
             &:after {
@@ -84,6 +75,23 @@
             }
             &:before {
                 border-left-color: $border-color;
+                border-width: $arrow-size + 3;
+                margin-top: -($arrow-size + 3);
+            }
+        }
+        &.left-arrow {
+            &:after, &:before {
+                right: 100%;
+                top: 20px;
+            }
+
+            &:after {
+                border-right-color: $color;
+                border-width: $arrow-size;
+                margin-top: -$arrow-size;
+            }
+            &:before {
+                border-right-color: $border-color;
                 border-width: $arrow-size + 3;
                 margin-top: -($arrow-size + 3);
             }

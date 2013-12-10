@@ -1,9 +1,7 @@
 Onboarder.prototype.defaults = {};
 
-Onboarder.prototype.MESSAGE_ID = 'waltz-onboarding-message';
-Onboarder.prototype.MESSAGE_CONTAINER_ID = 'waltz-onboarding-message-container';
-Onboarder.prototype.DISMISS_ID = 'waltz-onboarding-dismiss';
 Onboarder.prototype.MESSAGE_OFFSET = 15;
+Onboarder.prototype.OVERLAY_ID = "waltz-onboarding-overlay";
 
 function Onboarder(waltz) {
     this.waltz = waltz;
@@ -44,7 +42,6 @@ Onboarder.prototype.init = function(data) {
         this.siteData = this.storage.siteOnboardingDefaults;
         this.commitSiteData();
     }
-
 
     this.initialized.resolve();
 }
@@ -104,13 +101,28 @@ Onboarder.prototype.loginSuccess = function() {
     if (this.siteData.loginAttempts.success == 1 && this.totalSuccessfulLogins() < 2) {
         // case where the user is going through the tutorial for the first time
         // PRACTICE, yo!
+        var $overlay = this.addOverlay();
+
+        var $img = $("<img src='" + chrome.extension.getURL("/static/img/phone-logout.png") + "'/>");
+        $img.click(function(e) {
+            e.stopPropagation();
+            alert("Not this phone, YOUR phone!");
+        });
+
+        $overlay.append($img);
+
         var $message = this.getMessage();
 
         $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to log out and get some practice.");
 
-        $message.attr('class', 'bottom');
+        $message.attr('class', 'floating left-arrow');
 
-        $message.slideDown();
+        $message.css({
+            top: parseInt($img.css('top')) + 350,
+            left: parseInt($img.css('left')) + $img.width()
+        })
+
+        $message.fadeIn();
     } else {
         chrome.runtime.sendMessage({
             method: "openNewTab",
@@ -134,6 +146,10 @@ Onboarder.prototype.showWidget = function() {
         $message = this.getMessage(),
         text;
 
+    if (this.forceTutorial) {
+        this.addOverlay();
+    }
+
     if (_this.siteData.loginAttempts.success === 0) {
         // first time setting up Waltz
         text = "Click this to set up Waltz for " + _this.options.site.config.name;
@@ -155,7 +171,7 @@ Onboarder.prototype.showWidget = function() {
 
         $message.css({
             right: parseInt($widget.css('right')) + $widget.width() + _this.MESSAGE_OFFSET,
-            top: parseInt($widget.css('top')) - $message.height() / 2 + $widget.height() / 2
+            top: parseInt($widget.css('top')) + $widget.height() / 2 - 20
         });
 
         $message.fadeIn();
@@ -219,10 +235,11 @@ Onboarder.prototype.hideToolTips = function() {
     if (this.$message) {
         this.$message.fadeOut(100);
     }
+    this.router.trigger('onboarding.hide');
 };
 
 Onboarder.prototype.dismiss = function() {
-    this.hideToolTips();
+    this.router.trigger('onboarding.dismissed');
     this.storage.setOnboardingKey("dismissed", true);
     this.dismissed = true;
 };
@@ -230,16 +247,26 @@ Onboarder.prototype.dismiss = function() {
 Onboarder.prototype.getMessage = function() {
     if (this.$message) return this.$message; 
 
-    var $dismisser = $("<div id='" + this.DISMISS_ID + "'>&times;</div>");
-
-    this.$message = $("<div id='" + this.MESSAGE_ID + "'></div>");
-    this.$message.append("<p></p>", $dismisser);
-
-    $('body').append(this.$message);
-
-    $dismisser.click(this.dismiss.bind(this));
+    this.$message = Message.getMessage();
+    this.$message.on('dismiss', this.dismiss.bind(this)); 
 
     return this.$message;
+}
+
+Onboarder.prototype.addOverlay = function() {
+    var _this = this,
+        $overlay = $('<div id="' + this.OVERLAY_ID + '"></div>');
+    $('body').append($overlay);
+    this.router.on('onboarding.dismissed', function() {
+        $overlay.remove();
+    });
+
+    $overlay.click(function() {
+        _this.hideToolTips();
+        $overlay.remove();
+    })
+
+    return $overlay;
 }
 
 Onboarder.prototype.commitSiteData = function(cb) {
