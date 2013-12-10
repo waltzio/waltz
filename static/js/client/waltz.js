@@ -697,6 +697,7 @@
 		location: document.location
 	}, function(options) {
 		$(document).ready(function() {
+            if (!options) return;
             new Storage().getPrivateSettingsForSite(options.site.config.key, function(settings) {
                 var pathSettings = settings[window.location.pathname];
                 if (!settings.dismissedForever && !(pathSettings && pathSettings.dismissed)) {
