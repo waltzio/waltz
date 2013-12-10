@@ -5319,6 +5319,11 @@ header {
   background: #111111;
   height: 100px;
   margin: 50px auto; }
+  @media only screen and (max-width: 40em) {
+    header {
+      margin-top: 0;
+      height: auto;
+      padding: 20px 0; } }
   header .logo-container img {
     height: 80px;
     margin-top: 10px;
@@ -5331,10 +5336,16 @@ header {
     margin: auto;
     display: block;
     margin-top: -20px; }
+    @media only screen and (max-width: 40em) {
+      header .icon-container img {
+        margin: 30px auto; } }
   header .button-container .button {
     float: right;
     margin: 0;
     margin-top: 17px; }
+    @media only screen and (max-width: 40em) {
+      header .button-container .button {
+        width: 100%; } }
 
 .button.pink {
   background: #f50380;
@@ -5541,44 +5552,47 @@ html, body {
 body {
   overflow-x: hidden; }
 
-.hero {
+#waltz .hero {
   margin: 50px auto 0 auto; }
-  .hero .button {
+  #waltz .hero .button {
     float: right;
     margin-top: 15px; }
-  .hero .animation-container {
+    @media only screen and (max-width: 40em) {
+      #waltz .hero .button {
+        width: 100%; } }
+  #waltz .hero .animation-container {
     position: relative;
     z-index: 1; }
-    .hero .animation-container .video {
+    #waltz .hero .animation-container .video {
       display: none; }
-    .hero .animation-container .computer {
+    #waltz .hero .animation-container .computer {
       width: 450px;
       position: relative;
       float: right;
       margin-bottom: 40px;
       margin-top: 10px; }
-      .hero .animation-container .computer video {
+      #waltz .hero .animation-container .computer video {
         position: absolute;
         left: 66px;
         top: 35px;
         width: 310px; }
-    .hero .animation-container .phone {
+    #waltz .hero .animation-container .phone {
       position: absolute;
       top: 15px;
       right: 51%;
       width: 300px;
       -webkit-transform: rotate(-10deg);
       overflow: hidden; }
-      .hero .animation-container .phone img {
+      #waltz .hero .animation-container .phone img {
         position: relative;
         z-index: 2; }
-      .hero .animation-container .phone .barsy {
+      #waltz .hero .animation-container .phone .barsy {
         z-index: 1;
         position: absolute;
         left: 75px;
         top: 100px;
         width: 100px; }
-    .hero .animation-container .refresh {
+    #waltz .hero .animation-container .refresh {
       position: absolute;
       top: 0px;
       right: 30px;
@@ -5586,18 +5600,20 @@ body {
       color: #CCC;
       cursor: pointer;
       display: none; }
-      .hero .animation-container .refresh:hover {
+      #waltz .hero .animation-container .refresh:hover {
         color: #777; }
-
-.quote {
+#waltz .quote {
   position: relative;
   z-index: 2;
   margin-bottom: 50px;
   background: #8A7BAC; }
-  .quote .photo img {
+  @media only screen and (max-width: 40em) {
+    #waltz .quote {
+      margin: 50px auto; } }
+  #waltz .quote .photo img {
     width: 100px;
     margin-top: -30px; }
-  .quote blockquote {
+  #waltz .quote blockquote {
     color: white;
     border: none;
     font-weight: bold;
@@ -5606,41 +5622,50 @@ body {
     padding: 20px 0;
     margin: 0;
     position: relative; }
-    .quote blockquote cite {
+    #waltz .quote blockquote cite {
       position: absolute;
       right: 0;
       bottom: -30px;
       font-size: 20px;
       color: #8a7bac; }
-
-.why > .row {
+#waltz .why > .row {
   margin: 40px auto; }
-.why .header {
+#waltz .why .header {
   margin-top: 100px; }
-.why .table table {
+#waltz .why .table table {
   width: 100%; }
-  .why .table table th {
+  #waltz .why .table table th {
     text-align: center; }
-  .why .table table .feature-name {
+    @media only screen and (max-width: 40em) {
+      #waltz .why .table table th {
+        font-size: 12px; } }
+  #waltz .why .table table .feature-name {
     font-weight: bold; }
-  .why .table table .fi-check, .why .table table .fi-x {
+  #waltz .why .table table .fi-check, #waltz .why .table table .fi-x {
     background: #00c279;
     color: white;
     width: 30px;
     height: 30px;
     border-radius: 30px;
+    line-height: 30px;
     display: block;
     text-align: center;
-    line-height: 30px;
     font-size: 20px;
     margin: auto; }
-  .why .table table .fi-x {
+    @media only screen and (max-width: 40em) {
+      #waltz .why .table table .fi-check, #waltz .why .table table .fi-x {
+        font-size: 12px;
+        width: 20px;
+        height: 20px;
+        border-radius: 20px;
+        line-height: 20px; } }
+  #waltz .why .table table .fi-x {
     background: #d4384b; }
-.why .content h3 {
+#waltz .why .content h3 {
   margin-bottom: 30px; }
-.why .github .writing {
+#waltz .why .github .writing {
   margin-top: 30px;
   overflow: hidden; }
-.why .github .button {
+#waltz .why .github .button {
   margin-top: 40px;
   float: right; }

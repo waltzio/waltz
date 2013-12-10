@@ -5,6 +5,12 @@ header {
     height: $height;
     margin: 50px auto;
 
+    @media #{$small-only} {
+        margin-top: 0;
+        height: auto;
+        padding: 20px 0;
+    }
+
     .logo-container {
         img {
             height: $height - $margin * 2;
@@ -23,6 +29,9 @@ header {
             margin: auto;
             display: block;
             margin-top: ($height - $icon-height) / 2;
+            @media #{$small-only} {
+                margin: 30px auto;
+            }
         }
     }
 
@@ -31,6 +40,9 @@ header {
             float: right;
             margin: 0;
             margin-top: $margin * 1.7;
+            @media #{$small-only} {
+                width: 100%;
+            }
         }
     }
 }
