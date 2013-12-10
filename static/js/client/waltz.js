@@ -215,7 +215,7 @@
             _this.iframe.fadeIn();
             _this.trigger('show.iframe');
 
-            addEventListener("message", function(e) {
+            window.addEventListener("message", function(e) {
                 if(e.data.auth) {
                     _this.iframe.remove();
                     if (typeof cb == "function") {
