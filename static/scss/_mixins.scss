@@ -7,3 +7,39 @@
         box-shadow: ($size - 2) ($size - 2) 0 0 darken($color, 10%);
     }
 }
+
+@mixin popup-button($color, $logo:true) {
+    @include button();
+    @include button-shadow($color, 3px);
+    $padding: 15px;
+    width: 90%;
+    margin: 5% auto;
+    display: block;
+    color: white;
+    background: $color;
+    text-align: left;
+    padding: $padding;
+
+    &:focus, &:active {
+        outline: none;
+    }
+
+    &:hover {
+        background: lighten($color, 2%);
+    }
+
+    @if ($logo) {
+        position: relative;
+        padding-left: 25%;
+        &:before {
+            display: block;
+            position: absolute;
+            top: $padding;
+            left: 0;
+            width: 25%;
+            height: 100%;
+            font-size: 45px;
+            text-align: center;
+        }
+    }
+}
