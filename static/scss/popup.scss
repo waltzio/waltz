@@ -1,7 +1,34 @@
-@import "_settings.scss";
-@import "../foundation/scss/foundation.scss";
+@import "_settings";
+@import "_mixins";
+@import "../foundation/scss/foundation";
 
 html, body {
-    width: 400px;
-    height: 400px;
+    width: 300px;
+}
+
+#waltz-popup {
+    border: none;
+    ul {
+        list-style: none;
+        margin: 0;
+    }
+
+    a {
+
+        &.sites {
+            @include popup-button(#0390DC);
+        }
+
+        &.tutorial {
+            @include popup-button(#DD0005);
+        }
+
+        &.settings {
+            @include popup-button(#EB6800);
+        }
+
+        &.request {
+            @include popup-button(#00B45C);
+        }
+    }
 }

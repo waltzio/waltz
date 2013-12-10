@@ -28,3 +28,7 @@
 #sites .sites-list a li:hover {
   background: #EEE;
 }
+#sites .sites-list a img {
+  height: 150px;
+  width: 150px;
+}

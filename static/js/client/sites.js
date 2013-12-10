@@ -8,22 +8,23 @@ function Sites() {
 
 Sites.prototype.init = function(data) {
     var _this = this,
-        $siteContainer = $('.sites-list'),
-        site,
-        siteHTML;
+        $siteContainer = $('.sites-list');
 
     this.siteConfigs = data;
 
-    for (k in data) {
-        site = data[k];
+    $.each(data, function(key, site) {
         if (!site.ignore) {
-            $siteHTML = $([
+            var $siteHTML = $([
             "<a class='go-to-site' data-site-key='" + site.key + "' href='" + site.login.urls[0] + "'>",
                 "<li>",
                     "<h4 class='name'>" + site.name + "</h4>",
                     "<img src='/static/img/site_images/" + site.key + ".png'/>",
                 "</li>",
             "</a>"].join(""));
+
+            (function() {
+
+            })
 
             _this.storage.getOnboardingSiteData(site.key, function(data) {
                 if (data.loginAttempts.success >= 1) {
@@ -34,7 +35,7 @@ Sites.prototype.init = function(data) {
 
             $siteContainer.prepend($siteHTML);
         }
-    }
+    });
 
     _this.attachHandlers();
 };
