@@ -9,7 +9,6 @@
 }
 
 @mixin popup-button($color, $logo:true) {
-    @include button();
     @include button-shadow($color, 3px);
     $padding: 15px;
     width: 90%;
@@ -19,6 +18,11 @@
     background: $color;
     text-align: left;
     padding: $padding;
+
+    text-decoration: none;
+    font-family: $font-family;
+    font-weight: 700;
+    line-height: 1.4em;
 
     &:focus, &:active {
         outline: none;

@@ -214,6 +214,151 @@
   clear: both;
 }
 
+#waltz-message {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: none;
+  z-index: 9999;
+  color: #111;
+  background: white;
+  padding: 0;
+  width: 280px;
+  border: 2px solid #111111;
+  border-radius: 5px;
+}
+#waltz-message p {
+  margin: 20px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2em;
+}
+#waltz-message.floating {
+  position: absolute;
+}
+#waltz-message.floating.fixed {
+  position: fixed;
+}
+#waltz-message.floating:after, #waltz-message.floating:before {
+  content: " ";
+  position: absolute;
+  border: 10px solid transparent;
+  height: 0;
+  width: 0;
+  pointer-events: none;
+}
+#waltz-message.floating.right-arrow:after, #waltz-message.floating.right-arrow:before {
+  left: 100%;
+  top: 20px;
+}
+#waltz-message.floating.right-arrow:after {
+  border-left-color: white;
+  border-width: 10px;
+  margin-top: -10px;
+}
+#waltz-message.floating.right-arrow:before {
+  border-left-color: #111111;
+  border-width: 13px;
+  margin-top: -13px;
+}
+#waltz-message.floating.left-arrow:after, #waltz-message.floating.left-arrow:before {
+  right: 100%;
+  top: 20px;
+}
+#waltz-message.floating.left-arrow:after {
+  border-right-color: white;
+  border-width: 10px;
+  margin-top: -10px;
+}
+#waltz-message.floating.left-arrow:before {
+  border-right-color: #111111;
+  border-width: 13px;
+  margin-top: -13px;
+}
+#waltz-message.floating.top-arrow:after, #waltz-message.floating.top-arrow:before {
+  left: 50%;
+  bottom: 100%;
+}
+#waltz-message.floating.top-arrow:after {
+  border-bottom-color: white;
+  border-width: 10px;
+  margin-left: -10px;
+}
+#waltz-message.floating.top-arrow:before {
+  border-bottom-color: #111111;
+  border-width: 13px;
+  margin-left: -13px;
+}
+#waltz-message.floating.bottom-arrow:after, #waltz-message.floating.bottom-arrow:before {
+  left: 50%;
+  top: 100%;
+}
+#waltz-message.floating.bottom-arrow:after {
+  border-top-color: white;
+  border-width: 10px;
+  margin-left: -10px;
+}
+#waltz-message.floating.bottom-arrow:before {
+  border-top-color: #111111;
+  border-width: 13px;
+  margin-left: -13px;
+}
+#waltz-message.bottom {
+  position: fixed;
+  background: white;
+  color: #111;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+#waltz-message.click {
+  cursor: pointer;
+}
+#waltz-message.click:hover {
+  background: #DDD;
+}
+#waltz-message #waltz-message-dismiss {
+  top: 0;
+  left: 3px;
+  position: absolute;
+  color: #111;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+}
+#waltz-message #waltz-message-dismiss:hover {
+  color: #444;
+}
+#waltz-message #waltz-hide-for-site, #waltz-message #waltz-hide-for-page, #waltz-message #waltz-hide-cancel {
+  box-shadow: 3px 3px 0 0 #5e5e5e;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #777777;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+}
+#waltz-message #waltz-hide-for-site:hover, #waltz-message #waltz-hide-for-page:hover, #waltz-message #waltz-hide-cancel:hover {
+  box-shadow: 2px 2px 0 0 #5e5e5e;
+}
+#waltz-message #waltz-hide-for-site:active, #waltz-message #waltz-hide-for-page:active, #waltz-message #waltz-hide-cancel:active {
+  box-shadow: 1px 1px 0 0 #5e5e5e;
+}
+#waltz-message #waltz-hide-for-site:focus, #waltz-message #waltz-hide-for-site:active, #waltz-message #waltz-hide-for-page:focus, #waltz-message #waltz-hide-for-page:active, #waltz-message #waltz-hide-cancel:focus, #waltz-message #waltz-hide-cancel:active {
+  outline: none;
+}
+#waltz-message #waltz-hide-for-site:hover, #waltz-message #waltz-hide-for-page:hover, #waltz-message #waltz-hide-cancel:hover {
+  background: #7c7c7c;
+}
+
 #waltz-onboarding-overlay {
   position: absolute;
   top: 0;
@@ -230,125 +375,6 @@
   width: 300px;
   top: 50px;
   left: 50px;
-}
-
-#waltz-onboarding-message {
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  display: none;
-  z-index: 9999;
-  color: #111;
-  background: white;
-  padding: 0;
-  width: 280px;
-  border: 2px solid #111111;
-  border-radius: 5px;
-}
-#waltz-onboarding-message p {
-  margin: 20px;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1.2em;
-}
-#waltz-onboarding-message.floating {
-  position: absolute;
-}
-#waltz-onboarding-message.floating.fixed {
-  position: fixed;
-}
-#waltz-onboarding-message.floating:after, #waltz-onboarding-message.floating:before {
-  content: " ";
-  position: absolute;
-  border: 10px solid transparent;
-  height: 0;
-  width: 0;
-  pointer-events: none;
-}
-#waltz-onboarding-message.floating.right-arrow:after, #waltz-onboarding-message.floating.right-arrow:before {
-  left: 100%;
-  top: 20px;
-}
-#waltz-onboarding-message.floating.right-arrow:after {
-  border-left-color: white;
-  border-width: 10px;
-  margin-top: -10px;
-}
-#waltz-onboarding-message.floating.right-arrow:before {
-  border-left-color: #111111;
-  border-width: 13px;
-  margin-top: -13px;
-}
-#waltz-onboarding-message.floating.left-arrow:after, #waltz-onboarding-message.floating.left-arrow:before {
-  right: 100%;
-  top: 20px;
-}
-#waltz-onboarding-message.floating.left-arrow:after {
-  border-right-color: white;
-  border-width: 10px;
-  margin-top: -10px;
-}
-#waltz-onboarding-message.floating.left-arrow:before {
-  border-right-color: #111111;
-  border-width: 13px;
-  margin-top: -13px;
-}
-#waltz-onboarding-message.floating.top-arrow:after, #waltz-onboarding-message.floating.top-arrow:before {
-  left: 50%;
-  bottom: 100%;
-}
-#waltz-onboarding-message.floating.top-arrow:after {
-  border-bottom-color: white;
-  border-width: 10px;
-  margin-left: -10px;
-}
-#waltz-onboarding-message.floating.top-arrow:before {
-  border-bottom-color: #111111;
-  border-width: 13px;
-  margin-left: -13px;
-}
-#waltz-onboarding-message.floating.bottom-arrow:after, #waltz-onboarding-message.floating.bottom-arrow:before {
-  left: 50%;
-  top: 100%;
-}
-#waltz-onboarding-message.floating.bottom-arrow:after {
-  border-top-color: white;
-  border-width: 10px;
-  margin-left: -10px;
-}
-#waltz-onboarding-message.floating.bottom-arrow:before {
-  border-top-color: #111111;
-  border-width: 13px;
-  margin-left: -13px;
-}
-#waltz-onboarding-message.bottom {
-  position: fixed;
-  background: white;
-  color: #111;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-}
-#waltz-onboarding-message.click {
-  cursor: pointer;
-}
-#waltz-onboarding-message.click:hover {
-  background: #DDD;
-}
-#waltz-onboarding-message #waltz-onboarding-dismiss {
-  top: 0;
-  left: 3px;
-  position: absolute;
-  color: #111;
-  font-size: 20px;
-  text-align: center;
-  cursor: pointer;
-  font-weight: 700;
-  line-height: 1;
-}
-#waltz-onboarding-message #waltz-onboarding-dismiss:hover {
-  color: #444;
 }
 
 /* safari and chrome */

@@ -13,7 +13,7 @@
 	Waltz.prototype.CREDENTIAL_SLIDE_IN_CLASS = "slide-in";
 	Waltz.prototype.CREDENTIAL_LOGOS_ID = "waltz-credential-logos";
 
-	Waltz.prototype.DISMISSAL_THRESHOLD = 3;
+	Waltz.prototype.DISMISSAL_THRESHOLD = 1;
 
 
 	function Waltz(opts) {
@@ -147,9 +147,9 @@
             var $widget = this.$widget;
             $text.html(text);
 
-            var $forever = $("<a class='button' href='#'>hide forever</a>");
-            var $page = $("<a class='button' href='#'>hide for this page</a>");
-            var $cancel = $("<a class='button' href='#'>cancel</a>");
+            var $forever = $("<a id='waltz-hide-for-site' href='#'>hide forever</a>");
+            var $page = $("<a id='waltz-hide-for-page' href='#'>hide for this page</a>");
+            var $cancel = $("<a id='waltz-hide-cancel' href='#'>no thanks</a>");
             $text.append($forever, $page, $cancel);
 
             $forever.click(function(e) {
