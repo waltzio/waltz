@@ -26,7 +26,8 @@
                 "forcedRedirectURLs" : ["https://about.twitter.com/download"],
                 "nextURLs": ["https://twitter.com/login/captcha", "https://twitter.com/login/error"]
             }
-        }
+        },
+        "ignore": true
     }
 }
 

@@ -16,24 +16,45 @@
     .sites-list {
         padding: 0;
         text-align: center;
-        a {
-            display: block;
+
+        li {
+            width: 20%;
+            float: left;
+            margin: 20px 0;
+            padding-bottom: 20px;
             position: relative;
+            &:hover {
+                background: #EEE;
+            }
+
             &.completed {
                 opacity: .3;
-            }
-            li {
-                width: 25%;
-                float: left;
-                margin: 40px 0;
-                &:hover {
-                    background: #EEE;
+                &:before {
+                    position: absolute;
+                    top: 50px;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;
+                    font-size: 140px;
+                    text-align: center;
+                    color: $green;
+                    z-index: 1;
                 }
-                padding-bottom: 20px;
             }
+
+            a {
+                z-index: 2;
+                text-decoration: none;
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
             img {
-                height: 150px;
-                width: 150px;
+                height: 120px;
+                width: 120px;
             }
         }
     }
