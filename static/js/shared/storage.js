@@ -183,7 +183,7 @@ Storage.prototype.setPrivateSetting = function(key, value, cb) {
         options[key] = value;
         var save = {};
         save[_this.PRIVATE_SETTINGS_KEY] = options;
-        chrome.storage.local.set(save, cb);
+        _this.set(save, cb);
     });
 }
 
