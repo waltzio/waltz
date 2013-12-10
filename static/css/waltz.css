@@ -455,6 +455,7 @@
   background-color: transparent;
   top: -10px;
   right: -10px;
+  transition: background-color 200ms;
 }
 #waltz-login-wrapper .waltz-button.waltz-dismiss:hover {
   background-color: #db070a;
