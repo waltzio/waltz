@@ -1,0 +1,75 @@
+<script type="text/html" class="template" id='credentials'>
+<ul class="credentials">
+<% _.each(credentials, function(item, key, list) { %>
+    <li class="credential" data-key="<%= key %>" data-password="<%= item.password %>" data-username="<%= item.username %>">
+        <div class="information-container">
+            <div class="row">
+                <div class="small-6 columns information">
+                    <h4 class="name"><%= key %></h4>
+                    <h6 class="username"><%= item.username %></h6>
+                </div>
+                <div class="small-3 columns">
+                    <button class="decrypt">decrypt</button>
+                </div>
+                <div class="small-3 columns end">
+                    <button class="forget">forget</button>
+                </div>
+            </div>
+        </div>
+        <div class="decrypted-container">
+            <div class="row">
+                <div class="small-3 columns">
+                    <input name="username" type="text" value="<%= item.username %>">
+                </div>
+                <div class="small-3 columns">
+                    <input name="password" type="password" value="" class="toggled">
+                    <input name="password" type="text" value="">
+                </div>
+                <div class="small-3 columns end">
+                    <button class="show">show</button>
+                </div>
+                <div class="small-3 columns buttons end">
+                    <button class="save">save</button>
+                </div>
+            </div>
+        </div>
+        
+    </li>
+<% }); %>
+</ul>
+</script>
+
+<script type="text/html" class="template" id='settings'>
+<ul class="settings">
+<% _.each(settings, function(item, key, list) { %>
+    <li class="setting" >
+        <div class="row">
+            <div class="small-6 columns end">
+                <label for="<%= key %>"><%= item.name %></label>
+                <input type="text" name="<%= key %>" value="<%= item.value %>">
+            </div>
+        </div>
+    </li>
+<% }); %>
+</ul>
+</script>
+
+
+<script src="/static/js/vendor/jquery.min.js"></script>
+<script src="/static/js/vendor/underscore-min.js"></script>
+
+<script>
+    function template(name, context) {
+       return _.template($('#' + name).html(), context);
+    }
+
+    window.addEventListener('message', function(e) {
+        if (e.data.method === "template") {
+            e.source.postMessage({
+                method: "returnTemplate",
+                html: template(e.data.name, e.data.context),
+                name: e.data.name
+            }, '*');
+        }
+    });
+</script>

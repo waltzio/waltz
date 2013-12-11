@@ -470,7 +470,6 @@
 		// to those values (purely for convenience)
 		var $potentialUsernameField = $("input[name='" + this.options.site.config.login.usernameField + "']");
 		if ($potentialUsernameField.length > 0) {
-			console.log($potentialUsernameField.val());
         	$usernameField.val($potentialUsernameField.val());
         }
         var $potentialPasswordField = $("input[name='" + this.options.site.config.login.passwordField + "']");

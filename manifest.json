@@ -55,5 +55,8 @@
   "web_accessible_resources": [
     "static/img/*"
   ],
-  "content_security_policy": "script-src 'self' chrome-extension://; object-src 'self'"
+  "content_security_policy": "script-src 'self' chrome-extension://; object-src 'self'",
+  "sandbox": {
+    "pages": ["/html/templates.html"]
+  }
 }
