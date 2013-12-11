@@ -1,0 +1,24 @@
+{
+    "*://*.dropbox.com/*": {
+        "name": "Dropbox",
+        "logout": {
+            "cookies": ["bjar", "blid"]
+        },
+        "login": {
+            "urls": ["https://www.dropbox.com", "https://www.dropbox.com/login"],
+            "formURL": "https://www.dropbox.com/login",
+            "method": "POST",
+            "usernameField": "login_email",
+            "passwordField": "login_password",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Sign out')",
+            "twoFactor": [
+                {
+                    "url": "https://www.dropbox.com/verify_code",
+                    "check": "input[name='otp']"
+                }
+            ]
+        }
+    }
+}
+
