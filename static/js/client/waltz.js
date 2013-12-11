@@ -269,7 +269,7 @@
 		});
 	}
 
-	Waltz.prototype.logIn = function(cb) {
+	Waltz.prototype.logInToClef = function(cb) {
 		var _this = this;
 
         this.iframe.ready(function() {
@@ -446,7 +446,7 @@
 			method: "checkAuthentication"
 		}, function(response) {
 			if (!response.user) {
-				_this.logIn(cb);
+				_this.logInToClef(cb);
 			} else {
 				if (typeof(cb) == "function") {
 					cb();
