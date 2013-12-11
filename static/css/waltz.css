@@ -35,6 +35,16 @@
   }
 }
 
+@-webkit-keyframes opacity-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+}
+
 #waltz-credential-overlay {
   position: absolute;
   top: 0;
@@ -233,6 +243,7 @@
   font-weight: 700;
   font-size: 16px;
   line-height: 1.2em;
+  text-align: left;
 }
 #waltz-message.floating {
   position: absolute;
@@ -455,9 +466,10 @@
   background-color: transparent;
   top: -10px;
   right: -10px;
+  transition: background-color 200ms;
 }
 #waltz-login-wrapper .waltz-button.waltz-dismiss:hover {
-  background-color: #db070a;
+  background-color: #dd0005;
 }
 #waltz-login-wrapper .waltz-button.waltz-edit {
   top: -10px;

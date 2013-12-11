@@ -43,14 +43,19 @@ Storage.prototype.remove = function(keys) {
 }
 
 Storage.prototype.getCredentials = function(cb) {
-    var _this = this;
+    var _this = this,
+        promise = $.Deferred();
+
     this.get(this.CREDENTIALS_KEY, function(data) {
         var ret = data[_this.CREDENTIALS_KEY];
 
         ret = ret || {};
         
-        if (cb && typeof(cb) === "function") cb(ret);
+        if (typeof(cb) === "function") cb(ret);
+        promise.resolve(ret);
     });
+
+    return promise;
 }
 
 Storage.prototype.setCredentials = function(credentials, cb) {
@@ -113,15 +118,24 @@ Storage.prototype.clearLogins = function() {
 }
 
 Storage.prototype.getOptions = function(cb) {
-    var _this = this;
+    var _this = this,
+        promise = $.Deferred();
+
     this.get(this.OPTIONS_KEY, function(options) {
+        var ret;
+
         if(options[_this.OPTIONS_KEY]) {
-            cb(options[_this.OPTIONS_KEY]);
+            ret = options[_this.OPTIONS_KEY]
         } else {
             _this.setOptions(_this.optionsDefaults);
-            cb(_this.optionsDefaults);
+            ret = _this.optionsDefaults;
         }
+
+        if (typeof cb === "function") cb(ret);
+        promise.resolve(ret)
     });
+
+    return promise;
 }
 
 Storage.prototype.setOptions = function(options, cb) {

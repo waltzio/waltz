@@ -6563,6 +6563,16 @@ th.hide-for-touch {
   }
 }
 
+@-webkit-keyframes opacity-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+}
+
 body, html {
   font-family: "Open Sans", "Helvetica Neue", sans-serif;
 }

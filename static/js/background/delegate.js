@@ -366,10 +366,10 @@ Delegate.prototype.forceTutorial = function(opts, cb) {
     return true;
 };
 
-Delegate.prototype.saveCredentials = function(domain_key, username, password, cb) {
+Delegate.prototype.saveCredentials = function(key, username, password, cb) {
     var _this = this;
-	waltzCrypto.encrypt(password, domain_key, function(encrypted) {
-		_this.storage.setCredentialsForDomain(domain_key, username, encrypted.output, function() {
+	waltzCrypto.encrypt(password, key, function(encrypted) {
+		_this.storage.setCredentialsForDomain(key, username, encrypted.output, function() {
 			cb(true);
 		});
 	});

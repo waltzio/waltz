@@ -6529,7 +6529,54 @@ th.hide-for-touch {
   display: table-cell !important;
 }
 
-/** Vars **/
+@-webkit-keyframes slide-behind {
+  0% {
+    left: 0;
+    top: 0;
+  }
+
+  50% {
+    left: -700px;
+    top: -50px;
+  }
+
+  70% {
+    z-index: 0;
+    opacity: 1;
+  }
+
+  100% {
+    left: 0;
+    top: 0;
+    z-index: 0;
+    background: #DDD;
+  }
+}
+
+@-webkit-keyframes pulse {
+  0%, 10%, 20%, 30%, 100% {
+    -webkit-transform: scale(1, 1);
+  }
+
+  5%, 15%, 25% {
+    -webkit-transform: scale(1.15, 1.15);
+  }
+}
+
+@-webkit-keyframes opacity-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+}
+
+.clear {
+  clear: both;
+}
+
 /** Styles **/
 .header {
   border-bottom: 1px solid #EEE;
@@ -6556,59 +6603,61 @@ th.hide-for-touch {
   margin-top: 0;
   padding-top: 20px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #c1d4d9;
 }
 .main-content.settings {
   display: none;
+  padding: 20px;
 }
-.main-content.settings .all-settings {
-  padding: 5px 0 5px 50px;
-}
-.main-content.settings .all-settings #api-url {
-  width: 500px;
+.main-content.settings ul {
+  list-style: none;
+  margin: 0;
 }
 .main-content.sites-list ul {
-  list-style-type: none;
+  list-style: none;
+}
+.main-content.sites-list ul li.credential {
+  margin: 40px 0;
+}
+.main-content.sites-list ul .information-container .information, .main-content.sites-list ul .information-container .buttons {
+  float: left;
+}
+.main-content.sites-list ul .information-container .information {
+  min-width: 200px;
+}
+.main-content.sites-list ul .information-container .information h4, .main-content.sites-list ul .information-container .information h6 {
   margin: 0;
-  padding: 0;
 }
-.main-content.sites-list ul li {
-  background-color: #b6c7cc;
-  border-bottom: 2px solid #c1d4d9;
-  padding: 5px 0 5px 50px;
+.main-content.sites-list ul .decrypted-container {
+  display: none;
 }
-.main-content.sites-list ul li h3 {
-  display: inline;
-  font-weight: normal;
+.main-content.sites-list ul .decrypted-container input {
+  margin: 0;
 }
-.main-content.sites-list ul li .styled {
-  border: 2px solid #d7d8dd;
-  background-color: #c9cbd0;
-  padding: 5px;
-  border-radius: 3px;
-  box-shadow: 0 0 10px -3px #333;
-  cursor: pointer;
+.main-content.sites-list ul .decrypted-container input[name="password"]:not(.toggled) {
+  display: none;
 }
-.main-content.sites-list ul li .styled.success {
-  background-color: green;
+.main-content.sites-list ul .decrypted-container button {
+  padding: 8px;
 }
-.main-content.sites-list ul li .togglePass {
-  border: none;
-  background-color: transparent;
-  height: 25px;
-  width: 25px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: bottom;
-  cursor: pointer;
+.main-content button {
+  width: 100%;
 }
-.main-content.sites-list ul li .togglePass.closed {
-  background-image: url(/static/img/eye_open.png);
+.main-content button.forget {
+  background: #dd0005;
 }
-.main-content.sites-list ul li .togglePass.open {
-  background-image: url(/static/img/eye_closed.png);
+.main-content button.forget:hover {
+  background: #c40004;
 }
-.main-content.sites-list ul li label {
-  color: #444;
-  margin-left: 20px;
+.main-content button.save {
+  background: #00be61;
+}
+.main-content button.save:hover {
+  background: #00a554;
+}
+.main-content button.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }

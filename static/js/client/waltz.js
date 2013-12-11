@@ -272,7 +272,7 @@
 		});
 	}
 
-	Waltz.prototype.logIn = function(cb) {
+	Waltz.prototype.logInToClef = function(cb) {
 		var _this = this;
 
         this.iframe.ready(function() {
@@ -342,8 +342,16 @@
             $password = findInput(siteConfig.login.passwordField);
             $form = $login.parents('form');
 
+        if (siteConfig.login.submitButton) {
+            $form = $form.filter(':has(' + siteConfig.login.submitButton + ')');
+            // Re-select the login and password fields in case we're on
+            // a different form.
+            $login = $form.find('input[name="'+siteConfig.login.usernameField+'"]');
+            $password = $form.find('input[name="'+siteConfig.login.passwordField+'"]');
+        }
+
         // We are on the login page!
-        if ($login.length > 0 && $password.length > 0 && $form.attr('action') === siteConfig.login.formURL) {
+        if ($login.length > 0 && $password.length > 0) {
 			var $newLogin = $login.clone(),
 				$newPassword = $password.clone();
 
@@ -386,7 +394,11 @@
 				var appendInputs = function(data) {
 					var $data = $(data);
                     var $login = $data.find('input[name="'+siteConfig.login.usernameField+'"]');
-                    var $inputs = $login.parents('form').find('input');
+                    var $form = $login.parents('form');
+                    if (siteConfig.login.submitButton) {
+                        $form = $form.filter(':has(' + siteConfig.login.submitButton + ')');
+                    }
+                    var $inputs = $form.find('input');
 
 					$inputs = $inputs.filter(function(input) { 
 						return $(this).attr('name') != siteConfig.login.passwordField &&
@@ -437,7 +449,7 @@
 			method: "checkAuthentication"
 		}, function(response) {
 			if (!response.user) {
-				_this.logIn(cb);
+				_this.logInToClef(cb);
 			} else {
 				if (typeof(cb) == "function") {
 					cb();
@@ -461,7 +473,6 @@
 		// to those values (purely for convenience)
 		var $potentialUsernameField = $("input[name='" + this.options.site.config.login.usernameField + "']");
 		if ($potentialUsernameField.length > 0) {
-			console.log($potentialUsernameField.val());
         	$usernameField.val($potentialUsernameField.val());
         }
         var $potentialPasswordField = $("input[name='" + this.options.site.config.login.passwordField + "']");
