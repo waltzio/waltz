@@ -343,8 +343,8 @@
             $form = $form.filter(':has(input[type="submit"][value="'+siteConfig.login.submitButtonValue+'"])');
             // Re-select the login and password fields in case we're on
             // a different form.
-            $login = $form.find('input[name="'+siteConfig.login.usernameField'"]');
-            $password = $form.find('input[name="'+siteConfig.login.passwordField'"]');
+            $login = $form.find('input[name="'+siteConfig.login.usernameField+'"]');
+            $password = $form.find('input[name="'+siteConfig.login.passwordField+'"]');
         }
 
         // We are on the login page!
