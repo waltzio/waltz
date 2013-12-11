@@ -47,11 +47,11 @@ pattern](http://developer.chrome.com/extensions/match_patterns.html). Waltz
 will run on any page that matches this pattern. For example, Waltz will be run
 on `https://localhost/hello` and `http://sub.localhost/`.
 
-#### `name`
+#### name
 
 A human readable name. This is displayed in messages to the user.
 
-#### `logout`
+#### logout
 
 Configuration related to logging out. 
 
@@ -60,7 +60,7 @@ Configuration related to logging out.
 A list of cookies. Waltz will delete these cookies when a user logs out on
 their phone via Clef. 
 
-#### `login`
+#### login
 
 Configuration related to logging in.
 
@@ -125,7 +125,7 @@ Here is an example config that has *only* optional fields:
         }
     }
 
-### `login`
+### login
 
 These optional fields are all in the `login` section of the config file.
 
