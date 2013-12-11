@@ -9,7 +9,6 @@ function Sites() {
 Sites.prototype.init = function(data) {
     var _this = this,
         $siteContainer = $('.sites-list'),
-        uncompleted = [],
         completed = [],
         count;
 
@@ -33,10 +32,8 @@ Sites.prototype.init = function(data) {
             _this.storage.getOnboardingSiteData(site.key, function(data) {
                 if (data.loginAttempts.success >= 1) {
                     $siteHTML.addClass('completed fi-check');
-                    completed.push($siteHTML);
-                } else {
-                    uncompleted.push($siteHTML);
                 }
+                completed.push($siteHTML);
 
                 if (--count) (function() { 
                     function sorter(a, b) {
@@ -46,7 +43,7 @@ Sites.prototype.init = function(data) {
                         return 0
                     }
 
-                    $siteContainer.prepend(uncompleted.sort(sorter), completed.sort(sorter)); 
+                    $siteContainer.prepend(completed.sort(sorter)); 
                 })();
             });
         }
