@@ -118,6 +118,9 @@
         		_this.loginCredentials = creds;
 
         		if (_this.options.currentLogin) {
+                    if (!_this.iframe) {
+                        _this.loadIFrame();
+                    }
                     _this.checkAuthentication(function() {
                         var errorMessage = "Invalid username and password.";
                         _this.acknowledgeLoginAttempt({ success: false });
