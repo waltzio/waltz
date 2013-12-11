@@ -38,9 +38,28 @@
 	&.settings {
 		display: none;
 		padding: 20px;
+
+		.settings-container {
+			margin-bottom: 40px;
+		}
+
+		h1 {
+			font-weight: 500;
+			font-size: 30px;
+			margin-bottom: 30px;
+		}
 		ul {
 			list-style: none;
 			margin: 0;
+		}
+
+		.dismissals-container {
+			.dismissed-item {
+				h6 {
+					font-size: 20px;
+					font-weight: 500;
+				}
+			}
 		}
 	}
 

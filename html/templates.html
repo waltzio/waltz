@@ -40,18 +40,59 @@
 </script>
 
 <script type="text/html" class="template" id='settings'>
-<ul class="settings">
-<% _.each(settings, function(item, key, list) { %>
-    <li class="setting" >
-        <div class="row">
-            <div class="small-6 columns end">
-                <label for="<%= key %>"><%= item.name %></label>
-                <input type="text" name="<%= key %>" value="<%= item.value %>">
+<div class="settings-container">
+    <h1>Settings</h1>
+    <ul class="settings">
+    <% _.each(settings, function(item, key, list) { %>
+        <li class="setting" >
+            <div class="row">
+                <div class="small-6 columns end">
+                    <label for="<%= key %>"><%= item.name %></label>
+                    <input type="text" name="<%= key %>" value="<%= item.value %>">
+                </div>
             </div>
-        </div>
-    </li>
-<% }); %>
-</ul>
+        </li>
+    <% }); %>
+    </ul>
+</div>
+</script>
+
+<script type="text/html" class="template" id='dismissals'>
+<div class="dismissals-container">
+    <h1>Waltz has been dismissed in the following places</h1>
+    <ul class="dismissals">
+    <% _.each(dismissals, function(item, key, list) { %>
+        <% if (!item.dismissedForever && !item.pages) return %>
+        <li class="dismissal">
+            <h3 class="name"><%= key %></h3>
+            <% if (item.dismissedForever) { %>
+                <div class="row dismissed-item" data-key="<%= key %>">
+                    <div class="small-6 columns">
+                        <h6>everywhere</h6>
+                    </div>
+                    <div class="small-3 columns end">
+                        <button class="allow">allow</button>
+                    </div>
+                </div>
+            <% } %>
+            <% if (item.pages) { %>
+                <% for (k in item.pages) { %>
+                    <% if (item.pages[k].dismissed) { %>
+                        <div class="row dismissed-item" data-key="<%= key %>" data-path="<%= k %>">
+                            <div class="small-6 columns">
+                                <h6><%= k %></h6>
+                            </div>
+                            <div class="small-3 columns end">
+                                <button class="allow">allow</button>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            <% } %>
+        </li>
+    <% }); %>
+    </ul>
+</div>
 </script>
 
 

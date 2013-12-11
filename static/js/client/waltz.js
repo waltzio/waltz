@@ -157,36 +157,56 @@
 
             $forever.click(function(e) {
                 e.stopPropagation();
-                _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(settings) {
-                    settings.dismissedForever = true;
-                    settings.dismissals = 0;
-                    _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, settings);
-                    $message.find('#'+Message.DISMISS_ID).click();
-                });
-            })
+                _this.storage.getDismissalsForSite(
+                    _this.options.site.config.key, 
+                    function(dismissals) {
+                        dismissals.dismissedForever = true;
+                        dismissals.count = 0;
+                        _this.storage.setDismissalsForSite(
+                            _this.options.site.config.key,
+                            dismissals
+                        );
+                        $message.find('#'+Message.DISMISS_ID).click();
+                    }
+                );
+            });
 
             $page.click(function(e) {
                 e.stopPropagation();
-                _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(settings) {
-                    var pathSettings = settings[window.location.pathname] || {};
-                    pathSettings.dismissed = true;
-                    settings.dismissals = 0;
-                    settings[window.location.pathname] = pathSettings;
-                    _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, settings);
-                    $message.find('#'+Message.DISMISS_ID).click();
-                });
-            })
+
+                _this.storage.getDismissalsForSite(
+                    _this.options.site.config.key,
+                    function(dismissals) {
+                        dismissals.pages = dismissals.pages || {};
+                        var pathSettings = dismissals.pages[window.location.pathname] || {};
+                        pathSettings.dismissed = true;
+                        dismissals.count = 0;
+                        dismissals.pages[window.location.pathname] = pathSettings;
+                        _this.storage.setDismissalsForSite(
+                            _this.options.site.config.key,
+                            dismissals
+                        );
+                        $message.find('#'+Message.DISMISS_ID).click();
+                    }
+                );
+            });
 
             $cancel.click(function(e) {
                 e.stopPropagation();
-                _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(settings) {
-                    // Reset dismissals to re-trigger message after
-                    // DISMISSAL_THRESHOLD more tries.
-                    settings.dismissals = 0;
-                    _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, settings);
-                    $message.find('#'+Message.DISMISS_ID).click();
-                });
-            })
+                _this.storage.getDismissalsForSite(
+                    _this.options.site.config.key,
+                    function(dismissals) {
+                        // Reset dismissals to re-trigger message after
+                        // DISMISSAL_THRESHOLD more tries.
+                        dismissals.count = 0;
+                        _this.storage.setDismissalsForSite(
+                            _this.options.site.config.key,
+                            dismissals
+                        );
+                        $message.find('#'+Message.DISMISS_ID).click();
+                    }
+                );
+            });
 
             $message.attr('class', 'floating fixed');
             $message.attr('style', '');
@@ -617,11 +637,13 @@
 
 		$widget.find(".waltz-dismiss").click(function(e) {
 			e.stopPropagation();
-            _this.storage.getPrivateSettingsForSite(_this.options.site.config.key, function(options) {
-                options = options || { dismissals: 0};
-                options.dismissals += 1;
-                _this.storage.setPrivateSettingsForSite(_this.options.site.config.key, options);
-                _this.trigger('dismiss.widget', { dismissals: options.dismissals });
+            _this.storage.getDismissalsForSite(_this.options.site.config.key, function(dismissals) {
+                dismissals.count = (dismissals.count || 0) + 1;
+                _this.storage.setDismissalsForSite(
+                    _this.options.site.config.key, 
+                    dismissals
+                );
+                _this.trigger('dismiss.widget', { dismissals: dismissals.count });
             });
 
 			_this.hideWidget({ remove: true });
@@ -712,9 +734,10 @@
 	}, function(options) {
 		$(document).ready(function() {
             if (!options) return;
-            new Storage().getPrivateSettingsForSite(options.site.config.key, function(settings) {
-                var pathSettings = settings[window.location.pathname];
-                if (!settings.dismissedForever && !(pathSettings && pathSettings.dismissed)) {
+            new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
+                var pageSettings = dismissals.pages || {};
+                var pathSettings = pageSettings[window.location.pathname];
+                if (!dismissals.dismissedForever && !(pathSettings && pathSettings.dismissed)) {
                     var waltz = new Waltz(options);
                 }
             });

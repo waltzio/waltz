@@ -13,6 +13,9 @@ Storage.prototype.OPTIONS_KEY = "options";
 Storage.prototype.ONBOARDING_KEY = "onboarding";
 Storage.prototype.ONBOARDING_SITES_KEY = "sites";
 Storage.prototype.PRIVATE_SETTINGS_KEY = "private";
+Storage.prototype.DISMISSALS_KEY = "dismissals";
+
+Storage.prototype.dismissForeverKey = "forever";
 
 Storage.prototype.optionsDefaults = {
     cy_url: "https://api.waltz.io"
@@ -161,6 +164,53 @@ Storage.prototype.setOption = function(key, value, cb) {
         chrome.storage.local.set({options: options}, cb);
     });
 }
+
+Storage.prototype.getDismissals = function(cb) {
+    var _this = this,
+        promise = $.Deferred();
+    this.get(this.DISMISSALS_KEY, function(options) {
+        var ret;
+        if(options[_this.DISMISSALS_KEY]) {
+            ret = options[_this.DISMISSALS_KEY];
+        } else {
+            ret = {};
+            _this.setDismissals(ret);
+        }
+        if (typeof cb === "function") cb(ret);
+        promise.resolve(ret);
+    });
+
+    return promise;
+}
+
+Storage.prototype.setDismissals = function(options, cb) {
+    var save = {};
+    save[this.DISMISSALS_KEY] = options;
+    this.set(save, cb);
+}
+
+Storage.prototype.getDismissalsForSite = function(domain, cb) {
+    this.getDismissals(function(options) {
+        cb(options[domain] || {});
+    });
+}
+
+Storage.prototype.setDismissalsForSite = function(domain, siteDismissals, cb) {
+    var _this = this;
+    this.getDismissals(function(dismissals) {
+        dismissals[domain] = siteDismissals;
+        _this.setDismissals(dismissals, cb);
+    });
+}
+
+Storage.prototype.setDismissalForSite = function(domain, key, cb) {
+    var _this = this;
+    this.getDismissalsForSite(domain, function(dismissals) {
+        dismissals[key] = true;
+        _this.setDismissalsForSite(domain, dismissals, cb);
+    });
+}
+
 
 Storage.prototype.getPrivateSettings = function(cb) {
     var _this = this;

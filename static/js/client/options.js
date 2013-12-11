@@ -15,6 +15,7 @@ Options.prototype.decryptButtonSelector = "button.decrypt";
 Options.prototype.forgetButtonSelector = "button.forget";
 Options.prototype.saveButtonSelector = "button.save";
 Options.prototype.showButtonSelector = "button.show";
+Options.prototype.allowButtonSelector = "button.allow";
 
 Options.prototype.defaults = {}
 
@@ -31,14 +32,16 @@ function Options() {
 
 	var optionsReady = this.storage.getOptions();
 	var credentialsReady = this.storage.getCredentials();
+	var dismissalsReady = this.storage.getDismissals();
 
-	$.when(optionsReady, credentialsReady)
+	$.when(optionsReady, credentialsReady, dismissalsReady)
 	 .then(this.init.bind(this));
 }
 
-Options.prototype.init = function(options, credentials) {
+Options.prototype.init = function(options, credentials, dismissals) {
 	this.options = _.defaults(options, this.defaults);
 	this.credentials = credentials;
+	this.dismissals = dismissals;
 
 	this.render();
 };
@@ -59,7 +62,6 @@ Options.prototype.render = function() {
 		}
 	));
 
-
 	// only pick the settings, which we've explicitly declared we want to
 	// show
 	var displaySettings = _.clone(this.settingsMetaMap);
@@ -70,6 +72,14 @@ Options.prototype.render = function() {
 		{ settings: displaySettings },
 		function(html) {
 			$settings.prepend(html);
+		}
+	));
+
+	renderingComplete.push(this.templater.template(
+		'dismissals',
+		{ dismissals: this.dismissals },
+		function(html) {
+			$settings.append(html);
 		}
 	));
 	
@@ -99,6 +109,32 @@ Options.prototype.attachSettingsHandlers = function() {
 		$settings.find('input').each(function() {
 			_this.storage.setOption(this.name, $(this).val());
 		});
+	});
+
+	$settings.find(this.allowButtonSelector).click(function() {
+		var $item = $(this).parents('.dismissed-item'),
+			loading = triggerLoading(this, { promise: true });
+
+		_this.storage.getDismissalsForSite(
+			$item.data('key'),
+			function(dismissals) {
+				console.log(dismissals);
+				if ($item.data('path')) {
+					delete(dismissals.pages[$item.data('path')]);
+					if (Object.keys(dismissals.pages).length === 0) {
+						delete(dismissals['pages']);
+					}
+				} else {
+					dismissals.dismissedForever = false;
+				}
+				_this.storage.setDismissalsForSite(
+					$item.data('key'),
+					dismissals
+				);
+				loading.resolve();
+				$item.slideUp();
+			}
+		);
 	});
 }
 
