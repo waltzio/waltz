@@ -339,8 +339,16 @@
             $password = findInput(siteConfig.login.passwordField);
             $form = $login.parents('form');
 
+        if (siteConfig.login.submitButtonValue) {
+            $form = $form.filter(':has(input[type="submit"][value="'+siteConfig.login.submitButtonValue+'"])');
+            // Re-select the login and password fields in case we're on
+            // a different form.
+            $login = $form.find('input[name="'+siteConfig.login.usernameField'"]');
+            $password = $form.find('input[name="'+siteConfig.login.passwordField'"]');
+        }
+
         // We are on the login page!
-        if ($login.length > 0 && $password.length > 0 && $form.attr('action') === siteConfig.login.formURL) {
+        if ($login.length > 0 && $password.length > 0) {
 			var $newLogin = $login.clone(),
 				$newPassword = $password.clone();
 
@@ -383,7 +391,11 @@
 				var appendInputs = function(data) {
 					var $data = $(data);
                     var $login = $data.find('input[name="'+siteConfig.login.usernameField+'"]');
-                    var $inputs = $login.parents('form').find('input');
+                    var $form = $login.parents('form');
+                    if (siteConfig.login.submitButtonValue) {
+                        $form = $form.filter(':has(input[type="submit"][value="'+siteConfig.login.submitButtonValue+'"])');
+                    }
+                    var $inputs = $form.find('input');
 
 					$inputs = $inputs.filter(function(input) { 
 						return $(this).attr('name') != siteConfig.login.passwordField &&
