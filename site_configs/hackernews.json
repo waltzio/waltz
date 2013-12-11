@@ -10,7 +10,7 @@
             "method": "POST",
             "usernameField": "u",
             "passwordField": "p",
-            "submitButtonValue": "login",
+            "submitButton": "input[value='login']",
             "hasHiddenInputs": true,
             "check": "a:contains('logout')",
             "exclude": {
