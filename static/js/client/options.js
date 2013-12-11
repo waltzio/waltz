@@ -256,10 +256,18 @@ Options.prototype.loginWithClef = function(callback) {
 	$("body").append($iframe);
 
 
-	addEventListener("message", function(e) {
+	addEventListener("message", function handleMessage(e) {
+		console.log(e);
 		if(e.data.auth) {
 			$iframe.fadeOut(200, function() { $(this).remove(); });
 			if (typeof callback === "function") callback();
+			removeEventListener("message", handleMessage);
+		}
+
+		if (e.data && e.data.method == "closeIFrame") {
+			e.stopPropagation();
+			$iframe.remove();
+			removeEventListener("message", handleMessage);
 		}
 	});
 }
