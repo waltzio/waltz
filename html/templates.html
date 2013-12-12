@@ -1,0 +1,119 @@
+<script type="text/html" class="template" id='credentials'>
+<ul class="credentials">
+<% _.each(credentials, function(item, key, list) { %>
+    <li class="credential" data-key="<%= key %>" data-password="<%= item.password %>" data-username="<%= item.username %>">
+        <div class="information-container">
+            <div class="row">
+                <div class="small-6 columns information">
+                    <h4 class="name"><%= key %></h4>
+                    <h6 class="username"><%= item.username %></h6>
+                </div>
+                <div class="small-3 columns">
+                    <button class="decrypt">decrypt</button>
+                </div>
+                <div class="small-3 columns end">
+                    <button class="forget">forget</button>
+                </div>
+            </div>
+        </div>
+        <div class="decrypted-container">
+            <div class="row">
+                <div class="small-3 columns">
+                    <input name="username" type="text" value="<%= item.username %>">
+                </div>
+                <div class="small-3 columns">
+                    <input name="password" type="password" value="" class="toggled">
+                    <input name="password" type="text" value="">
+                </div>
+                <div class="small-3 columns end">
+                    <button class="show">show</button>
+                </div>
+                <div class="small-3 columns buttons end">
+                    <button class="save">save</button>
+                </div>
+            </div>
+        </div>
+        
+    </li>
+<% }); %>
+</ul>
+</script>
+
+<script type="text/html" class="template" id='settings'>
+<div class="settings-container">
+    <h1>Settings</h1>
+    <ul class="settings">
+    <% _.each(settings, function(item, key, list) { %>
+        <li class="setting" >
+            <div class="row">
+                <div class="small-6 columns end">
+                    <label for="<%= key %>"><%= item.name %></label>
+                    <input type="text" name="<%= key %>" value="<%= item.value %>">
+                </div>
+            </div>
+        </li>
+    <% }); %>
+    </ul>
+</div>
+</script>
+
+<script type="text/html" class="template" id='dismissals'>
+<div class="dismissals-container">
+    <h1>Waltz has been dismissed in the following places</h1>
+    <ul class="dismissals">
+    <% _.each(dismissals, function(item, key, list) { %>
+        <% if (!item.dismissedForever && !item.pages) return %>
+        <li class="dismissal">
+            <h3 class="name"><%= key %></h3>
+            <% if (item.dismissedForever) { %>
+                <div class="row dismissed-item" data-key="<%= key %>">
+                    <div class="small-6 columns">
+                        <h6>everywhere</h6>
+                    </div>
+                    <div class="small-3 columns end">
+                        <button class="allow">allow</button>
+                    </div>
+                </div>
+            <% } %>
+            <% if (item.pages) { %>
+                <% for (k in item.pages) { %>
+                    <% if (item.pages[k].dismissed) { %>
+                        <div class="row dismissed-item" data-key="<%= key %>" data-path="<%= k %>">
+                            <div class="small-6 columns">
+                                <h6><%= k %></h6>
+                            </div>
+                            <div class="small-3 columns end">
+                                <button class="allow">allow</button>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            <% } %>
+        </li>
+    <% }); %>
+    </ul>
+</div>
+</script>
+
+
+<script src="/static/js/vendor/jquery.min.js"></script>
+<script src="/static/js/vendor/underscore-min.js"></script>
+
+<script>
+    function template(name, context, html) {
+        if (!html) {
+            html = $('#' + name).html();
+        }
+       return _.template(html, context);
+    }
+
+    window.addEventListener('message', function(e) {
+        if (e.data.method === "template") {
+            e.source.postMessage({
+                method: "returnTemplate",
+                html: template(e.data.named, e.data.context, e.data.html),
+                named: e.data.named
+            }, '*');
+        }
+    });
+</script>

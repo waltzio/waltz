@@ -1,14 +1,21 @@
 {
     "*://*.helpscout.net/*": {
+        "name": "Help Scout",
         "logout": {
-            "cookies": ["PHPSESSID"]
+            "cookies": ["PHPSESSID", "PL-TOKEN"]
         },
         "login": {
-            "url": "https://secure.helpscout.net/members/process/login",
+            "urls": ["https://secure.helpscout.net/members/login/"],
+            "formURL": "https://secure.helpscout.net/members/process/login",
             "method": "POST",
             "usernameField": "email",
             "passwordField": "password",
-            "check": "a:contains(Logout)"
+            "submitButton": "button:contains(Login)",
+            "check": "a:contains(Logout)",
+            "exclude": {
+                "forcedRedirectURLs" : ["https://www.helpscout.net"],
+                "nextURLs": []
+            }
         }
     }
 }

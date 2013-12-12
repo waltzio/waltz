@@ -1,14 +1,22 @@
 {
     "*://*.facebook.com/*": {
+        "name": "Facebook",
         "logout": {
             "cookies": ["c_user"]
         },
         "login": {
-            "url": "https://www.facebook.com/login.php?login_attempt=1",
+            "urls": ["https://www.facebook.com"],
+            "formURL": "https://www.facebook.com/login.php?login_attempt=1",
             "method": "POST",
             "usernameField": "email",
             "passwordField": "pass",
-            "check": "input[type='submit'][value='Log Out']"
+            "check": "input[type='submit'][value='Log Out'], .UIIntentionalStory_Pic",
+            "twoFactor": [
+                {
+                    "url": "https://www.facebook.com/checkpoint/",
+                    "check": "input[name]='approvals_code'"
+                }     
+            ]
         }
     }
 }

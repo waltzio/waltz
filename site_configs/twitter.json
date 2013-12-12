@@ -1,18 +1,31 @@
 {
     "*://*.twitter.com/*": {
+        "name": "Twitter",
         "logout": {
             "cookies": ["auth_token"]
         },
         "login": {
-            "url": "https://twitter.com/sessions",
+            "urls": ["https://twitter.com/login"],
+            "formURL": "https://twitter.com/sessions",
             "method": "POST",
             "usernameField": "session[username_or_email]",
             "passwordField": "session[password]",
-            "other": {
-                "url": "https://twitter.com/login",
-                "fields": ["authenticity_token"]
-            },
-            "check": "button:contains('Sign out')"
+            "hasHiddenInputs": true,
+            "check": "button:contains('Sign out'), input:contains('Sign out'), .current-user",
+            "twoFactor": [
+                {
+                    "url": "https://twitter.com/account/login_verification/push",
+                    "check": "div.login-verification-push"
+                },
+                { 
+                    "url": "https://twitter.com/account/login_verification/sms",
+                    "check": "input[name]='token'"
+                }
+            ],
+            "exclude": {
+                "forcedRedirectURLs" : ["https://about.twitter.com/download"],
+                "nextURLs": ["https://twitter.com/login/captcha", "https://twitter.com/login/error"]
+            }
         }
     }
 }

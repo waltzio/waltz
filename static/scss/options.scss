@@ -1,0 +1,133 @@
+@import "_settings";
+@import "../foundation/scss/foundation.scss";
+@import "_mixins";
+@import "_animations";
+
+.clear {
+	clear: both;
+}
+/** Styles **/
+.header {
+	border-bottom: 1px solid #EEE;
+}
+
+.nav-bar {
+	padding: 0;
+	ul {
+		padding: 0;
+	}
+	li {
+		margin: 0;
+		a {
+			padding: 20px 20px;
+		}
+		&:hover {
+			background: #EEE;
+		}
+	}
+}
+
+.main-content {
+	h2 {
+		text-align: center;
+		margin-top: 0;
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
+
+	&.settings {
+		display: none;
+		padding: 20px;
+
+		.settings-container {
+			margin-bottom: 40px;
+		}
+
+		h1 {
+			font-weight: 500;
+			font-size: 30px;
+			margin-bottom: 30px;
+		}
+		ul {
+			list-style: none;
+			margin: 0;
+		}
+
+		.dismissals-container {
+			.dismissed-item {
+				h6 {
+					font-size: 20px;
+					font-weight: 500;
+				}
+			}
+		}
+	}
+
+	&.sites-list {
+
+		ul {
+			list-style: none;
+	
+			li.credential {
+				margin: 40px 0;
+			}
+
+			.information-container {
+				.information, .buttons {
+					float: left;
+				}
+				.information {
+					min-width: 200px;
+					h4, h6 {
+						margin: 0;
+					}
+				}
+
+				button.forget {
+				}
+			}
+
+			.decrypted-container {
+				display: none;
+
+				input {
+					margin: 0;
+					&[name="password"] {
+						&:not(.toggled) {
+							display: none;
+						}
+					}
+				}
+
+				button {
+					padding: 8px;
+				}
+			}
+		}
+	}
+
+	button {
+		width: 100%;
+		&.forget {
+			background: $red;
+			&:hover {
+				background: darken($red, 5%);
+			}
+		}
+
+		&.save {
+			background: $green;
+			&:hover {
+				background: darken($green, 5%);
+			}
+		}
+
+		&.loading {
+			 -webkit-animation-name: opacity-pulse;
+			  -webkit-animation-duration: 1s;
+			  -webkit-animation-iteration-count: infinite;
+			  -webkit-animation-timing-function: linear;
+			  transition: 1s;
+		}
+	}
+}

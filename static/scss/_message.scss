@@ -1,0 +1,152 @@
+#waltz-message {
+    $color: white;
+    $border-color: #111;
+    font-family: $font-family;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+    display: none;
+    z-index: 9999;
+    color: #111;
+    background: $color;
+    padding: 0;
+    width: 280px;
+    border: 2px solid $border-color;
+    border-radius: 5px;
+
+    p {
+        margin: 20px;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 1.2em;
+        text-align: left;
+    }
+
+    &.floating {
+        position: absolute;
+
+        &.fixed {
+            position: fixed;
+        }
+
+
+        $arrow-size: 10px;
+        &:after, &:before {
+            content: " ";
+            position: absolute;
+            border: $arrow-size solid transparent;
+            height: 0;
+            width: 0;
+            pointer-events: none;
+        }
+        &.right-arrow {
+            // &:after {
+            //     right: -$arrow-size - 10px;
+            //     top: 25%;
+            //     border-left: $arrow-size solid $color;
+            // }
+
+            &:after, &:before {
+                left: 100%;
+                top: 20px;
+            }
+
+            &:after {
+                border-left-color: $color;
+                border-width: $arrow-size;
+                margin-top: -$arrow-size;
+            }
+            &:before {
+                border-left-color: $border-color;
+                border-width: $arrow-size + 3;
+                margin-top: -($arrow-size + 3);
+            }
+        }
+        &.left-arrow {
+            &:after, &:before {
+                right: 100%;
+                top: 20px;
+            }
+
+            &:after {
+                border-right-color: $color;
+                border-width: $arrow-size;
+                margin-top: -$arrow-size;
+            }
+            &:before {
+                border-right-color: $border-color;
+                border-width: $arrow-size + 3;
+                margin-top: -($arrow-size + 3);
+            }
+        }
+        &.top-arrow {
+            &:after, &:before {
+                left: 50%;
+                bottom: 100%;
+            }
+
+            &:after {
+                border-bottom-color: $color;
+                border-width: $arrow-size;
+                margin-left: -$arrow-size;
+            }
+            &:before {
+                border-bottom-color: $border-color;
+                border-width: $arrow-size + 3;
+                margin-left: -($arrow-size + 3);
+            }
+        }
+        &.bottom-arrow {
+
+            &:after, &:before {
+                left: 50%;
+                top: 100%;
+            }
+
+            &:after {
+                border-top-color: $color;
+                border-width: $arrow-size;
+                margin-left: -$arrow-size;
+            }
+            &:before {
+                border-top-color: $border-color;
+                border-width: $arrow-size + 3;
+                margin-left: -($arrow-size + 3);
+            }
+        }
+    }
+
+    &.bottom {
+        position: fixed;
+        background: white;
+        color: #111;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+
+    &.click {
+        cursor: pointer;
+        &:hover {
+            background: #DDD;
+        }
+    }
+
+    #waltz-message-dismiss {
+        top: 0;
+        left: 3px;
+        position: absolute;
+        color: #111;
+        font-size: 20px;
+        text-align: center;
+        cursor: pointer;
+        font-weight: 700;
+        line-height: 1;
+
+        &:hover {
+            color: #444;
+        }
+    }
+
+    #waltz-hide-for-site, #waltz-hide-for-page, #waltz-hide-cancel {
+        @include popup-button(#777, false);
+    }
+}

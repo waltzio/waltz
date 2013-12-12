@@ -1,0 +1,34 @@
+#waltz-onboarding-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9990;
+    width: 100%;
+    height: 100%;
+    -webkit-transition: background .5s;
+    cursor: default;
+    background: rgba(255, 255, 255, 0.7);
+
+    img {
+        position: absolute;
+        width: 300px;
+        top: 50px;
+        left: 50px;
+    }
+}
+
+
+$wiggle-size: .5deg;
+/* safari and chrome */
+@-webkit-keyframes wiggle {
+    0% {-webkit-transform:rotate($wiggle-size);}
+    50% {-webkit-transform:rotate(-$wiggle-size);}
+    100% {-webkit-transform:rotate($wiggle-size);}
+}
+ 
+/* anyone brave enough to implement the ideal method */
+@keyframes wiggle {
+    0% {transform:rotate($wiggle-size);}
+    50% {transform:rotate(-$wiggle-size);}
+    100% {transform:rotate($wiggle-size);}
+}

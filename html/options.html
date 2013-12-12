@@ -1,31 +1,41 @@
 <html>
 <head>
   <title>Waltz Options</title>
-  <link rel="stylesheet" href="/css/options.css" type="text/css" />
+  <link rel="stylesheet" href="/static/css/options.css" type="text/css" />
 </head>
 
 <body>
-	<header><h1>Waltz</h1></header>
-	<nav>
-		<ul>
-			<li class="sites-tab" data-target=".sites-list">Sites</li>
-			<li class="settings-tab" data-target=".settings">Settings</li>
-		</ul>
-	</nav>
-	<div class="sites-list main-content">
-		<h2>Sites</h2>
-		<ul>
-		</ul>
+	<div class="row header">
+		<div class="large-12 columns">
+			<h1>Manage Waltz</h1>
+		</div>
 	</div>
-	<div class="settings main-content">
-		<h2>Settings</h2>
-		<div class="all-settings">
-			<label for="cy-url">Cy Server URL: </label> <input type="text" name="cy_url" id="cy-url" value="https://api.waltz.io" /><br>
+
+	<div class="row">
+		<div class="small-2 columns nav-bar">
+			<ul class="side-nav">
+				<li class="sites-tab active" data-target=".sites-list"><a href="#">Sites</a></li>
+				<li class="settings-tab" data-target=".settings"><a href="#">Settings</a></li>
+			</ul>
+		</div>
+		<div class="small-10 columns">
+			<div class="sites-list main-content">
+			</div>
+			<div class="settings main-content">
+				<div class="row">
+					<div class="small-4 columns">
+						<button class="save">save settings</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>
 
-<script src="/js/vendor/jquery.min.js"></script>
-<script src="/js/client/options.js"></script>
+<script src="/static/js/vendor/jquery.min.js"></script>
+<script src="/static/js/vendor/underscore-min.js"></script>
+<script src="/static/js/shared/templater.js"></script>
+<script src="/static/js/shared/storage.js"></script>
+<script src="/static/js/client/options.js"></script>
 
 </html>

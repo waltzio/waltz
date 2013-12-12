@@ -1,0 +1,68 @@
+@import "_settings";
+@import "_mixins";
+@import "../foundation/scss/foundation";
+
+html, body {
+    width: 300px;
+}
+
+#waltz-popup {
+    border: none;
+    ul {
+        list-style: none;
+        margin: 0;
+    }
+
+    a {
+
+        &.sites {
+            @include popup-button(#0390DC);
+        }
+
+        &.tutorial {
+            @include popup-button(#DD0005);
+        }
+
+        &.settings {
+            @include popup-button(#EB6800);
+        }
+
+        &.request {
+            @include popup-button(#00B45C);
+        }
+    }
+
+    .request-container {
+        display: none;
+
+        .columns {
+            padding: 5px;
+        }
+        width: 90%;
+        margin: auto;
+        a.request-twitter {
+            @include popup-button($twitter-color);
+        }
+
+        a.request-github {
+            @include popup-button($github-color);
+        }
+
+        a.request-email {
+            @include popup-button(#999);
+        }
+
+        a.request-twitter, a.request-github, a.request-email {
+            font-size: 14px;
+            padding: 5px 0 35px 0;
+            text-align: center;
+            &:before {
+                width: 100%;
+                text-align: center;
+                font-size: 25px;
+                top: 25px;
+            }
+        }
+        
+    }
+}

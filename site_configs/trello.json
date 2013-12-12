@@ -1,13 +1,16 @@
 {
     "*://*.trello.com/*": {
+        "name": "Trello",
         "logout": {
             "cookies": ["token"]
         },
         "login": {
-            "url": "https://trello.com/authenticate",
+            "urls": ["https://trello.com/login"],
+            "formURL": "https://trello.com/authenticate",
             "method": "POST",
             "usernameField": "user",
             "passwordField": "password",
+            "hasHiddenInputs": true,
             "check": "a.header-auth.member"
         }
     }

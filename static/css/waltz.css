@@ -1,0 +1,473 @@
+@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
+@-webkit-keyframes slide-behind {
+  0% {
+    left: 0;
+    top: 0;
+  }
+
+  50% {
+    left: -700px;
+    top: -50px;
+  }
+
+  70% {
+    z-index: 0;
+    opacity: 1;
+  }
+
+  100% {
+    left: 0;
+    top: 0;
+    z-index: 0;
+    background: #DDD;
+  }
+}
+
+@-webkit-keyframes pulse {
+  0%, 10%, 20%, 30%, 100% {
+    -webkit-transform: scale(1, 1);
+  }
+
+  5%, 15%, 25% {
+    -webkit-transform: scale(1.15, 1.15);
+  }
+}
+
+@-webkit-keyframes opacity-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+}
+
+#waltz-credential-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9990;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background: -moz-radial-gradient(center, ellipse cover, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(0, 0, 0, 0.4)), color-stop(100%, rgba(0, 0, 0, 0.7)));
+  /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* IE10+ */
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33000000', endColorstr='#b3000000',GradientType=1 );
+  -webkit-transition: opacity .5s;
+  cursor: default;
+}
+#waltz-credential-overlay.tutorial {
+  background: none;
+}
+#waltz-credential-overlay.slide-in {
+  opacity: 1;
+}
+#waltz-credential-overlay::after {
+  position: absolute;
+  color: white;
+  content: "×";
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+  line-height: 20px;
+  margin: 0;
+  opacity: .5;
+  cursor: pointer;
+  z-index: 9999;
+}
+#waltz-credential-overlay::after:hover {
+  opacity: 1;
+}
+
+#waltz-credential-form {
+  width: 280px;
+  background-color: black;
+  background-repeat: no-repeat;
+  background-position: 50% 20px;
+  background-size: 50px;
+  box-shadow: 0 0px 10px #000;
+  margin: auto;
+  margin-top: -500px;
+  padding-bottom: 1px;
+  -webkit-transition: .2s;
+  position: relative;
+}
+#waltz-credential-form.slide-in {
+  margin-top: 0;
+}
+#waltz-credential-form #waltz-credential-username,
+#waltz-credential-form #waltz-credential-password,
+#waltz-credential-form #waltz-credential-submit,
+#waltz-credential-form #waltz-credential-alert {
+  font-family: "Gill Sans", "Helvetica Neue", "Helvetica", serif;
+  font-weight: 300;
+  font-size: 18px;
+  padding: 5px;
+  margin: 20px;
+  border-radius: 0px;
+  display: block;
+  border: 1px solid black;
+}
+#waltz-credential-form #waltz-credential-username:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-password:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-submit:not(#waltz-credential-submit),
+#waltz-credential-form #waltz-credential-alert:not(#waltz-credential-submit) {
+  -webkit-transition: .5s;
+  -webkit-box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.54);
+}
+#waltz-credential-form #waltz-credential-username:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-password:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-submit:not(#waltz-credential-submit):focus,
+#waltz-credential-form #waltz-credential-alert:not(#waltz-credential-submit):focus {
+  outline: none;
+  border-color: #fe93ca;
+  -webkit-box-shadow: 0 0 10px #fe93ca;
+}
+#waltz-credential-form #waltz-credential-logos {
+  width: 200px;
+  margin: auto;
+  position: relative;
+}
+#waltz-credential-form #waltz-credential-logos img, #waltz-credential-form #waltz-credential-logos div#waltz-credential-site-logo {
+  width: 40px;
+  border-radius: 20px;
+  margin: 20px;
+  display: inline-block;
+}
+#waltz-credential-form #waltz-credential-logos img#waltz-credential-arrow, #waltz-credential-form #waltz-credential-logos div#waltz-credential-site-logo#waltz-credential-arrow {
+  margin: 20px 0;
+}
+#waltz-credential-form #waltz-credential-logos div#waltz-credential-site-logo {
+  height: 40px;
+  background: white;
+  background-size: 65% 65%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+#waltz-credential-form #waltz-credential-logos:after {
+  content: " ";
+  background-image: url("chrome-extension://__MSG_@@extension_id__/static/img/lock.png");
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-size: 12%;
+  background-position: 50% 10%;
+  background-repeat: no-repeat;
+  opacity: .5;
+}
+#waltz-credential-form #waltz-credential-message {
+  font-family: "Gill Sans", "Helvetica Neue", "Helvetica", serif;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  margin: 0;
+  padding: 0 10px;
+}
+#waltz-credential-form #waltz-credential-username {
+  width: 230px;
+}
+#waltz-credential-form #waltz-credential-password {
+  display: inline-block;
+  width: 190px;
+  margin-left: 20px;
+  margin-right: 0;
+  margin-top: 0;
+}
+#waltz-credential-form #waltz-credential-submit {
+  border: none;
+  color: white;
+  cursor: pointer;
+  background: white;
+  color: black;
+  width: 30px;
+  display: inline-block;
+  -webkit-transition: .5s;
+  margin: 0;
+  margin-left: 10px;
+  color: white;
+  background: transparent;
+  background-position: center center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  -webkit-border-radius: 20px;
+}
+#waltz-credential-form #waltz-credential-submit:hover {
+  background-color: #f50380;
+}
+#waltz-credential-form #waltz-credential-submit:after {
+  display: block;
+  clear: both;
+}
+#waltz-credential-form #waltz-credential-alert {
+  margin-top: 20px;
+  font-size: 14px;
+  background-color: #f65058;
+  color: white;
+}
+
+.waltz-clear {
+  clear: both;
+}
+
+#waltz-message {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: none;
+  z-index: 9999;
+  color: #111;
+  background: white;
+  padding: 0;
+  width: 280px;
+  border: 2px solid #111111;
+  border-radius: 5px;
+}
+#waltz-message p {
+  margin: 20px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2em;
+  text-align: left;
+}
+#waltz-message.floating {
+  position: absolute;
+}
+#waltz-message.floating.fixed {
+  position: fixed;
+}
+#waltz-message.floating:after, #waltz-message.floating:before {
+  content: " ";
+  position: absolute;
+  border: 10px solid transparent;
+  height: 0;
+  width: 0;
+  pointer-events: none;
+}
+#waltz-message.floating.right-arrow:after, #waltz-message.floating.right-arrow:before {
+  left: 100%;
+  top: 20px;
+}
+#waltz-message.floating.right-arrow:after {
+  border-left-color: white;
+  border-width: 10px;
+  margin-top: -10px;
+}
+#waltz-message.floating.right-arrow:before {
+  border-left-color: #111111;
+  border-width: 13px;
+  margin-top: -13px;
+}
+#waltz-message.floating.left-arrow:after, #waltz-message.floating.left-arrow:before {
+  right: 100%;
+  top: 20px;
+}
+#waltz-message.floating.left-arrow:after {
+  border-right-color: white;
+  border-width: 10px;
+  margin-top: -10px;
+}
+#waltz-message.floating.left-arrow:before {
+  border-right-color: #111111;
+  border-width: 13px;
+  margin-top: -13px;
+}
+#waltz-message.floating.top-arrow:after, #waltz-message.floating.top-arrow:before {
+  left: 50%;
+  bottom: 100%;
+}
+#waltz-message.floating.top-arrow:after {
+  border-bottom-color: white;
+  border-width: 10px;
+  margin-left: -10px;
+}
+#waltz-message.floating.top-arrow:before {
+  border-bottom-color: #111111;
+  border-width: 13px;
+  margin-left: -13px;
+}
+#waltz-message.floating.bottom-arrow:after, #waltz-message.floating.bottom-arrow:before {
+  left: 50%;
+  top: 100%;
+}
+#waltz-message.floating.bottom-arrow:after {
+  border-top-color: white;
+  border-width: 10px;
+  margin-left: -10px;
+}
+#waltz-message.floating.bottom-arrow:before {
+  border-top-color: #111111;
+  border-width: 13px;
+  margin-left: -13px;
+}
+#waltz-message.bottom {
+  position: fixed;
+  background: white;
+  color: #111;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+#waltz-message.click {
+  cursor: pointer;
+}
+#waltz-message.click:hover {
+  background: #DDD;
+}
+#waltz-message #waltz-message-dismiss {
+  top: 0;
+  left: 3px;
+  position: absolute;
+  color: #111;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+}
+#waltz-message #waltz-message-dismiss:hover {
+  color: #444;
+}
+#waltz-message #waltz-hide-for-site, #waltz-message #waltz-hide-for-page, #waltz-message #waltz-hide-cancel {
+  box-shadow: 3px 3px 0 0 #5e5e5e;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #777777;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+}
+#waltz-message #waltz-hide-for-site:hover, #waltz-message #waltz-hide-for-page:hover, #waltz-message #waltz-hide-cancel:hover {
+  box-shadow: 2px 2px 0 0 #5e5e5e;
+}
+#waltz-message #waltz-hide-for-site:active, #waltz-message #waltz-hide-for-page:active, #waltz-message #waltz-hide-cancel:active {
+  box-shadow: 1px 1px 0 0 #5e5e5e;
+}
+#waltz-message #waltz-hide-for-site:focus, #waltz-message #waltz-hide-for-site:active, #waltz-message #waltz-hide-for-page:focus, #waltz-message #waltz-hide-for-page:active, #waltz-message #waltz-hide-cancel:focus, #waltz-message #waltz-hide-cancel:active {
+  outline: none;
+}
+#waltz-message #waltz-hide-for-site:hover, #waltz-message #waltz-hide-for-page:hover, #waltz-message #waltz-hide-cancel:hover {
+  background: #7c7c7c;
+}
+
+#waltz-onboarding-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9990;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: background .5s;
+  cursor: default;
+  background: rgba(255, 255, 255, 0.7);
+}
+#waltz-onboarding-overlay img {
+  position: absolute;
+  width: 300px;
+  top: 50px;
+  left: 50px;
+}
+
+/* safari and chrome */
+@-webkit-keyframes wiggle {
+  0% {
+    -webkit-transform: rotate(0.5deg);
+  }
+
+  50% {
+    -webkit-transform: rotate(-0.5deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(0.5deg);
+  }
+}
+
+/* anyone brave enough to implement the ideal method */
+@keyframes wiggle {
+  0% {
+    transform: rotate(0.5deg);
+  }
+
+  50% {
+    transform: rotate(-0.5deg);
+  }
+
+  100% {
+    transform: rotate(0.5deg);
+  }
+}
+
+#waltz-login-wrapper {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  z-index: 9999;
+  width: 64px;
+  height: 64px;
+}
+#waltz-login-wrapper.waltz-remove {
+  right: -114px;
+}
+#waltz-login-wrapper #waltz-login-button {
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  border-radius: 32px;
+  background-size: 64px;
+  cursor: pointer;
+  background-position: center;
+  z-index: 9999;
+  -webkit-transition: .5s;
+  -webkit-animation-name: pulse;
+  -webkit-animation-duration: 4s;
+  -webkit-animation-iteration-count: infinite;
+}
+#waltz-login-wrapper #waltz-login-button:hover {
+  background-color: black;
+}
+#waltz-login-wrapper .waltz-button {
+  height: 20px;
+  width: 20px;
+  border-radius: 10px;
+  display: block;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  position: absolute;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+#waltz-login-wrapper .waltz-button.waltz-dismiss {
+  background-size: 100%;
+  background-position: center center;
+  background-color: transparent;
+  top: -10px;
+  right: -10px;
+  transition: background-color 200ms;
+}
+#waltz-login-wrapper .waltz-button.waltz-dismiss:hover {
+  background-color: #dd0005;
+}

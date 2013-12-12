@@ -1,0 +1,88 @@
+@import "_settings";
+@import "_mixins";
+@import "../foundation/scss/foundation";
+
+#sites {
+    font-family: $font-family;
+    & > * {
+        font-family: inherit;
+    }
+
+    header {
+        padding: 30px 0;
+        margin-bottom: 30px;
+        
+        h2 {
+            font-weight: 700;
+        }
+
+        .congratulations {
+            display: none;
+
+            .columns {
+                padding-left: 0;
+            }
+
+            .twitter {
+                @include popup-button($twitter-color);
+            }
+            .facebook {
+                @include popup-button($facebook-color);
+            }
+        }
+
+        border-bottom: 1px solid #EEE;
+    }
+    
+
+    .sites-list {
+        padding: 0;
+        text-align: center;
+
+        li {
+            width: 20%;
+            float: left;
+            margin: 20px 0;
+            padding-bottom: 20px;
+            position: relative;
+            &:hover {
+                background: #EEE;
+            }
+
+            &.completed {
+                opacity: .3;
+                &:before {
+                    position: absolute;
+                    top: 50px;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;
+                    font-size: 140px;
+                    text-align: center;
+                    color: $green;
+                    z-index: 1;
+                }
+            }
+
+            h4 {
+                font-weight: 700;
+            }
+
+            a {
+                z-index: 2;
+                text-decoration: none;
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            img {
+                height: 120px;
+                width: 120px;
+            }
+        }
+    }
+}
+

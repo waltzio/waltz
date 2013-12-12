@@ -1,14 +1,16 @@
 {
     "*://*.pivotaltracker.com/*": {
+        "name": "Pivotal Tracker",
         "logout": {
             "cookies": ["t_session"]
         },
         "login": {
-            "url": "https://www.pivotaltracker.com/signin",
+            "urls": ["https://www.pivotaltracker.com/signin"],
+            "formURL": "https://www.pivotaltracker.com/signin",
             "method": "POST",
             "usernameField": "credentials[username]",
             "passwordField": "credentials[password]",
-            "check": "li.person_name"
+            "check": "a#person_button"
         }
     }
 }

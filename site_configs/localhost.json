@@ -1,14 +1,17 @@
 {
     "http://localhost/*": {
+        "name": "localhost",
         "logout": {
             "cookies": ["PHPSESSID"]
         },
         "login": {
-            "url": "http://localhost/loginTest.php",
+            "urls": ["http://localhost/"],
+            "formURL": "http://localhost/test",
             "method": "POST",
             "usernameField": "username",
             "passwordField": "password",
             "check": "#logged_in"
-        }
+        },
+        "ignore": true
     }
 }

@@ -1,0 +1,33 @@
+{
+    "*://*.netflix.com/*": {
+        "name": "Netflix",
+        "logout": {
+            "cookies": ["NetflixId"]
+        },
+        "login": {
+            "urls": ["https://signup.netflix.com/Login"],
+            "formURL": "https://signup.netflix.com/Login",
+            "method": "POST",
+            "usernameField": "session[username_or_email]",
+            "passwordField": "session[password]",
+            "hasHiddenInputs": true,
+            "check": "button:contains('Sign out'), input:contains('Sign out')",
+            "twoFactor": [
+                {
+                    "url": "https://twitter.com/account/login_verification/push",
+                    "check": "div.login-verification-push"
+                },
+                { 
+                    "url": "https://twitter.com/account/login_verification/sms",
+                    "check": "input[name]='token'"
+                }
+            ],
+            "exclude": {
+                "forcedRedirectURLs" : ["https://about.twitter.com/download"],
+                "nextURLs": ["https://twitter.com/login/captcha", "https://twitter.com/login/error"]
+            }
+        },
+        "ignore": true
+    }
+}
+

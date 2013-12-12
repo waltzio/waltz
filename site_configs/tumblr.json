@@ -1,18 +1,17 @@
 {
     "*://*.tumblr.com/*": {
+        "name": "Tumblr",
         "logout": {
             "cookies": ["pfu"]
         },
         "login": {
-            "url": "https://www.tumblr.com/login",
+            "urls": ["https://www.tumblr.com/login"],
+            "formURL": "https://www.tumblr.com/login",
             "method": "POST",
             "usernameField": "user[email]",
             "passwordField": "user[password]",
-            "other": {
-                "url": "https://www.tumblr.com/login",
-                "fields": ["form_key"]
-            },
-            "check": "button:contains('Sign out')"
+            "hasHiddenInputs": true,
+            "check": "button:contains('Sign out'), #logout_button"
         }
     }
 }

@@ -1,0 +1,49 @@
+@mixin button-shadow($color, $size:3px) {
+    box-shadow: $size $size 0 0 darken($color, 10%);
+    &:hover {
+        box-shadow: ($size - 1) ($size - 1) 0 0 darken($color, 10%);
+    }
+    &:active {
+        box-shadow: ($size - 2) ($size - 2) 0 0 darken($color, 10%);
+    }
+}
+
+@mixin popup-button($color, $logo:true) {
+    @include button-shadow($color, 3px);
+    $padding: 15px;
+    width: 90%;
+    margin: 5% auto;
+    display: block;
+    color: white;
+    background: $color;
+    text-align: left;
+    padding: $padding;
+
+    text-decoration: none;
+    font-family: $font-family;
+    font-weight: 700;
+    line-height: 1.4em;
+
+    &:focus, &:active {
+        outline: none;
+    }
+
+    &:hover {
+        background: lighten($color, 2%);
+    }
+
+    @if ($logo) {
+        position: relative;
+        padding-left: 25%;
+        &:before {
+            display: block;
+            position: absolute;
+            top: $padding;
+            left: 0;
+            width: 25%;
+            height: 100%;
+            font-size: 45px;
+            text-align: center;
+        }
+    }
+}

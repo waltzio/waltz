@@ -1,18 +1,22 @@
 {
     "*://news.ycombinator.com/*": {
+        "name": "Hacker News",
         "logout": {
             "cookies": ["user"]
         },
         "login": {
-            "url": "https://news.ycombinator.com/y",
+            "urls": ["https://news.ycombinator.com/newslogin"],
+            "formURL": "https://news.ycombinator.com/y",
             "method": "POST",
             "usernameField": "u",
             "passwordField": "p",
-            "other": {
-                "url": "https://news.ycombinator.com/newslogin",
-                "fields": ["fnid"]
-            },
-            "check": "a:contains('logout')"
+            "submitButton": "input[value='login']",
+            "hasHiddenInputs": true,
+            "check": "a:contains('logout')",
+            "exclude": {
+                "forcedRedirectURLs": ["https://news.ycombinator.com/x"],
+                "nextURLs": ["https://news.ycombinator.com/x"]
+            }
         }
     }
 }
