@@ -12,6 +12,7 @@
       "static/js/background/crypto.js", 
       "static/js/shared/storage.js",
       "static/js/vendor/aes.js",
+      "static/js/shared/keen.js",
       "static/js/background/delegate.js",
       "static/js/background/tutorial.js"
     ]
@@ -26,6 +27,7 @@
       "static/js/shared/sharer.js",
       "static/js/client/message.js", 
       "static/js/client/onboarder.js",
+      "static/js/shared/keen.js",
       "static/js/client/waltz.js"
     ],
     "css": ["static/css/waltz.css"]
@@ -58,7 +60,7 @@
     "/static/img/*",
     "/html/templates.html"
   ],
-  "content_security_policy": "script-src 'self' chrome-extension://; object-src 'self'",
+  "content_security_policy": "script-src 'self' chrome-extension:// https://dc8na2hxrj29i.cloudfront.net/; object-src 'self'",
   "sandbox": {
     "pages": ["/html/templates.html"]
   }

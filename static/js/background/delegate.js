@@ -6,6 +6,8 @@
  *
 ********************/
 
+FIRST_INSTALL = false;
+
 Delegate.prototype.DEBUG = true;
 
 Delegate.prototype.options = {};
@@ -140,6 +142,13 @@ Delegate.prototype.init = function(options) {
         }
     });
 
+
+    Keen.setGlobalProperties(_this.keenGlobalProperties);
+
+    if(_this.options[KEEN_UUID_KEY] && !FIRST_INSTALL) {
+        _this.trackKeenEvent("initialize");
+    }
+
     // check whether logged in, exponential backoff
     // BOOM!
     var n = 0;
@@ -223,10 +232,14 @@ Delegate.prototype.completeTutorial =  function(request) {
     this.storage.completeTutorial(this.refreshOptions.bind(this));
 }
 
-Delegate.prototype.refreshOptions = function(request) {
+Delegate.prototype.refreshOptions = function(cb) {
     var _this = this;
     this.storage.getOptions(function(options) {
         _this.options = options;
+
+        if(typeof(cb) === "function") {
+            cb();
+        }
     });
 }
 
@@ -439,6 +452,19 @@ Delegate.prototype.getConfigForKey = function(key) {
     return false;
 }
 
+Delegate.prototype.trackKeenEvent = function(evnt, data) {
+    Keen.addEvent(evnt, data);
+}
+
+Delegate.prototype.keenGlobalProperties = function(eventCollection) {
+    // setup the global properties we'll use
+    var globalProperties = {
+        UUID: delegate.options[KEEN_UUID_KEY]
+    };
+
+    return globalProperties;
+}
+
 Delegate.prototype.initialize = function(data, callback) {
 	var url = data.location.href.split('#')[0];
 	if (this.includedDomainRegex.test(url)) {
@@ -466,6 +492,25 @@ Delegate.prototype.initialize = function(data, callback) {
 var blastOff = function() {
     delegate = new Delegate();
 }
+
+chrome.runtime.onInstalled.addListener(function() {
+    FIRST_INSTALL = true;
+
+    var storage = new Storage();
+    var UUID = Math.floor(Math.random() * 1000000000); //Just use a really large number.  It probably won't collide
+
+    storage.setOption(KEEN_UUID_KEY, UUID, function() {
+        if(delegate) {
+            delegate.refreshOptions(function() {
+                Keen.addEvent("install");
+            });
+        } else {
+            Keen.addEvent("install", {
+                UUID: UUID
+            });
+        }       
+    });
+});
 
 if (navigator.onLine) {
     blastOff();
