@@ -5661,6 +5661,8 @@ body {
         line-height: 20px; } }
   #waltz .why .table table .fi-x {
     background: #d4384b; }
+  #waltz .why .table table .soon {
+    text-align: center; }
 #waltz .why .content h3 {
   margin-bottom: 30px; }
 #waltz .why .github .writing {
