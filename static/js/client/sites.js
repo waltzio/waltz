@@ -30,7 +30,7 @@ Sites.prototype.init = function(data) {
 
     this.siteConfigs = data;
 
-    count = Object.keys(data).length;
+    count = _.filter(data, function(k, v) { return !k.ignore }).length
 
     $.each(data, function(key, site) {
         if (!site.ignore) {
@@ -51,32 +51,34 @@ Sites.prototype.init = function(data) {
                 }
                 completed.push($siteHTML);
 
-                if (--count) (function() { 
-                    function sorter(a, b) {
-                        var aName = a.find('.name').text(), bName = b.find('.name').text();
-                        if (aName > bName) return 1;
-                        if (aName < bName) return -1;
-                        return 0
-                    }
+                if (!--count) {
+                    (function() { 
+                        function sorter(a, b) {
+                            var aName = a.find('.name').text(), bName = b.find('.name').text();
+                            if (aName > bName) return 1;
+                            if (aName < bName) return -1;
+                            return 0
+                        }
 
-                    $siteContainer.prepend(completed.sort(sorter)); 
-                })();
+                        $siteContainer.prepend(completed.sort(sorter)); 
+                        _this.attachHandlers();
+                    })();
+                }
             });
         }
     });
     
-    _this.attachHandlers();
 };
 
 Sites.prototype.attachHandlers = function() {
-    $('li.go-to-site').click(this.redirectToSite.bind(this));
+    $('li.go-to-site a').click(this.redirectToSite.bind(this));
 };
 
 Sites.prototype.redirectToSite = function(e) {
     e.preventDefault();
 
-    var $li = $(e.currentTarget),
-        $a = $li.find('a'), 
+    var $a = $(e.currentTarget),
+        $li = $a.parents('li'), 
         siteKey = $li.data('site-key');
 
     chrome.runtime.sendMessage({

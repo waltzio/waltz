@@ -95,8 +95,9 @@ Onboarder.prototype.loggedIn = function() {
 };
 
 Onboarder.prototype.loginSuccess = function() {
+    var promise = $.Deferred();
     this.siteData.loginAttempts.success++;
-    this.commitSiteData();
+    this.commitSiteData(function () { promise.resolve(); });
 
     if (this.siteData.loginAttempts.success == 1 && this.totalSuccessfulLogins() < 2) {
         // case where the user is going through the tutorial for the first time
@@ -124,9 +125,12 @@ Onboarder.prototype.loginSuccess = function() {
 
         $message.fadeIn();
     } else {
-        chrome.runtime.sendMessage({
-            method: "openNewTab",
-            url: chrome.extension.getURL("html/sites.html?success=" + this.options.site.config.name)
+        var _this = this;
+        promise.then(function() {
+            chrome.runtime.sendMessage({
+                method: "openNewTab",
+                url: chrome.extension.getURL("html/sites.html?success=" + _this.options.site.config.name)
+            });
         });
     }
 
