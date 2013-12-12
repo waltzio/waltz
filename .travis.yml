@@ -14,8 +14,8 @@ after_script:
   - mkdir tempclone
   - cd tempclone
   - git clone $REPO.git waltz
-  - git checkout master
   - cd waltz
+  - git checkout master
   - git config user.email "joe@wegnerdesign.com"
   - git config user.name "Joseph Wegner"
 #  - cp ../../build/Waltz.zip deploy/ -f
