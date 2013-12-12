@@ -19,6 +19,12 @@ after_script:
   - git config user.email "joe@wegnerdesign.com"
   - git config user.name "Joseph Wegner"
 #  - cp ../../build/Waltz.zip deploy/ -f
+  - ls ../
+  - ls ../../
+  - ls ../waltzio
+  - ls ../waltzio/waltz
+  - ls
+  - git status
   - ls ../waltzio/waltz/build
   - cp ../waltzio/waltz/build/site_configs.json deploy/site_configs.json -f
   - git add deploy/site_configs.json
