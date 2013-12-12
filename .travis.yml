@@ -10,7 +10,7 @@ before_install:
 #  - grunt chrome-extension
 script: true
 after_script:
-  - rm -r .git
+  - cd ../../
   - mkdir tempclone
   - cd tempclone
   - git clone $REPO.git waltz
