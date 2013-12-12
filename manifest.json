@@ -22,9 +22,10 @@
       "static/js/vendor/underscore-min.js",
       "static/js/vendor/jquery.min.js",
       "static/js/shared/storage.js",
+      "static/js/shared/sharer.js",
       "static/js/client/message.js", 
-      "static/js/client/waltz.js", 
-      "static/js/client/onboarder.js"
+      "static/js/client/onboarder.js",
+      "static/js/client/waltz.js"
     ],
     "css": ["static/css/waltz.css"]
   }],

@@ -24,6 +24,7 @@
 
 		this.options = opts;
 		this.onboarder = new Onboarder(this);
+        this.sharer = new Sharer(this);
         this.thirdPartyCookiesChecked = $.Deferred();
 
 		var _this = this,

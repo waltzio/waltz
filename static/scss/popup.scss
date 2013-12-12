@@ -31,4 +31,38 @@ html, body {
             @include popup-button(#00B45C);
         }
     }
+
+    .request-container {
+        display: none;
+
+        .columns {
+            padding: 5px;
+        }
+        width: 90%;
+        margin: auto;
+        a.request-twitter {
+            @include popup-button(#68B2DC);
+        }
+
+        a.request-github {
+            @include popup-button(#010101);
+        }
+
+        a.request-email {
+            @include popup-button(#999);
+        }
+
+        a.request-twitter, a.request-github, a.request-email {
+            font-size: 14px;
+            padding: 5px 0 35px 0;
+            text-align: center;
+            &:before {
+                width: 100%;
+                text-align: center;
+                font-size: 25px;
+                top: 25px;
+            }
+        }
+        
+    }
 }
