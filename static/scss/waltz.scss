@@ -67,13 +67,5 @@
                 background-color: $red;
             }
         }
-
-        &.waltz-edit {
-            top: -$offset;
-            left: -$offset;
-            -webkit-transition-delay: .2s;
-            background-color: $pink-off;
-        }
-
     }
 }

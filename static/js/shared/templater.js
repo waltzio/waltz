@@ -4,7 +4,7 @@
     function Templater() {
         var $iframe = this.$iframe = $('<iframe>');
 
-        $iframe.attr('src', '/html/templates.html');
+        $iframe.attr('src', chrome.extension.getURL('/html/templates.html'));
         $iframe.css({
             display: 'none'
         });
@@ -19,25 +19,26 @@
         });
     }
 
-    Templater.prototype.template = function(name, context, callback) {
+    Templater.prototype.template = function(opts, callback) {
         var _this = this,
             promise = $.Deferred();
 
-        this.register(name, callback, promise);
+        this.register(opts.named, callback, promise);
 
         $.when(this.iframeLoaded).then(function() {
             _this.$iframe[0].contentWindow.postMessage({
                 method: 'template', 
-                name: name,
-                context: context
+                named: opts.named,
+                context: opts.context,
+                html: opts.html
             }, '*');
         });
 
         return promise;
     }
 
-    Templater.prototype.register = function(name, callback, promise) {
-        this.templatesRendering[name] = {
+    Templater.prototype.register = function(named, callback, promise) {
+        this.templatesRendering[named] = {
             callback: callback,
             promise: promise
         };
@@ -47,7 +48,7 @@
         var _this = this;
         window.addEventListener('message', function(e) {
             if (e.data.method === "returnTemplate") {
-                var registered = _this.templatesRendering[e.data.name];
+                var registered = _this.templatesRendering[e.data.named];
                 if (typeof registered.callback === "function") registered.callback(e.data.html);
                 registered.promise.resolve(e.data.html);
             }

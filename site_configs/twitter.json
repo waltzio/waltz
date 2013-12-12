@@ -11,7 +11,7 @@
             "usernameField": "session[username_or_email]",
             "passwordField": "session[password]",
             "hasHiddenInputs": true,
-            "check": "button:contains('Sign out'), input:contains('Sign out')",
+            "check": "button:contains('Sign out'), input:contains('Sign out'), .current-user",
             "twoFactor": [
                 {
                     "url": "https://twitter.com/account/login_verification/push",

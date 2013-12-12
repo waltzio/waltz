@@ -471,9 +471,3 @@
 #waltz-login-wrapper .waltz-button.waltz-dismiss:hover {
   background-color: #dd0005;
 }
-#waltz-login-wrapper .waltz-button.waltz-edit {
-  top: -10px;
-  left: -10px;
-  -webkit-transition-delay: .2s;
-  background-color: #f774b8;
-}

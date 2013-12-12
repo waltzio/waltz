@@ -10,7 +10,7 @@
             "method": "POST",
             "usernameField": "email",
             "passwordField": "pass",
-            "check": "input[type='submit'][value='Log Out']",
+            "check": "input[type='submit'][value='Log Out'], .UIIntentionalStory_Pic",
             "twoFactor": [
                 {
                     "url": "https://www.facebook.com/checkpoint/",

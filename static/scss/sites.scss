@@ -1,4 +1,6 @@
 @import "_settings";
+@import "_mixins";
+@import "../foundation/scss/foundation";
 
 #sites {
     font-family: $font-family;
@@ -7,9 +9,29 @@
     }
 
     header {
-        h1, h2 {
-            text-align: center;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        
+        h2 {
+            font-weight: 700;
         }
+
+        .congratulations {
+            display: none;
+
+            .columns {
+                padding-left: 0;
+            }
+
+            .twitter {
+                @include popup-button($twitter-color);
+            }
+            .facebook {
+                @include popup-button($facebook-color);
+            }
+        }
+
+        border-bottom: 1px solid #EEE;
     }
     
 
@@ -40,6 +62,10 @@
                     color: $green;
                     z-index: 1;
                 }
+            }
+
+            h4 {
+                font-weight: 700;
             }
 
             a {

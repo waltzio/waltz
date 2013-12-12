@@ -6701,12 +6701,12 @@ html, body {
   padding: 5px;
 }
 #waltz-popup .request-container a.request-twitter {
-  box-shadow: 3px 3px 0 0 #3f9dd2;
+  box-shadow: 3px 3px 0 0 #1c77a9;
   width: 90%;
   margin: 5% auto;
   display: block;
   color: white;
-  background: #68b2dc;
+  background: #2396d5;
   text-align: left;
   padding: 15px;
   text-decoration: none;
@@ -6717,16 +6717,16 @@ html, body {
   padding-left: 25%;
 }
 #waltz-popup .request-container a.request-twitter:hover {
-  box-shadow: 2px 2px 0 0 #3f9dd2;
+  box-shadow: 2px 2px 0 0 #1c77a9;
 }
 #waltz-popup .request-container a.request-twitter:active {
-  box-shadow: 1px 1px 0 0 #3f9dd2;
+  box-shadow: 1px 1px 0 0 #1c77a9;
 }
 #waltz-popup .request-container a.request-twitter:focus, #waltz-popup .request-container a.request-twitter:active {
   outline: none;
 }
 #waltz-popup .request-container a.request-twitter:hover {
-  background: #70b6de;
+  background: #279bdb;
 }
 #waltz-popup .request-container a.request-twitter:before {
   display: block;

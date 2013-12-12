@@ -41,11 +41,11 @@ html, body {
         width: 90%;
         margin: auto;
         a.request-twitter {
-            @include popup-button(#68B2DC);
+            @include popup-button($twitter-color);
         }
 
         a.request-github {
-            @include popup-button(#010101);
+            @include popup-button($github-color);
         }
 
         a.request-email {

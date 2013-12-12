@@ -9,19 +9,49 @@
    
     <div id="sites">
         <header>
-            <h1>Welcome to Waltz!</h1>
-            <h2>Choose a site below and we'll get started.</h2>
+            <div class="row">
+                <div class="small-12 columns small-centered">
+                    <div class="welcome">
+                        <h1>Welcome to Waltz!</h1>
+                        <h2>Choose a site below and we'll get started.</h2>
+                    </div>
+                    <div class="congratulations">
+                        <div class="panel">
+                            <h2>You just set up Waltz on <span class="name"></span>.</h2>
+                            <h3>Feel the weight of passwords lifting off your shoulders?</h3>
+                            <div class="row">
+                                <div class="small-6 columns">
+                                    <a href="#" class="twitter waltz-share fi-social-twitter" data-share-type="setupSuccess">share that feeling with your friends on twitter</a>
+                                </div>
+                                <div class="small-6 columns">
+                                    <a href="#" class="facebook waltz-share fi-social-facebook" data-share-type="setupSuccess">share that feeling with your friends on facebook</a>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="text-center">Want to feel even better? Set up more some sites!</h3>
+                    </div>
+                </div>
+            </div>
         </header>
 
+
         <div class="sites-list-container main-content">
-            <ul class="sites-list">
-                <div class="clear"></div>
-            </ul>
+            <div class="row">
+                <div class="small-12 columns">
+                    <ul class="sites-list">
+                        <div class="clear"></div>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div> 
 
     <script src="/static/js/vendor/jquery.min.js"></script>
+    <script src="/static/js/vendor/underscore-min.js"></script>
+    <script src="/static/js/shared/utils.js"></script>
+    <script src="/static/js/shared/templater.js"></script>
     <script src="/static/js/shared/storage.js"></script>
+    <script src="/static/js/shared/sharer.js"></script>
     <script src="/static/js/client/sites.js"></script>
 </body>
 

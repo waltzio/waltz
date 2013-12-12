@@ -126,7 +126,7 @@ Onboarder.prototype.loginSuccess = function() {
     } else {
         chrome.runtime.sendMessage({
             method: "openNewTab",
-            url: chrome.extension.getURL("html/sites.html")
+            url: chrome.extension.getURL("html/sites.html?success=" + this.options.site.config.name)
         });
     }
 

@@ -1,5 +1,21 @@
+Sites.prototype.welcomeSelector = ".welcome";
+Sites.prototype.congratulationsSelector = ".congratulations";
+
 function Sites() {
-    var configURL = chrome.extension.getURL("build/site_configs.json")
+
+    var params = Utils.getURLParams();
+
+    if (params.success) {
+        this.sharer = new Sharer();
+
+        $(this.welcomeSelector).hide();
+        var $congratsContainer = $(this.congratulationsSelector);
+        $congratsContainer.find('span.name').text(params.success);
+        $congratsContainer.find(this.sharer.shareSelector).data('name', params.success);
+        $(this.congratulationsSelector).show();
+    } 
+
+    var configURL = chrome.extension.getURL("build/site_configs.json");
 
     this.storage = new Storage();
 
@@ -48,9 +64,7 @@ Sites.prototype.init = function(data) {
             });
         }
     });
-
     
-
     _this.attachHandlers();
 };
 

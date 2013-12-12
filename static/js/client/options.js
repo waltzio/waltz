@@ -55,8 +55,10 @@ Options.prototype.render = function() {
 
 
 	renderingComplete.push(this.templater.template(
-		'credentials', 
-		{ credentials: this.credentials },
+		{
+			named: 'credentials',
+			context: { credentials: this.credentials }
+		},
 		function(html) {
 			$credentials.append(html);
 		}
@@ -68,16 +70,20 @@ Options.prototype.render = function() {
 	_.map(this.settingsMetaMap, function(v, k) { displaySettings[k].value = _this.options[k] });
 
 	renderingComplete.push(this.templater.template(
-		'settings',
-		{ settings: displaySettings },
+		{
+			named: 'settings',
+			context: { settings: displaySettings }
+		},
 		function(html) {
 			$settings.prepend(html);
 		}
 	));
 
 	renderingComplete.push(this.templater.template(
-		'dismissals',
-		{ dismissals: this.dismissals },
+		{
+			named: 'dismissals',
+			context: { dismissals: this.dismissals }
+		},
 		function(html) {
 			$settings.append(html);
 		}
@@ -118,7 +124,6 @@ Options.prototype.attachSettingsHandlers = function() {
 		_this.storage.getDismissalsForSite(
 			$item.data('key'),
 			function(dismissals) {
-				console.log(dismissals);
 				if ($item.data('path')) {
 					delete(dismissals.pages[$item.data('path')]);
 					if (Object.keys(dismissals.pages).length === 0) {
@@ -257,7 +262,6 @@ Options.prototype.loginWithClef = function(callback) {
 
 
 	addEventListener("message", function handleMessage(e) {
-		console.log(e);
 		if(e.data.auth) {
 			$iframe.fadeOut(200, function() { $(this).remove(); });
 			if (typeof callback === "function") callback();

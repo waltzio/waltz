@@ -8,7 +8,7 @@
       "static/js/vendor/underscore-min.js",
       "static/js/vendor/jquery.min.js",
       "static/js/vendor/pubnub.js",
-      "static/js/background/utils.js",
+      "static/js/shared/utils.js",
       "static/js/background/crypto.js", 
       "static/js/shared/storage.js",
       "static/js/vendor/aes.js",
@@ -21,6 +21,7 @@
     "js": [
       "static/js/vendor/underscore-min.js",
       "static/js/vendor/jquery.min.js",
+      "static/js/shared/templater.js",
       "static/js/shared/storage.js",
       "static/js/shared/sharer.js",
       "static/js/client/message.js", 
@@ -54,7 +55,8 @@
   "options_page": "html/options.html",
   "homepage_url": "http://waltz.io",
   "web_accessible_resources": [
-    "static/img/*"
+    "/static/img/*",
+    "/html/templates.html"
   ],
   "content_security_policy": "script-src 'self' chrome-extension://; object-src 'self'",
   "sandbox": {

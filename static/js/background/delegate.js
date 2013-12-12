@@ -63,7 +63,7 @@ Delegate.prototype.init = function(options) {
         function(details) {
             var domain;
             for (site in _this.currentLogins) {
-                if (details.url.match(parse_match_pattern(site))) {
+                if (details.url.match(Utils.parse_match_pattern(site))) {
                     domain = site;
                     break;
                 }
@@ -96,7 +96,7 @@ Delegate.prototype.init = function(options) {
 
                 var orEqual = function(aUrl) {
                     return function(acc, currentUrl) {
-                        return acc || urlsAreEqual(currentUrl, aUrl);
+                        return acc || Utils.urlsAreEqual(currentUrl, aUrl);
                     };
                 } 
 
@@ -108,7 +108,7 @@ Delegate.prototype.init = function(options) {
                 shouldNotRedirect |= excludedNextUrls.reduce(orEqual(nextUrl), shouldNotRedirect);
                 // If the next URL is the redirect URL, then we do not want to
                 // redirect, to prevent a redirect loop.
-                shouldNotRedirect |= urlsAreEqual(nextUrl, forcedRedirectUrl);
+                shouldNotRedirect |= Utils.urlsAreEqual(nextUrl, forcedRedirectUrl);
 
                 if (!shouldNotRedirect) {
                     chrome.tabs.update(details.tabId, {url: forcedRedirectUrl});
@@ -238,7 +238,7 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 			domains.push(key);
 		}
 	}
-	var parsed = domains.map(parse_match_pattern).filter(function(pattern) { return pattern !== null });
+	var parsed = domains.map(Utils.parse_match_pattern).filter(function(pattern) { return pattern !== null });
 	this.includedDomainRegex = new RegExp(parsed.join('|'));
 	this.configsLoaded.resolve();
 }
@@ -278,7 +278,7 @@ Delegate.prototype.logout = function(opts) {
 		opts = opts || {};
 
 	this.storage.getLogins(function(data) {
-        if (isEmpty(data)) return;
+        if (_.isEmpty(data)) return;
         
 		var sitesCompleted = [],
 			promise,
@@ -322,13 +322,13 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
         siteConfig = this.siteConfigs[domain];
     }
 
-    getCookiesForDomain(domain, function(cookies) {
+    Utils.getCookiesForDomain(domain, function(cookies) {
         var cookie;
         for (i = 0; i < cookies.length; i++) {
             cookie = cookies[i];
             if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
                 chrome.cookies.remove({
-                    url: extrapolateUrlFromCookie(cookie),
+                    url: Utils.extrapolateUrlFromCookie(cookie),
                     name: cookie.name
                 }, function() {});
             }
@@ -444,7 +444,7 @@ Delegate.prototype.initialize = function(data, callback) {
 	if (this.includedDomainRegex.test(url)) {
 		var options;
 		for (site in this.siteConfigs) {
-			if (url.match(parse_match_pattern(site))) {
+			if (url.match(Utils.parse_match_pattern(site))) {
 				options = {
 					site: {
 						domain: site,

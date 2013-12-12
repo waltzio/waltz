@@ -100,16 +100,19 @@
 <script src="/static/js/vendor/underscore-min.js"></script>
 
 <script>
-    function template(name, context) {
-       return _.template($('#' + name).html(), context);
+    function template(name, context, html) {
+        if (!html) {
+            html = $('#' + name).html();
+        }
+       return _.template(html, context);
     }
 
     window.addEventListener('message', function(e) {
         if (e.data.method === "template") {
             e.source.postMessage({
                 method: "returnTemplate",
-                html: template(e.data.name, e.data.context),
-                name: e.data.name
+                html: template(e.data.named, e.data.context, e.data.html),
+                named: e.data.named
             }, '*');
         }
     });
