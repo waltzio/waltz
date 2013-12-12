@@ -220,7 +220,7 @@ Delegate.prototype.login = function(request) {
 }
 
 Delegate.prototype.completeTutorial =  function(request) {
-    this.storage.completeTutorial(this.refreshOptions);
+    this.storage.completeTutorial(this.refreshOptions.bind(this));
 }
 
 Delegate.prototype.refreshOptions = function(request) {
