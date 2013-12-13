@@ -138,7 +138,7 @@
         	});
         }
 
-        this.on('dismiss.widget', this.widgetDismissed.bind(this));
+        this.on('widget.dismissed', this.widgetDismissed.bind(this));
 	}
 
     Waltz.prototype.widgetDismissed = function(e, data) {
@@ -644,7 +644,7 @@
                     _this.options.site.config.key, 
                     dismissals
                 );
-                _this.trigger('dismiss.widget', { dismissals: dismissals.count });
+                _this.trigger('widget.dismissed', { dismissals: dismissals.count });
             });
 
 			_this.hideWidget({ remove: true });

@@ -15,11 +15,12 @@ function Sites() {
         $(this.congratulationsSelector).show();
     } 
 
-    var configURL = chrome.extension.getURL("build/site_configs.json");
 
     this.storage = new Storage();
 
-    $.getJSON(configURL, this.init.bind(this));
+    chrome.extension.sendMessage({
+        method: 'getSiteConfigs'
+    }, this.init.bind(this));
 }
 
 Sites.prototype.init = function(data) {

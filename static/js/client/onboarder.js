@@ -261,7 +261,7 @@ Onboarder.prototype.addOverlay = function() {
     var _this = this,
         $overlay = $('<div id="' + this.OVERLAY_ID + '"></div>');
     $('body').append($overlay);
-    this.router.on('onboarding.dismissed', function() {
+    this.bind('onboarding.dismissed widget.dismissed', function() {
         $overlay.remove();
     });
 
