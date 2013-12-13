@@ -5612,7 +5612,8 @@ body {
       margin: 50px auto; } }
   #waltz .quote .photo img {
     width: 100px;
-    margin-top: -30px; }
+    margin-top: -30px;
+    border-radius: 100px; }
   #waltz .quote blockquote {
     color: white;
     border: none;
