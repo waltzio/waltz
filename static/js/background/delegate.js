@@ -240,6 +240,8 @@ Delegate.prototype.refreshOptions = function(request, cb) {
         _this.options = options;
         if (typeof cb === "function") cb();
     });
+
+    return true;
 }
 
 Delegate.prototype.updateSiteConfigs = function(data) {
