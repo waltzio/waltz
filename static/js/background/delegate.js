@@ -197,6 +197,17 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 	}
 }
 
+Delegate.prototype.getSiteConfigs = function(request, cb) {
+    var _this = this;
+
+    $.when(this.configsLoaded)
+     .then(function() {
+        cb(_this.siteConfigs);
+     });
+
+     return true;
+}
+
 Delegate.prototype.acknowledgeLoginAttempt = function(request) {
     delete(this.currentLogins[request.domain]);
 }
