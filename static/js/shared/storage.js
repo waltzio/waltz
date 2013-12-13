@@ -29,9 +29,36 @@ Storage.prototype.siteOnboardingDefaults = {
     forceTutorial: false,
     updatedAt: null,
     createdAt: null
+};
+
+Storage.prototype.eventHandlers = {};
+
+function Storage() {
+    this.listening = false;
 }
 
-function Storage() {}
+Storage.prototype.subscribe = function(e, cb) {
+    if (!this.listening) {
+        chrome.storage.onChanged.addListener(this.handleChange.bind(this));
+        this.listening = true;
+    }
+
+    if (this.eventHandlers[e]) {
+        this.eventHandlers[e].push(cb);
+    } else {
+        this.eventHandlers[e] = [cb];
+    }
+}
+
+Storage.prototype.handleChange = function(changes, areaName) {
+    var handlers;
+    for (k in changes) {
+        handlers = this.eventHandlers[k] || [];
+        for (var i = 0; i < handlers.length; i++) {
+            handlers[i](changes[k]);
+        }
+    }
+}
 
 Storage.prototype.set = function(items, cb) {
     chrome.storage.local.set(items, cb);
@@ -323,9 +350,4 @@ Storage.prototype.setOnboardingSiteKey = function(siteKey, key, value, cb) {
         data[key] = value;
         _this.setOnboardingSiteData(siteKey, data, cb);
     });
-}
-
-Storage.prototype.completeTutorial = function(cb) {
-    this.setOption("tutorialStep", -1);
-    if (typeof cb === "function") cb();
 }

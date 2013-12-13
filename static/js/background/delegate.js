@@ -25,12 +25,16 @@ function Delegate() {
     this.storage.getOptions(function(options) {
         _this.init(options);
     });
+    
 }
 
 Delegate.prototype.init = function(options) {
     var _this = this;
 
     this.options = $.extend(this.options, options);
+    this.storage.subscribe(this.storage.OPTIONS_KEY, function(changes) {
+        _this.options = changes.newValue;
+    });
 
     this.pubnub = PUBNUB.init({
         subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
@@ -228,10 +232,6 @@ Delegate.prototype.login = function(request) {
     if (this.options.tutorialStep != -1) {
         this.completeTutorial();
     } 
-}
-
-Delegate.prototype.completeTutorial =  function(request) {
-    this.storage.completeTutorial(this.refreshOptions.bind(this));
 }
 
 Delegate.prototype.refreshOptions = function(request, cb) {
