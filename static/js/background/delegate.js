@@ -234,10 +234,11 @@ Delegate.prototype.completeTutorial =  function(request) {
     this.storage.completeTutorial(this.refreshOptions.bind(this));
 }
 
-Delegate.prototype.refreshOptions = function(request) {
+Delegate.prototype.refreshOptions = function(request, cb) {
     var _this = this;
     this.storage.getOptions(function(options) {
         _this.options = options;
+        if (typeof cb === "function") cb();
     });
 }
 
@@ -451,7 +452,8 @@ Delegate.prototype.getConfigForKey = function(key) {
 }
 
 Delegate.prototype.initialize = function(data, callback) {
-	var url = data.location.href.split('#')[0];
+	var url = data.location.href.split('#')[0],
+        _this = this;
 	if (this.includedDomainRegex.test(url)) {
 		var options;
 		for (site in this.siteConfigs) {
@@ -461,16 +463,20 @@ Delegate.prototype.initialize = function(data, callback) {
 						domain: site,
 						config: this.siteConfigs[site]
 					},
-					cyHost: this.options.cy_url,
                     currentLogin: this.currentLogins[site],
 				};
-				callback(options);
-				return;
+                _this.refreshOptions({}, function() {
+                    options.cyHost = _this.options.cy_url
+                    callback(options);
+                });
+				return true;
 			}
 		}
 	} else {
 		callback(false);
 	}
+
+    return true;
 }
 
 
