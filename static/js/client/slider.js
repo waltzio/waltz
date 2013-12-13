@@ -6,6 +6,7 @@
         Slider.prototype.nextButtonSelector = '.next';
         Slider.prototype.previousButtonSelector = '.previous';
         Slider.prototype.siteStartSelector = ".site-start";
+        Slider.prototype.previous = [];
 
         function Slider() {
             var _this = this;
@@ -47,12 +48,20 @@
             }
             
             $slide.addClass('removed');
+            this.previous.push($slide.attr('id'));
             $('.tutorial-slides').removeClass($slide.attr('id'));
         };
 
         Slider.prototype.previousSlide = function(e) {
             e.preventDefault();
-            var $previous = $(e.currentTarget).parents(this.slideSelector).next()
+
+            var $b = $(e.currentTarget),
+                $slide = $b.parents(this.slideSelector),
+                customNext = $b;
+
+            var $previous = $slide.nextAll('#' + this.previous.pop());
+            $previous = $.merge($previous, $previous.prevUntil($slide));
+
             $previous.removeClass('removed');
             $('.tutorial-slides').addClass($previous.attr('id'));
         }
