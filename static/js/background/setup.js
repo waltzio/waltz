@@ -1,10 +1,13 @@
-Setup.prototype.TUTORIAL_KEY = "tutorialOpened";
+Setup.prototype.SETUP_KEY = "setup";
+Setup.prototype.ACTIVATED_KEY = "activated";
 
 Setup.prototype.waitlistHost = "http://localhost:4000";
 Setup.prototype.waitlistPaths = {
-    reserve: '/reserve',
-    check: '/check'
+    reserve: '/u/reserve',
+    check: '/u/check',
+    setEmail: '/u/email/set'
 }
+Setup.prototype.waitlistCheckTimeout = 1000;
 
 function Setup() {
     var _this = this;
@@ -29,9 +32,29 @@ Setup.prototype.openWaitlist = function() {
 
 
 Setup.prototype.openTutorial = function() {
-    chrome.tabs.create({
-        url: chrome.extension.getURL("html/tutorial.html")
-    }, function() {});
+    // chrome.browserAction.onClicked.removeListener(this.openWaitlist.bind(this));
+    // chrome.browserAction.setPopup({ popup: "/html/popup.html" });
+
+    this.storage.setPrivateSetting(
+        this.SETUP_KEY, 
+        true,
+        function() {
+            chrome.tabs.create({
+                url: chrome.extension.getURL("html/tutorial.html")
+            }, function() {});
+        }
+    );
+}
+
+Setup.prototype.startBackgroundWaitlistCheck = function() {
+    var _this = this;
+    setTimeout(function interval() {
+        _this.checkWaitlistStatus().then(function() {
+            if (!_this.settings[_this.ACTIVATED_KEY]) {
+                setTimeout(interval, _this.waitlistCheckTimeout);
+            }
+        });
+    }, this.waitlistCheckTimeout);
 }
 
 Setup.prototype.checkWaitlistStatus = function() {
@@ -45,6 +68,7 @@ Setup.prototype.checkWaitlistStatus = function() {
         $.get(
             Utils.addURLParam(url, "id", this.settings.waitlistID),
             function(data) {
+                console.log(data);
                 _this.settings.waiting = data.waiting;
                 _this.settings.rank = data.rank;
 
@@ -94,14 +118,36 @@ Setup.prototype.registerOnWaitlist = function() {
     return promise;
 }
 
+Setup.prototype.attachClickToWaitlist = function() {
+    console.log('yo');
+    // chrome.browserAction.setPopup({ popup: "" });
+    // chrome.browserAction.onClicked.addListener(this.openWaitlist);
+}
+
+Setup.prototype.attachClickToTutorial = function() {
+    console.log('yo2');
+    // chrome.browserAction.setPopup({ popup: "" });
+    // chrome.browserAction.onClicked.removeListener(this.openWaitlist);
+    // chrome.browserAction.onClicked.addListener(this.openTutorial.bind(this));
+}
+
+Setup.prototype.highlightIcon = function() {
+    this.attachClickToTutorial();
+
+}
+
 Setup.prototype.activate = function() {
     var _this = this,
         activationDone = $.Deferred();
-    this.settings.activated = true;
-    this.storage.setPrivateSettings(this.settings, function() {
-        _this.kickOff();
-        activationDone.resolve();
-    });
+    this.settings[this.ACTIVATED_KEY] = true;
+    this.storage.setPrivateSetting(
+        this.ACTIVATED_KEY,
+        true, 
+        function() {
+            _this.kickOff();
+            activationDone.resolve();
+        }
+    );
 
     return activationDone;
 }
@@ -109,10 +155,12 @@ Setup.prototype.activate = function() {
 Setup.prototype.onInstall = function() {
     var _this = this;
 
+    this.installing = true;
+
     $.when(this.initialized)
      .then(this.onStartup.bind(this))
      .then(function() {
-        console.log(_this.settings);
+        _this.installing = false;
         if (_this.settings.waiting) {
             _this.openWaitlist();
         }
@@ -124,10 +172,16 @@ Setup.prototype.onStartup = function(settings) {
 
     return $.when(this.initialized)
      .then(function() {
-        if (_this.activated) {
+        if (_this.settings[_this.ACTIVATED_KEY]) {
             return _this.kickOff();
         } else {
-            return _this.checkWaitlistStatus();
+            return _this.checkWaitlistStatus().then(function() {
+                if (!_this.settings[_this.ACTIVATED_KEY]) {
+                    _this.attachClickToWaitlist();
+                    _this.startBackgroundWaitlistCheck();
+                }
+                return $.Deferred().resolve();
+            });
         }
      });
 }
@@ -135,24 +189,27 @@ Setup.prototype.onStartup = function(settings) {
 Setup.prototype.kickOff = function() {
     var _this = this;
 
-    if (navigator.onLine) {
-        kickOffForReal();
-    } else {
-        window.addEventListener('online', function() {
-            window.removeEventListener('online');
-            kickOffForReal();
-        });
-    }
+    // if (navigator.onLine) {
+    //     kickOffForReal();
+    // } else {
+    //     window.addEventListener('online', function() {
+    //         window.removeEventListener('online');
+    //         kickOffForReal();
+    //     });
+    // }
+
+    kickOffForReal();
 
     function kickOffForReal() {
-        _this.delegate = new Delegate();
         _this.storage.getPrivateSettings(function(settings) {
-            if (!settings[_this.TUTORIAL_KEY]) {
-                settings[_this.TUTORIAL_KEY] = true;
-                _this.storage.setPrivateSettings(
-                    settings, 
-                    function() { _this.openTutorial(); }
-                );
+            if (settings[_this.ACTIVATED_KEY] && settings[_this.SETUP_KEY]) {
+                _this.delegate = new Delegate();
+            } else {
+                if (!_this.installing) {
+                    _this.highlightIcon();
+                } else {
+                    _this.openTutorial();
+                }
             }
         });
     }
