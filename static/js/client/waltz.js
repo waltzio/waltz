@@ -141,6 +141,41 @@
         this.on('dismiss.widget', this.widgetDismissed.bind(this));
 	}
 
+	Waltz.prototype.trackKeenEvent = function(evnt, data) {
+		var _this = this;
+
+		if(typeof(KEEN_UUID) !== "undefined") {
+			console.log("adding event", evnt, data);
+			Keen.addEvent(evnt, data);
+		} else {
+			this.initiateKeen(evnt, data);
+		}
+	}
+
+	Waltz.prototype.initiateKeen = function(evnt, data) {
+		var _this = this;
+
+		_this.storage.getOptions(function(options) {
+			KEEN_UUID = options[KEEN_UUID_KEY];
+			console.log("Set key", KEEN_UUID, evnt, data);
+			if(evnt) {
+				_this.trackKeenEvent(evnt, data);
+			}
+		});
+	};
+
+	Waltz.prototype.getKeenGlobals = function(eventCollection) {
+	    // setup the global properties we'll use
+	    var globalProperties = {
+	        UUID: KEEN_UUID,
+	        protocol: window.location.protocol,
+	        host: window.location.host,
+	        path: window.location.pathname
+	    };
+
+	    return globalProperties;
+	};
+
     Waltz.prototype.widgetDismissed = function(e, data) {
         var _this = this;
         if (data.dismissals > this.DISMISSAL_THRESHOLD) {
@@ -653,6 +688,8 @@
 		$("body").append($widget);
 		this.$widget = $widget;
 		this.trigger('show.widget');
+
+		_this.trackKeenEvent("show_widget");
 	}
 
 	Waltz.prototype.hideWidget = function(opts) {
