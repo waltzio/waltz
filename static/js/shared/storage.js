@@ -213,15 +213,21 @@ Storage.prototype.setDismissalForSite = function(domain, key, cb) {
 
 
 Storage.prototype.getPrivateSettings = function(cb) {
-    var _this = this;
+    var _this = this,
+        promise = $.Deferred();
     this.get(this.PRIVATE_SETTINGS_KEY, function(options) {
+        var _ret;
         if(options[_this.PRIVATE_SETTINGS_KEY]) {
-            cb(options[_this.PRIVATE_SETTINGS_KEY]);
+            _ret = options[_this.PRIVATE_SETTINGS_KEY];
         } else {
-            _this.setPrivateSettings({});
-            cb({});
+            _ret = {};
+            _this.setPrivateSettings(_ret);
         }
+        if (typeof cb === "function") cb(_ret);
+        promise.resolve(_ret);
     });
+
+    return promise
 }
 
 Storage.prototype.setPrivateSettings = function(options, cb) {

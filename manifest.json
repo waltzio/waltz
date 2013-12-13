@@ -13,7 +13,7 @@
       "static/js/shared/storage.js",
       "static/js/vendor/aes.js",
       "static/js/background/delegate.js",
-      "static/js/background/tutorial.js"
+      "static/js/background/setup.js"
     ]
   },
   "content_scripts": [{

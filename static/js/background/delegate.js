@@ -461,17 +461,3 @@ Delegate.prototype.initialize = function(data, callback) {
 		callback(false);
 	}
 }
-
-
-var blastOff = function() {
-    delegate = new Delegate();
-}
-
-if (navigator.onLine) {
-    blastOff();
-} else {
-    window.addEventListener('online', function() {
-        window.removeEventListener('online');
-        blastOff();
-    });
-}
