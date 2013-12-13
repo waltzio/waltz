@@ -176,6 +176,10 @@ header {
                 font-size: 100px;
             }
 
+            &.completed {
+                opacity: .3;
+            }
+
             &.twitter {
                 $color: #00BEF9;
                 background: $color;

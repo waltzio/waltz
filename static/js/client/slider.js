@@ -8,12 +8,22 @@
         Slider.prototype.siteStartSelector = ".site-start";
 
         function Slider() {
+            var _this = this;
 
             this.$slides = $(this.slideSelector);
             this.storage = new Storage();
 
             this.$slides.each(function() {
                 $('.tutorial-slides').addClass($(this).attr('id'));
+            });
+
+            $(this.siteStartSelector).each(function() {
+                var $this = $(this);
+                _this.storage.getOnboardingSiteData($this.data('key'), function(data) {
+                    if (data.loginAttempts.success >= 1) {
+                        $this.addClass('completed');
+                    }
+                });
             })
 
             this.attachHandlers();
