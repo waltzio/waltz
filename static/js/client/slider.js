@@ -27,6 +27,17 @@
                 });
             })
 
+            var params = Utils.getURLParams();
+            if (params.id) {
+                try {
+                    var $slidesToHide = $(this.slideSelector + ':not(#' + params.id + ')')
+                    if ($slidesToHide.length !== this.$slides.length) {
+                        $slidesToHide.addClass('removed');
+                        $($slidesToHide.get().reverse()).each(function() { _this.previous.push(this.id); });
+                    }
+                } catch (e) {}
+            }
+
             this.attachHandlers();
         }
 

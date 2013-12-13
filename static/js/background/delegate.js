@@ -64,66 +64,17 @@ Delegate.prototype.init = function(options) {
     // Listens to requests, so we can redirect to the original page 
     // after a successful login.
     chrome.webRequest.onCompleted.addListener(
-        function(details) {
-            var domain;
-            for (site in _this.currentLogins) {
-                if (details.url.match(Utils.parse_match_pattern(site))) {
-                    domain = site;
-                    break;
-                }
-            }
-            if (domain && _this.currentLogins[domain]['state'] !== 'redirected') {
-                var siteConfig = _this.siteConfigs[domain];
-
-                var nextUrl = details.url;
-                var forcedRedirectUrl = _this.currentLogins[domain]['redirectUrl'];
-                var shouldNotRedirect = false;
-
-                // If the URL which we are trying to force a redirect to 
-                // is the login URL, let the  site handle directing the 
-                // user to the right place
-                var excludedForcedRedirectUrls = $.merge([], siteConfig.login.urls);
-                // Also include the explicitly defined ones in the site config
-                if (siteConfig.login.exclude) {
-                    var others = siteConfig.login.exclude.forcedRedirectURLs || [];
-                    $.merge(excludedForcedRedirectUrls, others);
-                }
-
-                // If the next URL is the login URL, there's probably an error
-                var excludedNextUrls = $.merge([], siteConfig.login.urls);
-                // Also include the explicitly defined ones in the site config
-                if (siteConfig.login.exclude) {
-                    var others = siteConfig.login.exclude.nextURLs || [];
-                    $.merge(excludedNextUrls, others);
-                }
-                $.merge(excludedNextUrls, _.pluck(siteConfig.login.twoFactor, 'url'));
-
-                var orEqual = function(aUrl) {
-                    return function(acc, currentUrl) {
-                        return acc || Utils.urlsAreEqual(currentUrl, aUrl);
-                    };
-                } 
-
-                // Don't redirect if the forced redirect url is one of the
-                // excluded ones, as defined above.
-                var shouldNotRedirect = excludedForcedRedirectUrls.reduce(orEqual(forcedRedirectUrl), false);
-                // Don't redirect if the default next url is one of the
-                // excluded ones, as defined above.
-                shouldNotRedirect |= excludedNextUrls.reduce(orEqual(nextUrl), shouldNotRedirect);
-                // If the next URL is the redirect URL, then we do not want to
-                // redirect, to prevent a redirect loop.
-                shouldNotRedirect |= Utils.urlsAreEqual(nextUrl, forcedRedirectUrl);
-
-                if (!shouldNotRedirect) {
-                    chrome.tabs.update(details.tabId, {url: forcedRedirectUrl});
-                    // We set the state so it doesn't keep redirecting.
-                    _this.currentLogins[domain]['state'] = 'redirected';
-                    _this.currentLogins[domain]['modified'] = new Date();
-                }
-            }
-        },
+        this.handleSuccessfulLogin.bind(this),
         {
             urls: Object.keys(this.currentLogins), 
+            types: ["main_frame"]
+        }
+    );
+
+    chrome.webRequest.onCompleted.addListener(
+        this.handleClefTutorial.bind(this),
+        {
+            urls: ['https://*.getclef.com/*'],
             types: ["main_frame"]
         }
     );
@@ -434,6 +385,89 @@ Delegate.prototype.checkAuthentication = function(cb) {
 	});
 
 	return true;
+}
+
+Delegate.prototype.handleClefTutorial = function(details) {
+    if (details.url.match('(\/tutorial)|(\/user\/verify)')) {
+        var _this = this,
+            tutorialURL = chrome.extension.getURL('/html/tutorial.html');
+        chrome.tabs.query({
+            url: tutorialURL
+        }, function(data) {
+            _this.storage.getPrivateSettings(function(settings) {
+                if (!settings.hasRedirectedFromClefTutorial) {
+                    if (data.length) {
+                        chrome.tabs.remove(details.tabId)
+                        chrome.tabs.update(data[0].id, { selected: true });
+                    } else {
+                        chrome.tabs.update(details.tabID, { url: tutorialURL + '?id=site-setup'} );
+                    }
+                    _this.storage.setPrivateSetting("hasRedirectedFromClefTutorial", true);
+                }
+            })
+            
+        })
+    }
+}
+
+Delegate.prototype.handleSuccessfulLogin = function(details) {
+    var domain,
+        _this = this;
+    for (site in _this.currentLogins) {
+        if (details.url.match(Utils.parse_match_pattern(site))) {
+            domain = site;
+            break;
+        }
+    }
+    if (domain && _this.currentLogins[domain]['state'] !== 'redirected') {
+        var siteConfig = _this.siteConfigs[domain];
+
+        var nextUrl = details.url;
+        var forcedRedirectUrl = _this.currentLogins[domain]['redirectUrl'];
+        var shouldNotRedirect = false;
+
+        // If the URL which we are trying to force a redirect to 
+        // is the login URL, let the  site handle directing the 
+        // user to the right place
+        var excludedForcedRedirectUrls = $.merge([], siteConfig.login.urls);
+        // Also include the explicitly defined ones in the site config
+        if (siteConfig.login.exclude) {
+            var others = siteConfig.login.exclude.forcedRedirectURLs || [];
+            $.merge(excludedForcedRedirectUrls, others);
+        }
+
+        // If the next URL is the login URL, there's probably an error
+        var excludedNextUrls = $.merge([], siteConfig.login.urls);
+        // Also include the explicitly defined ones in the site config
+        if (siteConfig.login.exclude) {
+            var others = siteConfig.login.exclude.nextURLs || [];
+            $.merge(excludedNextUrls, others);
+        }
+        $.merge(excludedNextUrls, _.pluck(siteConfig.login.twoFactor, 'url'));
+
+        var orEqual = function(aUrl) {
+            return function(acc, currentUrl) {
+                return acc || Utils.urlsAreEqual(currentUrl, aUrl);
+            };
+        } 
+
+        // Don't redirect if the forced redirect url is one of the
+        // excluded ones, as defined above.
+        var shouldNotRedirect = excludedForcedRedirectUrls.reduce(orEqual(forcedRedirectUrl), false);
+        // Don't redirect if the default next url is one of the
+        // excluded ones, as defined above.
+        shouldNotRedirect |= excludedNextUrls.reduce(orEqual(nextUrl), shouldNotRedirect);
+        // If the next URL is the redirect URL, then we do not want to
+        // redirect, to prevent a redirect loop.
+        shouldNotRedirect |= Utils.urlsAreEqual(nextUrl, forcedRedirectUrl);
+
+        if (!shouldNotRedirect) {
+            chrome.tabs.update(details.tabId, {url: forcedRedirectUrl});
+            // We set the state so it doesn't keep redirecting.
+            _this.currentLogins[domain]['state'] = 'redirected';
+            _this.currentLogins[domain]['modified'] = new Date();
+        }
+    }
 }
 
 Delegate.prototype.openNewTab = function(request, cb) {
