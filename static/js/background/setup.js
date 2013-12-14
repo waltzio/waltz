@@ -137,13 +137,13 @@ Setup.prototype.attachClickToTutorial = function() {
 
         if (toggle) {
             toggle = false;
-            chrome.browserAction.setBadgeBackgroundColor({ color: "#3399CC" });
+            chrome.browserAction.setBadgeBackgroundColor({ color: "#83D589" });
         } else {
             toggle = true;
             chrome.browserAction.setBadgeBackgroundColor({ color: "#EEEEEE" });
         }
 
-        setTimeout(interval, 100);
+        setTimeout(interval, 500);
     })();
 
     chrome.browserAction.onClicked.addListener(function() {
