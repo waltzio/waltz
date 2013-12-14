@@ -61,9 +61,43 @@
             });
         }
 
+        Slider.prototype.trackKeenEvent = function(evnt, data) {
+            var _this = this;
+
+            if(typeof(KEEN_UUID) !== "undefined") {
+                Keen.addEvent(evnt, data);
+            } else {
+                this.initiateKeen(evnt, data);
+            }
+        }
+
+        Slider.prototype.initiateKeen = function(evnt, data) {
+            var _this = this;
+
+            _this.storage.getOptions(function(options) {
+                KEEN_UUID = options[KEEN_UUID_KEY];
+                Keen.setGlobalProperties(_this.getKeenGlobals);
+                if(evnt) {
+                    _this.trackKeenEvent(evnt, data);
+                }
+            });
+        };
+
+        Slider.prototype.getKeenGlobals = function(eventCollection) {
+            // setup the global properties we'll use
+            var globalProperties = {
+                UUID: KEEN_UUID,
+                has_network_connection: navigator.onLine,
+                chrome_version: window.navigator.appVersion
+            };
+
+            return globalProperties;
+        };
+
         return Slider;
     })();
 
     var slider = new Slider();
+    slider.trackKeenEvent("start_tutorial")
 
 }).call(this);

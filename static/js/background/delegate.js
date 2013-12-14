@@ -56,6 +56,11 @@ Delegate.prototype.init = function(options) {
         title: 'Waltz',
         onclick: function(info, tab) {
             chrome.tabs.create({url: "/html/options.html"});
+
+            _this.trackKeenEvent("context_menu", {
+                tabIndex: tab.index,
+                url: tab.url
+            });
         }
     });
 
