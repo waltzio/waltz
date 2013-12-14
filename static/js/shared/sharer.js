@@ -9,6 +9,10 @@ Sharer.prototype.messages = {
     setupSuccess: {
         twitter: "I just setup @getwaltz on <%= name %> - getting rid of more passwords!",
         facebook: "I just setup Waltz on <%= name %>. You probably should too, yo."
+    },
+    waitlist: {
+        twitter: "I am now on the waitlist and sharing to twitter!",
+        facebook: "I am now on the waitlist and sharing to facebook!"
     }
 };
 
@@ -21,8 +25,6 @@ function Sharer(waltz) {
     this.waltz = waltz;
 
     this.templater = new Templater();
-
-    // $(window).click(this.shareToTwitter.bind(this));
 
     this.attachHandlers();
 }

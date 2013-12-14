@@ -13,6 +13,7 @@ Waiter.prototype.init = function(opts) {
     var $rank = $(this.rankSelector);
 
     this.settings = opts;
+    this.sharer = new Sharer();
 
     $rank.text(this.settings.rank);
     $rank.addClass('shown');
