@@ -15,28 +15,32 @@
 
   "background": {
     "scripts": [
-      "/static/js/vendor/underscore-min.js",
-      "/static/js/vendor/jquery.min.js",
-      "/static/js/vendor/pubnub.js",
-      "/static/js/shared/utils.js",
-      "/static/js/background/crypto.js", 
-      "/static/js/shared/storage.js",
-      "/static/js/vendor/aes.js",
-      "/static/js/background/delegate.js",
-      "/static/js/background/tutorial.js"
+      "static/js/vendor/underscore-min.js",
+      "static/js/vendor/jquery.min.js",
+      "static/js/vendor/pubnub.js",
+      "static/js/shared/utils.js",
+      "static/js/background/crypto.js", 
+      "static/js/shared/storage.js",
+      "static/js/vendor/aes.js",
+      "static/js/shared/keen.js",
+      "static/js/vendor/keen.min.js",
+      "static/js/background/delegate.js",
+      "static/js/background/tutorial.js"
     ]
   },
   "content_scripts": [{
     "matches": ["*://*/*"],
     "js": [
-      "/static/js/vendor/underscore-min.js",
-      "/static/js/vendor/jquery.min.js",
-      "/static/js/shared/templater.js",
-      "/static/js/shared/storage.js",
-      "/static/js/shared/sharer.js",
-      "/static/js/client/message.js", 
-      "/static/js/client/onboarder.js",
-      "/static/js/client/waltz.js"
+      "static/js/vendor/underscore-min.js",
+      "static/js/vendor/jquery.min.js",
+      "static/js/shared/templater.js",
+      "static/js/shared/storage.js",
+      "static/js/shared/sharer.js",
+      "static/js/client/message.js", 
+      "static/js/client/onboarder.js",
+      "static/js/shared/keen.js",
+      "static/js/vendor/keen.min.js",
+      "static/js/client/waltz.js"
     ],
     "css": ["/static/css/waltz.css"]
   }],
