@@ -2,17 +2,74 @@
 <head>
   <title>Waltz | you're on the waiting list</title>
   <link rel="stylesheet" href="/static/css/foundation-icons.css" type="text/css" />
-  <link rel="stylesheet" href="/static/css/tutorial.css" type="text/css" />
+  <link rel="stylesheet" href="/static/css/waiting.css" type="text/css" />
 </head>
 
 <body>
-    <div class="tutorial-slides">
-        <img class="waltz-logo" src="/static/img/waltz-full.png" alt="Waltz">
-        <h1>We waiting</h1>
+    <div id="waiting-page">
+        <header>
+            <div class="row">
+                <div class="small-12 columns text-center">
+                    <img class="waltz-logo" src="/static/img/waltz-full.png" alt="Waltz">
+                    <h1>You're in line for Waltz.</h1>
+                </div>
+            </div>
+        </header>
+        <div class="container">
+
+            <div class="row">
+                <div class="small-7 columns small-centered">
+                    <div class="row rank-and-share-container">
+                        <div class="small-5 columns rank-container text-right">
+                            <div class="rank">1000</div>
+                            <h6>current position</h6>
+                        </div>
+
+                        <div class="small-7 columns share-container text-left">
+                            <h5>Share to move up in line</h5>
+                            <div class="row">
+                                <div class="small-8 columns">
+                                    <div class="row">
+                                        <div class="small-6 columns">
+                                            <a class="share twitter fi-social-twitter">twitter</a>
+                                        </div>
+                                        <div class="small-6 columns">
+                                            <a class="share facebook fi-social-facebook">facebook</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="email-container">
+                        <div class="row">
+                            <form action="">
+                                <div class="small-8 columns">
+                                    <input type="text" name="email" placeholder="Email">
+                                </div>
+                                <div class="small-4 columns">
+                                    <button type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <h5 class="error"></h5>
+                        <h5 class="text-center">Give us your email and we'll let you know when you're in.</h5>
+                    </div> 
+                    <div class="email-success-container">
+                        <h6 class="text-center">thanks, we'll let you know!</h6>
+                    </div>                   
+                </div>
+            </div>
+
+            
+        </div>
     </div>
 
     <script src="/static/js/vendor/jquery.min.js"></script>
+    <script src="/static/js/shared/utils.js"></script>
     <script src="/static/js/shared/storage.js"></script>
+    <script src="/static/js/client/waiter.js"></script>
 </body>
 
 </html>

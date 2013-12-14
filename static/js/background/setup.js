@@ -1,12 +1,6 @@
 Setup.prototype.SETUP_KEY = "setup";
 Setup.prototype.ACTIVATED_KEY = "activated";
 
-Setup.prototype.waitlistHost = "http://localhost:4000";
-Setup.prototype.waitlistPaths = {
-    reserve: '/u/reserve',
-    check: '/u/check',
-    setEmail: '/u/email/set'
-}
 Setup.prototype.waitlistCheckTimeout = 1000 * 60 * 5;
 
 function Setup() {
@@ -32,6 +26,8 @@ Setup.prototype.openWaitlist = function() {
 
 
 Setup.prototype.openTutorial = function() {
+    this.delegate = new Delegate();
+
     chrome.browserAction.onClicked.removeListener(this.openWaitlist.bind(this));
     chrome.browserAction.setPopup({ popup: "/html/popup.html" });
 
@@ -63,12 +59,11 @@ Setup.prototype.checkWaitlistStatus = function() {
     } else {
         var _this = this,
             promise = $.Deferred(),
-            url = this.waitlistHost + this.waitlistPaths.check;
+            url = Utils.settings.waitlistHost + Utils.settings.waitlistPaths.check;
 
         $.get(
             Utils.addURLParam(url, "id", this.settings.waitlistID),
             function(data) {
-                console.log(data);
                 _this.settings.waiting = data.waiting;
                 _this.settings.rank = data.rank;
 
@@ -96,7 +91,7 @@ Setup.prototype.registerOnWaitlist = function() {
     }
 
     $.post(
-        this.waitlistHost + this.waitlistPaths.reserve,
+        Utils.settings.waitlistHost + Utils.settings.waitlistPaths.reserve,
         {},
         function(data) {
             _this.settings.waitlistID = data.id;
@@ -124,12 +119,24 @@ Setup.prototype.attachClickToWaitlist = function() {
 }
 
 Setup.prototype.attachClickToTutorial = function() {
+    var _this = this;
+
+    chrome.browserAction.setPopup({ popup: "" });
+    chrome.browserAction.onClicked.removeListener(this.openWaitlist);
+
+    chrome.browserAction.onClicked.addListener(function() {
+        on = false;
+        chrome.browserAction.setBadgeText({ text: "" });
+        _this.openTutorial();
+    });
+}
+
+Setup.prototype.highlightIcon = function() {
     var _this = this,
         on = true,
         toggle = true;
 
-    chrome.browserAction.setPopup({ popup: "" });
-    chrome.browserAction.onClicked.removeListener(this.openWaitlist);
+    this.attachClickToTutorial();
 
     chrome.browserAction.setBadgeText({ text: "start" });
     (function interval() {
@@ -145,23 +152,12 @@ Setup.prototype.attachClickToTutorial = function() {
 
         setTimeout(interval, 500);
     })();
-
-    chrome.browserAction.onClicked.addListener(function() {
-        on = false;
-        chrome.browserAction.setBadgeText({ text: "" });
-        _this.openTutorial();
-    });
-}
-
-Setup.prototype.highlightIcon = function() {
-    this.attachClickToTutorial();
-
 }
 
 Setup.prototype.activate = function() {
     var _this = this,
         activationDone = $.Deferred();
-    this.settings[this.ACTIVATED_KEY] = true;
+
     this.storage.setPrivateSetting(
         this.ACTIVATED_KEY,
         true, 
@@ -177,12 +173,17 @@ Setup.prototype.activate = function() {
 Setup.prototype.onInstall = function() {
     var _this = this;
 
+    // if installing flag is true, we popup the tutorial
+    // straight away if they are in
     this.installing = true;
 
     $.when(this.initialized)
      .then(this.onStartup.bind(this))
      .then(function() {
         _this.installing = false;
+        // if on install we are put into the waitlist,
+        // we pop up the waitlist page
+        // otherwise, we just attach the waitlist to the button
         if (_this.settings.waiting) {
             _this.openWaitlist();
         }
@@ -192,6 +193,7 @@ Setup.prototype.onInstall = function() {
 Setup.prototype.onStartup = function(settings) {
     var _this = this;
 
+    // returns a promise, which is used in onInstall
     return $.when(this.initialized)
      .then(function() {
         if (_this.settings[_this.ACTIVATED_KEY]) {
@@ -224,6 +226,7 @@ Setup.prototype.kickOff = function() {
     });
 }
 
+// These are the two entry points for the extension.
 chrome.runtime.onInstalled.addListener(function() {
     var setup = new Setup();
     setup.onInstall();

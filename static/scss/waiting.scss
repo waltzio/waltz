@@ -1,0 +1,79 @@
+@import "_settings";
+@import "_mixins";
+@import "_animations";
+@import "../foundation/scss/foundation";
+
+#waiting-page {
+    header {
+        img {
+            width: 150px;
+            margin: 20px auto;
+            display: block;
+        }
+    }
+
+    .container {
+        margin-top: 10px;
+        input {
+            height: 54px;
+        }
+        button {
+            @include popup-button($green);
+            margin: 0;
+        }
+
+        .rank-and-share-container {
+            margin-top: 10px;
+            margin-bottom: 40px;
+            .rank-container {
+                .rank {
+                    opacity: 0;
+                    font-weight: 700;
+                    font-size: 80px;
+                    transition: .5s opacity;
+                    &.shown {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .share-container {
+
+                a.twitter {
+                    @include popup-button($twitter-color);
+                }
+
+                a.facebook {
+                    @include popup-button($facebook-color);
+                }
+
+                a.twitter, a.facebook {
+                    font-size: 12px;
+                    padding: 5px 0 35px 0;
+                    text-align: center;
+                    &:before {
+                        width: 100%;
+                        text-align: center;
+                        font-size: 25px;
+                        top: 25px;
+                    }
+                }
+            }
+        }
+
+        .email-container {
+            display: none;
+            .error {
+                display: none;
+                padding: 10px;
+                border: 1px solid $red;
+                // background: lighten($red, 50%);
+            }
+        }
+
+        .email-success-container {
+            display: none;
+            margin-top: 40px;
+        }
+    }
+}

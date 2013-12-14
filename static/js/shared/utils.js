@@ -107,6 +107,36 @@ var Utils = {
         newQueryString += parameterName + "=" + parameterValue;
 
         return urlParts[0] + newQueryString + urlhash;
+    },
+    triggerLoading: function (el, opts) {
+        var $el = $(el),
+            saveText = $el.text(),
+            promise;
+
+        $el.addClass('loading');
+        $el.text('loading..');
+
+        if (opts && opts.promise) {
+            promise = $.Deferred();
+            $.when(promise)
+             .then(unload)
+            return promise;
+        } else {
+            setTimeout(unload, 1000);
+        }
+
+        function unload() {
+            $el.removeClass('loading');
+            $el.text(saveText);
+        }
+    },
+    settings: {
+        waitlistHost: "http://localhost:4000",
+        waitlistPaths: {
+            reserve: '/u/reserve',
+            check: '/u/check',
+            setEmail: '/u/email/set'
+        }
     }
 }
 

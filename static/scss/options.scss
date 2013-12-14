@@ -122,13 +122,5 @@
 				background: darken($green, 5%);
 			}
 		}
-
-		&.loading {
-			 -webkit-animation-name: opacity-pulse;
-			  -webkit-animation-duration: 1s;
-			  -webkit-animation-iteration-count: infinite;
-			  -webkit-animation-timing-function: linear;
-			  transition: 1s;
-		}
 	}
 }

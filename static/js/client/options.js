@@ -111,7 +111,7 @@ Options.prototype.attachSettingsHandlers = function() {
 		$settings = $(this.settingsSelector);
 
 	$settings.find(this.saveButtonSelector).click(function() {
-		triggerLoading(this);
+		Utils.triggerLoading(this);
 		$settings.find('input').each(function() {
 			_this.storage.setOption(this.name, $(this).val());
 		});
@@ -119,7 +119,7 @@ Options.prototype.attachSettingsHandlers = function() {
 
 	$settings.find(this.allowButtonSelector).click(function() {
 		var $item = $(this).parents('.dismissed-item'),
-			loading = triggerLoading(this, { promise: true });
+			loading = Utils.triggerLoading(this, { promise: true });
 
 		_this.storage.getDismissalsForSite(
 			$item.data('key'),
@@ -164,7 +164,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 		});
 
 		function decryptAndDisplay() {
-			var finishedLoading = triggerLoading($this, { promise: true });
+			var finishedLoading = Utils.triggerLoading($this, { promise: true });
 			chrome.runtime.sendMessage({
 				method: "decrypt",
 				key: key,
@@ -216,7 +216,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 			var $this = $(this),
 				$credential = $this.parents('.credential');
 
-			var doneSaving = triggerLoading($this, { promise: true});
+			var doneSaving = Utils.triggerLoading($this, { promise: true});
 
 			chrome.runtime.sendMessage({
 				method: "saveCredentials",
@@ -274,29 +274,6 @@ Options.prototype.loginWithClef = function(callback) {
 			removeEventListener("message", handleMessage);
 		}
 	});
-}
-
-function triggerLoading(el, opts) {
-	var $el = $(el),
-		saveText = $el.text(),
-		promise;
-
-	$el.addClass('loading');
-	$el.text('loading..');
-
-	if (opts && opts.promise) {
-		promise = $.Deferred();
-		$.when(promise)
-		 .then(unload)
-		return promise;
-	} else {
-		setTimeout(unload, 1000);
-	}
-
-	function unload() {
-		$el.removeClass('loading');
-		$el.text(saveText);
-	}
 }
 
 $(document).ready(function() {

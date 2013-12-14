@@ -6577,6 +6577,13 @@ th.hide-for-touch {
 #sites header .congratulations .twitter:hover {
   background: #279bdb;
 }
+#sites header .congratulations .twitter.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
 #sites header .congratulations .twitter:before {
   display: block;
   position: absolute;
@@ -6614,6 +6621,13 @@ th.hide-for-touch {
 }
 #sites header .congratulations .facebook:hover {
   background: #4765ae;
+}
+#sites header .congratulations .facebook.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }
 #sites header .congratulations .facebook:before {
   display: block;

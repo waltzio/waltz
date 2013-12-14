@@ -1,5 +1,49 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
+@-webkit-keyframes slide-behind {
+  0% {
+    left: 0;
+    top: 0;
+  }
+
+  50% {
+    left: -700px;
+    top: -50px;
+  }
+
+  70% {
+    z-index: 0;
+    opacity: 1;
+  }
+
+  100% {
+    left: 0;
+    top: 0;
+    z-index: 0;
+    background: #DDD;
+  }
+}
+
+@-webkit-keyframes pulse {
+  0%, 10%, 20%, 30%, 100% {
+    -webkit-transform: scale(1, 1);
+  }
+
+  5%, 15%, 25% {
+    -webkit-transform: scale(1.15, 1.15);
+  }
+}
+
+@-webkit-keyframes opacity-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+}
+
 meta.foundation-mq-small {
   font-family: "/only screen and (max-width: 40em)/";
   width: 0em;
@@ -6529,141 +6573,186 @@ th.hide-for-touch {
   display: table-cell !important;
 }
 
-@-webkit-keyframes slide-behind {
-  0% {
-    left: 0;
-    top: 0;
-  }
-
-  50% {
-    left: -700px;
-    top: -50px;
-  }
-
-  70% {
-    z-index: 0;
-    opacity: 1;
-  }
-
-  100% {
-    left: 0;
-    top: 0;
-    z-index: 0;
-    background: #DDD;
-  }
+#waiting-page header img {
+  width: 150px;
+  margin: 20px auto;
+  display: block;
 }
-
-@-webkit-keyframes pulse {
-  0%, 10%, 20%, 30%, 100% {
-    -webkit-transform: scale(1, 1);
-  }
-
-  5%, 15%, 25% {
-    -webkit-transform: scale(1.15, 1.15);
-  }
+#waiting-page .container {
+  margin-top: 10px;
 }
-
-@-webkit-keyframes opacity-pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: .5;
-  }
+#waiting-page .container input {
+  height: 54px;
 }
-
-.clear {
-  clear: both;
-}
-
-/** Styles **/
-.header {
-  border-bottom: 1px solid #EEE;
-}
-
-.nav-bar {
-  padding: 0;
-}
-.nav-bar ul {
-  padding: 0;
-}
-.nav-bar li {
+#waiting-page .container button {
+  box-shadow: 3px 3px 0 0 #008b47;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #00be61;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+  position: relative;
+  padding-left: 25%;
   margin: 0;
 }
-.nav-bar li a {
-  padding: 20px 20px;
+#waiting-page .container button:hover {
+  box-shadow: 2px 2px 0 0 #008b47;
 }
-.nav-bar li:hover {
-  background: #EEE;
+#waiting-page .container button:active {
+  box-shadow: 1px 1px 0 0 #008b47;
 }
-
-.main-content h2 {
+#waiting-page .container button:focus, #waiting-page .container button:active {
+  outline: none;
+}
+#waiting-page .container button:hover {
+  background: #00c866;
+}
+#waiting-page .container button.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
+#waiting-page .container button:before {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  font-size: 45px;
   text-align: center;
-  margin-top: 0;
-  padding-top: 20px;
-  padding-bottom: 20px;
 }
-.main-content.settings {
-  display: none;
-  padding: 20px;
-}
-.main-content.settings .settings-container {
+#waiting-page .container .rank-and-share-container {
+  margin-top: 10px;
   margin-bottom: 40px;
 }
-.main-content.settings h1 {
-  font-weight: 500;
-  font-size: 30px;
-  margin-bottom: 30px;
+#waiting-page .container .rank-and-share-container .rank-container .rank {
+  opacity: 0;
+  font-weight: 700;
+  font-size: 80px;
+  transition: .5s opacity;
 }
-.main-content.settings ul {
-  list-style: none;
-  margin: 0;
+#waiting-page .container .rank-and-share-container .rank-container .rank.shown {
+  opacity: 1;
 }
-.main-content.settings .dismissals-container .dismissed-item h6 {
-  font-size: 20px;
-  font-weight: 500;
+#waiting-page .container .rank-and-share-container .share-container a.twitter {
+  box-shadow: 3px 3px 0 0 #1c77a9;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #2396d5;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+  position: relative;
+  padding-left: 25%;
 }
-.main-content.sites-list ul {
-  list-style: none;
+#waiting-page .container .rank-and-share-container .share-container a.twitter:hover {
+  box-shadow: 2px 2px 0 0 #1c77a9;
 }
-.main-content.sites-list ul li.credential {
-  padding: 40px 0 20px 0;
-  border-bottom: 1px solid #EEE;
+#waiting-page .container .rank-and-share-container .share-container a.twitter:active {
+  box-shadow: 1px 1px 0 0 #1c77a9;
 }
-.main-content.sites-list ul .information-container .information, .main-content.sites-list ul .information-container .buttons {
-  float: left;
+#waiting-page .container .rank-and-share-container .share-container a.twitter:focus, #waiting-page .container .rank-and-share-container .share-container a.twitter:active {
+  outline: none;
 }
-.main-content.sites-list ul .information-container .information {
-  min-width: 200px;
+#waiting-page .container .rank-and-share-container .share-container a.twitter:hover {
+  background: #279bdb;
 }
-.main-content.sites-list ul .information-container .information h4, .main-content.sites-list ul .information-container .information h6 {
-  margin: 0;
+#waiting-page .container .rank-and-share-container .share-container a.twitter.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }
-.main-content.sites-list ul .decrypted-container {
-  display: none;
+#waiting-page .container .rank-and-share-container .share-container a.twitter:before {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  font-size: 45px;
+  text-align: center;
 }
-.main-content.sites-list ul .decrypted-container input {
-  margin: 0;
+#waiting-page .container .rank-and-share-container .share-container a.facebook {
+  box-shadow: 3px 3px 0 0 #354c83;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #4461a7;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+  position: relative;
+  padding-left: 25%;
 }
-.main-content.sites-list ul .decrypted-container input[name="password"]:not(.toggled) {
-  display: none;
+#waiting-page .container .rank-and-share-container .share-container a.facebook:hover {
+  box-shadow: 2px 2px 0 0 #354c83;
 }
-.main-content.sites-list ul .decrypted-container button {
-  padding: 8px;
+#waiting-page .container .rank-and-share-container .share-container a.facebook:active {
+  box-shadow: 1px 1px 0 0 #354c83;
 }
-.main-content button {
+#waiting-page .container .rank-and-share-container .share-container a.facebook:focus, #waiting-page .container .rank-and-share-container .share-container a.facebook:active {
+  outline: none;
+}
+#waiting-page .container .rank-and-share-container .share-container a.facebook:hover {
+  background: #4765ae;
+}
+#waiting-page .container .rank-and-share-container .share-container a.facebook.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
+#waiting-page .container .rank-and-share-container .share-container a.facebook:before {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  font-size: 45px;
+  text-align: center;
+}
+#waiting-page .container .rank-and-share-container .share-container a.twitter, #waiting-page .container .rank-and-share-container .share-container a.facebook {
+  font-size: 12px;
+  padding: 5px 0 35px 0;
+  text-align: center;
+}
+#waiting-page .container .rank-and-share-container .share-container a.twitter:before, #waiting-page .container .rank-and-share-container .share-container a.facebook:before {
   width: 100%;
+  text-align: center;
+  font-size: 25px;
+  top: 25px;
 }
-.main-content button.forget {
-  background: #dd0005;
+#waiting-page .container .email-container {
+  display: none;
 }
-.main-content button.forget:hover {
-  background: #c40004;
+#waiting-page .container .email-container .error {
+  display: none;
+  padding: 10px;
+  border: 1px solid #dd0005;
 }
-.main-content button.save {
-  background: #00be61;
-}
-.main-content button.save:hover {
-  background: #00a554;
+#waiting-page .container .email-success-container {
+  display: none;
+  margin-top: 40px;
 }
