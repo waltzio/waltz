@@ -169,7 +169,9 @@
 	        UUID: KEEN_UUID,
 	        protocol: window.location.protocol,
 	        host: window.location.host,
-	        path: window.location.pathname
+	        path: window.location.pathname,
+	        has_network_connection: navigator.onLine,
+	        chrome_version: window.navigator.appVersion
 	    };
 
 	    return globalProperties;

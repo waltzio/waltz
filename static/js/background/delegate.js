@@ -459,7 +459,9 @@ Delegate.prototype.trackKeenEvent = function(evnt, data) {
 Delegate.prototype.keenGlobalProperties = function(eventCollection) {
     // setup the global properties we'll use
     var globalProperties = {
-        UUID: delegate.options[KEEN_UUID_KEY]
+        UUID: delegate.options[KEEN_UUID_KEY],
+        has_network_connection: navigator.onLine,
+        chrome_version: window.navigator.appVersion
     };
 
     return globalProperties;
