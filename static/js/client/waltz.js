@@ -621,6 +621,9 @@
 		var _this = this;
 
         var attemptLogin = function() {
+
+        	_this.trackKeenEvent("widget_clicked");
+
             if (!_this.iframe) {
                 _this.loadIFrame();
             }
