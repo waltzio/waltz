@@ -6724,6 +6724,9 @@ header h2 {
   margin: auto;
   font-size: 100px;
 }
+.tutorial-slides .slide .site-start.completed {
+  opacity: .3;
+}
 .tutorial-slides .slide .site-start.twitter {
   background: #00bef9;
   box-shadow: 3px 3px 0 0 #0097c6;

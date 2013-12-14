@@ -6628,7 +6628,8 @@ th.hide-for-touch {
   list-style: none;
 }
 .main-content.sites-list ul li.credential {
-  margin: 40px 0;
+  padding: 40px 0 20px 0;
+  border-bottom: 1px solid #EEE;
 }
 .main-content.sites-list ul .information-container .information, .main-content.sites-list ul .information-container .buttons {
   float: left;
