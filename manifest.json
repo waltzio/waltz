@@ -22,7 +22,7 @@
       "static/js/background/crypto.js", 
       "static/js/shared/storage.js",
       "static/js/vendor/aes.js",
-      "static/js/shared/keen.js",
+      "static/js/shared/analytics.js",
       "static/js/vendor/keen.min.js",
       "static/js/background/delegate.js",
       "static/js/background/tutorial.js"
@@ -38,7 +38,7 @@
       "static/js/shared/sharer.js",
       "static/js/client/message.js", 
       "static/js/client/onboarder.js",
-      "static/js/shared/keen.js",
+      "static/js/shared/analytics.js",
       "static/js/vendor/keen.min.js",
       "static/js/client/waltz.js"
     ],

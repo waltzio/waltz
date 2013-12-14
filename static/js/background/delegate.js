@@ -42,6 +42,8 @@ Delegate.prototype.init = function(options) {
         subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
     });
 
+    this.analytics = new Analytics(this.keenGlobalProperties);
+
     // bind the router
     chrome.runtime.onMessage.addListener(this.router.bind(this));
     window.addEventListener('online', function() {
@@ -61,7 +63,7 @@ Delegate.prototype.init = function(options) {
         onclick: function(info, tab) {
             chrome.tabs.create({url: "/html/options.html"});
 
-            _this.trackKeenEvent("context_menu", {
+            _this.analytics.trackKeenEvent("context_menu", {
                 tabIndex: tab.index,
                 url: tab.url
             });
@@ -102,11 +104,8 @@ Delegate.prototype.init = function(options) {
         }
     });
 
-
-    Keen.setGlobalProperties(_this.keenGlobalProperties);
-
     if(_this.options[KEEN_UUID_KEY] && !FIRST_INSTALL) {
-        _this.trackKeenEvent("initialize");
+        _this.analytics.trackKeenEvent("initialize");
     }
 
     // check whether logged in, exponential backoff
@@ -288,7 +287,7 @@ Delegate.prototype.logout = function(opts) {
 			_this.loggedIn = false;
 		});
 
-        _this.trackKeenEvent("logout_request", {
+        _this.analytics.trackKeenEvent("logout_request", {
             sites_count: Object.keys(data).length
         });
 	});
@@ -505,9 +504,6 @@ Delegate.prototype.getConfigForKey = function(key) {
     return false;
 }
 
-Delegate.prototype.trackKeenEvent = function(evnt, data) {
-    Keen.addEvent(evnt, data);
-}
 
 Delegate.prototype.keenGlobalProperties = function(eventCollection) {
     // setup the global properties we'll use
@@ -516,7 +512,7 @@ Delegate.prototype.keenGlobalProperties = function(eventCollection) {
         has_network_connection: navigator.onLine,
         chrome_version: window.navigator.appVersion
     };
-
+    
     return globalProperties;
 }
 

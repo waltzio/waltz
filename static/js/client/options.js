@@ -27,6 +27,7 @@ Options.prototype.settingsMetaMap = {
 
 function Options() {
 	this.storage = new Storage();
+	this.analytics = new Analytics(this.getKeenGlobals);
 	this.templater = new Templater();
 	var _this = this;
 
@@ -45,7 +46,7 @@ Options.prototype.init = function(options, credentials, dismissals) {
 
 	this.render();
 
-	_this.trackKeenEvent("options_page");
+	_this.analytics.trackKeenEvent("options_page");
 };
 
 Options.prototype.render = function() {
@@ -118,7 +119,7 @@ Options.prototype.attachSettingsHandlers = function() {
 			_this.storage.setOption(this.name, $(this).val());
 
 			if(this.name == "cy_url") {
-				_this.trackKeenEvent("changed_cy_url", {
+				_this.analytics.trackKeenEvent("changed_cy_url", {
 					is_https: $(this).val().toLowerCase().substr(0, 8) === "https://"
 				});
 			}
@@ -191,7 +192,8 @@ Options.prototype.attachCredentialsHandlers = function() {
 			});
 		}
 
-		_this.trackKeenEvent("credential_decrypted", {
+		console.log($credential.data('key'));
+		_this.analytics.trackKeenEvent("credential_decrypted", {
 			site: $credential.data('key')
 		});
 	});
@@ -206,7 +208,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 			}
 		);
 
-		_this.trackKeenEvent("credential_forgotten", {
+		_this.analytics.trackKeenEvent("credential_forgotten", {
 			site: $credential.data('key')
 		});
 
@@ -241,7 +243,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 				password: $credential.find(_this.passwordInputSelector).filter('.toggled').val()
 			}, function() { doneSaving.resolve(); });
 
-			_this.trackKeenEvent("credential_edited", {
+			_this.analytics.trackKeenEvent("credential_edited", {
 				site: $credential.data('key')
 			});
 	});
@@ -295,28 +297,6 @@ Options.prototype.loginWithClef = function(callback) {
 		}
 	});
 }
-
-Options.prototype.trackKeenEvent = function(evnt, data) {
-	var _this = this;
-
-	if(typeof(KEEN_UUID) !== "undefined") {
-		Keen.addEvent(evnt, data);
-	} else {
-		this.initiateKeen(evnt, data);
-	}
-}
-
-Options.prototype.initiateKeen = function(evnt, data) {
-	var _this = this;
-
-	_this.storage.getOptions(function(options) {
-		KEEN_UUID = options[KEEN_UUID_KEY];
-		Keen.setGlobalProperties(_this.getKeenGlobals);
-		if(evnt) {
-			_this.trackKeenEvent(evnt, data);
-		}
-	});
-};
 
 Options.prototype.getKeenGlobals = function(eventCollection) {
     // setup the global properties we'll use

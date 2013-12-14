@@ -17,6 +17,7 @@ function Sites() {
 
 
     this.storage = new Storage();
+    this.analytics = new Analytics(this.getKeenGlobals);
 
     chrome.extension.sendMessage({
         method: 'getSiteConfigs'
@@ -69,7 +70,7 @@ Sites.prototype.init = function(data) {
         }
     });
     
-    _this.trackKeenEvent("sites_list");
+    _this.analytics.trackKeenEvent("sites_list");
 };
 
 Sites.prototype.attachHandlers = function() {
@@ -88,28 +89,6 @@ Sites.prototype.redirectToSite = function(e) {
         key: siteKey
     }, function() {
         window.location = $a.attr('href');
-    });
-};
-
-Sites.prototype.trackKeenEvent = function(evnt, data) {
-    var _this = this;
-
-    if(typeof(KEEN_UUID) !== "undefined") {
-        Keen.addEvent(evnt, data);
-    } else {
-        this.initiateKeen(evnt, data);
-    }
-}
-
-Sites.prototype.initiateKeen = function(evnt, data) {
-    var _this = this;
-
-    _this.storage.getOptions(function(options) {
-        KEEN_UUID = options[KEEN_UUID_KEY];
-        Keen.setGlobalProperties(_this.getKeenGlobals);
-        if(evnt) {
-            _this.trackKeenEvent(evnt, data);
-        }
     });
 };
 

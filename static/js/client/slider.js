@@ -13,6 +13,7 @@
 
             this.$slides = $(this.slideSelector);
             this.storage = new Storage();
+            this.analytics = new Analytics(this.getKeenGlobals);
 
             this.$slides.each(function() {
                 $('.tutorial-slides').addClass($(this).attr('id'));
@@ -90,28 +91,6 @@
                 window.location = $a.attr('href');
             });
         }
-
-        Slider.prototype.trackKeenEvent = function(evnt, data) {
-            var _this = this;
-
-            if(typeof(KEEN_UUID) !== "undefined") {
-                Keen.addEvent(evnt, data);
-            } else {
-                this.initiateKeen(evnt, data);
-            }
-        }
-
-        Slider.prototype.initiateKeen = function(evnt, data) {
-            var _this = this;
-
-            _this.storage.getOptions(function(options) {
-                KEEN_UUID = options[KEEN_UUID_KEY];
-                Keen.setGlobalProperties(_this.getKeenGlobals);
-                if(evnt) {
-                    _this.trackKeenEvent(evnt, data);
-                }
-            });
-        };
 
         Slider.prototype.getKeenGlobals = function(eventCollection) {
             // setup the global properties we'll use
