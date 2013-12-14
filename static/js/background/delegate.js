@@ -321,6 +321,10 @@ Delegate.prototype.logout = function(opts) {
 			_this.user = false;
 			_this.loggedIn = false;
 		});
+
+        _this.trackKeenEvent("logout_request", {
+            sites_count: Object.keys(data).length
+        });
 	});
 }
 
