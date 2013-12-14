@@ -6575,16 +6575,16 @@ th.hide-for-touch {
 
 #waiting-page header img {
   width: 150px;
-  margin: 20px auto;
+  margin: 20px auto 10px auto;
   display: block;
 }
-#waiting-page .container {
+#waiting-page .waiting-container {
   margin-top: 10px;
 }
-#waiting-page .container input {
+#waiting-page .waiting-container input {
   height: 54px;
 }
-#waiting-page .container button {
+#waiting-page .waiting-container button {
   box-shadow: 3px 3px 0 0 #008b47;
   width: 90%;
   margin: 5% auto;
@@ -6601,26 +6601,26 @@ th.hide-for-touch {
   padding-left: 25%;
   margin: 0;
 }
-#waiting-page .container button:hover {
+#waiting-page .waiting-container button:hover {
   box-shadow: 2px 2px 0 0 #008b47;
 }
-#waiting-page .container button:active {
+#waiting-page .waiting-container button:active {
   box-shadow: 1px 1px 0 0 #008b47;
 }
-#waiting-page .container button:focus, #waiting-page .container button:active {
+#waiting-page .waiting-container button:focus, #waiting-page .waiting-container button:active {
   outline: none;
 }
-#waiting-page .container button:hover {
+#waiting-page .waiting-container button:hover {
   background: #00c866;
 }
-#waiting-page .container button.loading {
+#waiting-page .waiting-container button.loading {
   -webkit-animation-name: opacity-pulse;
   -webkit-animation-duration: 1s;
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
   transition: 1s;
 }
-#waiting-page .container button:before {
+#waiting-page .waiting-container button:before {
   display: block;
   position: absolute;
   top: 15px;
@@ -6630,20 +6630,20 @@ th.hide-for-touch {
   font-size: 45px;
   text-align: center;
 }
-#waiting-page .container .rank-and-share-container {
+#waiting-page .waiting-container .rank-and-share-container {
   margin-top: 10px;
   margin-bottom: 40px;
 }
-#waiting-page .container .rank-and-share-container .rank-container .rank {
+#waiting-page .waiting-container .rank-and-share-container .rank-container .rank {
   opacity: 0;
   font-weight: 700;
   font-size: 80px;
   transition: .5s opacity;
 }
-#waiting-page .container .rank-and-share-container .rank-container .rank.shown {
+#waiting-page .waiting-container .rank-and-share-container .rank-container .rank.shown {
   opacity: 1;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter {
   box-shadow: 3px 3px 0 0 #1c77a9;
   width: 90%;
   margin: 5% auto;
@@ -6659,26 +6659,26 @@ th.hide-for-touch {
   position: relative;
   padding-left: 25%;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter:hover {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:hover {
   box-shadow: 2px 2px 0 0 #1c77a9;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter:active {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:active {
   box-shadow: 1px 1px 0 0 #1c77a9;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter:focus, #waiting-page .container .rank-and-share-container .share-container a.twitter:active {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:focus, #waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:active {
   outline: none;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter:hover {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:hover {
   background: #279bdb;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter.loading {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter.loading {
   -webkit-animation-name: opacity-pulse;
   -webkit-animation-duration: 1s;
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
   transition: 1s;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter:before {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:before {
   display: block;
   position: absolute;
   top: 15px;
@@ -6688,7 +6688,7 @@ th.hide-for-touch {
   font-size: 45px;
   text-align: center;
 }
-#waiting-page .container .rank-and-share-container .share-container a.facebook {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.facebook {
   box-shadow: 3px 3px 0 0 #354c83;
   width: 90%;
   margin: 5% auto;
@@ -6704,26 +6704,26 @@ th.hide-for-touch {
   position: relative;
   padding-left: 25%;
 }
-#waiting-page .container .rank-and-share-container .share-container a.facebook:hover {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:hover {
   box-shadow: 2px 2px 0 0 #354c83;
 }
-#waiting-page .container .rank-and-share-container .share-container a.facebook:active {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:active {
   box-shadow: 1px 1px 0 0 #354c83;
 }
-#waiting-page .container .rank-and-share-container .share-container a.facebook:focus, #waiting-page .container .rank-and-share-container .share-container a.facebook:active {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:focus, #waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:active {
   outline: none;
 }
-#waiting-page .container .rank-and-share-container .share-container a.facebook:hover {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:hover {
   background: #4765ae;
 }
-#waiting-page .container .rank-and-share-container .share-container a.facebook.loading {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.facebook.loading {
   -webkit-animation-name: opacity-pulse;
   -webkit-animation-duration: 1s;
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
   transition: 1s;
 }
-#waiting-page .container .rank-and-share-container .share-container a.facebook:before {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:before {
   display: block;
   position: absolute;
   top: 15px;
@@ -6733,26 +6733,29 @@ th.hide-for-touch {
   font-size: 45px;
   text-align: center;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter, #waiting-page .container .rank-and-share-container .share-container a.facebook {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter, #waiting-page .waiting-container .rank-and-share-container .share-container a.facebook {
   font-size: 12px;
   padding: 5px 0 35px 0;
   text-align: center;
 }
-#waiting-page .container .rank-and-share-container .share-container a.twitter:before, #waiting-page .container .rank-and-share-container .share-container a.facebook:before {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:before, #waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:before {
   width: 100%;
   text-align: center;
   font-size: 25px;
   top: 25px;
 }
-#waiting-page .container .email-container {
+#waiting-page .waiting-container .email-container {
   display: none;
 }
-#waiting-page .container .email-container .error {
+#waiting-page .waiting-container .email-container .error {
   display: none;
   padding: 10px;
   border: 1px solid #dd0005;
 }
-#waiting-page .container .email-success-container {
+#waiting-page .waiting-container .email-success-container {
   display: none;
   margin-top: 40px;
+}
+#waiting-page .start-container {
+  display: none;
 }

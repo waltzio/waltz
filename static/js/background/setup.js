@@ -1,7 +1,7 @@
 Setup.prototype.SETUP_KEY = "setup";
 Setup.prototype.ACTIVATED_KEY = "activated";
 
-Setup.prototype.waitlistCheckTimeout = 1000 * 60 * 5;
+Setup.prototype.waitlistCheckTimeout = 1000;
 
 function Setup() {
     var _this = this;
@@ -64,8 +64,14 @@ Setup.prototype.checkWaitlistStatus = function() {
         $.get(
             Utils.addURLParam(url, "id", this.settings.waitlistID),
             function(data) {
+
                 _this.settings.waiting = data.waiting;
-                _this.settings.rank = data.rank;
+                _this.settings.rank = data.rank + 1;
+
+                chrome.runtime.sendMessage({
+                    messageLocation: 'waiting',
+                    method: 'refresh'
+                });
 
                 _this.storage.setPrivateSettings(_this.settings, function() {
                     if (!_this.settings.waiting) {
@@ -96,7 +102,7 @@ Setup.prototype.registerOnWaitlist = function() {
         function(data) {
             _this.settings.waitlistID = data.id;
             _this.settings.waiting = data.waiting;
-            _this.settings.rank = data.rank;
+            _this.settings.rank = data.rank + 1;
 
             _this.storage.setPrivateSettings(
                 _this.settings,

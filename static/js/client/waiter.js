@@ -2,11 +2,15 @@ Waiter.prototype.emailContainerSelector = ".email-container";
 Waiter.prototype.emailSuccessContainerSelector = ".email-success-container";
 Waiter.prototype.emailFormSelector = "form";
 Waiter.prototype.rankSelector = ".rank";
+Waiter.prototype.waitingContainerSelector = ".waiting-container";
+Waiter.prototype.startContainerSelector = ".start-container";
+
 
 function Waiter() {
     this.storage = new Storage();
 
     this.storage.getPrivateSettings(this.init.bind(this));
+
 }
 
 Waiter.prototype.init = function(opts) {
@@ -20,6 +24,11 @@ Waiter.prototype.init = function(opts) {
 
     if (!this.settings.hasEmail) {
         $(this.emailContainerSelector).show();
+    }
+
+    if (this.settings.activated) {
+        $(this.waitingContainerSelector).hide();
+        $(this.startContainerSelector).show();
     }
 
     this.attachHandlers();
@@ -56,8 +65,36 @@ Waiter.prototype.attachHandlers = function() {
             $(_this.emailContainerSelector).find('.error').text(errorMessage).fadeIn();
             finishedLoading.resolve();
         });
+    });
+
+    chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
+}
+
+Waiter.prototype.handleMessage = function(request, cb) {
+    if (request.messageLocation === "waiting") {
+        this[request.method].call(this, request, cb);
+    }
+}
+
+Waiter.prototype.refresh = function(data, cb) {
+    var _this = this;
+    this.storage.getPrivateSettings(function(settings) {
+        _this.settings = settings;
+        var rank = settings.rank;
+        if (rank === null) rank = 0;
+        $(_this.rankSelector).text(rank);
+
+        if (!_this.settings.waiting) {
+            _this.start();
+        }
     })
 }
 
+Waiter.prototype.start = function() {
+    var _this = this;
+    $(this.waitingContainerSelector).fadeOut(function() {
+        $(_this.startContainerSelector).fadeIn();
+    })
+}
 
 var waiter = new Waiter();

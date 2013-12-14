@@ -7,12 +7,12 @@
     header {
         img {
             width: 150px;
-            margin: 20px auto;
+            margin: 20px auto 10px auto;
             display: block;
         }
     }
 
-    .container {
+    .waiting-container {
         margin-top: 10px;
         input {
             height: 54px;
@@ -75,5 +75,9 @@
             display: none;
             margin-top: 40px;
         }
+    }
+
+    .start-container {
+        display: none;
     }
 }

@@ -24,8 +24,10 @@ function Delegate() {
     this.storage = new Storage();
 
     if (navigator.onLine) {
+        console.log("hi");
         start();
     } else {
+        console.log("hi2");
         window.addEventListener('online', function() {
             window.removeEventListener('online');
             start();
@@ -134,7 +136,9 @@ Delegate.prototype.init = function(options) {
 }
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
-	if(typeof(request.method) === "undefined") {
+    if (request.messageLocation && request.messageLocation !== "delegate") return false;
+    
+	if (typeof(request.method) === "undefined") {
 		return false;
 	}
 
