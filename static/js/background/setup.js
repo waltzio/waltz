@@ -7,6 +7,11 @@ function Setup() {
     var _this = this;
 
     this.storage = new Storage();
+    this.storage.subscribe(this.storage.PRIVATE_SETTINGS_KEY, function(changes) {
+        if (changes.newInfo) {
+            _this.settings = changes.newInfo;
+        }
+    });
     this.initialized = $.Deferred();
 
     var settingsLoaded = this.storage.getPrivateSettings();
@@ -164,12 +169,16 @@ Setup.prototype.activate = function() {
     var _this = this,
         activationDone = $.Deferred();
 
-    this.storage.setPrivateSetting(
-        this.ACTIVATED_KEY,
-        true, 
-        function() {
-            _this.kickOff();
-            activationDone.resolve();
+    $.post(
+        Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteCreate,
+        { id: _this.settings.waitlistID },
+        function (data) {
+            _this.settings[_this.ACTIVATED_KEY] = true;
+            _this.settings.inviteLink = data.inviteLink;
+            _this.storage.setPrivateSettings(_this.settings, function() {
+                _this.kickOff();
+                activationDone.resolve();
+            })
         }
     );
 

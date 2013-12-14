@@ -135,7 +135,8 @@ var Utils = {
         waitlistPaths: {
             reserve: '/u/reserve',
             check: '/u/check',
-            setEmail: '/u/email/set'
+            setEmail: '/u/email/set',
+            inviteCreate: '/i/create'
         }
     }
 }
