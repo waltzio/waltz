@@ -510,6 +510,7 @@
 		}, function(response) {
 			if (!response.user) {
 				_this.logInToClef(cb);
+				_this.trackKeenEvent("clef_auth_shown");
 			} else {
 				if (typeof(cb) == "function") {
 					cb();
