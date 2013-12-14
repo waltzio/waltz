@@ -32,8 +32,8 @@ Setup.prototype.openWaitlist = function() {
 
 
 Setup.prototype.openTutorial = function() {
-    // chrome.browserAction.onClicked.removeListener(this.openWaitlist.bind(this));
-    // chrome.browserAction.setPopup({ popup: "/html/popup.html" });
+    chrome.browserAction.onClicked.removeListener(this.openWaitlist.bind(this));
+    chrome.browserAction.setPopup({ popup: "/html/popup.html" });
 
     this.storage.setPrivateSetting(
         this.SETUP_KEY, 
@@ -119,16 +119,38 @@ Setup.prototype.registerOnWaitlist = function() {
 }
 
 Setup.prototype.attachClickToWaitlist = function() {
-    console.log('yo');
-    // chrome.browserAction.setPopup({ popup: "" });
-    // chrome.browserAction.onClicked.addListener(this.openWaitlist);
+    chrome.browserAction.setPopup({ popup: "" });
+    chrome.browserAction.onClicked.addListener(this.openWaitlist);
 }
 
 Setup.prototype.attachClickToTutorial = function() {
-    console.log('yo2');
-    // chrome.browserAction.setPopup({ popup: "" });
-    // chrome.browserAction.onClicked.removeListener(this.openWaitlist);
-    // chrome.browserAction.onClicked.addListener(this.openTutorial.bind(this));
+    var _this = this,
+        on = true,
+        toggle = true;
+
+    chrome.browserAction.setPopup({ popup: "" });
+    chrome.browserAction.onClicked.removeListener(this.openWaitlist);
+
+    chrome.browserAction.setBadgeText({ text: "start" });
+    (function interval() {
+        if (!on) return;
+
+        if (toggle) {
+            toggle = false;
+            chrome.browserAction.setBadgeBackgroundColor({ color: "#3399CC" });
+        } else {
+            toggle = true;
+            chrome.browserAction.setBadgeBackgroundColor({ color: "#EEEEEE" });
+        }
+
+        setTimeout(interval, 100);
+    })();
+
+    chrome.browserAction.onClicked.addListener(function() {
+        on = false;
+        chrome.browserAction.setBadgeText({ text: "" });
+        _this.openTutorial();
+    });
 }
 
 Setup.prototype.highlightIcon = function() {
@@ -189,30 +211,17 @@ Setup.prototype.onStartup = function(settings) {
 Setup.prototype.kickOff = function() {
     var _this = this;
 
-    // if (navigator.onLine) {
-    //     kickOffForReal();
-    // } else {
-    //     window.addEventListener('online', function() {
-    //         window.removeEventListener('online');
-    //         kickOffForReal();
-    //     });
-    // }
-
-    kickOffForReal();
-
-    function kickOffForReal() {
-        _this.storage.getPrivateSettings(function(settings) {
-            if (settings[_this.ACTIVATED_KEY] && settings[_this.SETUP_KEY]) {
-                _this.delegate = new Delegate();
+    this.storage.getPrivateSettings(function(settings) {
+        if (settings[_this.ACTIVATED_KEY] && settings[_this.SETUP_KEY]) {
+            _this.delegate = new Delegate();
+        } else {
+            if (!_this.installing) {
+                _this.highlightIcon();
             } else {
-                if (!_this.installing) {
-                    _this.highlightIcon();
-                } else {
-                    _this.openTutorial();
-                }
+                _this.openTutorial();
             }
-        });
-    }
+        }
+    });
 }
 
 chrome.runtime.onInstalled.addListener(function() {

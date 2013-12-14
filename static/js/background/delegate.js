@@ -22,10 +22,21 @@ function Delegate() {
 	var _this = this;
 
     this.storage = new Storage();
-    this.storage.getOptions(function(options) {
-        _this.init(options);
-    });
-    
+
+    if (navigator.onLine) {
+        start();
+    } else {
+        window.addEventListener('online', function() {
+            window.removeEventListener('online');
+            start();
+        });
+    }
+
+    function start() {
+        _this.storage.getOptions(function(options) {
+            _this.init(options);
+        });
+    }
 }
 
 Delegate.prototype.init = function(options) {
