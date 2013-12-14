@@ -114,6 +114,12 @@ Options.prototype.attachSettingsHandlers = function() {
 		triggerLoading(this);
 		$settings.find('input').each(function() {
 			_this.storage.setOption(this.name, $(this).val());
+
+			if(this.name == "cy_url") {
+				_this.trackKeenEvent("changed_cy_url", {
+					is_https: $(this).val().toLowerCase().substr(0, 8) === "https://"
+				});
+			}
 		});
 	});
 
