@@ -145,7 +145,6 @@
 		var _this = this;
 
 		if(typeof(KEEN_UUID) !== "undefined") {
-			console.log("adding event", evnt, data);
 			Keen.addEvent(evnt, data);
 		} else {
 			this.initiateKeen(evnt, data);
@@ -157,7 +156,7 @@
 
 		_this.storage.getOptions(function(options) {
 			KEEN_UUID = options[KEEN_UUID_KEY];
-			console.log("Set key", KEEN_UUID, evnt, data);
+			Keen.setGlobalProperties(_this.getKeenGlobals);
 			if(evnt) {
 				_this.trackKeenEvent(evnt, data);
 			}
