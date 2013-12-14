@@ -206,6 +206,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
+                _this.trackKeenEvent("dismissal_saved", {duration: "forever"});
             });
 
             $page.click(function(e) {
@@ -226,6 +227,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
+                _this.trackKeenEvent("dismissal_saved", {duration: "page"});
             });
 
             $cancel.click(function(e) {
@@ -243,6 +245,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
+                _this.trackKeenEvent("dismissal_saved", {duration: "cancel"});
             });
 
             $message.attr('class', 'floating fixed');
@@ -680,6 +683,7 @@
                     _this.options.site.config.key, 
                     dismissals
                 );
+                _this.trackKeenEvent("widget_dismissed");
                 _this.trigger('dismiss.widget', { dismissals: dismissals.count });
             });
 
