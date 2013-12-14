@@ -7,7 +7,7 @@ Setup.prototype.waitlistPaths = {
     check: '/u/check',
     setEmail: '/u/email/set'
 }
-Setup.prototype.waitlistCheckTimeout = 1000;
+Setup.prototype.waitlistCheckTimeout = 1000 * 60 * 5;
 
 function Setup() {
     var _this = this;
