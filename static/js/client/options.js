@@ -182,6 +182,10 @@ Options.prototype.attachCredentialsHandlers = function() {
 				finishedLoading.resolve();
 			});
 		}
+
+		_this.trackKeenEvent("credential_decrypted", {
+			site: $credential.data('key')
+		});
 	});
 
 	$credentials.find(this.forgetButtonSelector).click(function() {
@@ -193,6 +197,10 @@ Options.prototype.attachCredentialsHandlers = function() {
 				$credential.slideUp(300, function() { $(this).remove(); });
 			}
 		);
+
+		_this.trackKeenEvent("credential_forgotten", {
+			site: $credential.data('key')
+		});
 
 	});
 
@@ -224,6 +232,10 @@ Options.prototype.attachCredentialsHandlers = function() {
 				username: $credential.find(_this.usernameInputSelector).val(),
 				password: $credential.find(_this.passwordInputSelector).filter('.toggled').val()
 			}, function() { doneSaving.resolve(); });
+
+			_this.trackKeenEvent("credential_edited", {
+				site: $credential.data('key')
+			});
 	});
 };
 
@@ -275,6 +287,39 @@ Options.prototype.loginWithClef = function(callback) {
 		}
 	});
 }
+
+Options.prototype.trackKeenEvent = function(evnt, data) {
+	var _this = this;
+
+	if(typeof(KEEN_UUID) !== "undefined") {
+		Keen.addEvent(evnt, data);
+	} else {
+		this.initiateKeen(evnt, data);
+	}
+}
+
+Options.prototype.initiateKeen = function(evnt, data) {
+	var _this = this;
+
+	_this.storage.getOptions(function(options) {
+		KEEN_UUID = options[KEEN_UUID_KEY];
+		Keen.setGlobalProperties(_this.getKeenGlobals);
+		if(evnt) {
+			_this.trackKeenEvent(evnt, data);
+		}
+	});
+};
+
+Options.prototype.getKeenGlobals = function(eventCollection) {
+    // setup the global properties we'll use
+    var globalProperties = {
+        UUID: KEEN_UUID,
+        has_network_connection: navigator.onLine,
+        chrome_version: window.navigator.appVersion
+    };
+
+    return globalProperties;
+};
 
 function triggerLoading(el, opts) {
 	var $el = $(el),
