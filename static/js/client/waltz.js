@@ -559,6 +559,8 @@
 		$overlay.append($form);
         $body.append($overlay);
 
+        var formShownTime = Date.now();
+
 		//Put this on a timeout, because we need the class to be added after the initial draw
 		setTimeout(function() {
 			$.merge($overlay, $form).addClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
@@ -586,6 +588,11 @@
 					$.merge($overlay, $form).remove();
 					_this.trigger('remove.credentialOverlay');
 				}, 500);
+
+				_this.trackKeenEvent("credentials_form_dismissed", {
+					had_entered_credentials: !($usernameField.val() === "" && $passwordField.val() === ""),
+					shown_duration: Date.now() - formShownTime
+				});
 			}
 		});
 
