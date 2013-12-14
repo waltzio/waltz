@@ -22,12 +22,11 @@ function Delegate() {
 	var _this = this;
 
     this.storage = new Storage();
+    this.crypto = new Crypto();
 
     if (navigator.onLine) {
-        console.log("hi");
         start();
     } else {
-        console.log("hi2");
         window.addEventListener('online', function() {
             window.removeEventListener('online');
             start();
@@ -194,10 +193,6 @@ Delegate.prototype.login = function(request) {
         modified: new Date()
     }
 	this.storage.addLogin(request.domain);
-
-    if (this.options.tutorialStep != -1) {
-        this.completeTutorial();
-    } 
 }
 
 Delegate.prototype.refreshOptions = function(request, cb) {
@@ -348,7 +343,7 @@ Delegate.prototype.forceTutorial = function(opts, cb) {
 
 Delegate.prototype.saveCredentials = function(key, username, password, cb) {
     var _this = this;
-	waltzCrypto.encrypt(password, key, function(encrypted) {
+	this.crypto.encrypt(password, key, function(encrypted) {
 		_this.storage.setCredentialsForDomain(key, username, encrypted.output, function() {
 			cb(true);
 		});
@@ -358,7 +353,7 @@ Delegate.prototype.saveCredentials = function(key, username, password, cb) {
 }
 
 Delegate.prototype.decrypt = function(value, domain_key, cb) {
-	waltzCrypto.decrypt(value, domain_key, function(decrypted) {
+	this.crypto.decrypt(value, domain_key, function(decrypted) {
 		cb(decrypted);
 	});
 

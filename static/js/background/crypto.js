@@ -7,11 +7,11 @@
  *
 ********************/
 
-function WaltzCrypto(options) {
-
+function Crypto(options) {
+	this.storage = new Storage();
 }
 
-WaltzCrypto.prototype.encrypt = function(pre, identifier, cb) {
+Crypto.prototype.encrypt = function(pre, identifier, cb) {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState == 4) {
@@ -39,11 +39,14 @@ WaltzCrypto.prototype.encrypt = function(pre, identifier, cb) {
 		}
 	}
 
-	xhr.open("GET", delegate.options.cy_url+"/api/v0/keys/"+encodeURIComponent(identifier), true);
-	xhr.send();
+	this.storage.getOptions(function(options) {
+		xhr.open("GET", options.cy_url+"/api/v0/keys/"+encodeURIComponent(identifier), true);
+		xhr.send();
+	});
+
 }
 
-WaltzCrypto.prototype.decrypt = function(pre, identifier, cb) {
+Crypto.prototype.decrypt = function(pre, identifier, cb) {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState == 4) {
@@ -72,8 +75,8 @@ WaltzCrypto.prototype.decrypt = function(pre, identifier, cb) {
 		}
 	}
 
-	xhr.open("GET", delegate.options.cy_url+"/api/v0/keys/"+encodeURIComponent(identifier), true);
-	xhr.send();
+	this.storage.getOptions(function(options) {
+		xhr.open("GET", options.cy_url+"/api/v0/keys/"+encodeURIComponent(identifier), true);
+		xhr.send();
+	});
 }
-
-var waltzCrypto = new WaltzCrypto();
