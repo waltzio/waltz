@@ -1,7 +1,7 @@
 Setup.prototype.SETUP_KEY = "setup";
 Setup.prototype.ACTIVATED_KEY = "activated";
 
-Setup.prototype.waitlistCheckTimeout = 1000;
+Setup.prototype.waitlistCheckTimeout = 1000 * 60 * 5;
 
 function Setup() {
     var _this = this;
@@ -108,6 +108,8 @@ Setup.prototype.registerOnWaitlist = function() {
             _this.settings.waitlistID = data.id;
             _this.settings.waiting = data.waiting;
             _this.settings.rank = data.rank + 1;
+
+            _this.settings.referralLink = "http://getwaltz.com/share";
 
             _this.storage.setPrivateSettings(
                 _this.settings,

@@ -7,12 +7,13 @@ Sharer.prototype.shareSelector = ".waltz-share";
 
 Sharer.prototype.messages = {
     setupSuccess: {
-        twitter: "I just setup @getwaltz on <%= name %> - getting rid of more passwords!",
-        facebook: "I just setup Waltz on <%= name %>. You probably should too, yo."
+        twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>",
+        facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>"
     },
     waitlist: {
-        twitter: "I am now on the waitlist and sharing to twitter!",
-        facebook: "I am now on the waitlist and sharing to facebook!"
+        twitter: "I found something to get rid of my passwords! 8,000 people are in line, but we get in early if you join me: <%= link %>!",
+        facebook: "I found something to get rid of my passwords! 8,000 people are in line for access, but we get in early if you join me!",
+        email: "test"
     }
 };
 
@@ -41,18 +42,23 @@ Sharer.prototype.share = function(e) {
         $el = $(e.currentTarget),
         data = $el.data(),
         message,
-        type = "twitter";
+        type = "twitter",
+        name;
 
     if ($el.hasClass('facebook') || data.type === "facebook") {
         type = "facebook";
+    } else if ($el.hasClass('email') || data.type) {
+        type = "email";
+        name = "email-" + data.shareType;
     }
 
     _.defaults(data, this.shareDefaults);
+    data.link = data.link || this.waltzLink;
 
     this.templater.template({
-        name: null,
+        name: name,
         context: data,
-        html: this.messages[data.shareType].twitter
+        html: this.messages[data.shareType][type]
     }, function(message) {
         data.message = encodeURIComponent(message);
         _this[type](data);
@@ -70,8 +76,7 @@ Sharer.prototype.twitter = function(opts) {
         url = Utils.addURLParam(url, "text", opts.message);
     }
 
-
-    url = Utils.addURLParam(url, "u", this.waltzLink);
+    url = Utils.addURLParam(url, "u", opts.link);
 
     this.open(url);
 }
@@ -83,8 +88,14 @@ Sharer.prototype.facebook = function(opts) {
         url = Utils.addURLParam(url, "caption", opts.message);
     }
 
-    url = Utils.addURLParam(url, "link", this.waltzLink);
+    url = Utils.addURLParam(url, "link", opts.link);
     url = Utils.addURLParam(url, "redirect_uri", this.waltzLink);
+
+    this.open(url);
+}
+
+Sharer.prototype.email = function(opts) {
+    var url = "mailto:?subject=" + opts.subject;
 
     this.open(url);
 }

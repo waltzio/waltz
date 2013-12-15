@@ -6634,6 +6634,9 @@ th.hide-for-touch {
   margin-top: 10px;
   margin-bottom: 40px;
 }
+#waiting-page .waiting-container .rank-and-share-container h6 {
+  margin-top: 7px;
+}
 #waiting-page .waiting-container .rank-and-share-container .rank-container .rank {
   opacity: 0;
   font-weight: 700;
@@ -6733,16 +6736,70 @@ th.hide-for-touch {
   font-size: 45px;
   text-align: center;
 }
-#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter, #waiting-page .waiting-container .rank-and-share-container .share-container a.facebook {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.email {
+  box-shadow: 3px 3px 0 0 gray;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #999999;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+  position: relative;
+  padding-left: 25%;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container a.email:hover {
+  box-shadow: 2px 2px 0 0 gray;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container a.email:active {
+  box-shadow: 1px 1px 0 0 gray;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container a.email:focus, #waiting-page .waiting-container .rank-and-share-container .share-container a.email:active {
+  outline: none;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container a.email:hover {
+  background: #9e9e9e;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container a.email.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container a.email:before {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  font-size: 45px;
+  text-align: center;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter, #waiting-page .waiting-container .rank-and-share-container .share-container a.facebook, #waiting-page .waiting-container .rank-and-share-container .share-container a.email {
   font-size: 12px;
   padding: 5px 0 35px 0;
   text-align: center;
 }
-#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:before, #waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:before {
+#waiting-page .waiting-container .rank-and-share-container .share-container a.twitter:before, #waiting-page .waiting-container .rank-and-share-container .share-container a.facebook:before, #waiting-page .waiting-container .rank-and-share-container .share-container a.email:before {
   width: 100%;
   text-align: center;
   font-size: 25px;
-  top: 25px;
+  top: 8px;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container .referral-link {
+  margin-top: 10px;
+  display: block;
+  color: #AAA;
+  opacity: 0;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container .referral-link.shown {
+  opacity: 1;
 }
 #waiting-page .waiting-container .email-container {
   display: none;

@@ -49,7 +49,7 @@ html, body {
         }
 
         a.request-email {
-            @include popup-button(#999);
+            @include popup-button($email-color);
         }
 
         a.request-twitter, a.request-github, a.request-email {

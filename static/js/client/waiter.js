@@ -2,6 +2,8 @@ Waiter.prototype.emailContainerSelector = ".email-container";
 Waiter.prototype.emailSuccessContainerSelector = ".email-success-container";
 Waiter.prototype.emailFormSelector = "form";
 Waiter.prototype.rankSelector = ".rank";
+Waiter.prototype.referralLinkSelector =  ".referral-link";
+Waiter.prototype.dataReferralLinkSelector = ".waltz-share";
 Waiter.prototype.waitingContainerSelector = ".waiting-container";
 Waiter.prototype.startContainerSelector = ".start-container";
 
@@ -14,13 +16,19 @@ function Waiter() {
 }
 
 Waiter.prototype.init = function(opts) {
-    var $rank = $(this.rankSelector);
 
     this.settings = opts;
     this.sharer = new Sharer();
 
-    $rank.text(this.settings.rank);
-    $rank.addClass('shown');
+    this.render();
+
+    this.attachHandlers();
+};
+
+Waiter.prototype.render = function() {
+    $(this.rankSelector).text(this.settings.rank).addClass('shown');
+    $(this.referralLinkSelector).text(this.settings.referralLink).addClass('shown');
+    $(this.dataReferralLinkSelector).attr('data-link', this.settings.referralLink);
 
     if (!this.settings.hasEmail) {
         $(this.emailContainerSelector).show();
@@ -30,9 +38,7 @@ Waiter.prototype.init = function(opts) {
         $(this.waitingContainerSelector).hide();
         $(this.startContainerSelector).show();
     }
-
-    this.attachHandlers();
-};
+}
 
 Waiter.prototype.attachHandlers = function() {
     var _this = this;
