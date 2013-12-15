@@ -1,16 +1,20 @@
 $(document).ready(function() {
 
-    
+    // Chrome inline installation
+    var $installButtons = $(".install");
 
-	$(".circle").on('click', function() {
-		var cls = $(this).attr('class').replace('circle ', '');
+    $installButtons.click(function() {
+        chrome.webstore.install(
+            "https://chrome.google.com/webstore/detail/obhibkfopclldmnoohabnbimocpgdine", 
+            function (success) {
+                console.log(success);
+            },
+            function (error) {
+                console.log(error);
+            }
+        )
+    });
 
-		var top = $(".feature-detail."+cls).offset().top;
-
-		$("html, body").animate({
-			scrollTop: top - 50
-		}, 800);
-	});
 
     // ANIMATIONS!
 
