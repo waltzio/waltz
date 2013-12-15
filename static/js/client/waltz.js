@@ -152,7 +152,6 @@
 	        has_network_connection: navigator.onLine,
 	        chrome_version: window.navigator.appVersion
 	    };
-	    console.log(globalProperties);
 	    return globalProperties;
 	};
 
