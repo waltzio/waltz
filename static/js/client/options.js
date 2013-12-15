@@ -46,7 +46,7 @@ Options.prototype.init = function(options, credentials, dismissals) {
 
 	this.render();
 
-	_this.analytics.trackKeenEvent("options_page");
+	this.analytics.trackKeenEvent("options_page");
 };
 
 Options.prototype.render = function() {

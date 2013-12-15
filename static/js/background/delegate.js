@@ -177,6 +177,18 @@ Delegate.prototype.getSiteConfigs = function(request, cb) {
 }
 
 Delegate.prototype.acknowledgeLoginAttempt = function(request) {
+    // If the login is successful, let's refresh other potential tabs
+    // to help them log in!
+    if (request.successful) {
+        chrome.tabs.query({ url: request.domain }, function(tabs) {
+            _.each(tabs, function(tab) {
+                if (!tab.active) {
+                    chrome.tabs.reload(tab.id);
+                }
+            })
+        });
+    }
+
     delete(this.currentLogins[request.domain]);
 }
 
@@ -192,10 +204,6 @@ Delegate.prototype.login = function(request) {
         modified: new Date()
     }
 	this.storage.addLogin(request.domain);
-
-    if (this.options.tutorialStep != -1) {
-        this.completeTutorial();
-    } 
 }
 
 Delegate.prototype.refreshOptions = function(request, cb) {
