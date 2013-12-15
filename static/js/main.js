@@ -76,7 +76,7 @@ $(document).ready(function() {
                     $('.refresh').show();
                     $(this).dequeue();
                 });
-        }, 1200);
+        }, 3800);
     }
 
     $('.animation-container .barsy').barsy({

@@ -5581,9 +5581,10 @@ body {
       margin-top: 10px; }
       #waltz .hero .animation-container .computer video {
         position: absolute;
-        left: 66px;
+        left: 80px;
         top: 35px;
-        width: 310px; }
+        width: 290px;
+        -webkit-box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.3); }
     #waltz .hero .animation-container .phone {
       position: absolute;
       top: 15px;
