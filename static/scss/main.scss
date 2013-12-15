@@ -36,7 +36,21 @@ body {
     overflow-x: hidden;
 }
 
+
 #waltz {
+    .unsupported-browser {
+        display: none;
+        padding: 20px 0;
+        h4 {
+            margin-top: 0;
+        }
+
+        .button {
+            position: relative;
+            top: 5px;
+        }
+    }
+
     .hero {
         margin: 50px auto 0 auto;
 
@@ -206,6 +220,15 @@ body {
             .button {
                 margin-top: 40px;
                 float: right;
+            }
+        }
+    }
+
+    #emailModal {
+        form {
+            padding: 0;
+            .mc-field-group {
+                width: 100%;
             }
         }
     }

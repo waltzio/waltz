@@ -1,18 +1,32 @@
+var isChrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase()); 
+if (!isChrome) {
+    $('.unsupported-browser').show();
+}
+
+$(document).foundation();
 $(document).ready(function() {
+
+    // Unsupported browser slide down
+
 
     // Chrome inline installation
     var $installButtons = $(".install");
 
     $installButtons.click(function() {
-        chrome.webstore.install(
-            "https://chrome.google.com/webstore/detail/obhibkfopclldmnoohabnbimocpgdine", 
-            function (success) {
-                console.log(success);
-            },
-            function (error) {
-                console.log(error);
-            }
-        )
+        try {
+            chrome.webstore.install(
+                "https://chrome.google.com/webstore/detail/obhibkfopclldmnoohabnbimocpgdine", 
+                function (success) {
+                    console.log(success);
+                },
+                function (error) {
+                    console.log(error);
+                }
+            )
+        } catch (e) {
+            $('#emailModal').foundation('reveal', 'open');
+        }
+        
     });
 
 
