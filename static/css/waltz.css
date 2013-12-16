@@ -420,9 +420,10 @@
 
 #waltz-login-wrapper {
   position: fixed;
-  top: 30px;
+  top: 50%;
   right: 30px;
   z-index: 9999;
+  margin-top: -32px;
   width: 64px;
   height: 64px;
 }
