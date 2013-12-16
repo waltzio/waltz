@@ -723,11 +723,7 @@
 		}
 
         var isLoginPage = ($("input[name='" + this.options.site.config.login.passwordField + "']").length > 0);
-        this.options.site.config.login.urls.map(function(url) {
-            var loginUrl = new URL(url);
-            isLoginPage |= (window.location.hostname === loginUrl.hostname && 
-                            window.location.pathname === loginUrl.pathname);
-        });
+
 		if (isLoginPage) {
 			return "login";
 		}
