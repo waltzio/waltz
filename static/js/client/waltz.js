@@ -296,18 +296,19 @@
 
 		$iframe.attr('src', this.options.cyHost + '/v1/login');
 
+        $iframe.css({
+            position: 'fixed',
+            height: '100%',
+            width: '100%',
+            top: 0,
+            left: 0,
+            border: 'none',
+            display: 'none',
+            "z-index": 9995
+        });
+
 		$("body").append($iframe);
 
-		$iframe.css({
-			position: 'fixed',
-			height: '100%',
-			width: '100%',
-			top: 0,
-			left: 0,
-			border: 'none',
-			display: 'none',
-			"z-index": 9995
-		});
 	}
 
 	Waltz.prototype.logInToClef = function(cb) {
