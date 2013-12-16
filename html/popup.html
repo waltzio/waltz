@@ -15,13 +15,13 @@
             <div class="row">
               <h6 class="text-center">Request via</h6>
               <div class="small-4 columns">
-                <a href="https://twitter.com/intent/tweet?text=Hey @getwaltz, I'd love to stop using passwords on" target="_blank" class="request-twitter fi-social-twitter">twitter</a>
+                <a class="waltz-share request-twitter fi-social-twitter" data-share-type="requestSite">twitter</a>
               </div>
               <div class="small-4 columns">
                 <a href="https://github.com/waltzio/waltz/issues/new" target="_blank" class="request-github fi-social-github">github</a>
               </div>
               <div class="small-4 columns">
-                <a href="mailto:support@getwaltz.com?subject=Waltz Site Request" target="_blank" class="request-email fi-mail">email</a>
+                <a class="waltz-share email request-email fi-mail" data-subject="Waltz website request" data-share-type="requestSite">email</a>
               </div>
             </div>
           </div>
@@ -30,6 +30,10 @@
         <li><a href="tutorial.html" target="_blank" class="tutorial fi-clipboard-pencil">Show me the tutorial again.</a></li>
     </ul>
     <script src="/static/js/vendor/jquery.min.js"></script>
+    <script src="/static/js/vendor/underscore-min.js"></script>
+    <script src="/static/js/shared/utils.js"></script>
+    <script src="/static/js/shared/templater.js"></script>
+    <script src="/static/js/shared/sharer.js"></script>
     <script src="/static/js/client/popup.js"></script>
 </body>
 
