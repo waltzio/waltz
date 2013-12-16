@@ -84,6 +84,8 @@
             var $a = $(e.currentTarget), 
                 siteKey = $a.text().toLowerCase();
 
+            if ($a.hasClass('completed')) return;
+
             chrome.runtime.sendMessage({
                 method: 'forceTutorial',
                 key: siteKey

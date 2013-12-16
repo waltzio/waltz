@@ -6727,9 +6727,6 @@ header h2 {
   margin: auto;
   font-size: 100px;
 }
-.tutorial-slides .slide .site-start.completed {
-  opacity: .3;
-}
 .tutorial-slides .slide .site-start.twitter {
   background: #00bef9;
   box-shadow: 3px 3px 0 0 #0097c6;
@@ -6759,6 +6756,13 @@ header h2 {
 }
 .tutorial-slides .slide .site-start.github:active {
   box-shadow: 1px 1px 0 0 #060505;
+}
+.tutorial-slides .slide .site-start.completed {
+  opacity: .3;
+  -webkit-box-shadow: none;
+}
+.tutorial-slides .slide .site-start.completed:hover {
+  -webkit-box-shadow: none;
 }
 .tutorial-slides .slide iframe {
   overflow: hidden;

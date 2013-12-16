@@ -179,10 +179,6 @@ header {
                 font-size: 100px;
             }
 
-            &.completed {
-                opacity: .3;
-            }
-
             &.twitter {
                 $color: #00BEF9;
                 background: $color;
@@ -199,6 +195,14 @@ header {
                 $color: #201E1F;
                 background: $color;
                 @include button-shadow($color);
+            }
+            
+            &.completed {
+                opacity: .3;
+                -webkit-box-shadow: none;
+                &:hover {
+                    -webkit-box-shadow: none;
+                }
             }
         }
 
