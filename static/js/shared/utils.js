@@ -131,7 +131,7 @@ var Utils = {
         }
     },
     settings: {
-        waitlistHost: "http://localhost:4000",
+        waitlistHost: "http://localhost:5000",
         waitlistPaths: {
             reserve: '/u/reserve',
             check: '/u/check',

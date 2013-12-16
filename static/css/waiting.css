@@ -6808,6 +6808,7 @@ th.hide-for-touch {
   display: none;
   padding: 10px;
   border: 1px solid #dd0005;
+  color: #dd0005;
 }
 #waiting-page .waiting-container .email-success-container {
   display: none;

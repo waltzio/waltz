@@ -1,7 +1,7 @@
 
 Sharer.prototype.twitterBase = 'https://twitter.com/intent/tweet';
 Sharer.prototype.facebookBase = "https://www.facebook.com/dialog/feed?app_id=1383429211907692&display=popup";
-Sharer.prototype.waltzLink = encodeURIComponent("http://getwaltz.com");
+Sharer.prototype.waltzLink = "http://getwaltz.com";
 
 Sharer.prototype.shareSelector = ".waltz-share";
 

@@ -1,7 +1,7 @@
 Setup.prototype.SETUP_KEY = "setup";
 Setup.prototype.ACTIVATED_KEY = "activated";
 
-Setup.prototype.waitlistCheckTimeout = 1000 * 60 * 5;
+Setup.prototype.waitlistCheckTimeout = 1000;
 
 function Setup() {
     var _this = this;
@@ -28,7 +28,6 @@ Setup.prototype.openWaitlist = function() {
         url: chrome.extension.getURL("html/waiting.html")
     }, function() {});
 }
-
 
 Setup.prototype.openTutorial = function() {
     this.delegate = new Delegate();
@@ -66,26 +65,34 @@ Setup.prototype.checkWaitlistStatus = function() {
             promise = $.Deferred(),
             url = Utils.settings.waitlistHost + Utils.settings.waitlistPaths.check;
 
-        $.get(
-            Utils.addURLParam(url, "id", this.settings.waitlistID),
-            function(data) {
+        $.get(Utils.addURLParam(url, "id", this.settings.waitlistID))
+        .success(function(data) {
+            _this.settings.waiting = data.waiting;
+            _this.settings.rank = data.rank + 1;
 
-                _this.settings.waiting = data.waiting;
-                _this.settings.rank = data.rank + 1;
+            chrome.runtime.sendMessage({
+                messageLocation: 'waiting',
+                method: 'refresh'
+            });
 
-                chrome.runtime.sendMessage({
-                    messageLocation: 'waiting',
-                    method: 'refresh'
-                });
+            _this.storage.setPrivateSettings(_this.settings, function() {
+                if (!_this.settings.waiting) {
+                    return _this.activate();
+                } 
+                promise.resolve();
+            })
+        })
+        .fail(function(data) {
+            var error;
 
+            if (data.status === 404) {
+                // If the user cannot be found, let's re-register the user
+                _this.settings.waitlistID = false;
                 _this.storage.setPrivateSettings(_this.settings, function() {
-                    if (!_this.settings.waiting) {
-                        return _this.activate();
-                    } 
-                    promise.resolve();
-                })
+                    promise.resolve(_this.registerOnWaitlist());
+                });
             }
-        )
+        });
 
         return promise;
     }
@@ -103,26 +110,34 @@ Setup.prototype.registerOnWaitlist = function() {
 
     $.post(
         Utils.settings.waitlistHost + Utils.settings.waitlistPaths.reserve,
-        {},
-        function(data) {
-            _this.settings.waitlistID = data.id;
-            _this.settings.waiting = data.waiting;
-            _this.settings.rank = data.rank + 1;
+        {}
+    ).success(function(data) {
+        _this.settings.waitlistID = data.id;
+        _this.settings.waiting = data.waiting;
+        _this.settings.rank = data.rank + 1;
+        _this.settings.referralLink = data.referralLink;
+        _this.settings.inviteLink = data.inviteLink;
 
-            _this.settings.referralLink = "http://getwaltz.com/share";
 
-            _this.storage.setPrivateSettings(
-                _this.settings,
-                function() {
-                    if (!_this.settings.waiting) {
-                        return _this.activate();
-                    }
-                    promise.resolve();
+        _this.storage.setPrivateSettings(
+            _this.settings,
+            function() {
+                if (!_this.settings.waiting) {
+                    return _this.activate();
                 }
-            );
-        }
-    );
-
+                promise.resolve();
+            }
+        );
+    }).fail(function(data) {
+        _this.settings.waiting = true;
+        _this.storage.setPrivateSettings(
+            _this.settings,
+            function() {
+                promise.resolve();
+            }
+        );
+    });
+        
     return promise;
 }
 

@@ -66,8 +66,13 @@ Waiter.prototype.attachHandlers = function() {
                     finishedLoading.resolve();
                 }
             );
-        }).error(function(data) {
-            var errorMessage = JSON.parse(data.responseText).error;
+        }).fail(function(data) {
+            var errorMessage;
+            if (data.responseText) {
+                errorMessage = JSON.parse(data.responseText).error;
+            } else {
+                errorMessage = "Something went wrong with your internet connection. Refresh and try again.";
+            }
             $(_this.emailContainerSelector).find('.error').text(errorMessage).fadeIn();
             finishedLoading.resolve();
         });
