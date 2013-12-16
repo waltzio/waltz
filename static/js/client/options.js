@@ -27,6 +27,7 @@ Options.prototype.settingsMetaMap = {
 
 function Options() {
 	this.storage = new Storage();
+	this.analytics = new Analytics();
 	this.templater = new Templater();
 	var _this = this;
 
@@ -44,6 +45,8 @@ Options.prototype.init = function(options, credentials, dismissals) {
 	this.dismissals = dismissals;
 
 	this.render();
+
+	this.analytics.trackEvent("options_page");
 };
 
 Options.prototype.render = function() {
@@ -114,6 +117,12 @@ Options.prototype.attachSettingsHandlers = function() {
 		Utils.triggerLoading(this);
 		$settings.find('input').each(function() {
 			_this.storage.setOption(this.name, $(this).val());
+
+			if(this.name == "cy_url") {
+				_this.analytics.trackEvent("changed_cy_url", {
+					is_https: $(this).val().toLowerCase().substr(0, 8) === "https://"
+				});
+			}
 		});
 	});
 
@@ -182,6 +191,11 @@ Options.prototype.attachCredentialsHandlers = function() {
 				finishedLoading.resolve();
 			});
 		}
+
+		console.log($credential.data('key'));
+		_this.analytics.trackEvent("credential_decrypted", {
+			site: $credential.data('key')
+		});
 	});
 
 	$credentials.find(this.forgetButtonSelector).click(function() {
@@ -193,6 +207,10 @@ Options.prototype.attachCredentialsHandlers = function() {
 				$credential.slideUp(300, function() { $(this).remove(); });
 			}
 		);
+
+		_this.analytics.trackEvent("credential_forgotten", {
+			site: $credential.data('key')
+		});
 
 	});
 
@@ -224,6 +242,10 @@ Options.prototype.attachCredentialsHandlers = function() {
 				username: $credential.find(_this.usernameInputSelector).val(),
 				password: $credential.find(_this.passwordInputSelector).filter('.toggled').val()
 			}, function() { doneSaving.resolve(); });
+
+			_this.analytics.trackEvent("credential_edited", {
+				site: $credential.data('key')
+			});
 	});
 };
 

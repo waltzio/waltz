@@ -21,6 +21,7 @@
 		if (!opts) return;
 
 		this.storage = new Storage();
+		this.analytics = new Analytics({ captureURLData: true });
 
 		this.options = opts;
 		this.onboarder = new Onboarder(this);
@@ -170,6 +171,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
+                _this.analytics.trackEvent("dismissal_saved", {duration: "forever"});
             });
 
             $page.click(function(e) {
@@ -190,6 +192,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
+                _this.analytics.trackEvent("dismissal_saved", {duration: "page"});
             });
 
             $cancel.click(function(e) {
@@ -207,6 +210,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
+                _this.analytics.trackEvent("dismissal_saved", {duration: "cancel"});
             });
 
             $message.attr('class', 'floating fixed');
@@ -279,18 +283,19 @@
 
 		$iframe.attr('src', this.options.cyHost + '/v1/login');
 
+        $iframe.css({
+            position: 'fixed',
+            height: '100%',
+            width: '100%',
+            top: 0,
+            left: 0,
+            border: 'none',
+            display: 'none',
+            "z-index": 9995
+        });
+
 		$("body").append($iframe);
 
-		$iframe.css({
-			position: 'fixed',
-			height: '100%',
-			width: '100%',
-			top: 0,
-			left: 0,
-			border: 'none',
-			display: 'none',
-			"z-index": 9995
-		});
 	}
 
 	Waltz.prototype.logInToClef = function(cb) {
@@ -471,6 +476,7 @@
 		}, function(response) {
 			if (!response.user) {
 				_this.logInToClef(cb);
+				_this.analytics.trackEvent("clef_auth_shown");
 			} else {
 				if (typeof(cb) == "function") {
 					cb();
@@ -520,6 +526,8 @@
 		$overlay.append($form);
         $body.append($overlay);
 
+        var formShownTime = Date.now();
+
 		//Put this on a timeout, because we need the class to be added after the initial draw
 		setTimeout(function() {
 			$.merge($overlay, $form).addClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
@@ -547,6 +555,11 @@
 					$.merge($overlay, $form).remove();
 					_this.trigger('remove.credentialOverlay');
 				}, 500);
+
+				_this.analytics.trackEvent("credentials_form_dismissed", {
+					had_entered_credentials: !($usernameField.val() === "" && $passwordField.val() === ""),
+					shown_duration: Date.now() - formShownTime
+				});
 			}
 		});
 
@@ -582,6 +595,9 @@
 		var _this = this;
 
         var attemptLogin = function() {
+
+        	_this.analytics.trackEvent("widget_clicked");
+
             if (!_this.iframe) {
                 _this.loadIFrame();
             }
@@ -644,7 +660,10 @@
                     _this.options.site.config.key, 
                     dismissals
                 );
+
+                _this.analytics.trackEvent("widget_dismissed");
                 _this.trigger('widget.dismissed', { dismissals: dismissals.count });
+
             });
 
 			_this.hideWidget({ remove: true });
@@ -653,6 +672,8 @@
 		$("body").append($widget);
 		this.$widget = $widget;
 		this.trigger('show.widget');
+
+		_this.analytics.trackEvent("show_widget");
 	}
 
 	Waltz.prototype.hideWidget = function(opts) {
@@ -689,11 +710,7 @@
 		}
 
         var isLoginPage = ($("input[name='" + this.options.site.config.login.passwordField + "']").length > 0);
-        this.options.site.config.login.urls.map(function(url) {
-            var loginUrl = new URL(url);
-            isLoginPage |= (window.location.hostname === loginUrl.hostname && 
-                            window.location.pathname === loginUrl.pathname);
-        });
+
 		if (isLoginPage) {
 			return "login";
 		}
@@ -728,6 +745,7 @@
 	Waltz.prototype.on = function(eventName, cb) {
 		this.router.on(eventName, cb);
 	}
+
 
 	chrome.runtime.sendMessage({
 		method: "initialize",

@@ -1,109 +1,110 @@
+(function() {
+    Sharer.prototype.twitterBase = 'https://twitter.com/intent/tweet';
+    Sharer.prototype.facebookBase = "https://www.facebook.com/dialog/feed?app_id=1383429211907692&display=popup";
+    Sharer.prototype.shareSelector = ".waltz-share";
 
-Sharer.prototype.twitterBase = 'https://twitter.com/intent/tweet';
-Sharer.prototype.facebookBase = "https://www.facebook.com/dialog/feed?app_id=1383429211907692&display=popup";
-Sharer.prototype.waltzLink = "http://getwaltz.com";
+    Sharer.prototype.messages = {
+        setupSuccess: {
+            twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>",
+            facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>"
+        },
+        waitlist: {
+            twitter: "I found something to get rid of my passwords! 8,000 people are in line, but we get in early if you join me: <%= link %>!",
+            facebook: "I found something to get rid of my passwords! 8,000 people are in line for access, but we get in early if you join me!",
+            email: "test"
+        },
+        requestSite: {
+            twitter: "Hey @getwaltz, I'd love to get rid of my passwords on <%= site %>. Can you help?"
+        }
+    };
 
-Sharer.prototype.shareSelector = ".waltz-share";
+    Sharer.prototype.shareDefaults = {};
 
-Sharer.prototype.messages = {
-    setupSuccess: {
-        twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>",
-        facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>"
-    },
-    waitlist: {
-        twitter: "I found something to get rid of my passwords! 8,000 people are in line, but we get in early if you join me: <%= link %>!",
-        facebook: "I found something to get rid of my passwords! 8,000 people are in line for access, but we get in early if you join me!",
-        email: "test"
-    }
-};
+    function Sharer(waltz) {
+        this.waltz = waltz;
 
-Sharer.prototype.shareDefaults = {
+        this.templater = new Templater();
 
-};
-
-function Sharer(waltz) {
-
-    this.waltz = waltz;
-
-    this.templater = new Templater();
-
-    this.attachHandlers();
-}
-
-Sharer.prototype.attachHandlers = function() {
-    $(this.shareSelector).click(this.share.bind(this));
-};
-
-Sharer.prototype.share = function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    var _this = this,
-        $el = $(e.currentTarget),
-        data = $el.data(),
-        message,
-        type = "twitter",
-        name;
-
-    if ($el.hasClass('facebook') || data.type === "facebook") {
-        type = "facebook";
-    } else if ($el.hasClass('email') || data.type) {
-        type = "email";
-        name = "email-" + data.shareType;
+        this.attachHandlers();
     }
 
-    _.defaults(data, this.shareDefaults);
-    data.link = data.link || this.waltzLink;
+    Sharer.prototype.attachHandlers = function() {
+        $(this.shareSelector).click(this.share.bind(this));
+    };
 
-    this.templater.template({
-        name: name,
-        context: data,
-        html: this.messages[data.shareType][type]
-    }, function(message) {
-        data.message = encodeURIComponent(message);
-        _this[type](data);
-    });
-};
+    Sharer.prototype.share = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
 
-Sharer.prototype.shareSetupSuccess = function() {
+        var _this = this,
+            $el = $(e.currentTarget),
+            data = $el.data(),
+            message,
+            type = "twitter",
+            name;
 
-}
+        if ($el.hasClass('facebook') || data.type === "facebook") {
+            type = "facebook";
+        } else if ($el.hasClass('email') || data.type) {
+            type = "email";
+            name = "email-" + data.shareType;
+        }
 
-Sharer.prototype.twitter = function(opts) {
-    var url = this.sharedShare(this.twitterBase, opts);
+        _.defaults(data, this.shareDefaults);
+        data.link = data.link || this.waltzLink;
 
-    if (opts.message) {
-        url = Utils.addURLParam(url, "text", opts.message);
+        this.templater.template({
+            name: name,
+            context: data,
+            html: this.messages[data.shareType][type]
+        }, function(message) {
+            data.message = encodeURIComponent(message);
+            _this[type](data);
+        });
+    };
+
+    Sharer.prototype.shareSetupSuccess = function() {
+
     }
 
-    url = Utils.addURLParam(url, "u", opts.link);
+    Sharer.prototype.twitter = function(opts) {
+        var url = this.sharedShare(this.twitterBase, opts);
 
-    this.open(url);
-}
+        if (opts.message) {
+            url = Utils.addURLParam(url, "text", opts.message);
+        }
 
-Sharer.prototype.facebook = function(opts) {
-    var url = this.sharedShare(this.facebookBase, opts);
+        url = Utils.addURLParam(url, "u", opts.link);
 
-    if (opts.message) {
-        url = Utils.addURLParam(url, "caption", opts.message);
+        this.open(url);
     }
 
-    url = Utils.addURLParam(url, "link", opts.link);
-    url = Utils.addURLParam(url, "redirect_uri", this.waltzLink);
+    Sharer.prototype.facebook = function(opts) {
+        var url = this.sharedShare(this.facebookBase, opts);
 
-    this.open(url);
-}
+        if (opts.message) {
+            url = Utils.addURLParam(url, "caption", opts.message);
+        }
 
-Sharer.prototype.email = function(opts) {
-    var url = "mailto:?subject=" + opts.subject;
+        url = Utils.addURLParam(url, "link", opts.link);
+        url = Utils.addURLParam(url, "redirect_uri", this.waltzLink);
 
-    this.open(url);
-}
+        this.open(url);
+    }
 
-Sharer.prototype.open = function(url) {
-    window.open(url, "popup", "height=400px,width=600px,top=100px,left=100px");
-}
+    Sharer.prototype.email = function(opts) {
+        var url = "mailto:?subject=" + opts.subject;
 
-Sharer.prototype.sharedShare = function(url, opts) {
+        this.open(url);
+    }
+
+    Sharer.prototype.open = function(url) {
+        window.open(url, "popup", "height=400px,width=600px,top=100px,left=100px");
+    }
+
+    Sharer.prototype.sharedShare = function(url, opts) {
     return url;
-}
+    }
+
+    this.Sharer = Sharer;
+}).call(this);

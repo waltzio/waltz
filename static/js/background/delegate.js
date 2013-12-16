@@ -18,11 +18,17 @@ if (Delegate.prototype.DEBUG) {
 	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
 } 
 
-function Delegate() {
+function Delegate(opts) {
 	var _this = this;
 
+    this.options = $.extend(this.options, opts);
+
     this.storage = new Storage();
+    this.analytics = new Analytics();    
     this.crypto = new Crypto();
+
+
+    if (this.options.firstTime) this.analytics.trackEvent('first_setup');
 
     if (navigator.onLine) {
         start();
@@ -70,6 +76,11 @@ Delegate.prototype.init = function(options) {
         title: 'Waltz',
         onclick: function(info, tab) {
             chrome.tabs.create({url: "/html/options.html"});
+
+            _this.analytics.trackEvent("context_menu", {
+                tabIndex: tab.index,
+                url: tab.url
+            });
         }
     });
 
@@ -178,6 +189,18 @@ Delegate.prototype.getSiteConfigs = function(request, cb) {
 }
 
 Delegate.prototype.acknowledgeLoginAttempt = function(request) {
+    // If the login is successful, let's refresh other potential tabs
+    // to help them log in!
+    if (request.successful) {
+        chrome.tabs.query({ url: request.domain }, function(tabs) {
+            _.each(tabs, function(tab) {
+                if (!tab.active) {
+                    chrome.tabs.reload(tab.id);
+                }
+            })
+        });
+    }
+
     delete(this.currentLogins[request.domain]);
 }
 
@@ -283,6 +306,10 @@ Delegate.prototype.logout = function(opts) {
 			_this.user = false;
 			_this.loggedIn = false;
 		});
+
+        _this.analytics.trackEvent("logout_request", {
+            sites_count: Object.keys(data).length
+        });
 	});
 }
 

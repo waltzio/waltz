@@ -17,6 +17,7 @@ function Sites() {
 
 
     this.storage = new Storage();
+    this.analytics = new Analytics();
 
     chrome.extension.sendMessage({
         method: 'getSiteConfigs'
@@ -69,6 +70,7 @@ Sites.prototype.init = function(data) {
         }
     });
     
+    _this.analytics.trackEvent("sites_list");
 };
 
 Sites.prototype.attachHandlers = function() {

@@ -6,6 +6,7 @@ Setup.prototype.waitlistCheckTimeout = 1000;
 function Setup() {
     var _this = this;
 
+    this.analytics = new Analytics();
     this.storage = new Storage();
     this.storage.subscribe(this.storage.PRIVATE_SETTINGS_KEY, function(changes) {
         if (changes.newInfo) {
@@ -24,13 +25,15 @@ Setup.prototype.init = function(settings) {
 }
 
 Setup.prototype.openWaitlist = function() {
+    this.analytics.trackEvent('open_waitlist');
     chrome.tabs.create({
         url: chrome.extension.getURL("html/waiting.html")
     }, function() {});
 }
 
 Setup.prototype.openTutorial = function() {
-    this.delegate = new Delegate();
+    this.analytics.trackEvent('first_tutorial');
+    this.delegate = new Delegate({ firstTime: true });
 
     chrome.browserAction.onClicked.removeListener(this.openWaitlist.bind(this));
     chrome.browserAction.setPopup({ popup: "/html/popup.html" });
@@ -77,6 +80,7 @@ Setup.prototype.checkWaitlistStatus = function() {
 
             _this.storage.setPrivateSettings(_this.settings, function() {
                 if (!_this.settings.waiting) {
+                    _this.analytics.trackEvent('leave_waitlist', { waitlistID: _this.settings.waitlistID });
                     return _this.activate();
                 } 
                 promise.resolve();
@@ -118,6 +122,7 @@ Setup.prototype.registerOnWaitlist = function() {
         _this.settings.referralLink = data.referralLink;
         _this.settings.inviteLink = data.inviteLink;
 
+        
 
         _this.storage.setPrivateSettings(
             _this.settings,
@@ -125,6 +130,7 @@ Setup.prototype.registerOnWaitlist = function() {
                 if (!_this.settings.waiting) {
                     return _this.activate();
                 }
+                _this.analytics.trackEvent('join_waitlist', { waitlistID: _this.settings.waitlistID });
                 promise.resolve();
             }
         );
@@ -164,6 +170,8 @@ Setup.prototype.highlightIcon = function() {
         on = true,
         toggle = true;
 
+    this.analytics.trackEvent('highlight_icon');
+
     this.attachClickToTutorial();
 
     chrome.browserAction.setBadgeText({ text: "start" });
@@ -183,21 +191,15 @@ Setup.prototype.highlightIcon = function() {
 }
 
 Setup.prototype.activate = function() {
+    this.analytics.trackEvent('activated');
     var _this = this,
         activationDone = $.Deferred();
 
-    $.post(
-        Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteCreate,
-        { id: _this.settings.waitlistID },
-        function (data) {
-            _this.settings[_this.ACTIVATED_KEY] = true;
-            _this.settings.inviteLink = data.inviteLink;
-            _this.storage.setPrivateSettings(_this.settings, function() {
-                _this.kickOff();
-                activationDone.resolve();
-            })
-        }
-    );
+    _this.settings[_this.ACTIVATED_KEY] = true;
+    _this.storage.setPrivateSettings(_this.settings, function() {
+        _this.kickOff();
+        activationDone.resolve();
+    })
 
     return activationDone;
 }
@@ -208,10 +210,12 @@ Setup.prototype.onInstall = function() {
     // if installing flag is true, we popup the tutorial
     // straight away if they are in
     this.installing = true;
+    this.analytics.trackEvent('install');
 
     $.when(this.initialized)
      .then(this.onStartup.bind(this))
      .then(function() {
+
         _this.installing = false;
         // if on install we are put into the waitlist,
         // we pop up the waitlist page

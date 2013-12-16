@@ -13,6 +13,8 @@
 
             this.$slides = $(this.slideSelector);
             this.storage = new Storage();
+            this.analytics = new Analytics();
+            this.analytics.trackEvent("start_tutorial")
 
             this.$slides.each(function() {
                 $('.tutorial-slides').addClass($(this).attr('id'));
@@ -80,8 +82,14 @@
         Slider.prototype.startSiteSetup = function(e) {
             e.preventDefault();
 
+            this.analytics.trackEvent('finish_tutorial');
+
             var $a = $(e.currentTarget), 
                 siteKey = $a.text().toLowerCase();
+
+            this.analytics.trackEvent('tutorial_site_setup', { siteKey: siteKey });
+
+            if ($a.hasClass('completed')) return;
 
             chrome.runtime.sendMessage({
                 method: 'forceTutorial',
