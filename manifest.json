@@ -64,7 +64,7 @@
     "/static/img/*",
     "/html/templates.html"
   ],
-  "content_security_policy": "script-src 'self' chrome-extension://; object-src 'self'",
+  "content_security_policy": "script-src 'self' chrome-extension:// https://connect.facebook.net; object-src 'self'",
   "sandbox": {
     "pages": ["/html/templates.html"]
   }
