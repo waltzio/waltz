@@ -14,6 +14,7 @@
             this.$slides = $(this.slideSelector);
             this.storage = new Storage();
             this.analytics = new Analytics(this.getKeenGlobals);
+            this.analytics.trackKeenEvent("start_tutorial")
 
             this.$slides.each(function() {
                 $('.tutorial-slides').addClass($(this).attr('id'));
@@ -109,6 +110,5 @@
     })();
 
     var slider = new Slider();
-    slider.trackKeenEvent("start_tutorial")
 
 }).call(this);
