@@ -5548,6 +5548,8 @@ html, body {
   html .row .row, body .row .row {
     margin-left: auto;
     margin-right: auto; }
+  html h1, html h2, html h3, html h4, html h5, html h6, html p, body h1, body h2, body h3, body h4, body h5, body h6, body p {
+    cursor: text; }
 
 body {
   overflow-x: hidden; }

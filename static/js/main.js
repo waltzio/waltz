@@ -8,12 +8,11 @@ $(document).ready(function() {
 
     // Unsupported browser slide down
 
-
     // Chrome inline installation
     var $installButtons = $(".install");
-
+    
     $installButtons.click(function() {
-        try {
+        if (isChrome) {
             chrome.webstore.install(
                 "https://chrome.google.com/webstore/detail/obhibkfopclldmnoohabnbimocpgdine", 
                 function (success) {
@@ -22,13 +21,11 @@ $(document).ready(function() {
                 function (error) {
                     console.log(error);
                 }
-            )
-        } catch (e) {
+            );
+        } else {
             $('#emailModal').foundation('reveal', 'open');
         }
-        
     });
-
 
     // ANIMATIONS!
 
