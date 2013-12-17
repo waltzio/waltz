@@ -6,8 +6,6 @@
  *
 ********************/
 
-FIRST_INSTALL = false;
-
 Delegate.prototype.DEBUG = true;
 
 Delegate.prototype.options = {};
