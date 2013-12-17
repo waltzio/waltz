@@ -47,10 +47,10 @@ Waiter.prototype.attachHandlers = function() {
         e.preventDefault();
 
         var $form = $(e.currentTarget),
-            data = $form.serializeArray()[0],
+            data = $form.serializeArray(),
             finishedLoading = Utils.triggerLoading($form.find('button'), { promise: true });
 
-        data.id = _this.settings.waitlistID;
+        data.push({name: 'id', value: _this.settings.waitlistID});
 
         $.post(
             Utils.settings.waitlistHost + Utils.settings.waitlistPaths.setEmail,
