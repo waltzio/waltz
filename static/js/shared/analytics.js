@@ -28,7 +28,7 @@ Analytics.prototype.trackEvent = function(evnt, data) {
 		 	Keen.addEvent(evnt, data);
 	 	} else {
 	 		data = $.extend(data, _this.getProperties());
-	 		_this.debug("Analytics tracked: ", evnt, data);
+	 		_this.debug("Waltz analytics not tracked", evnt, data);
 	 	}
 	 });
 }
@@ -54,7 +54,6 @@ Analytics.prototype.initializeKeen = function(evnt, data) {
 		}
 		Keen.setGlobalProperties(_this.getProperties.bind(_this));
 	});
-
 	return promise;
 };
 

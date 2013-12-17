@@ -61,11 +61,11 @@ Storage.prototype.handleChange = function(changes, areaName) {
 }
 
 Storage.prototype.set = function(items, cb) {
-    chrome.storage.local.set(items, cb);
+    this.base.set(items, cb);
 }
 
 Storage.prototype.get = function(keys, cb) {
-    chrome.storage.local.get(keys, cb);
+    this.base.get(keys, cb);
 }
 
 Storage.prototype.remove = function(keys) {
@@ -278,9 +278,7 @@ Storage.prototype.setPrivateSetting = function(key, value, cb) {
     var _this = this;
     this.getPrivateSettings(function(options) {
         options[key] = value;
-        var save = {};
-        save[_this.PRIVATE_SETTINGS_KEY] = options;
-        _this.set(save, cb);
+        _this.setPrivateSettings(options, cb);
     });
 }
 
@@ -316,15 +314,21 @@ Storage.prototype.setOnboardingKey = function(key, value, cb) {
 
 // Allows you to get the onboarding data for a specific site
 Storage.prototype.getOnboardingSiteData = function(siteKey, cb) {
-    var _this = this;
+    var _this = this,
+        promise = $.Deferred();
 
     this.getOnboardingData(function(data) {
+        var _ret;
         if (data[_this.ONBOARDING_SITES_KEY] && data[_this.ONBOARDING_SITES_KEY][siteKey]) {
-            cb(data[_this.ONBOARDING_SITES_KEY][siteKey]);
+            _ret = data[_this.ONBOARDING_SITES_KEY][siteKey];
         } else {
-            cb(_this.siteOnboardingDefaults);
+            _ret = _this.siteOnboardingDefaults;
         }
+        if (typeof cb === "function") cb(_ret);
+        promise.resolve(_ret);
     });
+
+    return promise;
 }
 
 // Allows you to set *all* the onboarding data for a specific site
@@ -357,3 +361,55 @@ Storage.prototype.setOnboardingSiteKey = function(siteKey, key, value, cb) {
         _this.setOnboardingSiteData(siteKey, data, cb);
     });
 }
+
+
+StorageBase.prototype.toSet = [];
+
+function StorageBase() {
+    _this = this;
+
+    this.ready = $.Deferred();
+
+    chrome.storage.local.get(null, function(data) {
+        console.log('balh', data);
+        _this.data = data;
+        _this.ready.resolve();
+    });
+
+    // chrome.storage.onChanged.addListener(function(data) {
+    //     _this.data = data;
+    // });
+}
+
+StorageBase.prototype.set = function(items, cb) {
+    var _this = this;
+    $.when(this.ready).then(function() {
+        for (var k in items) {
+            _this.data[k] = items[k];
+        }
+
+        if (typeof cb === "function") cb();
+    });
+}
+
+StorageBase.prototype.get = function(key, cb) {
+    var _this = this;
+    $.when(this.ready).then(function() {
+        if (!_this.data[key]) {
+            _this.data[key] = {};
+        }
+        if (typeof cb === "function") cb(_this.data[key]);
+    })
+}
+
+
+Storage.prototype.base = new StorageBase();
+
+var s1 = new Storage();
+var s2 = new Storage();
+
+s1.setPrivateSettings({}, function() {
+    s1.setPrivateSetting('test1', true);
+    s2.setPrivateSetting('test2', true);
+});
+

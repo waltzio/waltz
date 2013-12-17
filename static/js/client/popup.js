@@ -1,5 +1,7 @@
 function Popup() {
+
     this.sharer = new Sharer();
+
     $('a.request').click(function() {
         chrome.tabs.query({ active: true }, function(data) {
             var site;
@@ -11,6 +13,11 @@ function Popup() {
             $('.waltz-share').data('site', site);
             $('.request-container').slideDown();
         });
+    });
+
+    chrome.browserAction.getBadgeText({}, function(details) {
+        chrome.browserAction.setBadgeText({ text: "" });
+        console.log(details);
     })
 }
 

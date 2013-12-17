@@ -124,6 +124,8 @@ Onboarder.prototype.loginSuccess = function() {
         })
 
         $message.fadeIn();
+    } else if (this.secondSiteSetup()) {
+        this.incrementInviteCount();
     } else {
         var _this = this;
         promise.then(function() {
@@ -284,6 +286,25 @@ Onboarder.prototype.totalSuccessfulLogins = function() {
         total += this.siteSpecificOnboardingData[site].loginAttempts.success;
     }
     return total;
+}
+
+Onboarder.prototype.secondSiteSetup = function() {
+    var numSites = 0;
+    for (var site in this.siteSpecificOnboardingData) {
+        if (this.siteSpecificOnboardingData[site].loginAttempts.success > 1) numSites++;
+    }
+
+    return numSites === 2;
+}
+
+
+Onboarder.prototype.incrementInviteCount = function(key) {
+    chrome.sendMessage({
+        method: 'incrementInviteCount',
+        key: this.siteKey
+    }, function(data) {
+        console.log(data);
+    });
 }
 
 

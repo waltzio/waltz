@@ -189,9 +189,10 @@ Delegate.prototype.getSiteConfigs = function(request, cb) {
 }
 
 Delegate.prototype.acknowledgeLoginAttempt = function(request) {
-    // If the login is successful, let's refresh other potential tabs
-    // to help them log in!
+    
     if (request.successful) {
+        // If the login is successful, let's refresh other potential tabs
+        // to help them log in!
         chrome.tabs.query({ url: request.domain }, function(tabs) {
             _.each(tabs, function(tab) {
                 if (!tab.active) {
@@ -505,6 +506,33 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
             _this.currentLogins[domain]['modified'] = new Date();
         }
     }
+}
+
+Delegate.prototype.incrementInviteCount = function(request, cb) {
+    var _this = this,
+        siteOnboardingLoaded = this.storage.getOnboardingSiteData(request.key),
+        privateSettingsLoaded = this.storage.getPrivateSettings();
+
+    $.when(siteOnboardingLoaded, privateSettingsLoaded)
+    .then(function(onboarding, settings) {
+        $.post(
+            Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteAdd,
+            { id: settings.waitlistID }
+        ).success(function(data) {
+            var inviteCount = (settings.inviteCount || 0) + 1;
+            _this.storage.setPrivateSetting('inviteCount', inviteCount, function() {
+                _this.storage.setPrivateSetting('waitingListActive', data.waiting);
+            });
+            _this.storage.setOnboardingSiteKey('inviteIncremented', true);
+            if (data.waiting) {
+                chrome.browserAction.setBadgeText({ text: inviteCount.toString() });
+            }
+
+            cb(data);
+        }).fail(function(data) {
+            cb({ error: true, data: data });
+        });
+    });
 }
 
 Delegate.prototype.openNewTab = function(request, cb) {
