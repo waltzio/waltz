@@ -137,7 +137,8 @@ var Utils = {
             check: '/u/check',
             setEmail: '/u/email/set',
             inviteCreate: '/i/create',
-            inviteAdd: '/i/add'
+            inviteAdd: '/i/add',
+            inviteClear: '/i/clear'
         }
     }
 }

@@ -159,6 +159,9 @@ Setup.prototype.attachClickToTutorial = function() {
     chrome.browserAction.onClicked.removeListener(this.openWaitlist);
 
     chrome.browserAction.onClicked.addListener(function() {
+        $.post(Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteClear, 
+            {id: _this.settings.waitlistID}
+        );
         on = false;
         chrome.browserAction.setBadgeText({ text: "" });
         _this.openTutorial();
