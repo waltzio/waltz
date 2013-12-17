@@ -9,10 +9,9 @@
     $size: 64px;
 
     position: fixed;
-    top: 50%;
+    top: 30px;
     right: 30px;
     z-index: 9999;
-    margin-top: -$size / 2;
 
     width: $size;
     height: $size;
