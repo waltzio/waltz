@@ -287,6 +287,7 @@ Delegate.prototype.logout = function(opts) {
 
 		for (domain in data) {
             sitesCompleted.push(_this.logOutOfSite({ domain: domain, refresh: true }));
+            delete(_this.currentLogins[domain]);
 		}
 
 		$.when(sitesCompleted).then(function() {

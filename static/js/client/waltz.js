@@ -128,6 +128,9 @@
                         _this.acknowledgeLoginAttempt({ success: false });
 						_this.showWidget();	
                         _this.requestCredentials(errorMessage); 
+                    }, function() {
+                        _this.acknowledgeLoginAttempt({ success: true });
+                        _this.showWidget();
                     });
                 } else {
 					_this.showWidget();	
@@ -344,7 +347,7 @@
 		this.decryptCredentials(function(response) {
 			if(response.error) {
 				if(response.error === "authentication") {
-					_this.login(_this);
+					_this.logInToClef(_this.decryptAndLogIn.bind(this));
 				} else {
 					console.log(response);
 				}
@@ -468,18 +471,24 @@
 		}	
 	}
 
-	Waltz.prototype.checkAuthentication = function(cb) {
+	Waltz.prototype.checkAuthentication = function(continueCallback, noUserCallback) {
 		var _this = this;
 
 		chrome.runtime.sendMessage({
 			method: "checkAuthentication"
 		}, function(response) {
 			if (!response.user) {
-				_this.logInToClef(cb);
-				_this.analytics.trackEvent("clef_auth_shown");
+                // normally, we'd want to show the overlay if there's no
+                // user, but sometimes we want to do something else
+                if (typeof(noUserCallback) === "function") {
+                    noUserCallback();
+                } else {
+                    _this.logInToClef(continueCallback);
+                    _this.analytics.trackEvent("clef_auth_shown");
+                }
 			} else {
-				if (typeof(cb) == "function") {
-					cb();
+				if (typeof(continueCallback) == "function") {
+					continueCallback();
 				}
 			}
 		});
