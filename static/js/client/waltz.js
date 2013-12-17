@@ -360,7 +360,7 @@
 		this.decryptCredentials(function(response) {
 			if(response.error) {
 				if(response.error === "authentication") {
-					_this.login(_this);
+					_this.logInToClef(_this.decryptAndLogIn.bind(this));
 				} else {
 					console.log(response);
 				}
