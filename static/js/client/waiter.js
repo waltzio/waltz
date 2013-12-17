@@ -98,14 +98,14 @@ Waiter.prototype.refresh = function(data, cb) {
         if (!_this.settings.waiting) {
             _this.start();
         }
-    })
+    });
 }
 
 Waiter.prototype.start = function() {
     var _this = this;
     $(this.waitingContainerSelector).fadeOut(function() {
         $(_this.startContainerSelector).fadeIn();
-    })
+    });
 }
 
 var waiter = new Waiter();

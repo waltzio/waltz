@@ -242,7 +242,7 @@ Storage.prototype.getPrivateSettings = function(cb) {
         promise.resolve(options[_this.PRIVATE_SETTINGS_KEY]);
     });
 
-    return promise
+    return promise;
 }
 
 Storage.prototype.setPrivateSettings = function(options, cb) {
@@ -271,7 +271,7 @@ Storage.prototype.setPrivateSetting = function(key, value, cb) {
 }
 
 // Allows you to get the entire onboarding data blob
-// This blog includes
+// This blob includes
 // * global onboarding settings
 // * site specific onboarding data
 Storage.prototype.getOnboardingData = function(cb) {
@@ -353,50 +353,83 @@ Storage.prototype.setOnboardingSiteKey = function(siteKey, key, value, cb) {
     });
 }
 
-
-StorageBase.prototype.toSet = [];
-
 function StorageBase() {
     _this = this;
+
+    this.isBackgroundPage = location.protocol === "chrome-extension:" && chrome.extension.getBackgroundPage() === window;
 
     this.ready = $.Deferred();
 
     chrome.storage.local.get(null, function(data) {
-        console.log('balh', data);
         _this.data = data;
         _this.ready.resolve();
     });
+
+    chrome.runtime.onMessage.addListener(this.proxyClient.bind(this));
+    console.log("Registered proxy listener.");
 
     // chrome.storage.onChanged.addListener(function(data) {
     //     _this.data = data;
     // });
 }
 
+StorageBase.prototype.proxyClient = function(request, sender, sendResponse) {
+    if (request.messageLocation && request.messageLocation !== "storage") return false;
+	if (typeof(request.method) === "undefined") {
+		return false;
+	}
+
+
+    if (this.isBackgroundPage) {
+        console.log("Proxying in background page.");
+        if (request.method === 'get') {
+            return this.get(request.key, sendResponse)
+        }
+        else if (request.method === 'set') {
+            return this.set(request.items, sendResponse)
+        }
+    }
+}
+
 StorageBase.prototype.set = function(items, cb) {
     var _this = this;
     $.when(this.ready).then(function() {
         _.merge(_this.data, items);
-        if (typeof cb === "function") chrome.storage.local.set(_this.data, cb);
+        if (_this.isBackgroundPage) {
+            if (typeof cb === "function") chrome.storage.local.set(_this.data, cb);
+        } else {
+            console.log("Proxying set in foreground page");
+            chrome.runtime.sendMessage({
+                method: "set",
+                items: items,
+                messageLocation: "storage"
+            }, cb);
+        }
     });
+
+    return true;
 }
 
 StorageBase.prototype.get = function(key, cb) {
     var _this = this;
     $.when(this.ready).then(function() {
-        if (!_this.data[key]) {
-            _this.data[key] = {};
+        if (_this.isBackgroundPage) {
+            if (!_this.data[key]) {
+                _this.data[key] = {};
+            }
+            if (typeof cb === "function") cb(_this.data);
+        } else {
+            console.log("Proxying get in foreground page");
+            chrome.runtime.sendMessage({
+                method: "get",
+                key: key,
+                messageLocation: "storage"
+            }, cb);
         }
-        if (typeof cb === "function") cb(_this.data);
     })
+
+    return true;
 }
 
 Storage.prototype.base = new StorageBase();
-
-var s1 = new Storage();
-var s2 = new Storage();
-
-s1.setPrivateSettings({}, function() {
-    s1.setPrivateSetting('test1', true);
-    s2.setPrivateSetting('test2', true);
-});
 
