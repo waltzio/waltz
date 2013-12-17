@@ -78,8 +78,6 @@ Storage.prototype.getCredentials = function(cb) {
 
     this.get(this.CREDENTIALS_KEY, function(data) {
         var ret = data[_this.CREDENTIALS_KEY];
-
-        ret = ret || {};
         
         if (typeof(cb) === "function") cb(ret);
         promise.resolve(ret);
@@ -154,12 +152,9 @@ Storage.prototype.getOptions = function(cb) {
     this.get(this.OPTIONS_KEY, function(options) {
         var ret;
 
-        if(options[_this.OPTIONS_KEY]) {
-            ret = options[_this.OPTIONS_KEY]
-        } else {
-            _this.setOptions(_this.optionsDefaults);
-            ret = _this.optionsDefaults;
-        }
+        _.defaults(options[_this.OPTIONS_KEY], _this.optionsDefaults);
+        ret = options[_this.OPTIONS_KEY];
+        _this.setOptions(ret);
 
         if (typeof cb === "function") cb(ret);
         promise.resolve(ret)
@@ -243,15 +238,8 @@ Storage.prototype.getPrivateSettings = function(cb) {
     var _this = this,
         promise = $.Deferred();
     this.get(this.PRIVATE_SETTINGS_KEY, function(options) {
-        var _ret;
-        if(options[_this.PRIVATE_SETTINGS_KEY]) {
-            _ret = options[_this.PRIVATE_SETTINGS_KEY];
-        } else {
-            _ret = {};
-            _this.setPrivateSettings(_ret);
-        }
-        if (typeof cb === "function") cb(_ret);
-        promise.resolve(_ret);
+        if (typeof cb === "function") cb(options[_this.PRIVATE_SETTINGS_KEY]);
+        promise.resolve(options[_this.PRIVATE_SETTINGS_KEY]);
     });
 
     return promise
@@ -289,7 +277,7 @@ Storage.prototype.setPrivateSetting = function(key, value, cb) {
 Storage.prototype.getOnboardingData = function(cb) {
     var _this = this;
     this.get(this.ONBOARDING_KEY, function(data) {
-        var ret = data[_this.ONBOARDING_KEY] || {};
+        var ret = data[_this.ONBOARDING_KEY];
         cb(ret);
     })
 }
@@ -318,14 +306,17 @@ Storage.prototype.getOnboardingSiteData = function(siteKey, cb) {
         promise = $.Deferred();
 
     this.getOnboardingData(function(data) {
-        var _ret;
-        if (data[_this.ONBOARDING_SITES_KEY] && data[_this.ONBOARDING_SITES_KEY][siteKey]) {
-            _ret = data[_this.ONBOARDING_SITES_KEY][siteKey];
-        } else {
-            _ret = _this.siteOnboardingDefaults;
+        if (!data[_this.ONBOARDING_SITES_KEY]) {
+            data[_this.ONBOARDING_SITES_KEY] = {}
         }
-        if (typeof cb === "function") cb(_ret);
-        promise.resolve(_ret);
+        if (!data[_this.ONBOARDING_SITES_KEY][siteKey]) {
+            data[_this.ONBOARDING_SITES_KEY][siteKey] = {}
+        }
+        _.defaults(data[_this.ONBOARDING_SITES_KEY][siteKey], _this.siteOnboardingDefaults);
+
+        var value = data[_this.ONBOARDING_SITES_KEY][siteKey]
+        if (typeof cb === "function") cb(value);
+        promise.resolve(value);
     });
 
     return promise;
@@ -384,11 +375,8 @@ function StorageBase() {
 StorageBase.prototype.set = function(items, cb) {
     var _this = this;
     $.when(this.ready).then(function() {
-        for (var k in items) {
-            _this.data[k] = items[k];
-        }
-
-        if (typeof cb === "function") cb();
+        _.merge(_this.data, items);
+        if (typeof cb === "function") chrome.storage.local.set(_this.data, cb);
     });
 }
 
@@ -398,10 +386,9 @@ StorageBase.prototype.get = function(key, cb) {
         if (!_this.data[key]) {
             _this.data[key] = {};
         }
-        if (typeof cb === "function") cb(_this.data[key]);
+        if (typeof cb === "function") cb(_this.data);
     })
 }
-
 
 Storage.prototype.base = new StorageBase();
 
