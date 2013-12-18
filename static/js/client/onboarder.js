@@ -114,7 +114,7 @@ Onboarder.prototype.loginSuccess = function() {
 
         var $message = this.getMessage();
 
-        $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to log out and get some practice.");
+        $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to logout and get some practice.");
 
         $message.attr('class', 'floating left-arrow');
 

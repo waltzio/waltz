@@ -68,8 +68,8 @@ Storage.prototype.get = function(keys, cb) {
     this.base.get(keys, cb);
 }
 
-Storage.prototype.remove = function(keys) {
-    chrome.storage.local.remove(keys);
+Storage.prototype.remove = function(keys, cb) {
+    this.base.remove(keys, cb);
 }
 
 Storage.prototype.getCredentials = function(cb) {
@@ -141,8 +141,8 @@ Storage.prototype.addLogin = function(domain) {
     })
 }
 
-Storage.prototype.clearLogins = function() {
-    this.remove(this.LOGIN_KEY);
+Storage.prototype.clearLogins = function(cb) {
+    this.remove(this.LOGIN_KEY, cb);
 }
 
 Storage.prototype.getOptions = function(cb) {
@@ -377,10 +377,11 @@ StorageBase.prototype.proxyClient = function(request, sender, sendResponse) {
 
     if (this.isBackgroundPage) {
         if (request.method === 'get') {
-            return this.get(request.key, sendResponse)
-        }
-        else if (request.method === 'set') {
-            return this.set(request.items, sendResponse)
+            return this.get(request.key, sendResponse);
+        } else if (request.method === 'set') {
+            return this.set(request.items, sendResponse);
+        } else if (request.method === 'remove') {
+            return this.remove(request.keys, sendResponse);
         }
     }
 }
@@ -420,6 +421,28 @@ StorageBase.prototype.get = function(key, cb) {
             }, cb);
         }
     })
+
+    return true;
+}
+
+StorageBase.prototype.remove = function(keys, cb) {
+    var _this = this;
+    if (!(keys instanceof Array)) keys = [keys];
+    $.when(this.ready).then(function() {
+        if (_this.isBackgroundPage) {
+            for (var i = 0; i < keys.length; i++) {
+                delete(_this.data[keys[i]]);
+            }
+            chrome.storage.local.remove(keys, cb);
+        } else {
+            if (!cb) cb = function() {};
+            chrome.runtime.sendMessage({
+                method: "remove",
+                keys: keys,
+                messageLocation: "storage"
+            }, cb);
+        }
+    });
 
     return true;
 }

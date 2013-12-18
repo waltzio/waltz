@@ -299,7 +299,7 @@ Delegate.prototype.logout = function(opts) {
 						type: "basic",
 						title: "You've been logged out of Waltz.",
 						message: "You've been logged out of all of your Waltz sites",
-						iconUrl: "img/waltz-48.png"
+						iconUrl: "/static/img/waltz-48.png"
 					},
 					function() {}
 				);
@@ -317,7 +317,8 @@ Delegate.prototype.logout = function(opts) {
 
 Delegate.prototype.logOutOfSite = function(opts, cb) {
     var promise = $.Deferred(),
-        domain = opts.domain;
+        domain = opts.domain,
+        siteConfig;
 
     if (opts.key) {
         siteConfig = this.getConfigForKey(opts.key);

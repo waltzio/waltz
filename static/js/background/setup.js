@@ -265,13 +265,14 @@ Setup.prototype.kickOff = function() {
     });
 }
 
+var setup;
 // These are the two entry points for the extension.
 chrome.runtime.onInstalled.addListener(function() {
-    var setup = new Setup();
+    setup = new Setup();
     setup.onInstall();
 });
 
 chrome.runtime.onStartup.addListener(function() {
-    var setup = new Setup();
+    setup = new Setup();
     setup.onStartup();
 });
