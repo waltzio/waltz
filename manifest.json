@@ -1,8 +1,8 @@
 {
   "name": "Waltz",
-  "version": "1.0",
+  "version": "1.0.1",
   "manifest_version": 2,
-  "description": "Forget About Your Accounts",
+  "description": "A modern account manager for the web.",
 
   "browser_action": {
     "default_icon": {
