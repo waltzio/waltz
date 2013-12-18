@@ -8,11 +8,11 @@
         // the default
         def: {
             twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out: <%= link %>.",
-            facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out: <%= link %>."
+            facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out!"
         },
         waitlist: {
             twitter: "I found something to get rid of my passwords! <%= waitListLength %> people are in line, but we get in early if you join me: <%= link %>",
-            facebook: "I found something to get rid of my passwords! <%= waitListLength %> people are in line for access, but we get in early if you join me: <%= link %>."
+            facebook: "I found something to get rid of my passwords! <%= waitListLength %> people are in line for access, but we get in early if you join me!"
         },
         requestSite: {
             twitter: "Hey @getwaltz, I'd love to get rid of my passwords on <%= site %>. Can you help?"
@@ -90,11 +90,15 @@
         var url = this.sharedShare(this.facebookBase, opts);
 
         if (opts.message) {
-            url = Utils.addURLParam(url, "caption", opts.message);
+            url = Utils.addURLParam(url, "description", opts.message);
+        } else {
+            url = Utils.addURLParam(url, "description", "Waltz is a modern account manager, making it easier and safer for you to browse the web. Waltz lets you use Clef (getclef.com) to log in and out of all of your favorite sites without out a password. There's nothing for you to remember or type, and Waltz lets you log in (and out) everywhere at once.");
         }
 
         url = Utils.addURLParam(url, "link", opts.link);
         url = Utils.addURLParam(url, "redirect_uri", this.waltzLink);
+        url = Utils.addURLParam(url, "name", "Waltz | A modern account manager for the web");
+        url = Utils.addURLParam(url, "picture", "http://getwaltz.com/static/img/waltz-full.png");
 
         this.open(url);
     }

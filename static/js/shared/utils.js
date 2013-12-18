@@ -135,7 +135,7 @@ var Utils = {
         return regex.test(email);
     },
     settings: {
-        waitlistHost: "http://share.getwaltz.com",
+        waitlistHost: "http://localhost:5000",
         waitlistPaths: {
             reserve: '/u/reserve',
             check: '/u/check',

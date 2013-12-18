@@ -77,6 +77,7 @@ Setup.prototype.launchFromActivated = function() {
     $.post(Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteClear, 
         {id: this.settings.waitlistID}
     );
+    
     this.pulsingStartBadge = false;
     chrome.browserAction.setBadgeText({ text: "" });
     chrome.tabs.query(
@@ -309,6 +310,7 @@ Setup.prototype.highlightIcon = function() {
 }
 
 Setup.prototype.showReadyNotification = function() {
+    var _this = this
     chrome.notifications.create(
         "ready_notification", 
         {
@@ -321,16 +323,8 @@ Setup.prototype.showReadyNotification = function() {
     );
     var listener = function(tabId) {
         if (tabId !== "ready_notification") return;
-        chrome.not
-        var url = chrome.extension.getURL('/html/waiting.html');
-        chrome.tabs.query({url: url}, function(result) {
-            result = result[0];
-            if (result) {
-                chrome.tabs.update(result.id, {active: true});
-            } else {
-                chrome.tabs.create({url: url, active: true})
-            }
-        });
+        _this.launchFromActivated();
+        chrome.notifications.onClicked.removeListener(listener);
     };
     chrome.notifications.onClicked.addListener(listener);
 }

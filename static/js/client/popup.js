@@ -46,9 +46,11 @@ Popup.prototype.render = function() {
     }
 
     $sharers
-        .attr('data-link', this.settings.inviteLink)
+        .data('link', this.settings.inviteLink)
         .data('inviteCount', this.settings.inviteCount)
         .data('waitListLength', this.settings.waitListLength);
+
+    $sharers.filter('.facebook').data('link', this.settings.longInviteLink);
 
     $('.share-link').attr('href', this.settings.inviteLink).text(this.settings.inviteLink);
 }

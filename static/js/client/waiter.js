@@ -32,9 +32,14 @@ Waiter.prototype.render = function() {
         .text(this.settings.referralLink)
         .attr('href', this.settings.referralLink)
         .addClass('shown');
-    $(this.dataReferralLinkSelector)
+
+    var $sharers = $(this.dataReferralLinkSelector);
+        
+    $sharers
         .data('link', this.settings.referralLink)
         .data('waitListLength', this.settings.waitListLength);
+
+    $sharers.filter('.facebook').data('link', this.settings.longReferralLink);
 
     $(this.futureRankSelector).text(this.calculateMovement());
 
