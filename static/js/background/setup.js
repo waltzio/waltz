@@ -223,7 +223,9 @@ Setup.prototype.registerOnWaitlist = function() {
         _this.settings.waiting = data.waiting;
         _this.settings.rank = data.rank + 1;
         _this.settings.referralLink = data.referralLink;
+        _this.settings.longReferralLink = data.longReferralLink;
         _this.settings.inviteLink = data.inviteLink;
+        _this.settings.longInviteLink = data.longInviteLink;
         _this.settings.projectedSharingRank = data.projectedSharingRank + 1;
         _this.settings.waitListLength = data.waitingListLength;
 
