@@ -101,5 +101,11 @@
 
     .start-container {
         display: none;
+        a.start {
+            span.fi-arrow-right {
+                position: relative;
+                top: 3px;
+            }
+        }
     }
 }

@@ -86,6 +86,13 @@ Waiter.prototype.attachHandlers = function() {
         });
     });
 
+    $(_this.startContainerSelector).find('a.start').click(function() {
+        chrome.runtime.sendMessage({
+            messageLocation: 'setup',
+            method: 'launchFromActivated'
+        });
+    })
+
     chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
 }
 

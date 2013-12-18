@@ -17,6 +17,12 @@ function Setup() {
 
     var settingsLoaded = this.storage.getPrivateSettings();
     $.when(settingsLoaded).then(this.init.bind(this));
+
+    chrome.runtime.onMessage.addListener(function(request, cb) {
+        if (request.messageLocation === "setup") {
+            _this[request.method].call(_this, request, cb);
+        }
+    })
 }
 
 Setup.prototype.init = function(settings) {
@@ -35,7 +41,11 @@ Setup.prototype.openTutorial = function() {
     this.analytics.trackEvent('first_tutorial');
     this.delegate = new Delegate({ firstTime: true });
 
-    chrome.browserAction.onClicked.removeListener(this.openWaitlist.bind(this));
+    if (this.browserActionClickListener) {
+        chrome.browserAction.onClicked.removeListener(this.browserActionClickListener);
+        this.browserActionClickListener = null;
+    }
+
     chrome.browserAction.setPopup({ popup: "/html/popup.html" });
 
     this.storage.setPrivateSetting(
@@ -47,6 +57,25 @@ Setup.prototype.openTutorial = function() {
             }, function() {});
         }
     );
+}
+
+Setup.prototype.launchFromActivated = function() {
+    if (!this.settings.activated) return;
+
+    $.post(Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteClear, 
+        {id: this.settings.waitlistID}
+    );
+    this.pulsingStartBadge = false;
+    chrome.browserAction.setBadgeText({ text: "" });
+    chrome.tabs.query(
+        { url: chrome.extension.getURL('html/waiting.html') },
+        function(data) {
+            _.each(data, function(v) {
+                chrome.tabs.remove(v.id);
+            })
+        }
+    );
+    this.openTutorial();
 }
 
 Setup.prototype.startBackgroundWaitlistCheck = function() {
@@ -170,20 +199,15 @@ Setup.prototype.attachClickToTutorial = function() {
         this.browserActionClickListener = null;
     }
 
-    chrome.browserAction.onClicked.addListener(function() {
-        $.post(Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteClear, 
-            {id: _this.settings.waitlistID}
-        );
-        on = false;
-        chrome.browserAction.setBadgeText({ text: "" });
-        _this.openTutorial();
-    });
+    this.browserActionClickListener = this.launchFromActivated.bind(this);
+    chrome.browserAction.onClicked.addListener(this.browserActionClickListener);
 }
 
 Setup.prototype.highlightIcon = function() {
     var _this = this,
-        on = true,
         toggle = true;
+
+    this.pulsingStartBadge = true;
 
     this.analytics.trackEvent('highlight_icon');
 
@@ -191,7 +215,7 @@ Setup.prototype.highlightIcon = function() {
 
     chrome.browserAction.setBadgeText({ text: "start" });
     (function interval() {
-        if (!on) return;
+        if (!_this.pulsingStartBadge) return;
 
         if (toggle) {
             toggle = false;

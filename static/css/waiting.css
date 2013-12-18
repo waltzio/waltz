@@ -6823,3 +6823,7 @@ th.hide-for-touch {
 #waiting-page .start-container {
   display: none;
 }
+#waiting-page .start-container a.start span.fi-arrow-right {
+  position: relative;
+  top: 3px;
+}
