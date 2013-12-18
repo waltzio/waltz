@@ -7,12 +7,12 @@
     Sharer.prototype.messages = {
         // the default
         def: {
-            twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>",
-            facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>"
+            twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out: <%= link %>.",
+            facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out: <%= link %>."
         },
         waitlist: {
-            twitter: "I found something to get rid of my passwords! <%= waitListLength %> people are in line, but we get in early if you join me: <%= link %>!",
-            facebook: "I found something to get rid of my passwords! <%= waitListLength %> people are in line for access, but we get in early if you join me!"
+            twitter: "I found something to get rid of my passwords! <%= waitListLength %> people are in line, but we get in early if you join me: <%= link %>",
+            facebook: "I found something to get rid of my passwords! <%= waitListLength %> people are in line for access, but we get in early if you join me: <%= link %>."
         },
         requestSite: {
             twitter: "Hey @getwaltz, I'd love to get rid of my passwords on <%= site %>. Can you help?"
