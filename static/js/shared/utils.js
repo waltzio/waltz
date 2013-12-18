@@ -131,7 +131,7 @@ var Utils = {
         }
     },
     settings: {
-        waitlistHost: "http://localhost:5000",
+        waitlistHost: "http://share.getwaltz.com",
         waitlistPaths: {
             reserve: '/u/reserve',
             check: '/u/check',
