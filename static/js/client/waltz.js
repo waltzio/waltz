@@ -502,108 +502,98 @@
 	}
 
 	Waltz.prototype.requestCredentials = function(errorMessage) {
-		var _this = this;
+		var _this = this,
+            templater = this.getTemplater()
+            usernameValue = "",
+            passwordValue = "";
 
-		var $overlay = $("<div id='" + this.CREDENTIAL_OVERLAY_ID + "'></div>"),
-			$form = $("<div id='"+ this.CREDENTIAL_FORM_ID + "'></div>"),
-			$usernameField = $("<input type='text' placeholder='type your username' id='" + this.CREDENTIAL_USERNAME_ID + "' />"),
-			$passwordField = $("<input type='password' placeholder='type your password' id='" + this.CREDENTIAL_PASSWORD_ID + "' />"),
-			$submitButton = $("<input type='submit' value=' ' id='" + this.CREDENTIAL_SUBMIT_ID + "' style='background-image: url(" + chrome.extension.getURL("/static/img/next.png") + ")'/>"),
-			$body = $('body');
-
-		// check if username and password fields exist on the page and if 
-		// they do, and they have values, set the credential fields
-		// to those values (purely for convenience)
-		var $potentialUsernameField = $("input[name='" + this.options.site.config.login.usernameField + "']");
-		if ($potentialUsernameField.length > 0) {
-        	$usernameField.val($potentialUsernameField.val());
+        // check if username and password fields exist on the page and if 
+        // they do, and they have values, set the credential fields
+        // to those values (purely for convenience)
+        var $potentialUsernameField = $("input[name='" + this.options.site.config.login.usernameField + "']");
+        if ($potentialUsernameField.length > 0) {
+            usernameValue = $potentialUsernameField.val();
         }
         var $potentialPasswordField = $("input[name='" + this.options.site.config.login.passwordField + "']");
         if ($potentialPasswordField.length > 0) {
-        	$passwordField.val($potentialPasswordField.val());
+            passwordValue = $potentialPasswordField.val();
         }
 
-		var logos = ["<div id='" + this.CREDENTIAL_LOGOS_ID + "'>",
-			"<div id='waltz-credential-site-logo' style='background-image: url(" + chrome.extension.getURL("/static/img/site_images/" + this.options.site.config.key + ".png" ) + ");'></div>",
-			"<img id='waltz-credential-arrow' src='" + chrome.extension.getURL("/static/img/arrow.png") + "'/>",
-			"<img src='" + chrome.extension.getURL("/static/img/waltz-transparent-128.png") + "'/>",
-		"</div>"].join("");
+        var templated = templater.template({
+            named: 'registration',
+            context: {
+                name: this.options.site.config.name.toLowerCase(),
+                waltzLogo: chrome.extension.getURL('/static/img/waltz-full.png'),
+                passwordValue: passwordValue,
+                usernameValue: usernameValue,
+                errorMessage: errorMessage
+            }
+        })
 
-		$form.append(logos);
-		$form.append("<p id='waltz-credential-message'>Securely encrypt your " + this.options.site.config.name + " password.</p>");
-
-		if (errorMessage) {
-            $form.append($("<p id='" + this.CREDENTIAL_ALERT_ID + "'>" + errorMessage + "</p>"));
-        }
-
-		$form.append($usernameField).append($passwordField);
-
-        $form.append($submitButton);
-		$overlay.append($form);
-        $body.append($overlay);
-
-        var formShownTime = Date.now();
-
-		//Put this on a timeout, because we need the class to be added after the initial draw
-		setTimeout(function() {
-			$.merge($overlay, $form).addClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
-			_this.trigger('show.credentialOverlay');
-		}, 0);
-
-		$usernameField.focus();
-
-		$.merge($usernameField, $passwordField).keyup(function(e) {
-			if(e.which === 13) {
-				submitForm(e);
-			}
-		});
-
-		$submitButton.click(submitForm);
-
-		$overlay.click(function(e) {
-			if ($(e.target).attr('id') === $overlay.attr('id')) {
-				$('#clef-waltz-login-wrapper').removeClass('waltz-remove');
-				$.merge($overlay, $form).removeClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
-				_this.trigger('hide.credentialOverlay');
-				_this.showWidget();
-
-				setTimeout(function() {
-					$.merge($overlay, $form).remove();
-					_this.trigger('remove.credentialOverlay');
-				}, 500);
-
-				_this.analytics.trackEvent("credentials_form_dismissed", {
-					had_entered_credentials: !($usernameField.val() === "" && $passwordField.val() === ""),
-					shown_duration: Date.now() - formShownTime
-				});
-			}
-		});
+        $.when(templated)
+        .done(function(html) {
+            var $overlay = $(html),
+                $form = $overlay.find('#' + _this.CREDENTIAL_FORM_ID),
+                $usernameField = $overlay.find('#' + _this.CREDENTIAL_USERNAME_ID),
+                $passwordField = $overlay.find('#' + _this.CREDENTIAL_PASSWORD_ID),
+                $body = $('body');
 
 
+            $body.append($overlay);
 
-		// capture the form submit, save our credentials, and then continue
-		// the submit
-		function submitForm(e) {
-			e.preventDefault();
+            var formShownTime = Date.now();
 
-			// remove handlers that bind this event, so we don't go
-			// into an infinite loop
-			$submitButton.off('click');
-			$.merge($usernameField, $passwordField).off("keyup");
+            //Put this on a timeout, because we need the class to be added after the initial draw
+            setTimeout(function() {
+                $.merge($overlay, $form).addClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
+                _this.trigger('show.credentialOverlay');
+            }, 0);
 
-			// get those credentials
-			var credentials = {
-				password: $passwordField.val(),
-				username: $usernameField.val()
-			}
+            $usernameField.focus();
 
-			// store the credentials in the DB
-			_this.encryptCredentials(credentials, function() {
-				// BOOM!
-				_this.submitLoginForm(credentials);
-			});
-		}
+            $form.find('form').submit(submitForm);
 
+            $overlay.click(function(e) {
+                if ($(e.target).attr('id') === $overlay.attr('id')) {
+                    $('#clef-waltz-login-wrapper').removeClass('waltz-remove');
+                    $.merge($overlay, $form).removeClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
+                    _this.trigger('hide.credentialOverlay');
+                    _this.showWidget();
+
+                    setTimeout(function() {
+                        $.merge($overlay, $form).remove();
+                        _this.trigger('remove.credentialOverlay');
+                    }, 500);
+
+                    _this.analytics.trackEvent("credentials_form_dismissed", {
+                        had_entered_credentials: !($usernameField.val() === "" && $passwordField.val() === ""),
+                        shown_duration: Date.now() - formShownTime
+                    });
+                }
+            });
+
+            // capture the form submit, save our credentials, and then continue
+            // the submit
+            function submitForm(e) {
+                e.preventDefault();
+
+                // remove handlers that bind this event, so we don't go
+                // into an infinite loop
+                $.merge($usernameField, $passwordField).off("keyup");
+
+                // get those credentials
+                var credentials = {
+                    password: $passwordField.val(),
+                    username: $usernameField.val()
+                }
+
+                // store the credentials in the DB
+                _this.encryptCredentials(credentials, function() {
+                    // BOOM!
+                    _this.submitLoginForm(credentials);
+                });
+            }
+        });
 	}
 
 	//Draws the waltz widget and binds the interactions
@@ -752,6 +742,11 @@
         });
 
         $message.fadeIn();
+    }
+
+    Waltz.prototype.getTemplater = function() {
+        if (!this.tempalter) this.templater = new Templater();
+        return this.templater;
     }
 
 	Waltz.prototype.trigger = function(eventName, data) {
