@@ -300,7 +300,7 @@
 		$("body").append($iframe);
 
 	}
-
+    
 	Waltz.prototype.logInToClef = function(cb) {
 		var _this = this;
 
@@ -308,22 +308,29 @@
             _this.iframe[0].contentWindow.postMessage({ method: "loadClef"}, _this.options.cyHost);
 
             _this.iframe.fadeIn();
-            _this.trigger('show.iframe');
 
-            window.addEventListener("message", function(e) {
+            window.addEventListener("message", listener); 
+
+            function listener(e) {
                 if(e.data.auth) {
                     _this.iframe.remove();
                     if (typeof cb == "function") {
                         cb();
                     }
                 }
-            });
+            }
+
+            _this.authListener = listener;
         });
 	}
 
 	Waltz.prototype.closeIFrame = function(e) {
 		if (e.origin == this.options.cyHost) {
 			if (e.data && e.data.method == "closeIFrame" && this.iframe) {
+                if (this.authListener) {
+                    window.removeEventListener("message", this.authListener);
+                    this.authListener = null;
+                }
 				this.iframe.remove();
 				this.trigger('hide.iframe');
 				this.iframe = false;
