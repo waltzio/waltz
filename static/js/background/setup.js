@@ -89,16 +89,42 @@ Setup.prototype.startBackgroundWaitlistCheck = function() {
     }, this.waitlistCheckTimeout);
 }
 
+Setup.prototype.checkStatusWithRetries = function() {
+    var url = Utils.settings.waitlistHost + Utils.settings.waitlistPaths.check;
+    checkWithRetriesPromise = $.Deferred();
+    $.ajax({
+        url: Utils.addURLParam(url, "id", this.settings.waitlistID),
+        type: 'GET',
+        timeout: 10000,
+        tries: 0,
+        maxRetries: 5,
+        success: function(data, textStatus, xhr) {
+            checkWithRetriesPromise.resolve(data, textStatus, xhr)
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            if (textStatus === "timeout" || errorThrown === "") {
+                this.tries++;
+                if (this.tries <= this.maxRetries) {
+                    $.ajax(this);
+                    return;
+                }
+            }
+
+            checkWithRetriesPromise.reject(xhr, textStatus, errorThrown);
+        }
+    });
+
+    return checkWithRetriesPromise;
+}
+
 Setup.prototype.checkWaitlistStatus = function() {
     if (!this.settings.waitlistID) {
         return this.registerOnWaitlist();
     } else {
         var _this = this,
-            promise = $.Deferred(),
-            url = Utils.settings.waitlistHost + Utils.settings.waitlistPaths.check;
+            promise = $.Deferred();
 
-        $.get(Utils.addURLParam(url, "id", this.settings.waitlistID))
-        .success(function(data) {
+        this.checkStatusWithRetries().done(function(data) {
             _this.settings.waiting = data.waiting;
             _this.settings.rank = data.rank + 1;
 
@@ -121,11 +147,24 @@ Setup.prototype.checkWaitlistStatus = function() {
                     return _this.activate();
                 } 
                 promise.resolve();
-            })
-        })
-        .fail(function(data) {
-            var error;
+            });
+        }).fail(function(data, textStatus, errorThrown) {
+            // The waiting list server is not reachable, so let's... FAIL OPEN!
+            if (textStatus === "timeout" || (textStatus === "error" && errorThrown === "")) {
+                _this.settings.waiting = false;
+                _this.storage.setPrivateSettings(_this.settings, function() {
+                    chrome.runtime.sendMessage({
+                        messageLocation: 'waiting',
+                        method: 'refresh'
+                    });
 
+                    if (!_this.settings.waiting) {
+                        _this.analytics.trackEvent('leave_waitlist', { waitlistID: _this.settings.waitlistID });
+                        return _this.activate();
+                    } 
+                    promise.resolve();
+                })
+            }
             if (data.status === 404) {
                 // If the user cannot be found, let's re-register the user
                 _this.settings.waitlistID = false;
@@ -139,6 +178,34 @@ Setup.prototype.checkWaitlistStatus = function() {
     }
 }
 
+Setup.prototype.reserveWithRetries = function() {
+    reservePromise = $.Deferred();
+    $.ajax({
+        url: Utils.settings.waitlistHost + Utils.settings.waitlistPaths.reserve,
+        type: 'POST',
+        data: {},
+        timeout: 10000, 
+        tries: 0,
+        maxRetries: 5,
+        success: function(data, textStatus, xhr) {
+            reservePromise.resolve(data, textStatus, xhr)
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            if (textStatus === "timeout" || errorThrown === "") {
+                this.tries++;
+                if (this.tries <= this.maxRetries) {
+                    console.log("Retrying...", this.tries);
+                    $.ajax(this);
+                    return;
+                }
+            }
+
+            reservePromise.reject(xhr, textStatus, errorThrown);
+        }
+    });
+    return reservePromise;
+}
+
 Setup.prototype.registerOnWaitlist = function() {
     var _this = this,
         promise = $.Deferred();
@@ -149,10 +216,7 @@ Setup.prototype.registerOnWaitlist = function() {
         return;
     }
 
-    $.post(
-        Utils.settings.waitlistHost + Utils.settings.waitlistPaths.reserve,
-        {}
-    ).success(function(data) {
+    this.reserveWithRetries().done(function(data) {
         _this.settings.waitlistID = data.id;
         _this.settings.waiting = data.waiting;
         _this.settings.rank = data.rank + 1;
@@ -161,24 +225,23 @@ Setup.prototype.registerOnWaitlist = function() {
         _this.settings.projectedSharingRank = data.projectedSharingRank + 1;
         _this.settings.waitListLength = data.waitingListLength;
 
-        _this.storage.setPrivateSettings(
-            _this.settings,
-            function() {
+        _this.storage.setPrivateSettings(_this.settings, function() {
+            if (!_this.settings.waiting) {
+                return _this.activate();
+            }
+            _this.analytics.trackEvent('join_waitlist', { waitlistID: _this.settings.waitlistID });
+            promise.resolve();
+        });
+    }).fail(function(data, textStatus, errorThrown) {
+        // The waiting list server is not reachable, so let's... FAIL OPEN!
+        if (textStatus === "timeout" || (textStatus === "error" && errorThrown === "")) {
+            _this.settings.waiting = false;
+            _this.storage.setPrivateSettings(_this.settings, function() {
                 if (!_this.settings.waiting) {
                     return _this.activate();
                 }
-                _this.analytics.trackEvent('join_waitlist', { waitlistID: _this.settings.waitlistID });
-                promise.resolve();
-            }
-        );
-    }).fail(function(data) {
-        _this.settings.waiting = true;
-        _this.storage.setPrivateSettings(
-            _this.settings,
-            function() {
-                promise.resolve();
-            }
-        );
+            });
+        }
     });
         
     return promise;
