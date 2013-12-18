@@ -113,7 +113,7 @@ Storage.prototype.setCredentialsForDomain = function(domain, username, password,
 Storage.prototype.deleteCredentialsForDomain = function(domain, cb) {
     var _this = this;
     this.getCredentials(function(credentials) {
-        delete(credentials[domain]);
+        credentials[domain] = null;
         _this.setCredentials(credentials, cb);
     });
 }
