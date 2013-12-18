@@ -82,6 +82,8 @@ Onboarder.prototype.loginSuccess = function() {
 
         if (this.options.site.config.key === "facebook" || this.options.site.config.key === "twitter") {
             this.handleFirstFacebookAndTwitterLogin();
+        } else if (this.options.site.config.key === "github") {
+            this.handleFirstGithubLogin();
         } else {
             this.showLogoutPrompt();
         }
