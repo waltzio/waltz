@@ -95,15 +95,52 @@
 </div>
 </script>
 
+<script type="text/html" class="template" id='email-invite'>Hey FAVORITE-FRIEND,
+
+There's this cool new thing called Waltz that is supposed to be a better way to log in. There are no usernames or passwords to remember, but it still makes logging in safer.
+
+Because there are a lot of new people trying it out, there's a wait list to get access. I've already been let in, so if you check Waltz out through this link (<%= link %>) then you'll be in too :) 
+
+I'm interested to hear what you think!
+
+<%= link %>
+
+Thanks,
+YOUR-NAME
+</script>
+
+<script type="text/html" class="template" id='email-waitlist'>Hey FAVORITE-FRIEND,
+
+There's this cool new thing called Waltz that is supposed to be a better way to log in. There are no usernames or passwords to remember, but it still makes logging in safer.
+
+Because there are a lot of new people trying it out, there's a wait list to get access. I'm in line now, but if you check Waltz out through this link (<%= link %>) then we can both jump ahead in line.
+
+I'm interested to hear what you think!
+
+<%= link %>
+
+Thanks,
+YOUR-NAME
+</script>
+
+<script type="text/html" class="template" id='email-requestSite'>Hi Waltz Team!
+
+I would love to use Waltz on <%= site %>.
+
+Thanks!
+YOUR-NAME
+</script>
+
 
 <script src="/static/js/vendor/jquery.min.js"></script>
-<script src="/static/js/vendor/underscore-min.js"></script>
+<script src="/static/js/vendor/lodash.min.js"></script>
 
 <script>
     function template(name, context, html) {
         if (!html) {
             html = $('#' + name).html();
         }
+
        return _.template(html, context);
     }
 

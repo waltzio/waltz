@@ -18,14 +18,32 @@ if (Delegate.prototype.DEBUG) {
 	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
 } 
 
-function Delegate() {
+function Delegate(opts) {
 	var _this = this;
 
+    this.options = $.extend(this.options, opts);
+
     this.storage = new Storage();
-    this.storage.getOptions(function(options) {
-        _this.init(options);
-    });
-    
+    this.analytics = new Analytics();    
+    this.crypto = new Crypto();
+
+
+    if (this.options.firstTime) this.analytics.trackEvent('first_setup');
+
+    if (navigator.onLine) {
+        start();
+    } else {
+        window.addEventListener('online', function() {
+            window.removeEventListener('online');
+            start();
+        });
+    }
+
+    function start() {
+        _this.storage.getOptions(function(options) {
+            _this.init(options);
+        });
+    }
 }
 
 Delegate.prototype.init = function(options) {
@@ -39,8 +57,6 @@ Delegate.prototype.init = function(options) {
     this.pubnub = PUBNUB.init({
         subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
     });
-
-    this.analytics = new Analytics(this.keenGlobalProperties);
 
     // bind the router
     chrome.runtime.onMessage.addListener(this.router.bind(this));
@@ -61,7 +77,7 @@ Delegate.prototype.init = function(options) {
         onclick: function(info, tab) {
             chrome.tabs.create({url: "/html/options.html"});
 
-            _this.analytics.trackKeenEvent("context_menu", {
+            _this.analytics.trackEvent("context_menu", {
                 tabIndex: tab.index,
                 url: tab.url
             });
@@ -102,10 +118,6 @@ Delegate.prototype.init = function(options) {
         }
     });
 
-    if(_this.options[KEEN_UUID_KEY] && !FIRST_INSTALL) {
-        _this.analytics.trackKeenEvent("initialize");
-    }
-
     // check whether logged in, exponential backoff
     // BOOM!
     var n = 0;
@@ -134,7 +146,9 @@ Delegate.prototype.init = function(options) {
 }
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
-	if(typeof(request.method) === "undefined") {
+    if (request.messageLocation && request.messageLocation !== "delegate") return false;
+    
+	if (typeof(request.method) === "undefined") {
 		return false;
 	}
 
@@ -175,9 +189,10 @@ Delegate.prototype.getSiteConfigs = function(request, cb) {
 }
 
 Delegate.prototype.acknowledgeLoginAttempt = function(request) {
-    // If the login is successful, let's refresh other potential tabs
-    // to help them log in!
+    
     if (request.successful) {
+        // If the login is successful, let's refresh other potential tabs
+        // to help them log in!
         chrome.tabs.query({ url: request.domain }, function(tabs) {
             _.each(tabs, function(tab) {
                 if (!tab.active) {
@@ -284,7 +299,7 @@ Delegate.prototype.logout = function(opts) {
 						type: "basic",
 						title: "You've been logged out of Waltz.",
 						message: "You've been logged out of all of your Waltz sites",
-						iconUrl: "img/waltz-48.png"
+						iconUrl: "/static/img/waltz-48.png"
 					},
 					function() {}
 				);
@@ -294,7 +309,7 @@ Delegate.prototype.logout = function(opts) {
 			_this.loggedIn = false;
 		});
 
-        _this.analytics.trackKeenEvent("logout_request", {
+        _this.analytics.trackEvent("logout_request", {
             sites_count: Object.keys(data).length
         });
 	});
@@ -302,7 +317,8 @@ Delegate.prototype.logout = function(opts) {
 
 Delegate.prototype.logOutOfSite = function(opts, cb) {
     var promise = $.Deferred(),
-        domain = opts.domain;
+        domain = opts.domain,
+        siteConfig;
 
     if (opts.key) {
         siteConfig = this.getConfigForKey(opts.key);
@@ -357,7 +373,7 @@ Delegate.prototype.forceTutorial = function(opts, cb) {
 
 Delegate.prototype.saveCredentials = function(key, username, password, cb) {
     var _this = this;
-	waltzCrypto.encrypt(password, key, function(encrypted) {
+	this.crypto.encrypt(password, key, function(encrypted) {
 		_this.storage.setCredentialsForDomain(key, username, encrypted.output, function() {
 			cb(true);
 		});
@@ -367,7 +383,7 @@ Delegate.prototype.saveCredentials = function(key, username, password, cb) {
 }
 
 Delegate.prototype.decrypt = function(value, domain_key, cb) {
-	waltzCrypto.decrypt(value, domain_key, function(decrypted) {
+	this.crypto.decrypt(value, domain_key, function(decrypted) {
 		cb(decrypted);
 	});
 
@@ -494,6 +510,34 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
     }
 }
 
+Delegate.prototype.incrementInviteCount = function(request, cb) {
+    var _this = this,
+        siteOnboardingLoaded = this.storage.getOnboardingSiteData(request.key),
+        privateSettingsLoaded = this.storage.getPrivateSettings();
+
+    $.when(siteOnboardingLoaded, privateSettingsLoaded)
+    .then(function(onboarding, settings) {
+        $.post(
+            Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteAdd,
+            { id: settings.waitlistID }
+        ).success(function(data) {
+            var inviteCount = data.invites;
+            chrome.browserAction.setBadgeText({ text: inviteCount.toString() });
+            _this.storage.setPrivateSetting('inviteCount', inviteCount, function() {
+                _this.storage.setPrivateSetting('waitingListActive', data.waiting);
+            });
+            _this.storage.setOnboardingSiteKey('inviteIncremented', true);
+            if (data.waiting) {
+                chrome.browserAction.setBadgeText({ text: inviteCount.toString() });
+            }
+
+            cb(data);
+        }).fail(function(data) {
+            cb({ error: true, data: data });
+        });
+    });
+}
+
 Delegate.prototype.openNewTab = function(request, cb) {
     chrome.tabs.create({url: request.url});
     if (typeof cb === "function") cb();
@@ -509,18 +553,6 @@ Delegate.prototype.getConfigForKey = function(key) {
     }
 
     return false;
-}
-
-
-Delegate.prototype.keenGlobalProperties = function(eventCollection) {
-    // setup the global properties we'll use
-    var globalProperties = {
-        UUID: delegate.options[KEEN_UUID_KEY],
-        has_network_connection: navigator.onLine,
-        chrome_version: window.navigator.appVersion
-    };
-    
-    return globalProperties;
 }
 
 Delegate.prototype.initialize = function(data, callback) {
@@ -549,37 +581,4 @@ Delegate.prototype.initialize = function(data, callback) {
 	}
 
     return true;
-}
-
-
-var blastOff = function() {
-    delegate = new Delegate();
-}
-
-chrome.runtime.onInstalled.addListener(function() {
-    FIRST_INSTALL = true;
-
-    var storage = new Storage();
-    var UUID = Math.floor(Math.random() * 1000000000); //Just use a really large number.  It probably won't collide
-
-    storage.setOption(KEEN_UUID_KEY, UUID, function() {
-        if(delegate) {
-            delegate.refreshOptions(function() {
-                Keen.addEvent("install");
-            });
-        } else {
-            Keen.addEvent("install", {
-                UUID: UUID
-            });
-        }       
-    });
-});
-
-if (navigator.onLine) {
-    blastOff();
-} else {
-    window.addEventListener('online', function() {
-        window.removeEventListener('online');
-        blastOff();
-    });
 }

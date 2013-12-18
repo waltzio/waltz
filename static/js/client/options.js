@@ -27,7 +27,7 @@ Options.prototype.settingsMetaMap = {
 
 function Options() {
 	this.storage = new Storage();
-	this.analytics = new Analytics(this.getKeenGlobals);
+	this.analytics = new Analytics();
 	this.templater = new Templater();
 	var _this = this;
 
@@ -46,7 +46,7 @@ Options.prototype.init = function(options, credentials, dismissals) {
 
 	this.render();
 
-	this.analytics.trackKeenEvent("options_page");
+	this.analytics.trackEvent("options_page");
 };
 
 Options.prototype.render = function() {
@@ -114,12 +114,12 @@ Options.prototype.attachSettingsHandlers = function() {
 		$settings = $(this.settingsSelector);
 
 	$settings.find(this.saveButtonSelector).click(function() {
-		triggerLoading(this);
+		Utils.triggerLoading(this);
 		$settings.find('input').each(function() {
 			_this.storage.setOption(this.name, $(this).val());
 
 			if(this.name == "cy_url") {
-				_this.analytics.trackKeenEvent("changed_cy_url", {
+				_this.analytics.trackEvent("changed_cy_url", {
 					is_https: $(this).val().toLowerCase().substr(0, 8) === "https://"
 				});
 			}
@@ -128,7 +128,7 @@ Options.prototype.attachSettingsHandlers = function() {
 
 	$settings.find(this.allowButtonSelector).click(function() {
 		var $item = $(this).parents('.dismissed-item'),
-			loading = triggerLoading(this, { promise: true });
+			loading = Utils.triggerLoading(this, { promise: true });
 
 		_this.storage.getDismissalsForSite(
 			$item.data('key'),
@@ -173,7 +173,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 		});
 
 		function decryptAndDisplay() {
-			var finishedLoading = triggerLoading($this, { promise: true });
+			var finishedLoading = Utils.triggerLoading($this, { promise: true });
 			chrome.runtime.sendMessage({
 				method: "decrypt",
 				key: key,
@@ -192,8 +192,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 			});
 		}
 
-		console.log($credential.data('key'));
-		_this.analytics.trackKeenEvent("credential_decrypted", {
+		_this.analytics.trackEvent("credential_decrypted", {
 			site: $credential.data('key')
 		});
 	});
@@ -208,7 +207,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 			}
 		);
 
-		_this.analytics.trackKeenEvent("credential_forgotten", {
+		_this.analytics.trackEvent("credential_forgotten", {
 			site: $credential.data('key')
 		});
 
@@ -234,7 +233,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 			var $this = $(this),
 				$credential = $this.parents('.credential');
 
-			var doneSaving = triggerLoading($this, { promise: true});
+			var doneSaving = Utils.triggerLoading($this, { promise: true});
 
 			chrome.runtime.sendMessage({
 				method: "saveCredentials",
@@ -243,7 +242,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 				password: $credential.find(_this.passwordInputSelector).filter('.toggled').val()
 			}, function() { doneSaving.resolve(); });
 
-			_this.analytics.trackKeenEvent("credential_edited", {
+			_this.analytics.trackEvent("credential_edited", {
 				site: $credential.data('key')
 			});
 	});
@@ -296,40 +295,6 @@ Options.prototype.loginWithClef = function(callback) {
 			removeEventListener("message", handleMessage);
 		}
 	});
-}
-
-Options.prototype.getKeenGlobals = function(eventCollection) {
-    // setup the global properties we'll use
-    var globalProperties = {
-        UUID: KEEN_UUID,
-        has_network_connection: navigator.onLine,
-        chrome_version: window.navigator.appVersion
-    };
-
-    return globalProperties;
-};
-
-function triggerLoading(el, opts) {
-	var $el = $(el),
-		saveText = $el.text(),
-		promise;
-
-	$el.addClass('loading');
-	$el.text('loading..');
-
-	if (opts && opts.promise) {
-		promise = $.Deferred();
-		$.when(promise)
-		 .then(unload)
-		return promise;
-	} else {
-		setTimeout(unload, 1000);
-	}
-
-	function unload() {
-		$el.removeClass('loading');
-		$el.text(saveText);
-	}
 }
 
 $(document).ready(function() {

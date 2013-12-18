@@ -17,7 +17,7 @@ function Sites() {
 
 
     this.storage = new Storage();
-    this.analytics = new Analytics(this.getKeenGlobals);
+    this.analytics = new Analytics();
 
     chrome.extension.sendMessage({
         method: 'getSiteConfigs'
@@ -48,7 +48,7 @@ Sites.prototype.init = function(data) {
             })
 
             _this.storage.getOnboardingSiteData(site.key, function(data) {
-                if (data.loginAttempts.success >= 1) {
+                if (data.loginAttempts && data.loginAttempts.success >= 1) {
                     $siteHTML.addClass('completed fi-check');
                 }
                 completed.push($siteHTML);
@@ -70,7 +70,7 @@ Sites.prototype.init = function(data) {
         }
     });
     
-    _this.analytics.trackKeenEvent("sites_list");
+    _this.analytics.trackEvent("sites_list");
 };
 
 Sites.prototype.attachHandlers = function() {
@@ -90,17 +90,6 @@ Sites.prototype.redirectToSite = function(e) {
     }, function() {
         window.location = $a.attr('href');
     });
-};
-
-Sites.prototype.getKeenGlobals = function(eventCollection) {
-    // setup the global properties we'll use
-    var globalProperties = {
-        UUID: KEEN_UUID,
-        has_network_connection: navigator.onLine,
-        chrome_version: window.navigator.appVersion
-    };
-
-    return globalProperties;
 };
 
 var sites = new Sites();

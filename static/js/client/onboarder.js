@@ -37,7 +37,7 @@ Onboarder.prototype.init = function(data) {
 
     if (this.siteData.forceTutorial) {
         this.dismissed = false;
-        this.storage.setOnboardingKey("dismissed", false);
+        this.storage.setOnboardingKey("dismissed", false, function() {});
         this.forceTutorial = true;
         this.siteData = this.storage.siteOnboardingDefaults;
         this.commitSiteData();
@@ -114,7 +114,7 @@ Onboarder.prototype.loginSuccess = function() {
 
         var $message = this.getMessage();
 
-        $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to log out and get some practice.");
+        $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to logout and get some practice.");
 
         $message.attr('class', 'floating left-arrow');
 
@@ -125,6 +125,7 @@ Onboarder.prototype.loginSuccess = function() {
 
         $message.fadeIn();
     } else {
+        this.incrementInviteCount();
         var _this = this;
         promise.then(function() {
             chrome.runtime.sendMessage({
@@ -258,9 +259,12 @@ Onboarder.prototype.getMessage = function() {
 }
 
 Onboarder.prototype.addOverlay = function() {
-    var _this = this,
+    var _this = this;
+    var $overlay = $('#'+this.OVERLAY_ID);
+    if (!$overlay.length) {
         $overlay = $('<div id="' + this.OVERLAY_ID + '"></div>');
-    $('body').append($overlay);
+        $('body').append($overlay);
+    }
     this.bind('onboarding.dismissed widget.dismissed', function() {
         $overlay.remove();
     });
@@ -275,6 +279,7 @@ Onboarder.prototype.addOverlay = function() {
 
 Onboarder.prototype.commitSiteData = function(cb) {
     this.siteData.updatedAt = new Date().getTime();
+    cb = cb || function() {};
     this.storage.setOnboardingSiteData(this.siteKey, this.siteData, cb);
 }
 
@@ -284,6 +289,25 @@ Onboarder.prototype.totalSuccessfulLogins = function() {
         total += this.siteSpecificOnboardingData[site].loginAttempts.success;
     }
     return total;
+}
+
+Onboarder.prototype.secondSiteSetup = function() {
+    var numSites = 0;
+    for (var site in this.siteSpecificOnboardingData) {
+        if (this.siteSpecificOnboardingData[site].loginAttempts.success > 1) numSites++;
+    }
+
+    return numSites === 2;
+}
+
+
+Onboarder.prototype.incrementInviteCount = function(key) {
+    chrome.runtime.sendMessage({
+        method: 'incrementInviteCount',
+        key: this.siteKey
+    }, function(data) {
+        console.log(data);
+    });
 }
 
 

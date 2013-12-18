@@ -8,30 +8,89 @@ Keen.configure({
 });
 
 //And now our code..
-KEEN_UUID_KEY = "keen-uuid"
+Analytics.prototype.KEEN_UUID_KEY = "keen-uuid";
 
-function Analytics(globalsFunction) {
-	this.globalsFunction = globalsFunction;
+function Analytics(opts) {
+	this.options = opts || {};
 	this.storage = new Storage();
+
+	this.initialized = this.initializeKeen();
+	this.loadedDevCheck = this.checkDevMode();
 }
 
-Analytics.prototype.trackKeenEvent = function(evnt, data) {
-	var _this = this;
-	if(typeof(KEEN_UUID) !== "undefined") {
-		Keen.addEvent(evnt, data);
-	} else {
-		this.initiateKeen(evnt, data);
-	}
+Analytics.prototype.trackEvent = function(evnt, data) {
+	var _this = this
+		data = data || {};
+
+	$.when(this.loadedDevCheck, this.initialized)
+	 .then(function(isDevMode) {
+	 	if (!isDevMode) {
+		 	Keen.addEvent(evnt, data);
+	 	} else {
+	 		data = $.extend(data, _this.getProperties());
+	 		_this.debug("Waltz analytics not tracked", evnt, data);
+	 	}
+	 });
 }
 
-Analytics.prototype.initiateKeen = function(evnt, data) {
-	var _this = this;
+Analytics.prototype.initializeKeen = function(evnt, data) {
+	var _this = this
+		promise = $.Deferred();
 
-	_this.storage.getOptions(function(options) {
-		KEEN_UUID = options[KEEN_UUID_KEY];
-		Keen.setGlobalProperties(_this.globalsFunction);
-		if(evnt) {
-			_this.trackKeenEvent(evnt, data);
+	this.storage.getPrivateSettings(function(options) {
+		if (options[_this.KEEN_UUID_KEY]) {
+			this.KEEN_UUID = options[_this.KEEN_UUID_KEY];
+			Keen.setGlobalProperties(_this.getProperties);
+			promise.resolve();
+		} else {
+			_this.KEEN_UUID = Math.floor(Math.random() * 1000000000);
+			_this.storage.setPrivateSetting(
+				_this.KEEN_UUID_KEY,
+				_this.KEEN_UUID,
+				function() {
+					promise.resolve();
+				}
+			);
 		}
+		Keen.setGlobalProperties(_this.getProperties.bind(_this));
 	});
+	return promise;
 };
+
+Analytics.prototype.checkDevMode = function() {
+	var _this = this,
+		promise = $.Deferred();
+
+	if (this.devMode) return promise.resolve(this.devMode);
+
+	$.getJSON(
+		chrome.runtime.getURL('manifest.json'),
+		function(data) {
+			_this.devMode = !('update_url' in data);
+			promise.resolve(_this.devMode);
+		}
+	);
+
+	return promise;
+}
+
+Analytics.prototype.getProperties = function() {
+	var properties = {
+        UUID: this.KEEN_UUID,
+        has_network_connection: navigator.onLine,
+        chrome_version: window.navigator.appVersion
+    };
+
+    if (this.options.captureURLData) {
+    	properties.protocol = window.location.protocol;
+    	properties.host = window.location.host;
+    	properties.path = window.location.pathname;
+    }
+
+    return properties;
+}
+
+Analytics.prototype.debug = function() {
+	console.log.apply(console, arguments);
+}
+

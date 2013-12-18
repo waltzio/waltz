@@ -1,63 +1,73 @@
 (function() {
     Sharer.prototype.twitterBase = 'https://twitter.com/intent/tweet';
     Sharer.prototype.facebookBase = "https://www.facebook.com/dialog/feed?app_id=1383429211907692&display=popup";
-    Sharer.prototype.waltzLink = encodeURIComponent("http://getwaltz.com");
-
     Sharer.prototype.shareSelector = ".waltz-share";
+    Sharer.prototype.waltzLink = "http://getwaltz.com";
 
     Sharer.prototype.messages = {
-        setupSuccess: {
-            twitter: "I just setup @getwaltz on <%= name %> - getting rid of more passwords!",
-            facebook: "I just setup Waltz on <%= name %>. You probably should too, yo."
+        // the default
+        def: {
+            twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>",
+            facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>"
+        },
+        waitlist: {
+            twitter: "I found something to get rid of my passwords! <%= waitListLength %> people are in line, but we get in early if you join me: <%= link %>!",
+            facebook: "I found something to get rid of my passwords! <%= waitListLength %> people are in line for access, but we get in early if you join me!"
         },
         requestSite: {
             twitter: "Hey @getwaltz, I'd love to get rid of my passwords on <%= site %>. Can you help?"
+        },
+        invite: {
+            twitter: "Found @getwaltz to get rid of all of my passwords. There's a long wait list, but you can skip it with this link: <%= link %>.",
+            facebook: "Found Waltz to get rid of all of my passwords. There's a long wait list, but you can skip it with this link: <%= link %>."
         }
     };
 
-    Sharer.prototype.shareDefaults = {
-
-    };
+    Sharer.prototype.shareDefaults = {};
 
     function Sharer(waltz) {
+        this.waltz = waltz;
 
-    this.waltz = waltz;
+        this.templater = new Templater();
 
-    this.templater = new Templater();
-
-    // $(window).click(this.shareToTwitter.bind(this));
-
-    this.attachHandlers();
+        this.attachHandlers();
     }
 
     Sharer.prototype.attachHandlers = function() {
-    $(this.shareSelector).click(this.share.bind(this));
+        $(this.shareSelector).click(this.share.bind(this));
     };
 
     Sharer.prototype.share = function(e) {
-    e.stopPropagation();
-    e.preventDefault();
+        e.stopPropagation();
+        e.preventDefault();
 
-    var _this = this,
-        $el = $(e.currentTarget),
-        data = $el.data(),
-        message,
-        type = "twitter";
+        var _this = this,
+            $el = $(e.currentTarget),
+            data = $el.data(),
+            message,
+            type = "twitter",
+            name;
 
-    if ($el.hasClass('facebook') || data.type === "facebook") {
-        type = "facebook";
-    }
+        if ($el.hasClass('facebook') || data.type === "facebook") {
+            type = "facebook";
+        } else if ($el.hasClass('email') || data.type === "email") {
+            type = "email";
+            name = "email-" + data.shareType;
+        }
 
-    _.defaults(data, this.shareDefaults);
+        _.defaults(data, this.shareDefaults);
+        data.link = data.link || this.waltzLink;
 
-    this.templater.template({
-        name: null,
-        context: data,
-        html: this.messages[data.shareType].twitter
-    }, function(message) {
-        data.message = encodeURIComponent(message);
-        _this[type](data);
-    });
+        html = (this.messages[data.shareType] || this.messages.def)[type];
+
+        this.templater.template({
+            named: name,
+            context: data,
+            html: html
+        }, function(message) {
+            data.message = encodeURIComponent(message);
+            _this[type](data);
+        });
     };
 
     Sharer.prototype.shareSetupSuccess = function() {
@@ -65,33 +75,40 @@
     }
 
     Sharer.prototype.twitter = function(opts) {
-    var url = this.sharedShare(this.twitterBase, opts);
+        var url = this.sharedShare(this.twitterBase, opts);
 
-    if (opts.message) {
-        url = Utils.addURLParam(url, "text", opts.message);
-    }
+        if (opts.message) {
+            url = Utils.addURLParam(url, "text", opts.message);
+        }
 
+        url = Utils.addURLParam(url, "u", opts.link);
 
-    url = Utils.addURLParam(url, "u", this.waltzLink);
-
-    this.open(url);
+        this.open(url);
     }
 
     Sharer.prototype.facebook = function(opts) {
-    var url = this.sharedShare(this.facebookBase, opts);
+        var url = this.sharedShare(this.facebookBase, opts);
 
-    if (opts.message) {
-        url = Utils.addURLParam(url, "caption", opts.message);
+        if (opts.message) {
+            url = Utils.addURLParam(url, "caption", opts.message);
+        }
+
+        url = Utils.addURLParam(url, "link", opts.link);
+        url = Utils.addURLParam(url, "redirect_uri", this.waltzLink);
+
+        this.open(url);
     }
 
-    url = Utils.addURLParam(url, "link", this.waltzLink);
-    url = Utils.addURLParam(url, "redirect_uri", this.waltzLink);
+    Sharer.prototype.email = function(opts) {
+        var url = "mailto:";
+        url = Utils.addURLParam(url, "subject", opts.subject);
+        url = Utils.addURLParam(url, "body", opts.message);
 
-    this.open(url);
+        this.open(url);
     }
 
     Sharer.prototype.open = function(url) {
-    window.open(url, "popup", "height=400px,width=600px,top=100px,left=100px");
+        window.open(url, "popup", "height=400px,width=600px,top=100px,left=100px");
     }
 
     Sharer.prototype.sharedShare = function(url, opts) {

@@ -28,7 +28,8 @@ grunt.initConfig({
         'static/css/options.css': 'static/scss/options.scss',
         'static/css/popup.css': 'static/scss/popup.scss',
         'static/css/tutorial.css': 'static/scss/tutorial.scss',
-        'static/css/sites.css': 'static/scss/sites.scss'
+        'static/css/sites.css': 'static/scss/sites.scss',
+        'static/css/waiting.css': 'static/scss/waiting.scss'
       }
     }
   },

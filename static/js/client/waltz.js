@@ -21,7 +21,7 @@
 		if (!opts) return;
 
 		this.storage = new Storage();
-		this.analytics = new Analytics(this.getKeenGlobals);
+		this.analytics = new Analytics({ captureURLData: true });
 
 		this.options = opts;
 		this.onboarder = new Onboarder(this);
@@ -145,19 +145,6 @@
         this.on('widget.dismissed', this.widgetDismissed.bind(this));
 	}
 
-	Waltz.prototype.getKeenGlobals = function(eventCollection) {
-	    // setup the global properties we'll use
-	    var globalProperties = {
-	        UUID: KEEN_UUID,
-	        protocol: window.location.protocol,
-	        host: window.location.host,
-	        path: window.location.pathname,
-	        has_network_connection: navigator.onLine,
-	        chrome_version: window.navigator.appVersion
-	    };
-	    return globalProperties;
-	};
-
     Waltz.prototype.widgetDismissed = function(e, data) {
         var _this = this;
         if (data.dismissals > this.DISMISSAL_THRESHOLD) {
@@ -187,7 +174,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
-                _this.analytics.trackKeenEvent("dismissal_saved", {duration: "forever"});
+                _this.analytics.trackEvent("dismissal_saved", {duration: "forever"});
             });
 
             $page.click(function(e) {
@@ -208,7 +195,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
-                _this.analytics.trackKeenEvent("dismissal_saved", {duration: "page"});
+                _this.analytics.trackEvent("dismissal_saved", {duration: "page"});
             });
 
             $cancel.click(function(e) {
@@ -226,7 +213,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
-                _this.analytics.trackKeenEvent("dismissal_saved", {duration: "cancel"});
+                _this.analytics.trackEvent("dismissal_saved", {duration: "cancel"});
             });
 
             $message.attr('class', 'floating fixed');
@@ -313,7 +300,7 @@
 		$("body").append($iframe);
 
 	}
-
+    
 	Waltz.prototype.logInToClef = function(cb) {
 		var _this = this;
 
@@ -321,22 +308,29 @@
             _this.iframe[0].contentWindow.postMessage({ method: "loadClef"}, _this.options.cyHost);
 
             _this.iframe.fadeIn();
-            _this.trigger('show.iframe');
 
-            window.addEventListener("message", function(e) {
+            window.addEventListener("message", listener); 
+
+            function listener(e) {
                 if(e.data.auth) {
                     _this.iframe.remove();
                     if (typeof cb == "function") {
                         cb();
                     }
                 }
-            });
+            }
+
+            _this.authListener = listener;
         });
 	}
 
 	Waltz.prototype.closeIFrame = function(e) {
 		if (e.origin == this.options.cyHost) {
 			if (e.data && e.data.method == "closeIFrame" && this.iframe) {
+                if (this.authListener) {
+                    window.removeEventListener("message", this.authListener);
+                    this.authListener = null;
+                }
 				this.iframe.remove();
 				this.trigger('hide.iframe');
 				this.iframe = false;
@@ -497,7 +491,7 @@
                     noUserCallback();
                 } else {
                     _this.logInToClef(continueCallback);
-                    _this.analytics.trackKeenEvent("clef_auth_shown");
+                    _this.analytics.trackEvent("clef_auth_shown");
                 }
 			} else {
 				if (typeof(continueCallback) == "function") {
@@ -578,7 +572,7 @@
 					_this.trigger('remove.credentialOverlay');
 				}, 500);
 
-				_this.analytics.trackKeenEvent("credentials_form_dismissed", {
+				_this.analytics.trackEvent("credentials_form_dismissed", {
 					had_entered_credentials: !($usernameField.val() === "" && $passwordField.val() === ""),
 					shown_duration: Date.now() - formShownTime
 				});
@@ -618,7 +612,7 @@
 
         var attemptLogin = function() {
 
-        	_this.analytics.trackKeenEvent("widget_clicked");
+        	_this.analytics.trackEvent("widget_clicked");
 
             if (!_this.iframe) {
                 _this.loadIFrame();
@@ -683,7 +677,7 @@
                     dismissals
                 );
 
-                _this.analytics.trackKeenEvent("widget_dismissed");
+                _this.analytics.trackEvent("widget_dismissed");
                 _this.trigger('widget.dismissed', { dismissals: dismissals.count });
 
             });
@@ -695,7 +689,7 @@
 		this.$widget = $widget;
 		this.trigger('show.widget');
 
-		_this.analytics.trackKeenEvent("show_widget");
+		_this.analytics.trackEvent("show_widget");
 	}
 
 	Waltz.prototype.hideWidget = function(opts) {
@@ -767,7 +761,6 @@
 	Waltz.prototype.on = function(eventName, cb) {
 		this.router.on(eventName, cb);
 	}
-
 
 	chrome.runtime.sendMessage({
 		method: "initialize",

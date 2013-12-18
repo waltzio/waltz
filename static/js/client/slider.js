@@ -13,8 +13,8 @@
 
             this.$slides = $(this.slideSelector);
             this.storage = new Storage();
-            this.analytics = new Analytics(this.getKeenGlobals);
-            this.analytics.trackKeenEvent("start_tutorial")
+            this.analytics = new Analytics();
+            this.analytics.trackEvent("start_tutorial")
 
             this.$slides.each(function() {
                 $('.tutorial-slides').addClass($(this).attr('id'));
@@ -82,8 +82,12 @@
         Slider.prototype.startSiteSetup = function(e) {
             e.preventDefault();
 
+            this.analytics.trackEvent('finish_tutorial');
+
             var $a = $(e.currentTarget), 
                 siteKey = $a.text().toLowerCase();
+
+            this.analytics.trackEvent('tutorial_site_setup', { siteKey: siteKey });
 
             if ($a.hasClass('completed')) return;
 
@@ -94,17 +98,6 @@
                 window.location = $a.attr('href');
             });
         }
-
-        Slider.prototype.getKeenGlobals = function(eventCollection) {
-            // setup the global properties we'll use
-            var globalProperties = {
-                UUID: KEEN_UUID,
-                has_network_connection: navigator.onLine,
-                chrome_version: window.navigator.appVersion
-            };
-
-            return globalProperties;
-        };
 
         return Slider;
     })();

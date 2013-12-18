@@ -5,12 +5,31 @@
   <link rel="stylesheet" href="/static/css/popup.css" type="text/css" />
 </head>
 
-<body id="waltz-popup">
+<body>
+  <div id="waltz-popup">
+    <a href=""></a>
+    <div class="share-container">
+      <h6 class="text-center invite-message">You currently have <b><span class="invite-count">0</span> invites</b> to Waltz!</h6>
+      <h6 class="text-center share-message">share waltz with your friends!</h6>
+      <div class="row">
+        <div class="small-12 columns">
+          <ul class="small-block-grid-3">
+            <li><a href="#" class="waltz-share twitter fi-social-twitter" data-share-type="invite"></a></li>
+            <li><a href="#" class="waltz-share facebook fi-social-facebook" data-share-type="invite"></a></li>
+            <li><a href="#" class="waltz-share email fi-mail" data-share-type="invite" data-subject="You're invited to Waltz!"></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-12 columns text-center">
+          <a href="" class="share-link">http://test.com</a>
+        </div>
+      </div>
+    </div>
     <ul>
-        <li><a href=""></a></li>
-        <li><a href="sites.html" target="_blank" class="sites fi-check">Sites where I can use Waltz already.</a></li>
+        <li><a href="sites.html" target="_blank" class="b sites fi-check">Sites where I can use Waltz already.</a></li>
         <li>
-          <a href="#" class="request fi-plus">I want this site to work with Waltz!</a>
+          <a href="#" class="b request fi-plus">I want this site to work with Waltz!</a>
           <div class="request-container">
             <div class="row">
               <h6 class="text-center">Request via</h6>
@@ -26,15 +45,17 @@
             </div>
           </div>
         </li>
-        <li><a href="options.html" target="_blank" class="settings fi-widget">Manage settings and account stuff.</a></li>
-        <li><a href="tutorial.html" target="_blank" class="tutorial fi-clipboard-pencil">Show me the tutorial again.</a></li>
+        <li><a href="options.html" target="_blank" class="b settings fi-widget">Manage settings and account stuff.</a></li>
+        <li><a href="tutorial.html" target="_blank" class="b tutorial fi-clipboard-pencil">Show me the tutorial again.</a></li>
     </ul>
-    <script src="/static/js/vendor/jquery.min.js"></script>
-    <script src="/static/js/vendor/underscore-min.js"></script>
-    <script src="/static/js/shared/utils.js"></script>
-    <script src="/static/js/shared/templater.js"></script>
-    <script src="/static/js/shared/sharer.js"></script>
-    <script src="/static/js/client/popup.js"></script>
+  </div>
+  <script src="/static/js/vendor/jquery.min.js"></script>
+  <script src="/static/js/vendor/lodash.min.js"></script>
+  <script src="/static/js/shared/utils.js"></script>
+  <script src="/static/js/shared/storage.js"></script>
+  <script src="/static/js/shared/templater.js"></script>
+  <script src="/static/js/shared/sharer.js"></script>
+  <script src="/static/js/client/popup.js"></script>
 </body>
 
 </html>

@@ -6534,11 +6534,36 @@ html, body {
 }
 
 #waltz-popup {
+  margin-top: 15px;
   border: none;
+  padding: 10px;
+  padding-bottom: 0px;
 }
 #waltz-popup ul {
   list-style: none;
   margin: 0;
+}
+#waltz-popup .share-container .invite-message, #waltz-popup .share-container .share-message {
+  display: none;
+}
+#waltz-popup .share-container li {
+  padding-bottom: 10px;
+}
+#waltz-popup .share-container a.waltz-share {
+  text-align: center;
+  display: block;
+  width: 100%;
+  color: #AAA;
+  font-size: 30px;
+}
+#waltz-popup .share-container a.waltz-share:hover {
+  color: #777;
+}
+#waltz-popup .share-container a.share-link {
+  color: #AAA;
+}
+#waltz-popup .share-container a.share-link:hover {
+  color: #777;
 }
 #waltz-popup a.sites {
   box-shadow: 3px 3px 0 0 #026faa;
@@ -6567,6 +6592,13 @@ html, body {
 }
 #waltz-popup a.sites:hover {
   background: #0397e6;
+}
+#waltz-popup a.sites.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }
 #waltz-popup a.sites:before {
   display: block;
@@ -6606,6 +6638,13 @@ html, body {
 #waltz-popup a.tutorial:hover {
   background: #e70005;
 }
+#waltz-popup a.tutorial.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
 #waltz-popup a.tutorial:before {
   display: block;
   position: absolute;
@@ -6643,6 +6682,13 @@ html, body {
 }
 #waltz-popup a.settings:hover {
   background: #f56d00;
+}
+#waltz-popup a.settings.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }
 #waltz-popup a.settings:before {
   display: block;
@@ -6682,6 +6728,13 @@ html, body {
 #waltz-popup a.request:hover {
   background: #00be61;
 }
+#waltz-popup a.request.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
 #waltz-popup a.request:before {
   display: block;
   position: absolute;
@@ -6692,10 +6745,14 @@ html, body {
   font-size: 45px;
   text-align: center;
 }
+#waltz-popup a.b {
+  width: 100%;
+  margin: 15px 0;
+}
 #waltz-popup .request-container {
   display: none;
   width: 90%;
-  margin: auto;
+  margin: 0;
 }
 #waltz-popup .request-container .columns {
   padding: 5px;
@@ -6727,6 +6784,13 @@ html, body {
 }
 #waltz-popup .request-container a.request-twitter:hover {
   background: #279bdb;
+}
+#waltz-popup .request-container a.request-twitter.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }
 #waltz-popup .request-container a.request-twitter:before {
   display: block;
@@ -6766,6 +6830,13 @@ html, body {
 #waltz-popup .request-container a.request-github:hover {
   background: #060606;
 }
+#waltz-popup .request-container a.request-github.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
 #waltz-popup .request-container a.request-github:before {
   display: block;
   position: absolute;
@@ -6803,6 +6874,13 @@ html, body {
 }
 #waltz-popup .request-container a.request-email:hover {
   background: #9e9e9e;
+}
+#waltz-popup .request-container a.request-email.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }
 #waltz-popup .request-container a.request-email:before {
   display: block;

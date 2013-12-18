@@ -369,6 +369,13 @@
 #waltz-message #waltz-hide-for-site:hover, #waltz-message #waltz-hide-for-page:hover, #waltz-message #waltz-hide-cancel:hover {
   background: #7c7c7c;
 }
+#waltz-message #waltz-hide-for-site.loading, #waltz-message #waltz-hide-for-page.loading, #waltz-message #waltz-hide-cancel.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
 
 #waltz-onboarding-overlay {
   position: absolute;
