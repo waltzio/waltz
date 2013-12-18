@@ -128,6 +128,27 @@
     </div>
 </div>
 </script>
+
+<script type="text/html" class="template" id="firstLogin">
+<div id="waltz-first-share-overlay">
+    <div id="waltz-first-share-form">
+        <div id="waltz-first-share-header">
+            <h1>Pretty cool, huh?</h1>
+            <p>If you like what you see, we'd really appreciate you sharing it with your friends.</p>
+
+            <% if (key === "facebook") { %>
+
+                <div class="waltz-share facebook"  id="waltz-first-share">tell your friends on <%= key %></div>
+
+            <% } else { %>
+                 <div class="waltz-share twitter"  id="waltz-first-share">tell your friends on <%= key %></div>
+            <% } %>
+            
+            <a id="waltz-first-share-continue">continue tutorial</a>
+        </div>
+    </div>
+</div>
+</script>
     
 <script type="text/html" class="template" id='email-invite'>Hey FAVORITE-FRIEND,
 

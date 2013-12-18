@@ -28,7 +28,11 @@
     function Sharer(waltz) {
         this.waltz = waltz;
 
-        this.templater = new Templater();
+        if (this.waltz && this.waltz.templater) {
+            this.templater = this.waltz.templater;
+        } else {
+            this.templater = new Templater();
+        }
 
         this.attachHandlers();
     }

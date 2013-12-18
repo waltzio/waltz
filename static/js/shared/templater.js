@@ -49,8 +49,11 @@
         window.addEventListener('message', function(e) {
             if (e.data.method === "returnTemplate") {
                 var registered = _this.templatesRendering[e.data.named];
-                if (typeof registered.callback === "function") registered.callback(e.data.html);
-                registered.promise.resolve(e.data.html);
+                if (registered) {
+                    if (typeof registered.callback === "function") registered.callback(e.data.html);
+                    registered.promise.resolve(e.data.html);
+                    delete(_this.templatesRendering[e.data.named]);
+                }
             }
         })
     }
