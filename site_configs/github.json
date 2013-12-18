@@ -17,10 +17,7 @@
                     "url": "https://github.com/session",
                     "check": "input[name='otp']"
                 }
-            ],
-            "exclude": {
-                "nextURLs": ["https://github.com/"]
-            }
+            ]
         }
     }
 }

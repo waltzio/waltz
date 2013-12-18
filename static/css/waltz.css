@@ -45,7 +45,7 @@
   }
 }
 
-#waltz-credential-overlay {
+#waltz-credential-overlay, #waltz-first-share-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -69,13 +69,13 @@
   -webkit-transition: opacity .5s;
   cursor: default;
 }
-#waltz-credential-overlay.tutorial {
+#waltz-credential-overlay.tutorial, #waltz-first-share-overlay.tutorial {
   background: none;
 }
-#waltz-credential-overlay.slide-in {
+#waltz-credential-overlay.slide-in, #waltz-first-share-overlay.slide-in {
   opacity: 1;
 }
-#waltz-credential-overlay::after {
+#waltz-credential-overlay::after, #waltz-first-share-overlay::after {
   position: absolute;
   color: white;
   content: "×";
@@ -88,11 +88,11 @@
   cursor: pointer;
   z-index: 9999;
 }
-#waltz-credential-overlay::after:hover {
+#waltz-credential-overlay::after:hover, #waltz-first-share-overlay::after:hover {
   opacity: 1;
 }
 
-#waltz-credential-form {
+#waltz-credential-form, #waltz-first-share-form {
   width: 380px;
   background-color: white;
   background-repeat: no-repeat;
@@ -105,20 +105,20 @@
   position: relative;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 }
-#waltz-credential-form h1, #waltz-credential-form h2, #waltz-credential-form h3, #waltz-credential-form h4, #waltz-credential-form h5, #waltz-credential-form h6, #waltz-credential-form p {
+#waltz-credential-form h1, #waltz-credential-form h2, #waltz-credential-form h3, #waltz-credential-form h4, #waltz-credential-form h5, #waltz-credential-form h6, #waltz-credential-form p, #waltz-first-share-form h1, #waltz-first-share-form h2, #waltz-first-share-form h3, #waltz-first-share-form h4, #waltz-first-share-form h5, #waltz-first-share-form h6, #waltz-first-share-form p {
   text-align: left;
   text-indent: 0;
 }
-#waltz-credential-form > * {
+#waltz-credential-form > *, #waltz-first-share-form > * {
   font-family: inherit;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-#waltz-credential-form.slide-in {
+#waltz-credential-form.slide-in, #waltz-first-share-form.slide-in {
   margin-top: 40px;
 }
-#waltz-credential-form div.label {
+#waltz-credential-form div.label, #waltz-first-share-form div.label {
   margin-top: 15px;
   margin-bottom: 4px;
   display: block;
@@ -131,7 +131,12 @@
 #waltz-credential-form #waltz-credential-username,
 #waltz-credential-form #waltz-credential-password,
 #waltz-credential-form #waltz-credential-submit,
-#waltz-credential-form #waltz-credential-alert {
+#waltz-credential-form #waltz-credential-alert,
+#waltz-credential-form #waltz-first-share, #waltz-first-share-form #waltz-credential-username,
+#waltz-first-share-form #waltz-credential-password,
+#waltz-first-share-form #waltz-credential-submit,
+#waltz-first-share-form #waltz-credential-alert,
+#waltz-first-share-form #waltz-first-share {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-size: 18px;
   border-radius: 0px;
@@ -148,10 +153,22 @@
 #waltz-credential-form #waltz-credential-submit:active,
 #waltz-credential-form #waltz-credential-submit:focus,
 #waltz-credential-form #waltz-credential-alert:active,
-#waltz-credential-form #waltz-credential-alert:focus {
+#waltz-credential-form #waltz-credential-alert:focus,
+#waltz-credential-form #waltz-first-share:active,
+#waltz-credential-form #waltz-first-share:focus, #waltz-first-share-form #waltz-credential-username:active, #waltz-first-share-form #waltz-credential-username:focus,
+#waltz-first-share-form #waltz-credential-password:active,
+#waltz-first-share-form #waltz-credential-password:focus,
+#waltz-first-share-form #waltz-credential-submit:active,
+#waltz-first-share-form #waltz-credential-submit:focus,
+#waltz-first-share-form #waltz-credential-alert:active,
+#waltz-first-share-form #waltz-credential-alert:focus,
+#waltz-first-share-form #waltz-first-share:active,
+#waltz-first-share-form #waltz-first-share:focus {
   outline: none;
 }
-#waltz-credential-form #waltz-credential-submit {
+#waltz-credential-form #waltz-credential-submit,
+#waltz-credential-form #waltz-first-share, #waltz-first-share-form #waltz-credential-submit,
+#waltz-first-share-form #waltz-first-share {
   background: #00be61;
   border: none;
   color: white;
@@ -163,17 +180,21 @@
   height: auto;
   box-shadow: 0 4px 0 0 #008b47;
 }
-#waltz-credential-form #waltz-credential-submit:hover {
+#waltz-credential-form #waltz-credential-submit:hover,
+#waltz-credential-form #waltz-first-share:hover, #waltz-first-share-form #waltz-credential-submit:hover,
+#waltz-first-share-form #waltz-first-share:hover {
   box-shadow: 0 3px 0 0 #008b47;
 }
-#waltz-credential-form #waltz-credential-submit:active {
+#waltz-credential-form #waltz-credential-submit:active,
+#waltz-credential-form #waltz-first-share:active, #waltz-first-share-form #waltz-credential-submit:active,
+#waltz-first-share-form #waltz-first-share:active {
   box-shadow: 0 2px 0 0 #008b47;
 }
-#waltz-credential-form form {
+#waltz-credential-form form, #waltz-first-share-form form {
   padding: 0 20px;
   display: block;
 }
-#waltz-credential-form form h2 {
+#waltz-credential-form form h2, #waltz-first-share-form form h2 {
   font-size: 12px;
   line-height: 16px;
   color: #888;
@@ -183,17 +204,17 @@
   padding: 0;
   text-align: left;
 }
-#waltz-credential-form #waltz-credential-alert {
+#waltz-credential-form #waltz-credential-alert, #waltz-first-share-form #waltz-credential-alert {
   font-size: 14px;
   background-color: #f65058;
   color: white;
   padding: 10px;
 }
-#waltz-credential-form #waltz-credential-header {
+#waltz-credential-form #waltz-credential-header, #waltz-credential-form #waltz-first-share-header, #waltz-first-share-form #waltz-credential-header, #waltz-first-share-form #waltz-first-share-header {
   padding: 20px;
   padding-bottom: 10px;
 }
-#waltz-credential-form #waltz-credential-header h1 {
+#waltz-credential-form #waltz-credential-header h1, #waltz-credential-form #waltz-first-share-header h1, #waltz-first-share-form #waltz-credential-header h1, #waltz-first-share-form #waltz-first-share-header h1 {
   font-size: 18px;
   color: #333;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
@@ -205,30 +226,30 @@
   background: white;
   text-indent: 0;
 }
-#waltz-credential-form #waltz-credential-footer {
+#waltz-credential-form #waltz-credential-footer, #waltz-first-share-form #waltz-credential-footer {
   background: #EEE;
   padding: 20px;
 }
-#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-image {
+#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-image, #waltz-first-share-form #waltz-credential-footer #waltz-credential-footer-image {
   width: 30%;
   float: left;
 }
-#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-image img {
+#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-image img, #waltz-first-share-form #waltz-credential-footer #waltz-credential-footer-image img {
   width: 80%;
 }
-#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-message {
+#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-message, #waltz-first-share-form #waltz-credential-footer #waltz-credential-footer-message {
   width: 70%;
   float: left;
 }
-#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-message p {
+#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-message p, #waltz-first-share-form #waltz-credential-footer #waltz-credential-footer-message p {
   margin: 0;
   font-size: 13px;
   line-height: 17px;
 }
-#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-message p:first-child {
+#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-message p:first-child, #waltz-first-share-form #waltz-credential-footer #waltz-credential-footer-message p:first-child {
   margin-bottom: 10px;
 }
-#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-message p b {
+#waltz-credential-form #waltz-credential-footer #waltz-credential-footer-message p b, #waltz-first-share-form #waltz-credential-footer #waltz-credential-footer-message p b {
   font-weight: 700;
 }
 
@@ -435,6 +456,22 @@
   100% {
     transform: rotate(0.5deg);
   }
+}
+
+#waltz-first-share-overlay p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 17px;
+  margin-top: 10px;
+}
+#waltz-first-share-overlay p b {
+  font-weight: 700;
+}
+#waltz-first-share-overlay #waltz-first-share {
+  margin: 30px 0;
+}
+#waltz-first-share-overlay #waltz-first-share-continue {
+  font-size: 14px;
 }
 
 #waltz-login-wrapper {

@@ -1,6 +1,6 @@
 {
   "name": "Waltz",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 2,
   "description": "A modern account manager for the web.",
 
@@ -33,6 +33,7 @@
     "js": [
       "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
+      "static/js/shared/utils.js",
       "static/js/shared/templater.js",
       "static/js/shared/storage.js",
       "static/js/shared/sharer.js",
@@ -59,7 +60,7 @@
     "128": "/static/img/waltz-128.png"
   },
   "options_page": "html/options.html",
-  "homepage_url": "http://waltz.io",
+  "homepage_url": "http://getwaltz.com",
   "web_accessible_resources": [
     "/static/img/*",
     "/html/templates.html",

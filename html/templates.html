@@ -128,6 +128,29 @@
     </div>
 </div>
 </script>
+
+<script type="text/html" class="template" id="firstLogin">
+<div id="waltz-first-share-overlay">
+    <div id="waltz-first-share-form">
+        <div id="waltz-first-share-header">
+            <h1>Pretty cool, huh?</h1>
+            <p>If you like what you see, we'd really appreciate you sharing it with your friends.</p>
+
+            <% if (key === "facebook") { %>
+
+                <div class="waltz-share facebook"  id="waltz-first-share">tell your friends on <%= key %></div>
+
+            <% } else if (key === "twitter") { %>
+                 <div class="waltz-share twitter"  id="waltz-first-share">tell your friends on <%= key %></div>
+            <% } else if (key === "github") {%>
+                <div id="waltz-first-share">star the waltz repo</div>
+            <% } %>
+
+            <a id="waltz-first-share-continue">continue tutorial</a>
+        </div>
+    </div>
+</div>
+</script>
     
 <script type="text/html" class="template" id='email-invite'>Hey FAVORITE-FRIEND,
 
@@ -136,6 +159,18 @@ There's this cool new thing called Waltz that is supposed to be a better way to 
 Because there are a lot of new people trying it out, there's a wait list to get access. I've already been let in, so if you check Waltz out through this link (<%= link %>) then you'll be in too :) 
 
 I'm interested to hear what you think!
+
+<%= link %>
+
+Thanks,
+YOUR-NAME
+</script>
+
+<script type="text/html" class="template" id='email-share'>Hey FAVORITE-FRIEND,
+
+There's this cool new thing called Waltz that is much a better way to log in. There are no usernames or passwords to remember, but it still makes logging in safer.
+
+I thought you might enjoy it - interested to hear what you think!
 
 <%= link %>
 

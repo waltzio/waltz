@@ -79,30 +79,15 @@ Onboarder.prototype.loginSuccess = function() {
     this.commitSiteData(function () { promise.resolve(); });
 
     if (this.siteData.loginAttempts.success == 1 && this.totalSuccessfulLogins() < 2) {
-        // case where the user is going through the tutorial for the first time
-        // PRACTICE, yo!
-        var $overlay = this.addOverlay();
 
-        var $img = $("<img src='" + chrome.extension.getURL("/static/img/phone-logout.png") + "'/>");
-        $img.click(function(e) {
-            e.stopPropagation();
-            alert("Not this phone, YOUR phone!");
-        });
-
-        $overlay.append($img);
-
-        var $message = this.getMessage();
-
-        $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to logout and get some practice.");
-
-        $message.attr('class', 'floating left-arrow');
-
-        $message.css({
-            top: parseInt($img.css('top')) + 350,
-            left: parseInt($img.css('left')) + $img.width()
-        })
-
-        $message.fadeIn();
+        if (this.options.site.config.key === "facebook" || this.options.site.config.key === "twitter") {
+            this.handleFirstFacebookAndTwitterLogin();
+        } else if (this.options.site.config.key === "github") {
+            this.handleFirstGithubLogin();
+        } else {
+            this.showLogoutPrompt();
+        }
+       
     } else if (this.siteData.forceTutorial) {
         this.siteData.forceTutorial = null;
         this.commitSiteData();
@@ -116,6 +101,98 @@ Onboarder.prototype.loginSuccess = function() {
         });
     }
 
+}
+
+Onboarder.prototype.handleFirstGithubLogin = function() {
+    var _this = this,
+        templater = this.waltz.getTemplater();
+
+    templater.template({
+        named: "firstLogin",
+        context: {
+            key: this.options.site.config.key
+        }
+    }, function(data) {
+        var $overlay = $(data),
+            $form = $overlay.find('#waltz-first-share-form'),
+            $body = $('body');
+
+        $body.append($overlay);
+
+        $overlay.addClass('slide-in');
+        $form.addClass('slide-in');
+
+        $overlay.click(continueTutorial);
+        $overlay.find('#waltz-first-share').click(starRepo);
+        $overlay.find('#waltz-first-share-continue, #waltz-first-share').click(continueTutorial);
+
+        function starRepo() {
+            $('.star-button.unstarred')[0].click();
+        }
+
+        function continueTutorial() {
+            $overlay.remove();
+            _this.showLogoutPrompt();
+        }
+    });
+}
+
+Onboarder.prototype.handleFirstFacebookAndTwitterLogin = function() {
+    var _this = this,
+        templater = this.waltz.getTemplater();
+
+    templater.template({
+        named: "firstLogin",
+        context: {
+            key: this.options.site.config.key
+        }
+    }, function(data) {
+        var $overlay = $(data),
+            $form = $overlay.find('#waltz-first-share-form'),
+            $body = $('body');
+
+        $body.append($overlay);
+
+        $overlay.addClass('slide-in');
+        $form.addClass('slide-in');
+
+        $overlay.click(continueTutorial);
+        $overlay.find('#waltz-first-share-continue, #waltz-first-share').click(continueTutorial);
+
+        _this.sharer = new Sharer(_this.waltz);
+
+        function continueTutorial() {
+            $overlay.remove();
+            _this.showLogoutPrompt();
+        }
+    });
+}
+
+Onboarder.prototype.showLogoutPrompt = function() {
+     // case where the user is going through the tutorial for the first time
+    // PRACTICE, yo!
+    var $overlay = this.addOverlay();
+
+    var $img = $("<img src='" + chrome.extension.getURL("/static/img/phone-logout.png") + "'/>");
+    $img.click(function(e) {
+        e.stopPropagation();
+        alert("Not this phone, YOUR phone!");
+    });
+
+    $overlay.append($img);
+
+    var $message = this.getMessage();
+
+    $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to logout and get some practice.");
+
+    $message.attr('class', 'floating left-arrow');
+
+    $message.css({
+        top: parseInt($img.css('top')) + 350,
+        left: parseInt($img.css('left')) + $img.width()
+    })
+
+    $message.fadeIn();
 }
 
 Onboarder.prototype.loginFailure = function() {
