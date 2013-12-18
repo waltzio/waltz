@@ -192,7 +192,6 @@ Options.prototype.attachCredentialsHandlers = function() {
 			});
 		}
 
-		console.log($credential.data('key'));
 		_this.analytics.trackEvent("credential_decrypted", {
 			site: $credential.data('key')
 		});

@@ -2,6 +2,7 @@
     Sharer.prototype.twitterBase = 'https://twitter.com/intent/tweet';
     Sharer.prototype.facebookBase = "https://www.facebook.com/dialog/feed?app_id=1383429211907692&display=popup";
     Sharer.prototype.shareSelector = ".waltz-share";
+    Sharer.prototype.waltzLink = "http://getwaltz.com";
 
     Sharer.prototype.messages = {
         // the default
@@ -10,15 +11,15 @@
             facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>"
         },
         waitlist: {
-            twitter: "I found something to get rid of my passwords! 8,000 people are in line, but we get in early if you join me: <%= link %>!",
-            facebook: "I found something to get rid of my passwords! 8,000 people are in line for access, but we get in early if you join me!"
+            twitter: "I found something to get rid of my passwords! <%= waitListLength %> people are in line, but we get in early if you join me: <%= link %>!",
+            facebook: "I found something to get rid of my passwords! <%= waitListLength %> people are in line for access, but we get in early if you join me!"
         },
         requestSite: {
             twitter: "Hey @getwaltz, I'd love to get rid of my passwords on <%= site %>. Can you help?"
         },
         invite: {
-            twitter: "There are <%= waitListCount %> number of people in line to use Waltz, but the first <%= inviteCount %> people to click this link can skip the line and use Waltz now! <%= link %>",
-            facebook: "There are <%= waitListCount %> number of people in line to use Waltz, but the first <%= inviteCount %> people to click this link can skip the line and use Waltz now! <%= link %>"
+            twitter: "Found @getwaltz to get rid of all of my passwords. There's a long wait list, but you can skip it with this link: <%= link %>.",
+            facebook: "Found Waltz to get rid of all of my passwords. There's a long wait list, but you can skip it with this link: <%= link %>."
         }
     };
 

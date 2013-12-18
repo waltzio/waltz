@@ -48,7 +48,7 @@ Popup.prototype.render = function() {
     $sharers
         .attr('data-link', this.settings.inviteLink)
         .data('inviteCount', this.settings.inviteCount)
-        .data('waitListCount', 11);
+        .data('waitListLength', this.settings.waitListLength);
 
     $('.share-link').attr('href', this.settings.inviteLink).text(this.settings.inviteLink);
 }

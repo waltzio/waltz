@@ -72,14 +72,21 @@ Setup.prototype.checkWaitlistStatus = function() {
         .success(function(data) {
             _this.settings.waiting = data.waiting;
             _this.settings.rank = data.rank + 1;
-            _this.settings.projectedSharingRank = data.projectedSharingRank + 1;
 
-            chrome.runtime.sendMessage({
-                messageLocation: 'waiting',
-                method: 'refresh'
-            });
+            if (data.projectedSharingRank) {
+                _this.settings.projectedSharingRank = data.projectedSharingRank + 1;
+            }
+
+            if (data.waitListLength) {
+                _this.settings.waitListLength = data.waitingListLength;
+            }
 
             _this.storage.setPrivateSettings(_this.settings, function() {
+                chrome.runtime.sendMessage({
+                    messageLocation: 'waiting',
+                    method: 'refresh'
+                });
+
                 if (!_this.settings.waiting) {
                     _this.analytics.trackEvent('leave_waitlist', { waitlistID: _this.settings.waitlistID });
                     return _this.activate();
@@ -123,6 +130,7 @@ Setup.prototype.registerOnWaitlist = function() {
         _this.settings.referralLink = data.referralLink;
         _this.settings.inviteLink = data.inviteLink;
         _this.settings.projectedSharingRank = data.projectedSharingRank + 1;
+        _this.settings.waitListLength = data.waitingListLength;
 
         _this.storage.setPrivateSettings(
             _this.settings,
@@ -149,14 +157,18 @@ Setup.prototype.registerOnWaitlist = function() {
 
 Setup.prototype.attachClickToWaitlist = function() {
     chrome.browserAction.setPopup({ popup: "" });
-    chrome.browserAction.onClicked.addListener(this.openWaitlist);
+    this.browserActionClickListener = this.openWaitlist.bind(this);
+    chrome.browserAction.onClicked.addListener(this.browserActionClickListener);
 }
 
 Setup.prototype.attachClickToTutorial = function() {
     var _this = this;
 
     chrome.browserAction.setPopup({ popup: "" });
-    chrome.browserAction.onClicked.removeListener(this.openWaitlist);
+    if (this.browserActionClickListener) {
+        chrome.browserAction.onClicked.removeListener(this.browserActionClickListener);
+        this.browserActionClickListener = null;
+    }
 
     chrome.browserAction.onClicked.addListener(function() {
         $.post(Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteClear, 

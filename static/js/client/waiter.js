@@ -29,7 +29,9 @@ Waiter.prototype.init = function(opts) {
 Waiter.prototype.render = function() {
     $(this.rankSelector).text(this.settings.rank).addClass('shown');
     $(this.referralLinkSelector).text(this.settings.referralLink).addClass('shown');
-    $(this.dataReferralLinkSelector).attr('data-link', this.settings.referralLink);
+    $(this.dataReferralLinkSelector)
+        .data('link', this.settings.referralLink)
+        .data('waitListLength', this.settings.waitListLength);
     $(this.futureRankSelector).text(this.calculateMovement());
 
     if (!this.settings.hasEmail) {
@@ -97,6 +99,8 @@ Waiter.prototype.refresh = function(data, cb) {
         if (rank === null) rank = 0;
         $(_this.rankSelector).text(rank);
         $(_this.futureRankSelector).text(_this.calculateMovement());
+        $(_this.dataReferralLinkSelector)
+            .data('waitListLength', _this.settings.waitListLength);
 
         if (!_this.settings.waiting) {
             _this.start();
