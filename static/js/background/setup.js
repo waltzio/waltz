@@ -1,6 +1,8 @@
 Setup.prototype.SETUP_KEY = "setup";
 Setup.prototype.ACTIVATED_KEY = "activated";
 
+Setup.prototype.readyNotificationID = "ready_notification";
+
 Setup.prototype.waitlistCheckTimeout = 1000;
 
 function Setup() {
@@ -74,10 +76,12 @@ Setup.prototype.openTutorial = function() {
 Setup.prototype.launchFromActivated = function() {
     if (!this.settings.activated) return;
 
+    chrome.notifications.clear(this.readyNotificationID, function() {});
+
     $.post(Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteClear, 
         {id: this.settings.waitlistID}
     );
-    
+
     this.pulsingStartBadge = false;
     chrome.browserAction.setBadgeText({ text: "" });
     chrome.tabs.query(
@@ -312,7 +316,7 @@ Setup.prototype.highlightIcon = function() {
 Setup.prototype.showReadyNotification = function() {
     var _this = this
     chrome.notifications.create(
-        "ready_notification", 
+        this.readyNotificationID, 
         {
             type: "basic",
             title: "We're ready for you.",
@@ -322,7 +326,7 @@ Setup.prototype.showReadyNotification = function() {
         function() {}
     );
     var listener = function(tabId) {
-        if (tabId !== "ready_notification") return;
+        if (tabId !== _this.readyNotificationID) return;
         _this.launchFromActivated();
         chrome.notifications.onClicked.removeListener(listener);
     };
