@@ -60,7 +60,7 @@
     "128": "/static/img/waltz-128.png"
   },
   "options_page": "html/options.html",
-  "homepage_url": "http://waltz.io",
+  "homepage_url": "http://getwaltz.com",
   "web_accessible_resources": [
     "/static/img/*",
     "/html/templates.html",
