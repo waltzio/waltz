@@ -17,7 +17,6 @@ function Popup() {
 
     chrome.browserAction.getBadgeText({}, function(details) {
         chrome.browserAction.setBadgeText({ text: "" });
-        console.log(details);
     })
 }
 

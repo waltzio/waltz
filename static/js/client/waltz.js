@@ -755,7 +755,6 @@
 		this.router.on(eventName, cb);
 	}
 
-
 	chrome.runtime.sendMessage({
 		method: "initialize",
 		location: document.location
