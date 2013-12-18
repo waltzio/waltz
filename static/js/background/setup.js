@@ -3,7 +3,7 @@ Setup.prototype.ACTIVATED_KEY = "activated";
 
 Setup.prototype.readyNotificationID = "ready_notification";
 
-Setup.prototype.waitlistCheckTimeout = 1000;
+Setup.prototype.waitlistCheckTimeout = 1000 * 60 * 4;
 
 function Setup() {
     var _this = this;
