@@ -95,6 +95,38 @@
 </div>
 </script>
 
+<script type="text/html" class="template" id="registration">
+<div id="waltz-credential-overlay">
+    <div id="waltz-credential-form">
+        <div id="waltz-credential-header">
+            <h1>Waltz replaces all of your passwords with the Clef wave.</h1>
+        </div>
+        <form> 
+            <% if (errorMessage) { %>
+            <p id="waltz-credential-alert"><%= errorMessage %></p>
+            <% } %>
+            <div class="label">your <%= name %> username</div>
+            <input type="text" placeholder="type your <%= name %> username" id="waltz-credential-username" value="<%= usernameValue %>">
+            <div class="label">your <%= name %> password</div>
+            <input type="password" placeholder="type your <%= name %> password" id="waltz-credential-password" value="<%= passwordValue %>">
+            <h2>Save your password once, Waltz will replace it forever.</h2>
+            <input type="submit" id="waltz-credential-submit" value="Replace my password">
+
+        </form>
+        <div id="waltz-credential-footer">
+            <div id="waltz-credential-footer-image">
+                <img src="<%= waltzLogo %>">
+            </div>
+            <div id="waltz-credential-footer-message">
+                <p>Your password is securely encrypted on this computer.</p>
+                <p><b>It is never sent to, or stored, on a remote server.</b></p>
+            </div>
+            <div class="waltz-clear"></div>
+        </div>
+    </div>
+</div>
+</script>
+
 <script type="text/html" class="template" id='email-invite'>Hey FAVORITE-FRIEND,
 
 There's this cool new thing called Waltz that is supposed to be a better way to log in. There are no usernames or passwords to remember, but it still makes logging in safer.
