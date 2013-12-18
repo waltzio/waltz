@@ -1,6 +1,7 @@
 <script type="text/html" class="template" id='credentials'>
 <ul class="credentials">
 <% _.each(credentials, function(item, key, list) { %>
+    <% if (item) { %>
     <li class="credential" data-key="<%= key %>" data-password="<%= item.password %>" data-username="<%= item.username %>">
         <div class="information-container">
             <div class="row">
@@ -35,6 +36,7 @@
         </div>
         
     </li>
+    <% } %>
 <% }); %>
 </ul>
 </script>
@@ -77,7 +79,7 @@
             <% } %>
             <% if (item.pages) { %>
                 <% for (k in item.pages) { %>
-                    <% if (item.pages[k].dismissed) { %>
+                    <% if (item.pages[k] && item.pages[k].dismissed) { %>
                         <div class="row dismissed-item" data-key="<%= key %>" data-path="<%= k %>">
                             <div class="small-6 columns">
                                 <h6><%= k %></h6>

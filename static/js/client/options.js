@@ -134,9 +134,9 @@ Options.prototype.attachSettingsHandlers = function() {
 			$item.data('key'),
 			function(dismissals) {
 				if ($item.data('path')) {
-					delete(dismissals.pages[$item.data('path')]);
-					if (Object.keys(dismissals.pages).length === 0) {
-						delete(dismissals['pages']);
+					dismissals.pages[$item.data('path')] = null;
+					if (_.filter(dismissals.pages, function(page) { page !== null}).length === 0) {
+						dismissals['pages'] = null;
 					}
 				} else {
 					dismissals.dismissedForever = false;
