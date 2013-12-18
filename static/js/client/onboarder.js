@@ -101,6 +101,40 @@ Onboarder.prototype.loginSuccess = function() {
 
 }
 
+Onboarder.prototype.handleFirstGithubLogin = function() {
+    var _this = this,
+        templater = this.waltz.getTemplater();
+
+    templater.template({
+        named: "firstLogin",
+        context: {
+            key: this.options.site.config.key
+        }
+    }, function(data) {
+        var $overlay = $(data),
+            $form = $overlay.find('#waltz-first-share-form'),
+            $body = $('body');
+
+        $body.append($overlay);
+
+        $overlay.addClass('slide-in');
+        $form.addClass('slide-in');
+
+        $overlay.click(continueTutorial);
+        $overlay.find('#waltz-first-share').click(starRepo);
+        $overlay.find('#waltz-first-share-continue, #waltz-first-share').click(continueTutorial);
+
+        function starRepo() {
+            $('.star-button.unstarred')[0].click();
+        }
+
+        function continueTutorial() {
+            $overlay.remove();
+            _this.showLogoutPrompt();
+        }
+    });
+}
+
 Onboarder.prototype.handleFirstFacebookAndTwitterLogin = function() {
     var _this = this,
         templater = this.waltz.getTemplater();
