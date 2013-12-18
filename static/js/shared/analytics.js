@@ -39,7 +39,7 @@ Analytics.prototype.initializeKeen = function(evnt, data) {
 
 	this.storage.getPrivateSettings(function(options) {
 		if (options[_this.KEEN_UUID_KEY]) {
-			this.KEEN_UUID = options[_this.KEEN_UUID_KEY];
+			_this.KEEN_UUID = options[_this.KEEN_UUID_KEY];
 			Keen.setGlobalProperties(_this.getProperties.bind(_this));
 			promise.resolve();
 		} else {
