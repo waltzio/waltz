@@ -95,7 +95,7 @@ Delegate.prototype.init = function(options) {
     );
 
     chrome.webRequest.onCompleted.addListener(
-        this.handleClefTutorial.bind(this),
+        this.handleLinkCaptures.bind(this),
         {
             urls: ['https://*.getclef.com/*'],
             types: ["main_frame"]
@@ -427,7 +427,7 @@ Delegate.prototype.checkAuthentication = function(cb) {
 	return true;
 }
 
-Delegate.prototype.handleClefTutorial = function(details) {
+Delegate.prototype.handleLinkCaptures = function(details) {
     if (details.url.match('(\/tutorial)|(\/user\/verify)')) {
         var _this = this,
             tutorialURL = chrome.extension.getURL('/html/tutorial.html');
@@ -447,7 +447,7 @@ Delegate.prototype.handleClefTutorial = function(details) {
             })
             
         })
-    }
+    } 
 }
 
 Delegate.prototype.handleSuccessfulLogin = function(details) {

@@ -18,6 +18,18 @@ function Setup() {
     var settingsLoaded = this.storage.getPrivateSettings();
     $.when(settingsLoaded).then(this.init.bind(this));
 
+    chrome.webRequest.onCompleted.addListener(
+        function(details) {
+            if (details.url.match(/\?startwt\=true/)) {
+                chrome.tabs.update(details.tabID, { url: chrome.extension.getURL('/html/waiting.html') })
+            }
+        },
+        {
+            urls: ["http://*.getwaltz.com/*"],
+            types: ["main_frame"]
+        }
+    );
+
     chrome.runtime.onMessage.addListener(function(request, cb) {
         if (request.messageLocation === "setup") {
             _this[request.method].call(_this, request, cb);
