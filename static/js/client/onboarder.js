@@ -259,9 +259,12 @@ Onboarder.prototype.getMessage = function() {
 }
 
 Onboarder.prototype.addOverlay = function() {
-    var _this = this,
+    var _this = this;
+    var $overlay = $('#'+this.OVERLAY_ID);
+    if (!$overlay.length) {
         $overlay = $('<div id="' + this.OVERLAY_ID + '"></div>');
-    $('body').append($overlay);
+        $('body').append($overlay);
+    }
     this.bind('onboarding.dismissed widget.dismissed', function() {
         $overlay.remove();
     });
