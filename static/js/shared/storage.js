@@ -396,7 +396,7 @@ StorageBase.prototype.set = function(items, cb) {
     $.when(this.ready).then(function() {
         _.merge(_this.data, items);
         if (_this.isBackgroundPage) {
-            if (typeof cb === "function") chrome.storage.local.set(_this.data, cb);
+            chrome.storage.local.set(_this.data, cb);
         } else {
             console.log("Proxying set in foreground page");
             chrome.runtime.sendMessage({

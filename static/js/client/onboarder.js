@@ -37,7 +37,7 @@ Onboarder.prototype.init = function(data) {
 
     if (this.siteData.forceTutorial) {
         this.dismissed = false;
-        this.storage.setOnboardingKey("dismissed", false);
+        this.storage.setOnboardingKey("dismissed", false, function() {});
         this.forceTutorial = true;
         this.siteData = this.storage.siteOnboardingDefaults;
         this.commitSiteData();
@@ -277,6 +277,7 @@ Onboarder.prototype.addOverlay = function() {
 
 Onboarder.prototype.commitSiteData = function(cb) {
     this.siteData.updatedAt = new Date().getTime();
+    cb = cb || function() {};
     this.storage.setOnboardingSiteData(this.siteKey, this.siteData, cb);
 }
 
