@@ -5687,3 +5687,25 @@ body {
   padding: 0; }
   #waltz #emailModal form .mc-field-group {
     width: 100%; }
+
+.powered-by {
+  text-align: center;
+}
+  .powered-by h4 {
+    display: inline;
+    color: #6f6f6f;
+  }
+  .powered-by ul {
+    list-style-type: none;
+    padding: 0;
+    display: inline;
+  }
+    .powered-by ul li {
+      display: inline;
+      margin-right: 5px;
+    }
+      .powered-by ul li img {
+        height: 50px;
+        position: relative;
+        top: -5px;
+      }
