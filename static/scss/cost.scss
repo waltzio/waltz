@@ -1,0 +1,209 @@
+@import "_settings";
+@import "../foundation/scss/foundation";
+@import "_header";
+@import "_button";
+@import "_animations";
+@import "_barsy";
+
+
+#cost {
+
+    .header {
+        margin: 30px auto 0 auto;
+    }
+
+    .category {
+        padding-top: 50px;
+        margin: 20px auto;
+        .label-container {
+            h3, h4 {
+                margin: 0;
+            }
+            h4 {
+                font-size: 16px;
+            }
+        }
+        .slider-container {
+            margin-top: 30px;
+            .slider {
+                background: $red;
+                position: relative;
+                border: none;
+                border-radius: 0;
+                &:before, &:after {
+                    width: 15px;
+                    height: 50px;
+                    margin-top: -25px;
+                    content: " ";
+                    position: absolute;
+                    top: 50%;
+                    right: 100%;
+                    background: inherit;
+                }
+
+                &:after {
+                    left: 100%;
+                }
+
+                .ui-slider-handle {
+                    $size: 28px;
+                    background: inherit;
+                    border: none;
+                    height: $size;
+                    width: $size;
+                    border-radius: $size / 2;
+                    cursor: pointer;
+                    margin-top: -2px;
+                    &:after {
+                        $circle-size: $size / 2;
+                        content: " ";
+                        width: $circle-size;
+                        height: $circle-size;
+                        border-radius: $circle-size / 2;
+                        background: white;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        margin-left: -$circle-size /2;
+                        margin-top: -$circle-size /2;
+                    }
+                    &.ui-state-active, &.ui-state-focus, &.ui-state-hover {
+                        outline: none;
+                    }
+
+                }
+
+                .count-display {
+                    $height: 30px;
+                    position: absolute;
+                    top: -$height - 30;
+                    left: 33.3333333%;
+                    background: inherit;
+                    width: 50px;
+                    height: $height;
+                    line-height: $height;
+                    color: white;
+                    text-align: center;
+                    margin-left: -25px;
+                    &:after {
+                        top: 100%;
+                        left: 50%;
+                        border: solid transparent;
+                        content: " ";
+                        height: 0;
+                        width: 0;
+                        position: absolute;
+                        pointer-events: none;
+                        border-color: rgba(212, 56, 75, 0);
+                        border-top-color: $red;
+                        border-width: 10px;
+                        margin-left: -10px;
+                    }
+                }
+            }
+        }
+
+        &.corporate {
+            h3, h4 {
+                color: $red;
+            }
+        }
+
+        &.banking {
+            h3, h4 {
+                color: $blue;
+            }
+            .slider {
+                background: $blue;
+                .count-display {
+                    &:after {
+                        border-top-color: $blue;
+                    }
+                }
+            }
+        }
+
+        &.personal {
+            h3, h4 {
+                color: $green;
+            }
+            .slider {
+                background: $green;
+                .count-display {
+                    &:after {
+                        border-top-color: $green;
+                    }
+                }
+            }
+        }
+
+        &.other {
+            h3, h4 {
+                color: $purple;
+            }
+            .slider {
+                background: $purple;
+                .count-display {
+                    &:after {
+                        border-top-color: $purple;
+                    }
+                }
+            }
+        }
+    }
+
+    .total-container {
+        margin: 70px auto 0 auto;
+        background: black;
+        h1 {
+            color: white;
+            font-size: 20px;
+        }
+        .total {
+            font-size: 100px;
+            margin-left: 10px;
+            color: $red;
+        }
+    }
+
+    .share-container {
+        background: $green;
+        h3 {
+            color: lighten($green, 40%);
+        }
+        .t-container {
+            position: relative;
+            top: 2px;
+            margin-left: 40px;
+        }
+        .fb-container {
+            position: relative;
+            top: -7px;
+            margin-left: 0px;
+        }
+    }
+
+    .waltz {
+        padding: 20px;
+        background: $blue;
+        margin-bottom: 50px;
+        img {
+            margin-top: 5px;
+        }
+        h1, h2, h3 {
+            margin: 0;
+            color: white;
+        }
+        .button {
+            margin-top: 30px;
+            width: 100%;
+        }
+    }
+
+    .sources {
+        a {
+            color: #444;
+        }
+    }
+
+}

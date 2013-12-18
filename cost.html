@@ -1,9 +1,166 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Password cost</title>
+    <title>How much are your passwords worth?</title>
+    <link rel="stylesheet" href="/static/css/cost.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="/static/css/foundation-icons.css"> 
 </head>
 <body>
-    <img src="/static/img/password_cost.png" alt="">
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1383429211907692";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <div class="container" id="cost">
+
+        <div class="row share-container">
+            <div class="small-12 columns">
+                <h3 class="text-right">Share how much your passwords are worth <span class="t-container"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://getwaltz.com/cost" data-text="How much are your passwords worth? Find out at " data-via="getwaltz" data-related="getwaltz">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></span><span class="fb-container"><div class="fb-share-button" data-href="http://getwaltz.com/cost" data-type="button_count"></div></span></h3>
+            </div>
+        </div>
+        <div class="row header">
+            <div class="small-12 columns">
+                <h1>How much are your passwords worth?</h1>
+                <h5 class="subheader">As hacking becomes more prevalent, your passwords are becoming
+more and more valuable. How much are yours worth? Pick how many
+passwords you have from each category to find out.</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-12 columns category corporate">
+                <div class="small-6 columns label-container">
+                    <h3>Corporate passwords</h3>
+                    <h4 class="subheader">(# of accounts you log in to for work)</h4>
+                </div>
+                <div class="small-6 columns slider-container">
+                   <div class="slider" data-category="corporate">
+                       <div class="segment zero"></div>
+                       <div class="segment five"></div>
+                       <div class="segment ten"></div>
+                       <div class="segment fifteen"></div>
+                       <div class="segment twenty"></div>
+                       <div class="segment twenty-five"></div>
+                       <div class="segment thirty"></div>
+
+                       <div class="count-display">10</div>
+                   </div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-12 columns category banking">
+                <div class="small-6 columns label-container">
+                    <h3>Financial passwords</h3>
+                    <h4 class="subheader">(accounts for credit cards, online banking, etc)</h4>
+                </div>
+                <div class="small-6 columns slider-container">
+                   <div class="slider" data-category="banking">
+                       <div class="segment zero"></div>
+                       <div class="segment five"></div>
+                       <div class="segment ten"></div>
+                       <div class="segment fifteen"></div>
+                       <div class="segment twenty"></div>
+                       <div class="segment twenty-five"></div>
+                       <div class="segment thirty"></div>
+
+                       <div class="count-display">10</div>
+                   </div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-12 columns category personal">
+                <div class="small-6 columns label-container">
+                    <h3>Personal passwords</h3>
+                    <h4 class="subheader">(accounts for social networks, games, etc)</h4>
+                </div>
+                <div class="small-6 columns slider-container">
+                   <div class="slider" data-category="personal">
+                       <div class="segment zero"></div>
+                       <div class="segment five"></div>
+                       <div class="segment ten"></div>
+                       <div class="segment fifteen"></div>
+                       <div class="segment twenty"></div>
+                       <div class="segment twenty-five"></div>
+                       <div class="segment thirty"></div>
+
+                       <div class="count-display">10</div>
+                   </div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-12 columns category other">
+                <div class="small-6 columns label-container">
+                    <h3>Other passwords</h3>
+                    <h4 class="subheader">(everything else)</h4>
+                </div>
+                <div class="small-6 columns slider-container">
+                   <div class="slider" data-category="other">
+                       <div class="segment zero"></div>
+                       <div class="segment five"></div>
+                       <div class="segment ten"></div>
+                       <div class="segment fifteen"></div>
+                       <div class="segment twenty"></div>
+                       <div class="segment twenty-five"></div>
+                       <div class="segment thirty"></div>
+
+                       <div class="count-display">10</div>
+                   </div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="row total-container">
+            <div class="small-12 columns">
+               <h1 class="text-right">your passwords are worth more than <span class="total">$4,700</span></h1> 
+            </div>
+        </div>
+
+        <div class="row share-container">
+            <div class="small-12 columns">
+                <h3 class="text-right">Share how much your passwords are worth <span class="t-container"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://getwaltz.com/cost" data-text="How much are your passwords worth? Find out at " data-via="getwaltz" data-related="getwaltz">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></span><span class="fb-container"><div class="fb-share-button" data-href="http://getwaltz.com/cost" data-type="button_count"></div></span></h3>
+            </div>
+        </div>
+
+        <div class="row waltz">
+
+            <div class="small-7 columns">
+                <h1>Stop using passwords</h1>
+                <h3>There's a better way to log in.</h3>
+            </div>            
+            <div class="small-3 columns">
+                <a href="http://getwaltz.com" class="button pink">Try Waltz Now</a>
+            </div>
+            <div class="small-2 columns">
+                <img src="/static/img/waltz-full.png" alt="Waltz">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-12 columns text-center">
+                <h4 class="subheader">learn more at <a href="http://getwaltz.com">getwaltz.com</a></h4>
+                <h6 class="subheader sources">Sources: <a href="http://www.secureworks.com/resources/blog/the-underground-hacking-economy-is-alive-and-well/">secureworks.com</a>, <a href="http://www.informationweek.com/traffic-management/cybercrime-costs-skyrocket/d/d-id/1111861?).">informationweek.com</a>, <a href="http://resources.infosecinstitute.com/cybercrime-and-the-underground-market/">infosecinstitute.com</a></h6>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.transit.js"></script>
+    <script type="text/javascript" src="/static/foundation/js/foundation.min.js"></script>
+    <script type="text/javascript" src="/static/js/cost.js"></script>
 </body>
 </html>
