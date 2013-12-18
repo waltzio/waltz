@@ -364,7 +364,7 @@ Delegate.prototype.forceTutorial = function(opts, cb) {
     this.logOutOfSite({
         key: siteKey
     }, function() {
-        _this.storage.setOnboardingSiteKey(siteKey, 'forceTutorial', true);
+        _this.storage.setOnboardingSiteKey(siteKey, 'forceTutorial', Date.now());
         if (typeof cb === "function") cb(true);
     });
 

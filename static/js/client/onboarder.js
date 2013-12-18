@@ -36,10 +36,11 @@ Onboarder.prototype.init = function(data) {
     }
 
     if (this.siteData.forceTutorial) {
+        if (Date.now() - parseInt(this.siteData.forceTutorial) > 2 * 60 * 1000) {
+            this.siteData.forceTutorial = null;
+        } 
         this.dismissed = false;
         this.storage.setOnboardingKey("dismissed", false, function() {});
-        this.forceTutorial = true;
-        this.siteData = this.storage.siteOnboardingDefaults;
         this.commitSiteData();
     }
 
@@ -49,7 +50,6 @@ Onboarder.prototype.init = function(data) {
 Onboarder.prototype.attachHandlers = function() {
     var _this = this;
 
-    this.bind('loggedIn', this.loggedIn);
     this.bind('login.success', this.loginSuccess);
     this.bind('login.failure', this.loginFailure);
     this.bind('show.widget', this.showWidget);
@@ -72,27 +72,6 @@ Onboarder.prototype.bind = function(eventName, cb) {
          });
     })
 }
-
-Onboarder.prototype.loggedIn = function() {
-    if (this.forceTutorial) {
-        var _this = this,
-            $message = this.getMessage();
-
-        $message.find('p').html("<b>Click me to logout and start setting up Clef!</b>");
-        $message.attr('class', 'bottom click');
-
-        $message.click(function() {
-            $message.off('click');
-            chrome.runtime.sendMessage({ 
-                method: "logOutOfSite", 
-                domain: _this.options.site.domain,
-                refresh: true
-            });
-        })
-
-        $message.slideDown();
-    }
-};
 
 Onboarder.prototype.loginSuccess = function() {
     var promise = $.Deferred();
@@ -124,7 +103,9 @@ Onboarder.prototype.loginSuccess = function() {
         })
 
         $message.fadeIn();
-    } else {
+    } else if (this.siteData.forceTutorial) {
+        this.siteData.forceTutorial = null;
+        this.commitSiteData();
         this.incrementInviteCount();
         var _this = this;
         promise.then(function() {
@@ -151,36 +132,38 @@ Onboarder.prototype.showWidget = function() {
         $message = this.getMessage(),
         text;
 
-    if (this.forceTutorial) {
+    if (_this.siteData.forceTutorial) {
         this.addOverlay();
-    }
 
-    if (_this.siteData.loginAttempts.success === 0) {
-        // first time setting up Waltz
-        text = "Click this to set up Waltz for " + _this.options.site.config.name;
-    } else if (_this.siteData.loginAttempts.success === 1) {
-        // second time after they logged out with their phone in
-        // the tutorial
-        text = "Click this button to log in from now on!";
-    } else {
-        // every other time when they come from the tutorial
-        text = "Click this button to log in!";
-    }
+        if (_this.siteData.loginAttempts.success === 0) {
+            // first time setting up Waltz
+            text = "Click this to set up Waltz for " + _this.options.site.config.name;
+        } else if (_this.siteData.loginAttempts.success === 1) {
+            // second time after they logged out with their phone in
+            // the tutorial
+            text = "Click this button to log in from now on!";
+        } else {
+            // every other time when they come from the tutorial
+            text = "Click this button to log in!";
+        }
 
-    onFinishedTransitioning($widget, "right", function() {
+        onFinishedTransitioning($widget, "right", function() {
 
-        $message.find('p').text(text);
+            $message.find('p').text(text);
 
-        $message.attr('class', 'right-arrow floating fixed');
-        $message.attr('style', '');
+            $message.attr('class', 'right-arrow floating fixed');
+            $message.attr('style', '');
 
-        $message.css({
-            right: parseInt($widget.css('right')) + $widget.width() + _this.MESSAGE_OFFSET,
-            top: parseInt($widget.css('top')) + $widget.height() / 2 - 20
+            $message.css({
+                right: parseInt($widget.css('right')) + $widget.width() + _this.MESSAGE_OFFSET,
+                top: parseInt($widget.css('top')) + $widget.height() / 2 - 20
+            });
+
+            $message.fadeIn();
         });
+    }
 
-        $message.fadeIn();
-    })
+    
 }
 
 Onboarder.prototype.showCredentialOverlay = function() {
