@@ -52,7 +52,7 @@ Popup.prototype.render = function() {
 
     $sharers.filter('.facebook').data('link', this.settings.longInviteLink);
 
-    $('.share-link').attr('href', this.settings.inviteLink).text(this.settings.inviteLink);
+    $('.share-link').text(this.settings.inviteLink);
 }
 
 var popup = new Popup();

@@ -50,6 +50,11 @@ Waiter.prototype.render = function() {
     if (this.settings.activated) {
         $(this.waitingContainerSelector).hide();
         $(this.startContainerSelector).show();
+    } else {
+        chrome.runtime.sendMessage({
+            messageLocation: 'setup',
+            method: 'checkWaitlistStatus'
+        })
     }
 }
 
