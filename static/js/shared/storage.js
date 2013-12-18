@@ -366,11 +366,6 @@ function StorageBase() {
     });
 
     chrome.runtime.onMessage.addListener(this.proxyClient.bind(this));
-    console.log("Registered proxy listener.");
-
-    // chrome.storage.onChanged.addListener(function(data) {
-    //     _this.data = data;
-    // });
 }
 
 StorageBase.prototype.proxyClient = function(request, sender, sendResponse) {
@@ -381,7 +376,6 @@ StorageBase.prototype.proxyClient = function(request, sender, sendResponse) {
 
 
     if (this.isBackgroundPage) {
-        console.log("Proxying in background page.");
         if (request.method === 'get') {
             return this.get(request.key, sendResponse)
         }
@@ -398,7 +392,7 @@ StorageBase.prototype.set = function(items, cb) {
         if (_this.isBackgroundPage) {
             chrome.storage.local.set(_this.data, cb);
         } else {
-            console.log("Proxying set in foreground page");
+            if (!cb) cb = function() {};
             chrome.runtime.sendMessage({
                 method: "set",
                 items: items,
@@ -419,7 +413,6 @@ StorageBase.prototype.get = function(key, cb) {
             }
             if (typeof cb === "function") cb(_this.data);
         } else {
-            console.log("Proxying get in foreground page");
             chrome.runtime.sendMessage({
                 method: "get",
                 key: key,
