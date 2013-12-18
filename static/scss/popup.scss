@@ -7,14 +7,42 @@ html, body {
 }
 
 #waltz-popup {
+    margin-top: 15px;
     border: none;
+    padding: 10px;
+    padding-bottom: 0px;
     ul {
         list-style: none;
         margin: 0;
     }
 
-    a {
+    .share-container {
+        .invite-message, .share-message {
+            display: none;
+        }
+        li {
+            padding-bottom: 10px;
+        }
+        a.waltz-share {
+            text-align: center;
+            display: block;
+            width: 100%;
+            color: #AAA;
+            font-size: 30px;
+            &:hover {
+                color: #777;
+            }
+        }
 
+        a.share-link {
+            color: #AAA;
+            &:hover {
+                color: #777;
+            }
+        }
+    }
+
+    a {
         &.sites {
             @include popup-button(#0390DC);
         }
@@ -30,6 +58,11 @@ html, body {
         &.request {
             @include popup-button(#00B45C);
         }
+
+        &.b {
+            width: 100%;
+            margin: 15px 0;
+        }
     }
 
     .request-container {
@@ -39,7 +72,7 @@ html, body {
             padding: 5px;
         }
         width: 90%;
-        margin: auto;
+        margin: 0;
         a.request-twitter {
             @include popup-button($twitter-color);
         }

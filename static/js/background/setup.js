@@ -72,6 +72,7 @@ Setup.prototype.checkWaitlistStatus = function() {
         .success(function(data) {
             _this.settings.waiting = data.waiting;
             _this.settings.rank = data.rank + 1;
+            _this.settings.projectedSharingRank = data.projectedSharingRank + 1;
 
             chrome.runtime.sendMessage({
                 messageLocation: 'waiting',
@@ -121,8 +122,7 @@ Setup.prototype.registerOnWaitlist = function() {
         _this.settings.rank = data.rank + 1;
         _this.settings.referralLink = data.referralLink;
         _this.settings.inviteLink = data.inviteLink;
-
-        
+        _this.settings.projectedSharingRank = data.projectedSharingRank + 1;
 
         _this.storage.setPrivateSettings(
             _this.settings,

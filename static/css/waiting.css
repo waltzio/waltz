@@ -6637,6 +6637,9 @@ th.hide-for-touch {
 #waiting-page .waiting-container .rank-and-share-container h6 {
   margin-top: 7px;
 }
+#waiting-page .waiting-container .rank-and-share-container .rank-container {
+  margin-top: 30px;
+}
 #waiting-page .waiting-container .rank-and-share-container .rank-container .rank {
   opacity: 0;
   font-weight: 700;
@@ -6645,6 +6648,9 @@ th.hide-for-touch {
 }
 #waiting-page .waiting-container .rank-and-share-container .rank-container .rank.shown {
   opacity: 1;
+}
+#waiting-page .waiting-container .rank-and-share-container .share-container .button-container {
+  margin: 20px auto;
 }
 #waiting-page .waiting-container .rank-and-share-container .share-container a.twitter {
   box-shadow: 3px 3px 0 0 #1c77a9;

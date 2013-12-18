@@ -2,6 +2,7 @@ Waiter.prototype.emailContainerSelector = ".email-container";
 Waiter.prototype.emailSuccessContainerSelector = ".email-success-container";
 Waiter.prototype.emailFormSelector = "form";
 Waiter.prototype.rankSelector = ".rank";
+Waiter.prototype.futureRankSelector = ".share-once-rank";
 Waiter.prototype.referralLinkSelector =  ".referral-link";
 Waiter.prototype.dataReferralLinkSelector = ".waltz-share";
 Waiter.prototype.waitingContainerSelector = ".waiting-container";
@@ -12,12 +13,12 @@ function Waiter() {
     this.storage = new Storage();
 
     this.storage.getPrivateSettings(this.init.bind(this));
-
 }
 
 Waiter.prototype.init = function(opts) {
-
     this.settings = opts;
+    this.settings.rank = this.settings.rank || 1;
+
     this.sharer = new Sharer();
 
     this.render();
@@ -29,6 +30,7 @@ Waiter.prototype.render = function() {
     $(this.rankSelector).text(this.settings.rank).addClass('shown');
     $(this.referralLinkSelector).text(this.settings.referralLink).addClass('shown');
     $(this.dataReferralLinkSelector).attr('data-link', this.settings.referralLink);
+    $(this.futureRankSelector).text(this.calculateMovement());
 
     if (!this.settings.hasEmail) {
         $(this.emailContainerSelector).show();
@@ -94,6 +96,7 @@ Waiter.prototype.refresh = function(data, cb) {
         var rank = settings.rank;
         if (rank === null) rank = 0;
         $(_this.rankSelector).text(rank);
+        $(_this.futureRankSelector).text(_this.calculateMovement());
 
         if (!_this.settings.waiting) {
             _this.start();
@@ -106,6 +109,14 @@ Waiter.prototype.start = function() {
     $(this.waitingContainerSelector).fadeOut(function() {
         $(_this.startContainerSelector).fadeIn();
     });
+}
+
+Waiter.prototype.calculateMovement = function() {
+    var rank = this.settings.rank || 1;
+    var projectedSharingRank = this.settings.projectedSharingRank || 1;
+
+    
+    return rank - projectedSharingRank;
 }
 
 var waiter = new Waiter();

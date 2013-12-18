@@ -6534,11 +6534,36 @@ html, body {
 }
 
 #waltz-popup {
+  margin-top: 15px;
   border: none;
+  padding: 10px;
+  padding-bottom: 0px;
 }
 #waltz-popup ul {
   list-style: none;
   margin: 0;
+}
+#waltz-popup .share-container .invite-message, #waltz-popup .share-container .share-message {
+  display: none;
+}
+#waltz-popup .share-container li {
+  padding-bottom: 10px;
+}
+#waltz-popup .share-container a.waltz-share {
+  text-align: center;
+  display: block;
+  width: 100%;
+  color: #AAA;
+  font-size: 30px;
+}
+#waltz-popup .share-container a.waltz-share:hover {
+  color: #777;
+}
+#waltz-popup .share-container a.share-link {
+  color: #AAA;
+}
+#waltz-popup .share-container a.share-link:hover {
+  color: #777;
 }
 #waltz-popup a.sites {
   box-shadow: 3px 3px 0 0 #026faa;
@@ -6720,10 +6745,14 @@ html, body {
   font-size: 45px;
   text-align: center;
 }
+#waltz-popup a.b {
+  width: 100%;
+  margin: 15px 0;
+}
 #waltz-popup .request-container {
   display: none;
   width: 90%;
-  margin: auto;
+  margin: 0;
 }
 #waltz-popup .request-container .columns {
   padding: 5px;

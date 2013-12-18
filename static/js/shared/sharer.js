@@ -4,17 +4,21 @@
     Sharer.prototype.shareSelector = ".waltz-share";
 
     Sharer.prototype.messages = {
-        setupSuccess: {
+        // the default
+        def: {
             twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>",
             facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out. <%= link %>"
         },
         waitlist: {
             twitter: "I found something to get rid of my passwords! 8,000 people are in line, but we get in early if you join me: <%= link %>!",
-            facebook: "I found something to get rid of my passwords! 8,000 people are in line for access, but we get in early if you join me!",
-            email: "test"
+            facebook: "I found something to get rid of my passwords! 8,000 people are in line for access, but we get in early if you join me!"
         },
         requestSite: {
             twitter: "Hey @getwaltz, I'd love to get rid of my passwords on <%= site %>. Can you help?"
+        },
+        invite: {
+            twitter: "There are <%= waitListCount %> number of people in line to use Waltz, but the first <%= inviteCount %> people to click this link can skip the line and use Waltz now! <%= link %>",
+            facebook: "There are <%= waitListCount %> number of people in line to use Waltz, but the first <%= inviteCount %> people to click this link can skip the line and use Waltz now! <%= link %>"
         }
     };
 
@@ -45,7 +49,7 @@
 
         if ($el.hasClass('facebook') || data.type === "facebook") {
             type = "facebook";
-        } else if ($el.hasClass('email') || data.type) {
+        } else if ($el.hasClass('email') || data.type === "email") {
             type = "email";
             name = "email-" + data.shareType;
         }
@@ -53,10 +57,12 @@
         _.defaults(data, this.shareDefaults);
         data.link = data.link || this.waltzLink;
 
+        html = (this.messages[data.shareType] || this.messages.def)[type];
+
         this.templater.template({
-            name: name,
+            named: name,
             context: data,
-            html: this.messages[data.shareType][type]
+            html: html
         }, function(message) {
             data.message = encodeURIComponent(message);
             _this[type](data);
@@ -93,7 +99,9 @@
     }
 
     Sharer.prototype.email = function(opts) {
-        var url = "mailto:?subject=" + opts.subject;
+        var url = "mailto:";
+        url = Utils.addURLParam(url, "subject", opts.subject);
+        url = Utils.addURLParam(url, "body", opts.message);
 
         this.open(url);
     }

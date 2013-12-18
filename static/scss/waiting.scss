@@ -29,6 +29,7 @@
                 margin-top: 7px;
             }
             .rank-container {
+                margin-top: 30px;
                 .rank {
                     opacity: 0;
                     font-weight: 700;
@@ -41,6 +42,9 @@
             }
 
             .share-container {
+                .button-container {
+                    margin: 20px auto;
+                }
 
                 a.twitter {
                     @include popup-button($twitter-color);
