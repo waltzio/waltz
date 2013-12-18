@@ -143,6 +143,7 @@ Setup.prototype.checkWaitlistStatus = function() {
                 });
 
                 if (!_this.settings.waiting) {
+                    _this.showReadyNotification();
                     _this.analytics.trackEvent('leave_waitlist', { waitlistID: _this.settings.waitlistID });
                     return _this.activate();
                 } 
@@ -159,6 +160,7 @@ Setup.prototype.checkWaitlistStatus = function() {
                     });
 
                     if (!_this.settings.waiting) {
+                        _this.showReadyNotification();
                         _this.analytics.trackEvent('leave_waitlist', { waitlistID: _this.settings.waitlistID });
                         return _this.activate();
                     } 
@@ -290,6 +292,33 @@ Setup.prototype.highlightIcon = function() {
 
         setTimeout(interval, 500);
     })();
+}
+
+Setup.prototype.showReadyNotification = function() {
+    chrome.notifications.create(
+        "ready_notification", 
+        {
+            type: "basic",
+            title: "We're ready for you.",
+            message: "Click here to get started.",
+            iconUrl: "/static/img/waltz-48.png"
+        },
+        function() {}
+    );
+    var listener = function(tabId) {
+        if (tabId !== "ready_notification") return;
+        chrome.not
+        var url = chrome.extension.getURL('/html/waiting.html');
+        chrome.tabs.query({url: url}, function(result) {
+            result = result[0];
+            if (result) {
+                chrome.tabs.update(result.id, {active: true});
+            } else {
+                chrome.tabs.create({url: url, active: true})
+            }
+        });
+    };
+    chrome.notifications.onClicked.addListener(listener);
 }
 
 Setup.prototype.activate = function() {
