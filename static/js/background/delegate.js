@@ -522,7 +522,6 @@ Delegate.prototype.incrementInviteCount = function(request, cb) {
             { id: settings.waitlistID }
         ).success(function(data) {
             var inviteCount = data.invites;
-            chrome.browserAction.setBadgeText({ text: inviteCount.toString() });
             _this.storage.setPrivateSetting('inviteCount', inviteCount, function() {
                 _this.storage.setPrivateSetting('waitingListActive', data.waiting);
             });
