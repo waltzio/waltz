@@ -701,10 +701,12 @@
         var isTwoFactor = false;
         if (siteConfig.login.twoFactor) {
             $.map(siteConfig.login.twoFactor, function(twoFactor) {
-                var twoFactorUrl = new URL(twoFactor.url); 
+                var twoFactorUrl = new URL(twoFactor.url),
+                    twoFactorCheck = $(twoFactor.check); 
+
                 isTwoFactor |= 
                     (window.location.hostname === twoFactorUrl.hostname &&
-                     window.location.pathname === twoFactorUrl.pathname);
+                     window.location.pathname === twoFactorUrl.pathname) && twoFactorCheck.length > 0;
             });
         }
         if (isTwoFactor) {
