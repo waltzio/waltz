@@ -5581,7 +5581,7 @@ header {
       #cost .category .slider-container .slider .count-display {
         position: absolute;
         top: -60px;
-        left: 33.3333333%;
+        left: 10%;
         background: inherit;
         width: 50px;
         height: 30px;
