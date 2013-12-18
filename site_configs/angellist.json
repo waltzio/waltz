@@ -1,0 +1,18 @@
+{
+    "*://*.angel.co/*": {
+        "name": "AngelList",
+        "logout": {
+            "cookies": ["_starlists_session", "remember_user_token"]
+        },
+        "login": {
+            "urls": ["https://angel.co/login"],
+            "formURL": "https://angel.co/users/login",
+            "method": "POST",
+            "usernameField": "user[email]",
+            "passwordField": "user[password]",
+            "hasHiddenInputs": true,
+            "check": ".user_image, a:contains('Logout')"
+        }
+    }
+}
+
