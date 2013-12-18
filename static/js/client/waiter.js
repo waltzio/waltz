@@ -55,9 +55,15 @@ Waiter.prototype.attachHandlers = function() {
         e.preventDefault();
 
         var $form = $(e.currentTarget),
-            data = $form.serializeArray(),
-            finishedLoading = Utils.triggerLoading($form.find('button'), { promise: true });
+            data = $form.serializeArray();
 
+        var email = data[0].value;
+        if (!Utils.isEmail(email)) {
+            $('.error').show();
+            return;
+        }
+
+        var finishedLoading = Utils.triggerLoading($form.find('button'), { promise: true });
         data.push({name: 'id', value: _this.settings.waitlistID});
 
         $.post(
