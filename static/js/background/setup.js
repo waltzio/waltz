@@ -74,13 +74,10 @@ Setup.prototype.openTutorial = function() {
 }
 
 Setup.prototype.launchFromActivated = function() {
+    var _this = this;
     if (!this.settings.activated) return;
 
     chrome.notifications.clear(this.readyNotificationID, function() {});
-
-    $.post(Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteClear, 
-        {id: this.settings.waitlistID}
-    );
 
     this.pulsingStartBadge = false;
     chrome.browserAction.setBadgeText({ text: "" });
@@ -337,6 +334,12 @@ Setup.prototype.activate = function() {
     this.analytics.trackEvent('activated');
     var _this = this,
         activationDone = $.Deferred();
+
+    $.post(Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteClear, 
+        {id: this.settings.waitlistID}
+    ).done(function(data) {
+        _this.storage.setPrivateSetting('inviteCount', data.invites);
+    });
 
     _this.settings[_this.ACTIVATED_KEY] = true;
     _this.storage.setPrivateSettings(_this.settings, function() {
