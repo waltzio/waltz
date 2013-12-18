@@ -313,6 +313,7 @@ Storage.prototype.getOnboardingSiteData = function(siteKey, cb) {
             data[_this.ONBOARDING_SITES_KEY][siteKey] = {}
         }
         _.defaults(data[_this.ONBOARDING_SITES_KEY][siteKey], _this.siteOnboardingDefaults);
+        _this.setOnboardingData(data);
 
         var value = data[_this.ONBOARDING_SITES_KEY][siteKey]
         if (typeof cb === "function") cb(value);

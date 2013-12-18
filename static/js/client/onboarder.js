@@ -124,9 +124,8 @@ Onboarder.prototype.loginSuccess = function() {
         })
 
         $message.fadeIn();
-    } else if (this.secondSiteSetup()) {
-        this.incrementInviteCount();
     } else {
+        this.incrementInviteCount();
         var _this = this;
         promise.then(function() {
             chrome.runtime.sendMessage({
@@ -300,7 +299,7 @@ Onboarder.prototype.secondSiteSetup = function() {
 
 
 Onboarder.prototype.incrementInviteCount = function(key) {
-    chrome.sendMessage({
+    chrome.runtime.sendMessage({
         method: 'incrementInviteCount',
         key: this.siteKey
     }, function(data) {
