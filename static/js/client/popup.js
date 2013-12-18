@@ -1,3 +1,4 @@
+Popup.prototype.shareContainerSelector = '.share-container';
 Popup.prototype.shareMessageSelector = '.share-message';
 Popup.prototype.inviteMessageSelector = '.invite-message';
 Popup.prototype.inviteCountSelector = '.invite-count';
@@ -32,7 +33,8 @@ function Popup() {
 }
 
 Popup.prototype.render = function() {
-    var $sharers = $(this.sharer.shareSelector);
+    var $shareContainer = $(this.shareContainerSelector),
+        $sharers = $shareContainer.find(this.sharer.shareSelector);
 
     if (this.settings.waitingListActive && this.settings.inviteCount) {
         $(this.inviteCountSelector).text(this.settings.inviteCount)
