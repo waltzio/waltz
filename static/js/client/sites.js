@@ -48,7 +48,7 @@ Sites.prototype.init = function(data) {
             })
 
             _this.storage.getOnboardingSiteData(site.key, function(data) {
-                if (data.loginAttempts.success >= 1) {
+                if (data.loginAttempts && data.loginAttempts.success >= 1) {
                     $siteHTML.addClass('completed fi-check');
                 }
                 completed.push($siteHTML);
