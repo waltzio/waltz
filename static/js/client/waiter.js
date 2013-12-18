@@ -28,10 +28,14 @@ Waiter.prototype.init = function(opts) {
 
 Waiter.prototype.render = function() {
     $(this.rankSelector).text(this.settings.rank).addClass('shown');
-    $(this.referralLinkSelector).text(this.settings.referralLink).addClass('shown');
+    $(this.referralLinkSelector)
+        .text(this.settings.referralLink)
+        .attr('href', this.settings.referralLink)
+        .addClass('shown');
     $(this.dataReferralLinkSelector)
         .data('link', this.settings.referralLink)
         .data('waitListLength', this.settings.waitListLength);
+
     $(this.futureRankSelector).text(this.calculateMovement());
 
     if (!this.settings.hasEmail) {
