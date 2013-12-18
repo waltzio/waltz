@@ -19,7 +19,7 @@
                 },
                 { 
                     "url": "https://twitter.com/account/login_verification/sms",
-                    "check": "input[name]='token'"
+                    "check": "input[name='token']"
                 }
             ],
             "exclude": {
