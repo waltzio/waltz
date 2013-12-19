@@ -701,7 +701,7 @@
         var isTwoFactor = false;
         if (siteConfig.login.twoFactor) {
             $.map(siteConfig.login.twoFactor, function(twoFactor) {
-                var twoFactorUrl = new URL(twoFactor.url),
+                var twoFactorUrl = Utils.url(twoFactor.url),
                     twoFactorCheck = $(twoFactor.check); 
 
                 isTwoFactor |= 

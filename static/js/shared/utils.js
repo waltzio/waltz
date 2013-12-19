@@ -34,8 +34,8 @@ var Utils = {
         return match_pattern;
     },
     urlsAreEqual: function (urlString1, urlString2) {
-        var url1 = new URL(urlString1);
-        var url2 = new URL(urlString2);
+        var url1 = Utils.url(urlString1);
+        var url2 = Utils.url(urlString2);
 
         return url1.hostname === url2.hostname && 
                url1.pathname === url2.pathname;
@@ -144,6 +144,9 @@ var Utils = {
             inviteAdd: '/i/add',
             inviteClear: '/i/clear'
         }
+    },
+    url: function(urlString) {
+        return $('<a>', { href: urlString })[0];
     }
 }
 
