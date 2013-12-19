@@ -731,7 +731,7 @@
         var $message = Message.getMessage();
 
         var $widget = this.$widget;
-        var text = "<p>Waltz needs to set a cookie to log you in.</p><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> and add excpetions for <code>[*.]waltz.io</code> and <code>[*.]clef.io</code>.</p>";
+        var text = "<p>Waltz needs to set a cookie to log you in.</p><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> and add exceptions for <code>[*.]waltz.io</code> and <code>[*.]clef.io</code>.</p>";
 
         $message.find('p').html(text);
 
