@@ -1,0 +1,17 @@
+{
+    "*://*.wordpress.com/*": {
+        "name": "WordPress",
+        "logout": {
+            "cookies": ["wordpress_logged_in"]
+        },
+        "login": {
+            "urls": ["http://wordpress.com", "https://wordpress.com", "https://en.wordpress.com"],
+            "formURL": "https://en.wordpress.com/wp-login.php",
+            "method": "POST",
+            "usernameField": "log",
+            "passwordField": "pwd",
+            "hasHiddenInputs": true,
+            "check": "#wp-admin-bar-logout"
+        }
+    }
+}
