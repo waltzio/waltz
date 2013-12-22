@@ -6,9 +6,9 @@
         },
         "login": {
             "urls": [
-                "https://login.yahoo.com/config/login?.src=fpctx&.intl=us"
+                "https://login.yahoo.com/config/login"
             ],
-            "formURL": "https://login.yahoo.com/config/login?",
+            "formURL": "https://login.yahoo.com/config/login",
             "method": "POST",
             "usernameField": "login",
             "passwordField": "passwd",
