@@ -1,0 +1,25 @@
+{
+    "*://*.wikipedia.org/*": {
+        "name": "Wikipedia",
+        "logout": {
+            "cookies": [
+            	"centralauth_Session",
+            	"centralauth_User",
+            	"centralauth_LoggedOut"
+            ]
+        },
+        "login": {
+            "urls": ["https://en.wikipedia.org/w/index.php?title=Special:UserLogin&returnto=Main+Page"],
+            "formURL": "https://en.wikipedia.org/w/index.php?title=Special:UserLogin&action=submitlogin&type=login&returnto=Main+Page",
+            "method": "POST",
+            "usernameField": "wpName",
+            "passwordField": "wpPassword",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Log out')",
+            "exclude": {
+                "forcedRedirectURLs": ["http://www.wikipedia.org"],
+                "nextURLs": []
+            }
+        }
+    }
+}
