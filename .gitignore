@@ -1,2 +1,4 @@
 node_modules
 build
+
+static/js/background/delegate.js
