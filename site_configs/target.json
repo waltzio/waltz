@@ -1,0 +1,21 @@
+{
+    "*://*.target.com/*": {
+        "name": "Target",
+        "logout": {
+            "cookies": ["WC_SESSION_ESTABLISHED"]
+        },
+        "login": {
+            "urls": [
+                "http://www.target.com/",
+                "https://www-secure.target.com/EverestLoginView",
+                "https://www-secure.target.com/checkout_process"
+            ],
+            "formURL": "https://www-secure.target.com/EverestLoginoverlay",
+            "method": "POST",
+            "usernameField": "logonId",
+            "passwordField": "logonPassword",
+            "hasHiddenInputs": true,
+            "check": "#userWrapper.a:contains('sign out')" ********* is this valid?
+        }
+    }
+}
