@@ -577,6 +577,23 @@
             function submitForm(e) {
                 e.preventDefault();
 
+                var pass = true;
+
+                $usernameField.removeClass("error");
+                $passwordField.removeClass("error");
+
+                if($passwordField.val() === "" || $passwordField.val() === $passwordField.attr('placeholder')) {
+                	$passwordField.addClass("error");
+                	pass = false;
+                }
+
+                if($usernameField.val() === "" || $usernameField.val() === $usernameField.attr('placeholder')) {
+                	$usernameField.addClass("error");
+                	pass = false;
+                }
+
+                if(!pass) return false;
+
                 // remove handlers that bind this event, so we don't go
                 // into an infinite loop
                 $.merge($usernameField, $passwordField).off("keyup");
