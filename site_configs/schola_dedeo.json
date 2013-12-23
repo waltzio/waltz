@@ -1,0 +1,16 @@
+{
+    "*://schola.dedeo.org/*": {
+        "name": "Schola de Deo",
+        "logout": {
+            "cookies": ["MoodleSession"]
+        },
+        "login": {
+            "urls": ["https://schola.dedeo.org/login/index.php"],
+            "formURL": "https://schola.dedeo.org/login/index.php",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "check": "a:contains('Log out')"   
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "*://talk.runningwarehouse.com/*": {
+        "name": "Talk Running",
+        "logout": {
+            "cookies": ["bbsessionhash"]
+        },
+        "login": {
+            "urls": ["http://talk.runningwarehouse.com/"],
+            "formURL": "http://talk.runningwarehouse.com/index.phplogin.php?do=login",
+            "method": "POST",
+            "usernameField": "vb_login_username",
+            "passwordField": "vb_login_password",
+            "check": "a:contains('Log Out')"
+        }
+    }
+}

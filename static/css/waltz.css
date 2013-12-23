@@ -527,3 +527,7 @@
 #waltz-login-wrapper .waltz-button.waltz-dismiss:hover {
   background-color: #dd0005;
 }
+
+#waltz-credential-overlay input.error {
+  box-shadow: 0 0 5px #a81100;
+}

@@ -109,6 +109,11 @@
 
     Sharer.prototype.email = function(opts) {
         var url = "mailto:";
+
+        if(typeof(opts.to) === "string") {
+            url += opts.to;
+        }
+
         url = Utils.addURLParam(url, "subject", opts.subject);
         url = Utils.addURLParam(url, "body", opts.message);
 

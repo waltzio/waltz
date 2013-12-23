@@ -1,0 +1,16 @@
+{
+    "*://www.runningwarehouse.com/*": {
+        "name": "Running Warehouse",
+        "logout": {
+            "cookies": ["SMID"]
+        },
+        "login": {
+            "urls": ["https://www.runningwarehouse.com/loginaccount.html", "https://www.runningwarehouse.com/setupcustomer.html"],
+            "formURL": "https://www.runningwarehouse.com/loginaccount.html",
+            "method": "POST",
+            "usernameField": "login",
+            "passwordField": "pass",
+            "check": "input[type='submit'][value='Log out']"
+        }
+    }
+}
