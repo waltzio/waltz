@@ -181,9 +181,10 @@ Storage.prototype.setOptionsForDomain = function(domain, newOptions, cb) {
 }
 
 Storage.prototype.setOption = function(key, value, cb) {
+    var _this = this;
     this.getOptions(function(options) {
         options[key] = value;
-        chrome.storage.local.set({options: options}, cb);
+        _this.setOptions(options, cb);
     });
 }
 
