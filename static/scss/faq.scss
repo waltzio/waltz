@@ -1,0 +1,38 @@
+@import "_settings";
+@import "../foundation/scss/foundation";
+
+.hero {
+
+	h1 {
+		background-color: $blue;
+		padding: 20px;
+		color: white;
+	}
+}
+
+ul.questions {
+	list-style-type: none;
+	margin: 30px 0 50px 0;
+
+	li.question {
+
+		h3 {
+			padding-top: 20px;
+			font-size: 1.5em;
+
+			a {
+				color: black;
+			}
+		}
+
+		p {
+			color: #6f6f6f;
+			margin-bottom: 10px;
+
+			&.techy {
+				font-style: italic;
+			}
+		}
+	}
+
+}

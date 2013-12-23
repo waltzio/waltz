@@ -15,7 +15,8 @@ module.exports = function(grunt) {
             dist: {
                 files: {
                     'static/css/main.css': 'static/scss/main.scss',
-                    'static/css/cost.css': 'static/scss/cost.scss'
+                    'static/css/cost.css': 'static/scss/cost.scss',
+                    'static/css/faq.css': 'static/scss/faq.scss'
                 }
             }
         },
