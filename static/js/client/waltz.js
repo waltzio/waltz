@@ -294,7 +294,7 @@
             left: 0,
             border: 'none',
             display: 'none',
-            "z-index": 9995
+            "z-index": 9999990
         });
 
 		$("body").append($iframe);
