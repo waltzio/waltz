@@ -1,0 +1,21 @@
+{
+    "*://*.zotero.org/*": {
+        "name": "Zotero",
+        "logout": {
+            "cookies": ["zotero_www_session_v2", "zoteroUserInfo"]
+        },
+        "login": {
+            "urls": [
+                "https://www.zotero.org/user/login"
+            ],
+            "formURL": "https://www.zotero.org/user/login",
+            "formOnly": true,
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "submitButton": "button#login",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Log Out')"
+        }
+    }
+}
