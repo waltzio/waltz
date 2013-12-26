@@ -1,6 +1,7 @@
 {
     "*://*.prezi.com/*": {
         "name": "Prezi",
+        "match": "https?://(?!blog\\.)(?!beautifulbits\\.)([^.]+\\.)?prezi\\.com",
         "logout": {
             "cookies": ["prezi-auth", "auth-sessionid", "sessionid"]
         },
