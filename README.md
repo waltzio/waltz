@@ -81,7 +81,7 @@ Here is an example config that has *only* optional fields:
             "name": "Example.com",
             "login": {
                 "hasHiddenInputs": true,
-                "submitButtonValue": "login",
+                "submitButton": "input[value='login']",
                 "twoFactor": [
                     {
                         "url": "https://www.example.com/checkpoint/twoFactor",
