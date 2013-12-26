@@ -1,7 +1,7 @@
 {
     "*://*.github.com/*": {
         "name": "GitHub",
-        "match": "https?://(?!help\\.)(?!training\\.)(?!developer\\.)(?!shop\\.)([^.]+\\.)?github\\.com",
+        "match": "https?://(?!help\\.)(?!training\\.)(?!developer\\.)(?!shop\\.)(?!status\\.)([^.]+\\.)?github\\.com",
         "logout": {
             "cookies": ["user_session"]
         },
