@@ -1,6 +1,6 @@
 {
     "*://*.craigslist.org/*": {
-        "name": "Craig's List",
+        "name": "Craigslist",
         "logout": {
             "cookies": ["cl_session"]
         },
