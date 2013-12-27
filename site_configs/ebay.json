@@ -1,0 +1,29 @@
+{
+    "*://*.ebay.com/*": {
+        "name": "Ebay",
+        "logout": {
+            "cookies": ["cid", "dp1"]
+        },
+        "login": {
+            "urls": [
+                "https://signin.ebay.com/ws/eBayISAPI.dll?SignIn"
+            ],
+            "formURL": "https://signin.ebay.com/ws/eBayISAPI.dll?co_partnerId=2&siteid=0&UsingSSL=1",
+            "method": "POST",
+            "usernameField": "userid",
+            "passwordField": "pass",
+            "hasHiddenInputs": true,
+            "check": "",
+            "twoFactor": [
+                {
+                    "url": "https://signin.ebay.com/ws/eBayISAPI.dll?co_partnerId=2&siteid=0&UsingSSL=1",
+                    "check": "input#otp1"
+                }
+            ],
+            "exclude": {
+                "forcedRedirectURLs" : ["http://www.ebay.com"],
+                "nextURLs": []
+            }
+        }
+    }
+}
