@@ -1,0 +1,20 @@
+{
+    "*://*.washingtonpost.com/*": {
+        "name": "The Washington Post",
+        "match": "https?://(?!findnsave\\.)([^.]+\\.)?washingtonpost\\.com",
+        "logout": {
+            "cookies": ["wapo_login_id", "wapo_secure_login_id", "wapo_sess_id"]
+        },
+        "login": {
+            "urls": [
+                "https://account.washingtonpost.com/actmgmt/registration/login-only"
+            ],
+            "formURL": "https://id.washingtonpost.com/identity/login/site",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "ul.signed-in, li.sign-out"
+        }
+    }
+}
