@@ -1,7 +1,6 @@
 {
     "*://*.nytimes.com/*": {
         "name": "New York Times",
-        "match": "https://myaccount\\.nytimes\\.com",
         "logout": {
             "cookies": ["NYT-S"]
         },
