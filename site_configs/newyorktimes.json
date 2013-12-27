@@ -9,7 +9,7 @@
             "urls": [
                 "https://myaccount.nytimes.com/auth/login"
             ],
-            "formURL": "https://myaccount.nytimes.com/auth/login?URI=http://",
+            "formURL": "https://myaccount.nytimes.com/auth/login",
             "method": "POST",
             "usernameField": "userid",
             "passwordField": "password",
