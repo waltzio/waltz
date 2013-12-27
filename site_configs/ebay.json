@@ -13,7 +13,7 @@
             "usernameField": "userid",
             "passwordField": "pass",
             "hasHiddenInputs": true,
-            "check": "",
+            "check": "a:contains('Sign out'), img[src='http://p.ebaystatic.com/aw/pics/s.gif']",
             "twoFactor": [
                 {
                     "url": "https://signin.ebay.com/ws/eBayISAPI.dll?co_partnerId=2&siteid=0&UsingSSL=1",
