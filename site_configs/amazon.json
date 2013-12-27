@@ -11,7 +11,7 @@
             "usernameField": "email",
             "passwordField": "password",
             "hasHiddenInputs": true,
-            "check": "a:contains('Sign Out')",
+            "check": "a:contains('Sign Out'), a#nav-your-account",
             "exclude": {
                 "forcedRedirectURLs" : ["http://www.amazon.com"],
                 "nextURLs": []
