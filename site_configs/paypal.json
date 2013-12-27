@@ -1,0 +1,25 @@
+{
+    "*://*.paypal.com/*": {
+        "name": "PayPal",
+        "logout": {
+            "cookies": [""]
+        },
+        "login": {
+            "urls": [
+                "https://www.paypal.com/"
+            ],
+            "formURL": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
+            "method": "POST",
+            "usernameField": "login_email",
+            "passwordField": "login_password",
+            "hasHiddenInputs": true,
+            "check": "li.logout",
+            "twoFactor": [
+                {
+                    "url": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
+                    "check": "otp"
+                }
+            ]
+        }
+    }
+}
