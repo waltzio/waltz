@@ -5,12 +5,11 @@
             "cookies": ["_session_id"]
         },
         "login": {
-            "urls": ["http://www.theverge.com/thisisnotreallyapage"],
+            "urls": ["http://www.theverge.com/"],
             "formURL": "http://www.theverge.com/chorus_auth/initiate_password_auth",
             "method": "POST",
             "usernameField": "username",
             "passwordField": "password",
-            "submitButton": "ThisIsNotARealSubmitButton",
             "check": "a[href='http://www.theverge.com/account/logout']"
         }
     }
