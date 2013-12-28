@@ -2,7 +2,7 @@
     "*://*.paypal.com/*": {
         "name": "PayPal",
         "logout": {
-            "cookies": [""]
+            "cookies": ["HaC80bwXscjqZ7KM6VOxULOB534"]
         },
         "login": {
             "urls": [
@@ -13,11 +13,11 @@
             "usernameField": "login_email",
             "passwordField": "login_password",
             "hasHiddenInputs": true,
-            "check": "li.logout",
+            "check": "li.logout, a:contains('Log Out')",
             "twoFactor": [
                 {
                     "url": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
-                    "check": "otp"
+                    "check": "input[name='otp']"
                 }
             ]
         }
