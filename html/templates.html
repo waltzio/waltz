@@ -108,9 +108,9 @@
             <p id="waltz-credential-alert"><%= errorMessage %></p>
             <% } %>
             <div class="label">your <%= name %> username</div>
-            <input type="text" placeholder="type your <%= name %> username" id="waltz-credential-username" value="<%= usernameValue %>" <% if (errorMessage) { %> class="error" <% } %>>
+            <input type="text" autocomplete="off" placeholder="type your <%= name %> username" id="waltz-credential-username" value="<%= usernameValue %>" <% if (errorMessage) { %> class="error" <% } %>>
             <div class="label">your <%= name %> password</div>
-            <input type="password" placeholder="type your <%= name %> password" id="waltz-credential-password" value="<%= passwordValue %>" <% if (errorMessage) { %> class="error" <% } %>>
+            <input type="password" autocomplete="off" placeholder="type your <%= name %> password" id="waltz-credential-password" value="<%= passwordValue %>" <% if (errorMessage) { %> class="error" <% } %>>
             <h2>Save your password once, Waltz will replace it forever.</h2>
             <input type="submit" id="waltz-credential-submit" value="Replace my password">
 
