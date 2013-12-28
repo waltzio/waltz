@@ -153,20 +153,8 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 	}
 
 	switch(request.method) {
-		case "saveCredentials":
-			return this.saveCredentials(request.key, request.username, request.password, sendResponse);
-			break;
 		case "deleteCredentials":
 			return this.deleteCredentials(request.key, sendResponse);
-			break;
-		case "getCredentials":
-			return this.getCredentials(request.key, sendResponse);
-			break;
-		case "decrypt":
-			return this.decrypt(request.value, request.key, sendResponse);
-			break;
-		case "checkAuthentication":
-			return this.checkAuthentication(sendResponse);
 			break;
 		case "getHost":
 			return sendResponse(this.options.cy_url);
@@ -371,14 +359,8 @@ Delegate.prototype.forceTutorial = function(opts, cb) {
     return true;
 };
 
-Delegate.prototype.saveCredentials = function(key, username, password, cb) {
-    var _this = this;
-	this.crypto.encrypt(password, key, function(encrypted) {
-		_this.storage.setCredentialsForDomain(key, username, encrypted.output, function() {
-			cb(true);
-		});
-	});
-
+Delegate.prototype.saveCredentials = function(request, cb) {
+	this.crypto.encrypt(request, cb);
 	return true;
 }
 
@@ -402,7 +384,8 @@ Delegate.prototype.proxyRequest = function(request, cb) {
 	return true;
 }
 
-Delegate.prototype.checkAuthentication = function(cb) {
+Delegate.prototype.checkAuthentication = function(request, cb) {
+    if (typeof request === "function" && !cb) cb = request;
 	var _this = this;
 
 	$.ajax({
