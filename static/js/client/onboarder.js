@@ -244,6 +244,8 @@ Onboarder.prototype.showWidget = function() {
 }
 
 Onboarder.prototype.showCredentialOverlay = function() {
+    if (!this.siteData.forceTutorial) return;
+
     var _this = this,
         $credentialForm = $('#' + this.waltz.CREDENTIAL_FORM_ID),
         $message = this.getMessage(),
@@ -385,5 +387,5 @@ function onFinishedTransitioning(el, style, cb) {
         } else {
             cb();
         }
-    }, 50);
+    }, 200);
 }

@@ -294,7 +294,7 @@
             left: 0,
             border: 'none',
             display: 'none',
-            "z-index": 9995
+            "z-index": 9999990
         });
 
 		$("body").append($iframe);
@@ -387,7 +387,11 @@
         }
 
         // We are on the login page!
-        if ($login.length > 0 && $password.length > 0) {
+        if ($login.length > 0 && 
+            $password.length > 0 && 
+            _.any($login, function(v) { $(v).is(':visible')}) &&
+            _.any($login, function(v) { $(v).is(':visible')})
+        ) {
 			var $newLogin = $login.clone(),
 				$newPassword = $password.clone();
 
@@ -577,6 +581,23 @@
             function submitForm(e) {
                 e.preventDefault();
 
+                var pass = true;
+
+                $usernameField.removeClass("error");
+                $passwordField.removeClass("error");
+
+                if($passwordField.val() === "" || $passwordField.val() === $passwordField.attr('placeholder')) {
+                	$passwordField.addClass("error");
+                	pass = false;
+                }
+
+                if($usernameField.val() === "" || $usernameField.val() === $usernameField.attr('placeholder')) {
+                	$usernameField.addClass("error");
+                	pass = false;
+                }
+
+                if(!pass) return false;
+
                 // remove handlers that bind this event, so we don't go
                 // into an infinite loop
                 $.merge($usernameField, $passwordField).off("keyup");
@@ -731,7 +752,7 @@
         var $message = Message.getMessage();
 
         var $widget = this.$widget;
-        var text = "<p>Waltz needs to set a cookie to log you in.</p><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> and add excpetions for <code>[*.]waltz.io</code> and <code>[*.]clef.io</code>.</p>";
+        var text = "<p>Waltz needs to set a cookie to log you in.</p><p>To enable cookies for Waltz, follow <a target='_blank' href='https://support.google.com/chrome/answer/3123708?hl=en'>these instructions</a> and add exceptions for <code>[*.]waltz.io</code> and <code>[*.]clef.io</code>.</p>";
 
         $message.find('p').html(text);
 

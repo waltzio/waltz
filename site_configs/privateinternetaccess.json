@@ -1,0 +1,17 @@
+{
+    "https://www.privateinternetaccess.com/*": {
+        "name": "Private Internet Access",
+        "logout": {
+            "cookies": ["_pia_session"]
+        },
+        "login": {
+            "urls": ["https://www.privateinternetaccess.com/pages/client-support/"],
+            "formURL": "https://www.privateinternetaccess.com/pages/ccp-sign-in",
+            "formOnly": true,
+            "method": "POST",
+            "usernameField": "user",
+            "passwordField": "pass",
+            "check": "a:contains('Sign out')"
+        }
+    }
+}

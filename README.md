@@ -79,9 +79,10 @@ Here is an example config that has *only* optional fields:
     {
         "*://*.example.com/*": { 
             "name": "Example.com",
+            "match": "https?://(?!blog\\.)([^.]+\\.)?example\\.com/",
             "login": {
                 "hasHiddenInputs": true,
-                "submitButtonValue": "login",
+                "submitButton": "input[value='login']",
                 "twoFactor": [
                     {
                         "url": "https://www.example.com/checkpoint/twoFactor",
@@ -98,7 +99,9 @@ Here is an example config that has *only* optional fields:
     }
 
 
-- `*://*.example.com/*` *object* 
+- `*://*.example.com/*` *object*
+    - `match` *string* — A RegExp string that should only match URLs that the Waltz button should appear on.  The [match
+pattern](http://developer.chrome.com/extensions/match_patterns.html) as the top-level key does not let you be specific enough to do things like exlude specific subdomains.  Use this RegExp to filter down to only the correct pages. 
     - `login` *object*
     
         - `hasHiddenInputs` *boolean* — specify `true` if the login form has hidden inputs. If `hasHiddenInputs` is

@@ -6,7 +6,7 @@
  *
 ********************/
 
-Delegate.prototype.DEBUG = false;
+Delegate.prototype.DEBUG = true;
 
 Delegate.prototype.options = {};
 Delegate.prototype.currentLogins = {};
@@ -560,7 +560,15 @@ Delegate.prototype.initialize = function(data, callback) {
 	if (this.includedDomainRegex.test(url)) {
 		var options;
 		for (site in this.siteConfigs) {
-			if (url.match(Utils.parse_match_pattern(site))) {
+            var matched;
+            if(typeof(this.siteConfigs[site].match) !== "undefined") {
+                var regex = new RegExp(this.siteConfigs[site].match);
+                matched = regex.test(url);
+            } else {
+                matched = url.match(Utils.parse_match_pattern(site));
+            }
+
+			if (matched) {
 				options = {
 					site: {
 						domain: site,

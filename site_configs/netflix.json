@@ -1,0 +1,18 @@
+{
+    "*://*.netflix.com/*": {
+        "name": "Netflix",
+        "logout": {
+            "cookies": ["NetflixId"]
+        },
+        "login": {
+            "urls": ["https://signup.netflix.com/"],
+            "formURL": "https://signup.netflix.com/Login",
+			"formOnly": true,
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Sign out of Netflix')"
+        }
+    }
+}
