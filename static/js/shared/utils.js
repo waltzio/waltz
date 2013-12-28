@@ -137,6 +137,9 @@ var Utils = {
     url: function(urlString) {
         return $('<a>', { href: urlString })[0];
     },
+    psuedoUniqueID: function() {
+        return Math.random().toString(36).substring(2, 16);
+    },
     settings: {
         waitlistHost: "http://share.getwaltz.com",
         waitlistPaths: {

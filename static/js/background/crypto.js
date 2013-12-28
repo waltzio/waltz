@@ -25,17 +25,19 @@ Crypto.prototype.encrypt = function(request, cb) {
 	var _this = this,
 		siteKey = request.key
 		username = request.username,
-		unencryptedPassword = request.password;
+		unencryptedPassword = request.password,
+		credentialID = Utils.psuedoUniqueID();
 
 	this.storage.getOptions(function(options) {
-		$.get(options.cy_url + _this.keyPath + siteKey)
+		$.get(options.cy_url + _this.keyPath + credentialID)
 		.done(function(data) {
 			var encryptedPassword = _this.encryptPassword(unencryptedPassword, data.key.key);
 			_this.storage.setCredentialsForDomain(
 				siteKey,
 				{
 					username: username,
-					password: encryptedPassword
+					password: encryptedPassword,
+					id: credentialID
 				},
 				cb
 			);
@@ -64,8 +66,10 @@ Crypto.prototype.decrypt = function(request, cb) {
 
 	$.when(this.storage.getOptions(), this.storage.getCredentialsForDomain(siteKey))
 	.then(function(options, credentials) {
-		var encryptedPassword = credentials.password;
-		$.get(options.cy_url + _this.keyPath + siteKey)
+		var keyID = credentials.id || siteKey,
+			encryptedPassword = credentials.password;
+
+		$.get(options.cy_url + _this.keyPath + keyID)
 		.done(function(data) {
 			var decryptedPassword = _this.decryptPassword(encryptedPassword, data.key.key);
 			var _ret = {
