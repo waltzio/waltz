@@ -5,9 +5,7 @@
             "cookies": ["HaC80bwXscjqZ7KM6VOxULOB534"]
         },
         "login": {
-            "urls": [
-                "https://www.paypal.com/"
-            ],
+            "urls": ["https://www.paypal.com/us/cgi-bin/webscr?cmd=_account"],
             "formURL": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
             "method": "POST",
             "usernameField": "login_email",
