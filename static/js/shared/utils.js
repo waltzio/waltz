@@ -134,6 +134,9 @@ var Utils = {
         var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         return regex.test(email);
     },
+    url: function(urlString) {
+        return $('<a>', { href: urlString })[0];
+    },
     settings: {
         waitlistHost: "http://share.getwaltz.com",
         waitlistPaths: {
@@ -144,9 +147,6 @@ var Utils = {
             inviteAdd: '/i/add',
             inviteClear: '/i/clear'
         }
-    },
-    url: function(urlString) {
-        return $('<a>', { href: urlString })[0];
     }
 }
 
