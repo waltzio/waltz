@@ -7,76 +7,88 @@
  *
 ********************/
 
+Crypto.prototype.keyPath= "/api/v0/keys/";
+
 function Crypto(options) {
 	this.storage = new Storage();
 }
 
-Crypto.prototype.encrypt = function(pre, identifier, cb) {
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function() {
-		if(xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				var keyInfo = JSON.parse(xhr.responseText);
-
-				var encrypted = CryptoJS.AES.encrypt(pre, keyInfo.key.key);
-				if(typeof(cb) === "function") {
-					cb({
-						error: null,
-						output: encrypted.toString()
-					});
-				}
-			} else if(xhr.status == 403) {
-				cb({
-					error: "authentication",
-					status: 403
-				});
-			} else {
-				cb({
-					error: "unknown",
-					status: xhr.status
-				});
-			}
-		}
-	}
-
-	this.storage.getOptions(function(options) {
-		xhr.open("GET", options.cy_url+"/api/v0/keys/"+encodeURIComponent(identifier), true);
-		xhr.send();
-	});
-
+Crypto.prototype.encryptPassword = function(password, key) {
+	return CryptoJS.AES.encrypt(password, key).toString();
 }
 
-Crypto.prototype.decrypt = function(pre, identifier, cb) {
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function() {
-		if(xhr.readyState == 4) {
-			if(xhr.status == 200) {
+Crypto.prototype.decryptPassword = function(encryptedPassword, key) {
+	return CryptoJS.AES.decrypt(encryptedPassword, key).toString(CryptoJS.enc.Utf8);
+}
 
-				var keyInfo = JSON.parse(xhr.responseText);
-
-				var decrypted = CryptoJS.AES.decrypt(pre, keyInfo.key.key);
-				if(typeof(cb) === "function") {
-					cb({
-						error: null,
-						output: decrypted.toString(CryptoJS.enc.Utf8)
-					});
-				}
-			} else if(xhr.status == 403) {
-				cb({
-					error: "authentication",
-					status: 403
-				});
-			} else {
-				cb({
-					error: "unknown",
-					status: xhr.status
-				});
-			}
-		}
-	}
+Crypto.prototype.encrypt = function(request, cb) {
+	var _this = this,
+		siteKey = request.key
+		username = request.username,
+		unencryptedPassword = request.password;
 
 	this.storage.getOptions(function(options) {
-		xhr.open("GET", options.cy_url+"/api/v0/keys/"+encodeURIComponent(identifier), true);
-		xhr.send();
+		$.get(options.cy_url + _this.keyPath + siteKey)
+		.done(function(data) {
+			var encryptedPassword = _this.encryptPassword(unencryptedPassword, data.key.key);
+			_this.storage.setCredentialsForDomain(
+				siteKey,
+				{
+					username: username,
+					password: encryptedPassword
+				},
+				cb
+			);
+		})
+		.error(function(data) {
+			var _ret;
+			if (data.status === 403) {
+				_ret = {
+					error: "authentication",
+					status: 403
+				};
+			} else {
+				_ret = {
+					error: data.statusText,
+					status: data.status
+				}
+			}
+			if (typeof cb === "function") cb(_ret);
+		});
+	});
+}
+
+Crypto.prototype.decrypt = function(request, cb) {
+	var _this = this,
+		siteKey = request.key;
+
+	$.when(this.storage.getOptions(), this.storage.getCredentialsForDomain(siteKey))
+	.then(function(options, credentials) {
+		var encryptedPassword = credentials.password;
+		$.get(options.cy_url + _this.keyPath + siteKey)
+		.done(function(data) {
+			var decryptedPassword = _this.decryptPassword(encryptedPassword, data.key.key);
+			var _ret = {
+				error: null,
+				password: decryptedPassword
+			};
+
+			if (typeof cb === "function") cb(_ret);
+		})
+		.error(function(data) {
+			var _ret;
+			if (data.status === 403) {
+				_ret = {
+					error: "authentication",
+					status: 403
+				};
+			} else {
+				_ret = {
+					error: data.statusText,
+					status: data.status
+				}
+			}
+			if (typeof cb === "function") cb(_ret);
+		});
 	});
 }

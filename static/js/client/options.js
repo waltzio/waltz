@@ -176,16 +176,14 @@ Options.prototype.attachCredentialsHandlers = function() {
 			var finishedLoading = Utils.triggerLoading($this, { promise: true });
 			chrome.runtime.sendMessage({
 				method: "decrypt",
-				key: key,
-				value: encryptedPassword
-
+				key: key
 			}, function(response) {
 				if(response.error) {
 					alert(response.error);
 					return false;
 				} 
 
-				$credential.find(_this.passwordInputSelector).val(response.output);
+				$credential.find(_this.passwordInputSelector).val(response.password);
 				$credential.find(_this.decryptedContainerSelector).slideDown();
 
 				finishedLoading.resolve();
