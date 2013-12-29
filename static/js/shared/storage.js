@@ -93,18 +93,19 @@ Storage.prototype.setCredentials = function(credentials, cb) {
 }
 
 Storage.prototype.getCredentialsForDomain = function(domain, cb) {
+    var promise = $.Deferred();
     this.getCredentials(function(credentials) {
-        cb(credentials[domain] || false);
+        var _ret = credentials[domain] || false;
+        if (typeof(cb) === "function") cb(_ret);
+        promise.resolve(_ret);
     });
+    return promise;
 }
 
-Storage.prototype.setCredentialsForDomain = function(domain, username, password, cb) {
+Storage.prototype.setCredentialsForDomain = function(domain, creds, cb) {
     var _this = this;
     this.getCredentials(function(credentials) {
-        credentials[domain] = {
-            username: username,
-            password: password
-        }
+        credentials[domain] = creds;
 
         _this.setCredentials(credentials, cb);
     });
