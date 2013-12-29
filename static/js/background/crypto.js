@@ -26,7 +26,7 @@ Crypto.prototype.encrypt = function(request, cb) {
 		siteKey = request.key
 		username = request.username,
 		unencryptedPassword = request.password,
-		credentialID = Utils.psuedoUniqueID();
+		credentialID = Utils.pseudoUniqueID();
 
 	this.storage.getOptions(function(options) {
 		$.get(options.cy_url + _this.keyPath + credentialID)
@@ -42,7 +42,7 @@ Crypto.prototype.encrypt = function(request, cb) {
 				cb
 			);
 		})
-		.error(function(data) {
+		.fail(function(data) {
 			var _ret;
 			if (data.status === 403) {
 				_ret = {
@@ -79,7 +79,7 @@ Crypto.prototype.decrypt = function(request, cb) {
 
 			if (typeof cb === "function") cb(_ret);
 		})
-		.error(function(data) {
+		.fail(function(data) {
 			var _ret;
 			if (data.status === 403) {
 				_ret = {

@@ -54,6 +54,15 @@ grunt.initConfig({
       src: 'site_configs',
       dest: 'build/site_configs.json'
     }
+  },
+  jasmine: {
+    waltz: {
+      src: 'static/**/*.js',
+      options: {
+        specs: 'test/spec/*Spec.js',
+        helpers: 'test/spec/*Helper.js'
+      }
+    }
   }
 });
 
@@ -99,5 +108,7 @@ grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-contrib-watch');
 grunt.loadNpmTasks('grunt-chrome-compile');
 grunt.loadNpmTasks('grunt-merge-json');
+grunt.loadNpmTasks('grunt-contrib-jasmine');
 
 grunt.registerTask('default', ['watch']);
+grunt.registerTask('test', ['jasmine:waltz']);

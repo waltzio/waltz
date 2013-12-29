@@ -364,11 +364,8 @@ Delegate.prototype.saveCredentials = function(request, cb) {
 	return true;
 }
 
-Delegate.prototype.decrypt = function(value, domain_key, cb) {
-	this.crypto.decrypt(value, domain_key, function(decrypted) {
-		cb(decrypted);
-	});
-
+Delegate.prototype.decrypt = function(request, cb) {
+	this.crypto.decrypt(request, cb);
 	return true;
 }
 
