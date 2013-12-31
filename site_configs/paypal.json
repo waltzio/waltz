@@ -1,7 +1,7 @@
 {
     "*://*.paypal.com/*": {
         "name": "PayPal",
-        "match": "https?://(?!shopping\\.)([^.]+\\.)?paypal(?!-community)\\.com",
+        "match": "https?://(?!shopping\\.)([^.]+\\.)?paypal\\.com",
         "logout": {
             "cookies": ["HaC80bwXscjqZ7KM6VOxULOB534"]
         },
