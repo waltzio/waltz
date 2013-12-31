@@ -1,0 +1,17 @@
+{
+    "*://*.codeschool.com/*": {
+        "name": "Code School",
+        "logout": {
+            "cookies": ["_codeschool_session"]
+        },
+        "login": {
+            "urls": ["https://www.codeschool.com/users/sign_in"],
+            "formURL": "https://www.codeschool.com/users/sign_in",
+            "method": "POST",
+            "usernameField": "user[login]",
+            "passwordField": "user[password]",
+            "hasHiddenInputs": true,
+            "check": "li[title='Sign Out']"
+        }
+    }
+}
