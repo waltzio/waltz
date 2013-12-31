@@ -103,6 +103,7 @@
   padding-bottom: 1px;
   -webkit-transition: .2s;
   position: relative;
+  color: black;
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 }
 #waltz-credential-form h1, #waltz-credential-form h2, #waltz-credential-form h3, #waltz-credential-form h4, #waltz-credential-form h5, #waltz-credential-form h6, #waltz-credential-form p, #waltz-first-share-form h1, #waltz-first-share-form h2, #waltz-first-share-form h3, #waltz-first-share-form h4, #waltz-first-share-form h5, #waltz-first-share-form h6, #waltz-first-share-form p {
@@ -117,6 +118,9 @@
 }
 #waltz-credential-form.slide-in, #waltz-first-share-form.slide-in {
   margin-top: 40px;
+}
+#waltz-credential-form *, #waltz-first-share-form * {
+  text-shadow: none;
 }
 #waltz-credential-form div.label, #waltz-first-share-form div.label {
   margin-top: 15px;
@@ -146,6 +150,7 @@
   margin-bottom: 15px;
   width: 85%;
   background: white;
+  color: black;
 }
 #waltz-credential-form #waltz-credential-username:active, #waltz-credential-form #waltz-credential-username:focus,
 #waltz-credential-form #waltz-credential-password:active,
