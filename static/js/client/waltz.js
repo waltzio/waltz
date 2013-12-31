@@ -249,13 +249,11 @@
 			chrome.runtime.sendMessage({
 				method: "decrypt",
 				key: this.options.site.config.key,
-				value: this.loginCredentials.password
-
 			}, function(response) {
 				if(typeof(cb) === "function") {
 					cb({
 						username: _this.loginCredentials.username,
-						password: response.output,
+						password: response.password,
 						error: response.error
 					});
 				}

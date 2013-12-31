@@ -1,0 +1,17 @@
+{
+    "*://*.imgur.com/*": {
+        "name": "Imgur",
+        "match": "https?://([^.]+\\.)?imgur\\.com/(?!blog)",
+        "logout": {
+            "cookies": ["IMGURSESSION"]
+        },
+        "login": {
+            "urls": ["https://imgur.com/signin"],
+            "formURL": "https://imgur.com/signin",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "check": ".user-dropdown"
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "*://*.khanacademy.org/*": {
+        "name": "Khan Academy",
+        "match": "https?://(?!shop\\.)([^.]+\\.)?khanacademy\\.org/(?!careers/interns)",
+        "logout": {
+            "cookies": ["KAID"]
+        },
+        "login": {
+            "urls": ["https://www.khanacademy.org/thisisnotarealpath"],
+            "formURL": "https://www.khanacademy.org/login?form=1",
+            "method": "POST",
+            "usernameField": "identifier",
+            "passwordField": "password",
+            "check": "#page_logout"
+        }
+    }
+}
