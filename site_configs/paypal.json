@@ -1,6 +1,7 @@
 {
     "*://*.paypal.com/*": {
         "name": "PayPal",
+        "match": "https?://(?!shopping\\.)([^.]+\\.)?paypal(?!-community)\\.com",
         "logout": {
             "cookies": ["HaC80bwXscjqZ7KM6VOxULOB534"]
         },
@@ -11,7 +12,7 @@
             "usernameField": "login_email",
             "passwordField": "login_password",
             "hasHiddenInputs": true,
-            "check": "li.logout, a:contains('Log Out')",
+            "check": "li.logout, a:contains('Log Out'), ul#nav-global-loggedin",
             "twoFactor": [
                 {
                     "url": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
