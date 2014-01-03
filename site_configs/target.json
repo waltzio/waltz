@@ -1,8 +1,9 @@
 {
     "*://*.target.com/*": {
         "name": "Target",
+        "match": "https?://(?!corporate\\.)(?!investors\\.)(?!pressroom\\.)([^.]+\\.)?target\\.com",
         "logout": {
-            "cookies": ["WC_SESSION_ESTABLISHED"]
+            "cookies": ["WC_SESSION_ESTABLISHED", "guestDisplayName"]
         },
         "login": {
             "urls": [
@@ -15,7 +16,7 @@
             "usernameField": "logonId",
             "passwordField": "logonPassword",
             "hasHiddenInputs": true,
-            "check": "#userWrapper.a:contains('sign out')" ********* is this valid?
+            "check": "a:contains('sign out')"
         }
     }
 }
