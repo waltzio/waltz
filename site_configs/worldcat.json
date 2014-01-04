@@ -1,18 +1,20 @@
 {
-    "*://*.worldcat.org/account/?page=login*": {
+    "*://*.worldcat.org/*": {
         "name": "WorldCat",
+        "match": "https?://([^.]+\\.)?worldcat\\.org(?!/search*)(?!/title*)(?!/whatis*)",
         "logout": {
             "cookies": ["JSESSIONID"]
         },
         "login": {
             "urls": [
-                "https://www.worldcat.org/account/?page=login"
+                "https://www.worldcat.org/",
+                "http://www.worldcat.org/"
               	],
             "formURL": "https://www.worldcat.org/account/",
             "method": "POST",
             "usernameField": "username",
             "passwordField": "password",
-             "hasHiddenInputs": true,
+            "hasHiddenInputs": true,
             "check": "span.useracct-wc-on"
         }
     }
