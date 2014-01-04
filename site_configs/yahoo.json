@@ -1,0 +1,34 @@
+{
+    "*://*.yahoo.com/*": {
+        "name": "Yahoo",
+        "match": "https?://([^.]+\\.)?yahoo\\.com(?!/config/login_verify2)*",
+        "logout": {
+            "cookies": ["T", "F"]
+        },
+        "login": {
+            "urls": [
+                "https://login.yahoo.com/config/login"
+            ],
+            "formURL": "https://login.yahoo.com/config/login",
+            "method": "POST",
+            "usernameField": "login",
+            "passwordField": "passwd",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Sign Out')"
+        }
+    }, "https://login.yahoo.com/config/login_verify2?*": {
+        "name": "Yahoo Verify",
+        "logout": {
+            "cookies": ["T", "F"]
+        },
+        "login": {
+            "urls": ["http://www.yahoo.com/"],
+            "formURL": "https://login.yahoo.com/config/login_verify2?",
+            "method": "POST",
+            "usernameField": "passwd",
+            "passwordField": "passwd",
+            "hasHiddenInputs": true,
+            "check": "a:contains('ZZZ')"
+        }
+    }
+}
