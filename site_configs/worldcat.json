@@ -1,0 +1,19 @@
+{
+    "*://*.worldcat.org/account/?page=login*": {
+        "name": "WorldCat",
+        "logout": {
+            "cookies": ["JSESSIONID"]
+        },
+        "login": {
+            "urls": [
+                "https://www.worldcat.org/account/?page=login"
+              	],
+            "formURL": "https://www.worldcat.org/account/",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+             "hasHiddenInputs": true,
+            "check": "span.useracct-wc-on"
+        }
+    }
+}
