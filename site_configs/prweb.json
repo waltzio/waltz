@@ -1,0 +1,18 @@
+{
+    "*://*.prweb.com/*": {
+        "name": "PR Web",
+        "logout": {
+            "cookies": ["SessionKey"]
+        },
+        "login": {
+            "urls": ["https://app.prweb.com/Main.aspx?Entity=Home"],
+            "formURL": "https://app.prweb.com/Login.aspx",
+            "method": "POST",
+            "hasHiddenInputs": true,
+            "formOnly": true,
+            "usernameField": "textCompanyLoginName",
+            "passwordField": "txtpassword",
+            "check": "a:contains('Logout')"
+        }
+    }
+}
