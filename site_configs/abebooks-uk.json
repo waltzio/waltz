@@ -1,0 +1,22 @@
+{
+    "*://*.abebooks.co.uk/*": {
+        "name": "ABEBooks.co.uk",
+        "logout": {
+            "cookies": ["ABE_id", "CoreID6", "TestSess3", "pave", "sock", "cmTPSet"]
+        },
+        "login": {
+            "urls": [
+            	"http://www.abebooks.co.uk/",
+            	"https://www.abebooks.co.uk/",
+            	"https://www.abebooks.co.uk/servlet/SignOnPL"
+           	],
+            "formURL": "https://www.abebooks.co.uk/servlet/SignOnPL",
+            "method": "POST",
+            "usernameField": "clientpin",
+            "passwordField": "clientpw",
+            "hasHiddenInputs": true,
+            "formOnly": true,
+            "check": "a.signOff"   
+        }
+    }
+}
