@@ -1,0 +1,27 @@
+{
+    "https://*.box.com/*": {
+        "name": "Box",
+        "match": "https://(www\\.box\\.com/?$)|(app\\.box\\.com)",
+        "logout": {
+            "cookies": ["dc208104892", "z"]
+        },
+        "login": {
+            "urls": [
+                "https://app.box.com/files/",
+                "https://www.box.com/"
+            ],
+            "formURL": "https://app.box.com/login/",
+            "method": "POST",
+            "usernameField": "login",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "li#current_user_tab",
+            "twoFactor": [
+                {
+                    "url": "https://app.box.com/login",
+                    "check": "input[name='sms_code']"
+                }
+            ]
+        }
+    }
+}
