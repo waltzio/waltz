@@ -1,0 +1,20 @@
+{
+    "*://*.moz.com/*": {
+        "name": "Moz",
+        "logout": {
+            "cookies": ["mozauth"]
+        },
+        "login": {
+            "urls": [
+                "http://moz.com/",
+                "https://moz.com/login"
+            ],
+            "formURL": "https://moz.com/login",
+            "method": "POST",
+            "usernameField": "data[User][login_email]",
+            "passwordField": "data[User][password]",
+            "hasHiddenInputs": true,
+            "check": "a.logout"
+        }
+    }
+}
