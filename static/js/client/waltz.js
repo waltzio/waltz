@@ -373,7 +373,7 @@
 		}
 
         var $login = findInput(siteConfig.login.usernameField),
-            $password = findInput(siteConfig.login.passwordField);
+            $password = findInput(siteConfig.login.passwordField),
             $form = $login.parents('form');
 
         if (siteConfig.login.submitButton) {
@@ -387,8 +387,8 @@
         // We are on the login page!
         if ($login.length > 0 && 
             $password.length > 0 && 
-            _.any($login, function(v) { $(v).is(':visible')}) &&
-            _.any($login, function(v) { $(v).is(':visible')})
+            _.some($login, function(v) { return $(v).is(':visible')}) &&
+            _.some($password, function(v) { return $(v).is(':visible')})
         ) {
 			var $newLogin = $login.clone(),
 				$newPassword = $password.clone();
@@ -403,8 +403,8 @@
 			$password.attr('name', '');
 			$login.attr('name', '');
 
-			$form.append($newLogin);
-			$form.append($newPassword);
+			$form.prepend($newLogin);
+			$form.prepend($newPassword);
 
 			submitForm($form);
 		} else {
@@ -448,18 +448,10 @@
 					submitForm();
 				}
 
-                var onLoginPage = _.reduce(siteConfig.login.urls, function(memo, url) {
-                    return memo || window.location.href.match(url);
-                }, false);
-
-				if (onLoginPage) {
-					appendInputs(document);
-				} else {
-					chrome.runtime.sendMessage({
-						method: "proxyRequest",
-						url: siteConfig.login.urls[0]
-					}, appendInputs);
-				}
+				chrome.runtime.sendMessage({
+					method: "proxyRequest",
+					url: siteConfig.login.urls[0]
+				}, appendInputs);
 			} else {
 				submitForm();
 			}
@@ -475,6 +467,9 @@
 			if (!$form) {
             	form.append('<input type="submit" />').appendTo($("body")).submit();
 			} else {
+                // remove possible conflicts with submit() function on 
+                // actual form element
+                $form.find('input[type="submit"]').attr('name', '').attr('id', '');
 				$form.submit();
 			}
 		}	
