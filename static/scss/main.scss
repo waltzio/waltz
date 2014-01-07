@@ -229,6 +229,45 @@ body {
         }
     }
 
+    .footer {
+
+        ul {
+            list-style-type:none;
+            text-align: center;
+
+            li {
+                display: inline-block;
+                margin: 0 20px;
+            }
+        }
+    }
+
+    .powered-by {
+          text-align: center;
+
+          h4 {
+            display: inline;
+            color: #6f6f6f;
+          }
+          ul {
+            list-style-type: none;
+            padding: 0;
+            display: inline;
+
+            li {
+              display: inline;
+              margin-right: 5px;
+
+              img {
+                height: 50px;
+                position: relative;
+                top: -5px;
+              }
+            }
+          }
+    }
+
+
     #emailModal {
         form {
             padding: 0;
