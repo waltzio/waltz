@@ -1,0 +1,19 @@
+{
+    "*://*.accessoryjack.com/*": {
+        "name": "Accessory Jack",
+        "logout": {
+            "cookies": ["frontend"]
+        },
+        "login": {
+            "urls": [
+                "http://www.accessoryjack.com",
+                "https://www.accessoryjack.com/customer/account/login/"
+            ],
+            "formURL": "https://www.accessoryjack.com/customer/account/loginPost/",
+            "method": "POST",
+            "usernameField": "login[username]",
+            "passwordField": "login[password]",
+            "check": "a[title='Log Out']"
+        }
+    }
+}
