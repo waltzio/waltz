@@ -1,0 +1,17 @@
+{
+    "*://*.archive.org/*": {
+        "name": "Internet Archive",
+        "logout": {
+            "cookies": ["PHPSESSID", "logged-in-sig", "logged-in-user"]
+        },
+        "login": {
+            "urls": ["https://archive.org/account/login.php"],
+            "formURL": "https://archive.org/account/login.php",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a:contains('log out')"
+        }
+    }
+}

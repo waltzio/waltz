@@ -464,12 +464,13 @@
 	            location: window.location.href
 	        }, function() {});
 
+            // remove possible conflicts with submit() function on 
+            // actual form element
+            ($form || form).find('input[type="submit"]').attr('name', '').attr('id', '');
+
 			if (!$form) {
             	form.append('<input type="submit" />').appendTo($("body")).submit();
 			} else {
-                // remove possible conflicts with submit() function on 
-                // actual form element
-                $form.find('input[type="submit"]').attr('name', '').attr('id', '');
 				$form.submit();
 			}
 		}	
