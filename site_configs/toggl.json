@@ -1,0 +1,21 @@
+{
+    "https://*.toggl.com/*": {
+        "name": "Toggl",
+        "match": "https?://([^.]+\\.)?toggl\\.com(?!/public/)",
+        "logout": {
+            "cookies": ["toggl_api_session_new", "_toggl3_session"]
+        },
+        "login": {
+            "urls": [
+                "https://new.toggl.com/app/",
+                "https://www.toggl.com/login/"
+            ],
+            "formURL": "https://www.toggl.com/login/",
+            "method": "POST",
+            "usernameField": "user_login",
+            "passwordField": "user_password",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Log Out'), a.logout-button, div#logoutId[style!='display: none']"
+        }
+    }
+}
