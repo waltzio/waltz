@@ -458,21 +458,30 @@
 		}	
 
 		function submitForm($form) {
+            var formSubmitted = !!$form;
+            $form = $form || $(form);
+
 			chrome.runtime.sendMessage({
 	            method: "login",
 	            domain: _this.options.site.domain,
 	            location: window.location.href
-	        }, function() {});
+	        }, function() {
 
-            // remove possible conflicts with submit() function on 
-            // actual form element
-            ($form || form).find('input[type="submit"]').attr('name', '').attr('id', '');
+                // hack to fix issues where submit button
+                // has name="submit" -- WAY TOO HARD
+                if ($form[0].submit !== "function") {
+                    $form = $form.clone()
+                    $form.find('input[name="submit"]').remove();
+                    $form.css('display', 'none');
+                    formSubmitted = false;
+                }
 
-			if (!$form) {
-            	form.append('<input type="submit" />').appendTo($("body")).submit();
-			} else {
-				$form.submit();
-			}
+                if (!formSubmitted) {
+                    $form.appendTo($("body")).submit();
+                } else {
+                    $form.submit();
+                }
+            });
 		}	
 	}
 
