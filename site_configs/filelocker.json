@@ -1,0 +1,21 @@
+{
+    "https://*.filelocker.com/*": {
+        "name": "FileLocker",
+        "logout": {
+            "cookies": ["badongoU", "badongoP"]
+        },
+        "login": {
+            "urls": [
+                "https://secure.filelocker.com/",
+                "https://secure.filelocker.com/login"
+            ],
+            "formURL": "https://secure.filelocker.com/login",
+            "formOnly": true,
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a[title='Log Out of FileLocker']"
+		}
+    }
+}
