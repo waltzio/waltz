@@ -1,0 +1,16 @@
+{
+    "*://*.tes.co.uk/*": {
+        "name": "The TES",
+        "logout": {
+            "cookies": ["TSLCookie"]
+        },
+        "login": {
+            "urls": ["http://www.tes.co.uk/"],
+            "formURL": "https://account.tes.co.uk/LogOn?rtn=http%3a%2f%2fwww.tes.co.uk%2fhome.aspx",
+            "method": "POST",
+            "usernameField": "Username",
+            "passwordField": "Password",
+            "check": "ul#personalLinks.auth"
+        }
+    }
+}
