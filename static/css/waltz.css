@@ -171,6 +171,11 @@
 #waltz-first-share-form #waltz-first-share:focus {
   outline: none;
 }
+#waltz-credential-form #waltz-credential-username,
+#waltz-credential-form #waltz-credential-password, #waltz-first-share-form #waltz-credential-username,
+#waltz-first-share-form #waltz-credential-password {
+  height: 24px;
+}
 #waltz-credential-form #waltz-credential-submit,
 #waltz-credential-form #waltz-first-share, #waltz-first-share-form #waltz-credential-submit,
 #waltz-first-share-form #waltz-first-share {
@@ -531,8 +536,4 @@
 }
 #waltz-login-wrapper .waltz-button.waltz-dismiss:hover {
   background-color: #dd0005;
-}
-
-#waltz-credential-overlay input.error {
-  box-shadow: 0 0 5px #a81100;
 }
