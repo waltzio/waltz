@@ -15,3 +15,10 @@ $button-font-weight: 700;
 
 $slide-height: 600px;
 $slide-width: 400px;
+
+$z-index-1st: 2147483647;
+$z-index-2nd: $z-index-1st - 1;
+$z-index-3rd: $z-index-2nd - 1;
+$z-index-4th: $z-index-3rd - 1;
+
+$z-index-below-clef: 9990;

@@ -4,7 +4,7 @@
     font-family: $font-family;
     -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
     display: none;
-    z-index: 9999;
+    z-index: $z-index-1st;
     color: #111;
     background: $color;
     padding: 0;
