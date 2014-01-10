@@ -140,17 +140,7 @@ var Utils = {
     pseudoUniqueID: function() {
         return Math.random().toString(36).substring(2, 16);
     },
-    settings: {
-        waitlistHost: "http://share.getwaltz.com",
-        waitlistPaths: {
-            reserve: '/u/reserve',
-            check: '/u/check',
-            setEmail: '/u/email/set',
-            inviteCreate: '/i/create',
-            inviteAdd: '/i/add',
-            inviteClear: '/i/clear'
-        }
-    }
+    settings: {}
 }
 
 

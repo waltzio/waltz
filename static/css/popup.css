@@ -6547,9 +6547,6 @@ html, body {
   list-style: none;
   margin: 0;
 }
-#waltz-popup .share-container .invite-message, #waltz-popup .share-container .share-message {
-  display: none;
-}
 #waltz-popup .share-container li {
   padding-bottom: 10px;
 }

@@ -16,10 +16,6 @@
         },
         requestSite: {
             twitter: "Hey @getwaltz, I'd love to get rid of my passwords on <%= site %>. Can you help?"
-        },
-        invite: {
-            twitter: "Found @getwaltz to get rid of all of my passwords. There's a long wait list, but you can skip it with this link: <%= link %>.",
-            facebook: "Found Waltz to get rid of all of my passwords. There's a long wait list, but you can skip it with this link: <%= link %>."
         }
     };
 
