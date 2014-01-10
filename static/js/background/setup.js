@@ -7,19 +7,7 @@ function Setup(opts) {
 
     this.analytics = new Analytics();
     this.storage = new Storage();
-
-    chrome.webRequest.onCompleted.addListener(
-        function(details) {
-            if (details.url.match(/\?startwt\=true/)) {
-                chrome.tabs.update(details.tabID, { url: chrome.extension.getURL('/html/waiting.html') });
-            }
-        },
-        {
-            urls: ["http://*.getwaltz.com/*"],
-            types: ["main_frame"]
-        }
-    );
-
+    
     this.storage.getPrivateSettings(function(settings) {
         _this.settings = settings;
         if (opts.install) {
@@ -31,8 +19,8 @@ function Setup(opts) {
 }
 
 Setup.prototype.openTutorial = function() {
+    this.analytics.trackEvent('first_setup');
     this.analytics.trackEvent('first_tutorial');
-    this.delegate = new Delegate({ firstTime: true });
 
     this.storage.setPrivateSetting(
         this.SETUP_KEY, 
