@@ -14,7 +14,7 @@
             this.$slides = $(this.slideSelector);
             this.storage = new Storage();
             this.analytics = new Analytics();
-            this.analytics.trackEvent("start_tutorial")
+            this.analytics.trackEvent("start_tutorial");
 
             this.$slides.each(function() {
                 $('.tutorial-slides').addClass($(this).attr('id'));
@@ -27,12 +27,12 @@
                         $this.addClass('completed');
                     }
                 });
-            })
+            });
 
             var params = Utils.getURLParams();
             if (params.id) {
                 try {
-                    var $slidesToHide = $(this.slideSelector + ':not(#' + params.id + ')')
+                    var $slidesToHide = $(this.slideSelector + ':not(#' + params.id + ')');
                     if ($slidesToHide.length !== this.$slides.length) {
                         $slidesToHide.addClass('removed');
                         $($slidesToHide.get().reverse()).each(function() { _this.previous.push(this.id); });
@@ -77,7 +77,7 @@
 
             $previous.removeClass('removed');
             $('.tutorial-slides').addClass($previous.attr('id'));
-        }
+        };
 
         Slider.prototype.startSiteSetup = function(e) {
             e.preventDefault();
@@ -97,7 +97,7 @@
             }, function() {
                 window.location = $a.attr('href');
             });
-        }
+        };
 
         return Slider;
     })();

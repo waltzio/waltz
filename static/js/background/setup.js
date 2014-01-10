@@ -11,7 +11,7 @@ function Setup(opts) {
     chrome.webRequest.onCompleted.addListener(
         function(details) {
             if (details.url.match(/\?startwt\=true/)) {
-                chrome.tabs.update(details.tabID, { url: chrome.extension.getURL('/html/waiting.html') })
+                chrome.tabs.update(details.tabID, { url: chrome.extension.getURL('/html/waiting.html') });
             }
         },
         {
@@ -43,7 +43,7 @@ Setup.prototype.openTutorial = function() {
             }, function() {});
         }
     );
-}
+};
 
 Setup.prototype.onInstall = function() {
     var _this = this,
@@ -67,7 +67,7 @@ Setup.prototype.onInstall = function() {
     }
 
     this.onStartup();
-}
+};
 
 Setup.prototype.onStartup = function(settings) {
     var _this = this;
@@ -77,7 +77,7 @@ Setup.prototype.onStartup = function(settings) {
     if (!_this.settings[_this.SETUP_KEY]) {
         _this.openTutorial();
     }
-}
+};
 
 var setup;
 // These are the two entry points for the extension.

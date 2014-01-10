@@ -28,7 +28,7 @@ Popup.prototype.render = function() {
         $sharers = $shareContainer.find(this.sharer.shareSelector);
 
     if (this.settings.waitingListActive && this.settings.inviteCount) {
-        $(this.inviteCountSelector).text(this.settings.inviteCount)
+        $(this.inviteCountSelector).text(this.settings.inviteCount);
         $(this.inviteMessageSelector).show();
         $sharers.data('share-type', 'invite');
     } else {
@@ -54,6 +54,6 @@ Popup.prototype.render = function() {
     $sharers.filter('.facebook').data('link', this.settings.longInviteLink);
 
     $('.share-link').text(this.settings.inviteLink);
-}
+};
 
 var popup = new Popup();

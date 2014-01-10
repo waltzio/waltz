@@ -143,7 +143,7 @@ Delegate.prototype.init = function(options) {
 
     // when the configs are done loading, blast off, baby!
     $.when(this.configsLoaded).then(kickOff);
-}
+};
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
     if (request.messageLocation && request.messageLocation !== "delegate") return false;
@@ -155,15 +155,12 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 	switch(request.method) {
 		case "deleteCredentials":
 			return this.deleteCredentials(request.key, sendResponse);
-			break;
 		case "getHost":
 			return sendResponse(this.options.cy_url);
-			break;
 		default:
 			return this[request.method].bind(this)(request, sendResponse);
-			break;
 	}
-}
+};
 
 Delegate.prototype.getSiteConfigs = function(request, cb) {
     var _this = this;
@@ -174,7 +171,7 @@ Delegate.prototype.getSiteConfigs = function(request, cb) {
      });
 
      return true;
-}
+};
 
 Delegate.prototype.acknowledgeLoginAttempt = function(request) {
     
@@ -186,12 +183,12 @@ Delegate.prototype.acknowledgeLoginAttempt = function(request) {
                 if (!tab.active) {
                     chrome.tabs.reload(tab.id);
                 }
-            })
+            });
         });
     }
 
     delete(this.currentLogins[request.domain]);
-}
+};
 
 Delegate.prototype.login = function(request, cb) {
 	if (!this.loggedIn) {
@@ -203,11 +200,11 @@ Delegate.prototype.login = function(request, cb) {
         redirectUrl: request.location,
         state: 'attempted',
         modified: new Date()
-    }
+    };
 	this.storage.addLogin(request.domain);
 
     if (typeof cb === "function") cb();
-}
+};
 
 Delegate.prototype.refreshOptions = function(request, cb) {
     var _this = this;
@@ -217,7 +214,7 @@ Delegate.prototype.refreshOptions = function(request, cb) {
     });
 
     return true;
-}
+};
 
 Delegate.prototype.updateSiteConfigs = function(data) {
 	this.siteConfigs = data;
@@ -227,10 +224,10 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 			domains.push(key);
 		}
 	}
-	var parsed = domains.map(Utils.parse_match_pattern).filter(function(pattern) { return pattern !== null });
+	var parsed = domains.map(Utils.parse_match_pattern).filter(function(pattern) { return pattern !== null; });
 	this.includedDomainRegex = new RegExp(parsed.join('|'));
 	this.configsLoaded.resolve();
-}
+};
 
 Delegate.prototype.pubnubSubscribe = function(data) {
 	var _this = this;
@@ -250,9 +247,9 @@ Delegate.prototype.pubnubSubscribe = function(data) {
 					_this.logout();
 				}
 			}
-		})
+		});
 	}
-}
+};
 
 Delegate.prototype.pubnubUnsubscribe = function(channel) {
 	if (channel) {
@@ -260,11 +257,11 @@ Delegate.prototype.pubnubUnsubscribe = function(channel) {
 			channel: channel
 		});
 	}
-}
+};
 
 Delegate.prototype.logout = function(opts) {
-	var _this = this,
-		opts = opts || {};
+	var _this = this;
+	opts = opts || {};
 
 	this.storage.getLogins(function(data) {
         if (_.isEmpty(data)) return;
@@ -275,7 +272,7 @@ Delegate.prototype.logout = function(opts) {
 			i;
 
 
-		for (domain in data) {
+		for (var domain in data) {
             sitesCompleted.push(_this.logOutOfSite({ domain: domain, refresh: true }));
             delete(_this.currentLogins[domain]);
 		}
@@ -303,7 +300,7 @@ Delegate.prototype.logout = function(opts) {
             sites_count: Object.keys(data).length
         });
 	});
-}
+};
 
 Delegate.prototype.logOutOfSite = function(opts, cb) {
     var promise = $.Deferred(),
@@ -325,7 +322,7 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
                 chrome.cookies.remove({
                     url: Utils.extrapolateUrlFromCookie(cookie),
                     name: cookie.name
-                }, function() {});
+                });
             }
         }
 
@@ -364,12 +361,12 @@ Delegate.prototype.forceTutorial = function(opts, cb) {
 Delegate.prototype.saveCredentials = function(request, cb) {
 	this.crypto.encrypt(request, cb);
 	return true;
-}
+};
 
 Delegate.prototype.decrypt = function(request, cb) {
 	this.crypto.decrypt(request, cb);
 	return true;
-}
+};
 
 Delegate.prototype.proxyRequest = function(request, cb) {
     $.ajax({
@@ -381,7 +378,7 @@ Delegate.prototype.proxyRequest = function(request, cb) {
     });
 
 	return true;
-}
+};
 
 Delegate.prototype.checkAuthentication = function(request, cb) {
     if (typeof request === "function" && !cb) cb = request;
@@ -407,7 +404,7 @@ Delegate.prototype.checkAuthentication = function(request, cb) {
 	});
 
 	return true;
-}
+};
 
 Delegate.prototype.handleLinkCaptures = function(details) {
     if (details.url.match('(\/tutorial)|(\/user\/verify)')) {
@@ -419,33 +416,33 @@ Delegate.prototype.handleLinkCaptures = function(details) {
             _this.storage.getPrivateSettings(function(settings) {
                 if (!settings.hasRedirectedFromClefTutorial) {
                     if (data.length) {
-                        chrome.tabs.remove(details.tabId)
+                        chrome.tabs.remove(details.tabId);
                         chrome.tabs.update(data[0].id, { selected: true });
                     } else {
                         chrome.tabs.update(details.tabID, { url: tutorialURL + '?id=site-setup'} );
                     }
                     _this.storage.setPrivateSetting("hasRedirectedFromClefTutorial", true);
                 }
-            })
-            
-        })
+            });
+        });
     } 
-}
+};
 
 Delegate.prototype.handleSuccessfulLogin = function(details) {
     var domain,
         _this = this;
-    for (site in _this.currentLogins) {
+    for (var site in _this.currentLogins) {
         if (details.url.match(Utils.parse_match_pattern(site))) {
             domain = site;
             break;
         }
     }
-    if (domain && _this.currentLogins[domain]['state'] !== 'redirected') {
-        var siteConfig = _this.siteConfigs[domain];
+    if (domain && _this.currentLogins[domain].state !== 'redirected') {
+        var siteConfig = _this.siteConfigs[domain],
+            others;
 
         var nextUrl = details.url;
-        var forcedRedirectUrl = _this.currentLogins[domain]['redirectUrl'];
+        var forcedRedirectUrl = _this.currentLogins[domain].redirectUrl;
         var shouldNotRedirect = false;
 
         // If the URL which we are trying to force a redirect to 
@@ -454,7 +451,7 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
         var excludedForcedRedirectUrls = $.merge([], siteConfig.login.urls);
         // Also include the explicitly defined ones in the site config
         if (siteConfig.login.exclude) {
-            var others = siteConfig.login.exclude.forcedRedirectURLs || [];
+            others = siteConfig.login.exclude.forcedRedirectURLs || [];
             $.merge(excludedForcedRedirectUrls, others);
         }
 
@@ -462,7 +459,7 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
         var excludedNextUrls = $.merge([], siteConfig.login.urls);
         // Also include the explicitly defined ones in the site config
         if (siteConfig.login.exclude) {
-            var others = siteConfig.login.exclude.nextURLs || [];
+            others = siteConfig.login.exclude.nextURLs || [];
             $.merge(excludedNextUrls, others);
         }
         $.merge(excludedNextUrls, _.pluck(siteConfig.login.twoFactor, 'url'));
@@ -471,11 +468,11 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
             return function(acc, currentUrl) {
                 return acc || Utils.urlsAreEqual(currentUrl, aUrl);
             };
-        } 
+        };
 
         // Don't redirect if the forced redirect url is one of the
         // excluded ones, as defined above.
-        var shouldNotRedirect = excludedForcedRedirectUrls.reduce(orEqual(forcedRedirectUrl), false);
+        shouldNotRedirect = excludedForcedRedirectUrls.reduce(orEqual(forcedRedirectUrl), false);
         // Don't redirect if the default next url is one of the
         // excluded ones, as defined above.
         shouldNotRedirect |= excludedNextUrls.reduce(orEqual(nextUrl), shouldNotRedirect);
@@ -486,11 +483,11 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
         if (!shouldNotRedirect) {
             chrome.tabs.update(details.tabId, {url: forcedRedirectUrl});
             // We set the state so it doesn't keep redirecting.
-            _this.currentLogins[domain]['state'] = 'redirected';
-            _this.currentLogins[domain]['modified'] = new Date();
+            _this.currentLogins[domain].state = 'redirected';
+            _this.currentLogins[domain].modified = new Date();
         }
     }
-}
+};
 
 Delegate.prototype.incrementInviteCount = function(request, cb) {
     var _this = this,
@@ -517,7 +514,7 @@ Delegate.prototype.incrementInviteCount = function(request, cb) {
             cb({ error: true, data: data });
         });
     });
-}
+};
 
 Delegate.prototype.openNewTab = function(request, cb) {
     chrome.tabs.create({url: request.url});
@@ -525,23 +522,23 @@ Delegate.prototype.openNewTab = function(request, cb) {
 };
 
 Delegate.prototype.getConfigForKey = function(key) {
-    for (domain in this.siteConfigs) {
+    for (var domain in this.siteConfigs) {
         if (this.siteConfigs[domain].key === key) {
             var config = this.siteConfigs[domain];
-            config['domain'] = domain;
+            config.domain = domain;
             return config;
         }
     }
 
     return false;
-}
+};
 
 Delegate.prototype.initialize = function(data, callback) {
 	var url = data.location.href.split('#')[0],
         _this = this;
 	if (this.includedDomainRegex.test(url)) {
 		var options;
-		for (site in this.siteConfigs) {
+		for (var site in this.siteConfigs) {
             var matched;
             if(typeof(this.siteConfigs[site].match) !== "undefined") {
                 var regex = new RegExp(this.siteConfigs[site].match);
@@ -558,10 +555,7 @@ Delegate.prototype.initialize = function(data, callback) {
 					},
                     currentLogin: this.currentLogins[site],
 				};
-                _this.refreshOptions({}, function() {
-                    options.cyHost = _this.options.cy_url
-                    callback(options);
-                });
+                sendMatchCallback();
 				return true;
 			}
 		}
@@ -569,5 +563,12 @@ Delegate.prototype.initialize = function(data, callback) {
 		callback(false);
 	}
 
+    function sendMatchCallback() {
+        _this.refreshOptions({}, function() {
+            options.cyHost = _this.options.cy_url;
+            callback(options);
+        });
+    }
+
     return true;
-}
+};

@@ -5,9 +5,9 @@ var Utils = {
       * @returns  String to be passed to the RegExp constructor */
     parse_match_pattern: function (input) {
         if (typeof input !== 'string') return null;
-        var match_pattern = '(?:^'
-          , regEscape = function(s) {return s.replace(/[[^$.|?*+(){}\\]/g, '\\$&');}
-          , result = /^(\*|https?|file|ftp|chrome-extension):\/\//.exec(input);
+        var match_pattern = '(?:^', 
+            regEscape = function(s) {return s.replace(/[[^$.|?*+(){}\\]/g, '\\$&');},
+            result = /^(\*|https?|file|ftp|chrome-extension):\/\//.exec(input);
 
         // Parse scheme
         if (!result) return null;
@@ -57,7 +57,7 @@ var Utils = {
         chrome.cookies.getAll(
             { domain: Utils.extrapolateDomainFromMatchURL(domain) },
             function(cookies) {
-                cb(cookies)
+                cb(cookies);
             }
         );
     },
@@ -71,10 +71,11 @@ var Utils = {
         return vars;
     },
     addURLParam: function(url, parameterName, parameterValue) {
+        var cl;
         replaceDuplicates = true;
 
         if(url.indexOf('#') > 0){
-            var cl = url.indexOf('#');
+            cl = url.indexOf('#');
             urlhash = url.substring(url.indexOf('#'),url.length);
         } else {
             urlhash = '';
@@ -119,7 +120,7 @@ var Utils = {
         if (opts && opts.promise) {
             promise = $.Deferred();
             $.when(promise)
-             .then(unload)
+             .then(unload);
             return promise;
         } else {
             setTimeout(unload, 1000);
@@ -151,7 +152,4 @@ var Utils = {
             inviteClear: '/i/clear'
         }
     }
-}
-
-
-
+};
