@@ -19,7 +19,7 @@ function Analytics(opts) {
 }
 
 Analytics.prototype.trackEvent = function(evnt, data) {
-	var _this = this
+	var _this = this,
 		data = data || {};
 
 	$.when(this.loadedDevCheck, this.initialized)
@@ -28,13 +28,13 @@ Analytics.prototype.trackEvent = function(evnt, data) {
 		 	Keen.addEvent(evnt, data);
 	 	} else {
 	 		data = $.extend(data, _this.getProperties());
-	 		_this.debug("Waltz analytics not tracked", evnt, data);
+	 		_this.debug("DEBUG: analytics - event -", evnt, data);
 	 	}
 	 });
 }
 
 Analytics.prototype.initializeKeen = function(evnt, data) {
-	var _this = this
+	var _this = this,
 		promise = $.Deferred();
 
 	this.storage.getPrivateSettings(function(options) {
