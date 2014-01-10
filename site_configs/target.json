@@ -1,0 +1,22 @@
+{
+    "*://*.target.com/*": {
+        "name": "Target",
+        "match": "https?://(?!corporate\\.)(?!investors\\.)(?!pressroom\\.)([^.]+\\.)?target\\.com",
+        "logout": {
+            "cookies": ["WC_SESSION_ESTABLISHED", "guestDisplayName"]
+        },
+        "login": {
+            "urls": [
+                "http://www.target.com/",
+                "https://www-secure.target.com/EverestLoginView",
+                "https://www-secure.target.com/checkout_process"
+            ],
+            "formURL": "https://www-secure.target.com/EverestLoginoverlay",
+            "method": "POST",
+            "usernameField": "logonId",
+            "passwordField": "logonPassword",
+            "hasHiddenInputs": true,
+            "check": "a:contains('sign out')"
+        }
+    }
+}

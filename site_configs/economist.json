@@ -1,0 +1,21 @@
+{
+    "*://*.economist.com/*": {
+        "name": "The Economist",
+        "match": "https?://(?!store\\.)(?!jobs\\.)([^.]+\\.)?economist\\.com(?!/debate/?)",
+        "logout": {
+            "cookies": ["SESS51bc4d1899eb66e9e1b91e718fd2b9b0"]
+        },
+        "login": {
+            "urls": [
+                "https://www.economist.com/user/login"
+            ],
+            "formURL": "https://www.economist.com/user/login",
+            "method": "POST",
+            "usernameField": "name",
+            "passwordField": "pass",
+            "hasHiddenInputs": true,
+            "submitButton": "input[value='Log in']",
+            "check": "li#user_account_menu, a:contains('Log out')"
+        }
+    }
+}

@@ -193,7 +193,7 @@ Delegate.prototype.acknowledgeLoginAttempt = function(request) {
     delete(this.currentLogins[request.domain]);
 }
 
-Delegate.prototype.login = function(request) {
+Delegate.prototype.login = function(request, cb) {
 	if (!this.loggedIn) {
 		this.loggedIn = true;
 		this.pubnubSubscribe();
@@ -205,6 +205,8 @@ Delegate.prototype.login = function(request) {
         modified: new Date()
     }
 	this.storage.addLogin(request.domain);
+
+    if (typeof cb === "function") cb();
 }
 
 Delegate.prototype.refreshOptions = function(request, cb) {
