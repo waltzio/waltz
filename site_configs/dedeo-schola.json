@@ -11,6 +11,7 @@
             "usernameField": "username",
             "passwordField": "password",
             "check": "a:contains('Log out')"   
-        }
+        },
+        "ignore": true
     }
 }
