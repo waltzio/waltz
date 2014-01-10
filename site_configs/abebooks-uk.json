@@ -17,6 +17,7 @@
             "hasHiddenInputs": true,
             "formOnly": true,
             "check": "a.signOff"   
-        }
+        },
+        "ignore": true
     }
 }
