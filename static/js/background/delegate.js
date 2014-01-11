@@ -99,6 +99,15 @@ Delegate.prototype.init = function(options) {
         }
     );
 
+    chrome.webRequest.onHeadersReceived.addListener(
+        this.handleCSPHeader.bind(this), 
+        {
+            urls: ["https://lastpass.com/*"],
+            types: ["main_frame"]
+        }, 
+        ["blocking", "responseHeaders"]
+    );
+
 	// load configs and fall back if cannot access Github
 	this.configsLoaded = $.Deferred();
 
@@ -405,6 +414,25 @@ Delegate.prototype.checkAuthentication = function(request, cb) {
 
 	return true;
 }
+
+Delegate.prototype.handleCSPHeader = function(details) {
+    var safeDomains = 'https://*.googleapis.com https://*.googleusercontent.com'
+    for (i = 0; i < details.responseHeaders.length; i++) {
+
+        if (Utils.isCSPHeader(details.responseHeaders[i].name.toUpperCase())) {
+            var csp = details.responseHeaders[i].value;
+
+            csp = csp.replace('font-src', 'font-src ' + safeDomains);
+            csp = csp.replace('style-src', 'style-src ' + safeDomains);
+
+            details.responseHeaders[i].value = csp;
+        }
+    }
+
+    return { // Return the new HTTP header
+        responseHeaders: details.responseHeaders
+    };
+};
 
 Delegate.prototype.handleLinkCaptures = function(details) {
     if (details.url.match('(\/tutorial)|(\/user\/verify)')) {

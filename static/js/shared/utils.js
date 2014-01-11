@@ -140,6 +140,9 @@ var Utils = {
     pseudoUniqueID: function() {
         return Math.random().toString(36).substring(2, 16);
     },
+    isCSPHeader: function(headerName) {
+      return (headerName == 'CONTENT-SECURITY-POLICY') || (headerName == 'X-WEBKIT-CSP');
+    },
     settings: {}
 }
 
