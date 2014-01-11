@@ -11,12 +11,7 @@
             "usernameField": "email",
             "passwordField": "password",
             "hasHiddenInputs": true,
-            "check": "a:contains('Sign Out'), a#nav-your-account",
-            "exclude": {
-                "forcedRedirectURLs" : ["http://www.amazon.com"],
-                "nextURLs": []
-            }
+            "check": "a#nav-item-signout, script:contains('Sign Out')"
         }
     }
 }
-
