@@ -11,7 +11,7 @@
             "usernameField": "email",
             "passwordField": "password",
             "hasHiddenInputs": true,
-            "check": "a#nav-item-signout, script:contains('Sign Out')"
+            "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
         }
     }
 }
