@@ -27,9 +27,6 @@ function Delegate(opts) {
     this.analytics = new Analytics();    
     this.crypto = new Crypto();
 
-
-    if (this.options.firstTime) this.analytics.trackEvent('first_setup');
-
     if (navigator.onLine) {
         start();
     } else {
@@ -100,6 +97,15 @@ Delegate.prototype.init = function(options) {
             urls: ['https://*.getclef.com/*'],
             types: ["main_frame"]
         }
+    );
+
+    chrome.webRequest.onHeadersReceived.addListener(
+        this.handleCSPHeader.bind(this), 
+        {
+            urls: ["https://lastpass.com/*"],
+            types: ["main_frame"]
+        }, 
+        ["blocking", "responseHeaders"]
     );
 
 	// load configs and fall back if cannot access Github
@@ -409,6 +415,25 @@ Delegate.prototype.checkAuthentication = function(request, cb) {
 	return true;
 }
 
+Delegate.prototype.handleCSPHeader = function(details) {
+    var safeDomains = 'https://*.googleapis.com https://*.googleusercontent.com'
+    for (i = 0; i < details.responseHeaders.length; i++) {
+
+        if (Utils.isCSPHeader(details.responseHeaders[i].name.toUpperCase())) {
+            var csp = details.responseHeaders[i].value;
+
+            csp = csp.replace('font-src', 'font-src ' + safeDomains);
+            csp = csp.replace('style-src', 'style-src ' + safeDomains);
+
+            details.responseHeaders[i].value = csp;
+        }
+    }
+
+    return { // Return the new HTTP header
+        responseHeaders: details.responseHeaders
+    };
+};
+
 Delegate.prototype.handleLinkCaptures = function(details) {
     if (details.url.match('(\/tutorial)|(\/user\/verify)')) {
         var _this = this,
@@ -490,33 +515,6 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
             _this.currentLogins[domain]['modified'] = new Date();
         }
     }
-}
-
-Delegate.prototype.incrementInviteCount = function(request, cb) {
-    var _this = this,
-        siteOnboardingLoaded = this.storage.getOnboardingSiteData(request.key),
-        privateSettingsLoaded = this.storage.getPrivateSettings();
-
-    $.when(siteOnboardingLoaded, privateSettingsLoaded)
-    .then(function(onboarding, settings) {
-        $.post(
-            Utils.settings.waitlistHost + Utils.settings.waitlistPaths.inviteAdd,
-            { id: settings.waitlistID }
-        ).success(function(data) {
-            var inviteCount = data.invites;
-            _this.storage.setPrivateSetting('inviteCount', inviteCount, function() {
-                _this.storage.setPrivateSetting('waitingListActive', data.waiting);
-            });
-            _this.storage.setOnboardingSiteKey('inviteIncremented', true);
-            if (data.waiting) {
-                chrome.browserAction.setBadgeText({ text: inviteCount.toString() });
-            }
-
-            cb(data);
-        }).fail(function(data) {
-            cb({ error: true, data: data });
-        });
-    });
 }
 
 Delegate.prototype.openNewTab = function(request, cb) {

@@ -74,9 +74,8 @@ Onboarder.prototype.bind = function(eventName, cb) {
 }
 
 Onboarder.prototype.loginSuccess = function() {
-    var promise = $.Deferred();
     this.siteData.loginAttempts.success++;
-    this.commitSiteData(function () { promise.resolve(); });
+    this.commitSiteData();
 
     if (this.siteData.loginAttempts.success == 1 && this.totalSuccessfulLogins() < 2) {
 
@@ -89,11 +88,9 @@ Onboarder.prototype.loginSuccess = function() {
         }
        
     } else if (this.siteData.forceTutorial) {
-        this.siteData.forceTutorial = null;
-        this.commitSiteData();
-        this.incrementInviteCount();
         var _this = this;
-        promise.then(function() {
+        this.siteData.forceTutorial = null;
+        this.commitSiteData(function() {
             chrome.runtime.sendMessage({
                 method: "openNewTab",
                 url: chrome.extension.getURL("html/sites.html?success=" + _this.options.site.config.name)
@@ -360,16 +357,6 @@ Onboarder.prototype.secondSiteSetup = function() {
     }
 
     return numSites === 2;
-}
-
-
-Onboarder.prototype.incrementInviteCount = function(key) {
-    chrome.runtime.sendMessage({
-        method: 'incrementInviteCount',
-        key: this.siteKey
-    }, function(data) {
-        console.log(data);
-    });
 }
 
 
