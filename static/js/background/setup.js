@@ -1,5 +1,4 @@
 Setup.prototype.SETUP_KEY = "setup";
-Setup.prototype.ACTIVATED_KEY = "activated";
 Setup.prototype.VERSION_KEY = "version";
 
 function Setup(opts) {

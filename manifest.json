@@ -1,6 +1,6 @@
 {
   "name": "Waltz",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "manifest_version": 2,
   "description": "A modern account manager for the web.",
 
@@ -52,7 +52,8 @@
     "tabs",
     "notifications",
     "contextMenus",
-    "webRequest"
+    "webRequest",
+    "webRequestBlocking"
   ],
   "icons": {
     "16": "/static/img/waltz-16.png",

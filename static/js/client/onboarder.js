@@ -74,7 +74,6 @@ Onboarder.prototype.bind = function(eventName, cb) {
 };
 
 Onboarder.prototype.loginSuccess = function() {
-    var promise = $.Deferred();
     this.siteData.loginAttempts.success++;
     this.commitSiteData();
 

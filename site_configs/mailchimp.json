@@ -1,0 +1,22 @@
+{
+    "*://*.mailchimp.com/*": {
+        "name": "MailChimp",
+        "logout": {
+            "cookies": ["PHPSESSID"]
+        },
+        "login": {
+            "urls": [
+                "https://us3.admin.mailchimp.com/account/",
+                "https://login.mailchimp.com/",
+                "http://mailchimp.com"
+            ],
+            "formURL": "https://login.mailchimp.com/login/post/",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "formOnly": true,
+            "check": "a.logout"
+        }
+    }
+}
