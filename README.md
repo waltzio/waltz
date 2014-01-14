@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/waltzio/waltz.png)](https://travis-ci.org/waltzio/waltz)
 
 # Waltz
-[Waltz](https://getwaltz.com) is an open source password manager designed to work with [password security app](https://getclef.com) [Clef](https://getclef.com).
+[Waltz](https://getwaltz.com) is an open source password manager designed to work with [password free security app](https://getclef.com) [Clef](https://getclef.com).
 
 For more information, visit the home page of the [password helper](https://getwaltz.com) [here](https://getwaltz.com). 
 
