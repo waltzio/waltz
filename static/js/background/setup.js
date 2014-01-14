@@ -2,6 +2,7 @@ Setup.prototype.SETUP_KEY = "setup";
 Setup.prototype.VERSION_KEY = "version";
 
 function Setup(opts) {
+    opts = opts || {};
     var _this = this;
 
     this.analytics = new Analytics();
