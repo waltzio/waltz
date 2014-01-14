@@ -17,13 +17,13 @@ Options.prototype.saveButtonSelector = "button.save";
 Options.prototype.showButtonSelector = "button.show";
 Options.prototype.allowButtonSelector = "button.allow";
 
-Options.prototype.defaults = {}
+Options.prototype.defaults = {};
 
 Options.prototype.settingsMetaMap = {
 	cy_url: {
 		name: "Waltz Server Base URL"
 	}
-}
+};
 
 function Options() {
 	this.storage = new Storage();
@@ -36,7 +36,7 @@ function Options() {
 	var dismissalsReady = this.storage.getDismissals();
 
 	$.when(optionsReady, credentialsReady, dismissalsReady)
-	 .then(this.init.bind(this));
+	.then(this.init.bind(this));
 }
 
 Options.prototype.init = function(options, credentials, dismissals) {
@@ -70,7 +70,7 @@ Options.prototype.render = function() {
 	// only pick the settings, which we've explicitly declared we want to
 	// show
 	var displaySettings = _.clone(this.settingsMetaMap);
-	_.map(this.settingsMetaMap, function(v, k) { displaySettings[k].value = _this.options[k] });
+	_.map(this.settingsMetaMap, function(v, k) { displaySettings[k].value = _this.options[k]; });
 
 	renderingComplete.push(this.templater.template(
 		{
@@ -93,7 +93,7 @@ Options.prototype.render = function() {
 	));
 	
 	$.when.apply($, renderingComplete).then(this.attachHandlers.bind(this));
-}
+};
 
 Options.prototype.attachHandlers = function() {
 	$(this.navBarSelector).find("li").click(function() {
@@ -135,8 +135,13 @@ Options.prototype.attachSettingsHandlers = function() {
 			function(dismissals) {
 				if ($item.data('path')) {
 					dismissals.pages[$item.data('path')] = null;
-					if (_.filter(dismissals.pages, function(page) { page !== null}).length === 0) {
-						dismissals['pages'] = null;
+					var dismissalCount = _.filter(
+						dismissals.pages, 
+						function(page) { return page !== null; }
+					).length;
+
+					if (dismissalCount === 0) {
+						dismissals.pages = null;
 					}
 				} else {
 					dismissals.dismissedForever = false;
@@ -150,7 +155,7 @@ Options.prototype.attachSettingsHandlers = function() {
 			}
 		);
 	});
-}
+};
 
 Options.prototype.attachCredentialsHandlers = function() {
 	var _this = this,
@@ -261,7 +266,7 @@ Options.prototype.checkAuthentication = function(cb) {
 			}
 		}
 	});
-}
+};
 
 Options.prototype.loginWithClef = function(callback) {
 	var $iframe = $("<iframe>");
@@ -293,7 +298,7 @@ Options.prototype.loginWithClef = function(callback) {
 			removeEventListener("message", handleMessage);
 		}
 	});
-}
+};
 
 $(document).ready(function() {
 	var options = new Options();

@@ -10,10 +10,7 @@
             "method": "POST",
             "usernameField": "login",
             "passwordField": "password",
-            "check": "a#header_userdrop_logout",
-            "exclude": {
-
-            }
+            "check": "a#header_userdrop_logout"
         }
     }
 }

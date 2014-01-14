@@ -10,6 +10,13 @@ grunt.initConfig({
         debounceDelay: 500
       }
     },
+    jshint: {
+      files: ['static/js/**/*.js'],
+      tasks: ['jshint'],
+      options: {
+        debounceDelay: 500
+      }
+    },
     'build-config': {
       files: ['site_configs/*.json'],
       tasks: ['build-config'],
@@ -62,7 +69,24 @@ grunt.initConfig({
         helpers: 'test/spec/*Helper.js'
       }
     }
-  }
+  },
+  jshint: {
+    files: [
+      'Gruntfile.js', 
+      'static/js/background/**/*.js', 
+      'static/js/client/**/*.js',
+      'static/js/shared/**/*.js'
+    ],
+    options: {
+      // options here to override JSHint defaults
+      globals: {
+        jQuery: true,
+        console: true,
+        module: true,
+        document: true
+      }
+    }
+  },
 });
 
 grunt.task.registerMultiTask('build-config', 'Concatenates site configs.', function() {
@@ -86,8 +110,8 @@ grunt.task.registerMultiTask('build-config', 'Concatenates site configs.', funct
     var relativePath = _this.data.src + '/' + filename;
     siteConfig = grunt.file.readJSON(relativePath);
 
-    for (domain in siteConfig) {
-      siteConfig[domain]['key'] = filename.split('.')[0];
+    for (var domain in siteConfig) {
+      siteConfig[domain].key = filename.split('.')[0];
     }
 
     merged = jsonMerge(merged, siteConfig);
@@ -108,6 +132,7 @@ grunt.loadNpmTasks('grunt-contrib-watch');
 grunt.loadNpmTasks('grunt-chrome-compile');
 grunt.loadNpmTasks('grunt-merge-json');
 grunt.loadNpmTasks('grunt-contrib-jasmine');
+grunt.loadNpmTasks('grunt-contrib-jshint');
 
 grunt.registerTask('default', ['watch']);
 grunt.registerTask('test', ['jasmine:waltz']);

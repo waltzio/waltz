@@ -45,7 +45,7 @@ Onboarder.prototype.init = function(data) {
     }
 
     this.initialized.resolve();
-}
+};
 
 Onboarder.prototype.attachHandlers = function() {
     var _this = this;
@@ -56,7 +56,7 @@ Onboarder.prototype.attachHandlers = function() {
     this.bind('show.credentialOverlay', this.showCredentialOverlay);
     this.bind('show.iframe', this.showIFrame);
     this.bind('hide.widget hide.credentialOverlay', this.hideToolTips);
-}
+};
 
 Onboarder.prototype.bind = function(eventName, cb) {
     // this is a safe event attaching function that waits
@@ -70,8 +70,8 @@ Onboarder.prototype.bind = function(eventName, cb) {
                 cb.bind(_this)(e);
             }
          });
-    })
-}
+    });
+};
 
 Onboarder.prototype.loginSuccess = function() {
     this.siteData.loginAttempts.success++;
@@ -98,7 +98,7 @@ Onboarder.prototype.loginSuccess = function() {
         });
     }
 
-}
+};
 
 Onboarder.prototype.handleFirstGithubLogin = function() {
     var _this = this,
@@ -132,7 +132,7 @@ Onboarder.prototype.handleFirstGithubLogin = function() {
             _this.showLogoutPrompt();
         }
     });
-}
+};
 
 Onboarder.prototype.handleFirstFacebookAndTwitterLogin = function() {
     var _this = this,
@@ -163,7 +163,7 @@ Onboarder.prototype.handleFirstFacebookAndTwitterLogin = function() {
             _this.showLogoutPrompt();
         }
     });
-}
+};
 
 Onboarder.prototype.showLogoutPrompt = function() {
      // case where the user is going through the tutorial for the first time
@@ -187,16 +187,16 @@ Onboarder.prototype.showLogoutPrompt = function() {
     $message.css({
         top: parseInt($img.css('top')) + 350,
         left: parseInt($img.css('left')) + $img.width()
-    })
+    });
 
     $message.fadeIn();
-}
+};
 
 Onboarder.prototype.loginFailure = function() {
     this.failMode = true;
     this.siteData.loginAttempts.fail++;
     this.commitSiteData();
-}
+};
 
 Onboarder.prototype.showWidget = function() {
     if (this.failMode) return;
@@ -238,7 +238,7 @@ Onboarder.prototype.showWidget = function() {
     }
 
     
-}
+};
 
 Onboarder.prototype.showCredentialOverlay = function() {
     if (!this.siteData.forceTutorial) return;
@@ -251,7 +251,7 @@ Onboarder.prototype.showCredentialOverlay = function() {
     if (this.failMode) {
         text = "Try again...?";
     } else {
-        text = "Type your username and password to securely store them with Waltz."
+        text = "Type your username and password to securely store them with Waltz.";
     }
 
     onFinishedTransitioning($credentialForm, 'margin-top', function() {
@@ -267,7 +267,7 @@ Onboarder.prototype.showCredentialOverlay = function() {
 
         $message.fadeIn();
     });
-}
+};
 
 Onboarder.prototype.showIFrame = function() {
     var $message = this.getMessage(),
@@ -315,7 +315,7 @@ Onboarder.prototype.getMessage = function() {
     this.$message.on('dismiss', this.dismiss.bind(this)); 
 
     return this.$message;
-}
+};
 
 Onboarder.prototype.addOverlay = function() {
     var _this = this;
@@ -331,16 +331,16 @@ Onboarder.prototype.addOverlay = function() {
     $overlay.click(function() {
         _this.hideToolTips();
         $overlay.remove();
-    })
+    });
 
     return $overlay;
-}
+};
 
 Onboarder.prototype.commitSiteData = function(cb) {
     this.siteData.updatedAt = new Date().getTime();
     cb = cb || function() {};
     this.storage.setOnboardingSiteData(this.siteKey, this.siteData, cb);
-}
+};
 
 Onboarder.prototype.totalSuccessfulLogins = function() {
     var total = 0;
@@ -348,7 +348,7 @@ Onboarder.prototype.totalSuccessfulLogins = function() {
         total += this.siteSpecificOnboardingData[site].loginAttempts.success;
     }
     return total;
-}
+};
 
 Onboarder.prototype.secondSiteSetup = function() {
     var numSites = 0;
@@ -357,8 +357,7 @@ Onboarder.prototype.secondSiteSetup = function() {
     }
 
     return numSites === 2;
-}
-
+};
 
 // adds a 50 millisecond delay
 function onFinishedTransitioning(el, style, cb) {
@@ -370,7 +369,7 @@ function onFinishedTransitioning(el, style, cb) {
             $el.on('transitionend', function() {
                 $el.off('transitionend');
                 cb();
-            })
+            });
         } else {
             cb();
         }

@@ -68,7 +68,7 @@
 
     Sharer.prototype.shareSetupSuccess = function() {
 
-    }
+    };
 
     Sharer.prototype.twitter = function(opts) {
         var url = this.sharedShare(this.twitterBase, opts);
@@ -80,7 +80,7 @@
         url = Utils.addURLParam(url, "u", opts.link);
 
         this.open(url);
-    }
+    };
 
     Sharer.prototype.facebook = function(opts) {
         var url = this.sharedShare(this.facebookBase, opts);
@@ -97,7 +97,7 @@
         url = Utils.addURLParam(url, "picture", "http://getwaltz.com/static/img/waltz-full.png");
 
         this.open(url);
-    }
+    };
 
     Sharer.prototype.email = function(opts) {
         var url = "mailto:";
@@ -110,15 +110,15 @@
         url = Utils.addURLParam(url, "body", opts.message);
 
         this.open(url);
-    }
+    };
 
     Sharer.prototype.open = function(url) {
         window.open(url, "popup", "height=400px,width=600px,top=100px,left=100px");
-    }
+    };
 
     Sharer.prototype.sharedShare = function(url, opts) {
-    return url;
-    }
+        return url;
+    };
 
     this.Sharer = Sharer;
 }).call(this);

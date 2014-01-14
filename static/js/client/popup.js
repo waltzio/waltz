@@ -37,6 +37,6 @@ Popup.prototype.render = function() {
         }
         $('.waltz-share').data('site', site);
     });
-}
+};
 
 var popup = new Popup();
