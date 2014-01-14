@@ -387,7 +387,6 @@
         // We are on the login page!
         if ($login.length > 0 && 
             $password.length > 0 && 
-            _.some($login, function(v) { return $(v).is(':visible'); }) &&
             _.some($password, function(v) { return $(v).is(':visible'); })
         ) {
             var $newLogin = $login.clone(),
