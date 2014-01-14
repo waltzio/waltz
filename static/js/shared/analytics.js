@@ -1,5 +1,5 @@
 /* Keen Snippet */
-var Keen=Keen||{configure:function(e){this._cf=e},addEvent:function(e,t,n,i){this._eq=this._eq||[],this._eq.push([e,t,n,i])},setGlobalProperties:function(e){this._gp=e},onChartsReady:function(e){this._ocrq=this._ocrq||[],this._ocrq.push(e)}};
+var Keen=Keen||{configure:function(e){this._cf=e;},addEvent:function(e,t,n,i){this._eq=this._eq||[];this._eq.push([e,t,n,i]);},setGlobalProperties:function(e){this._gp=e;},onChartsReady:function(e){this._ocrq=this._ocrq||[];this._ocrq.push(e);}};
 
 // Configure the Keen object with your Project ID and (optional) access keys.
 Keen.configure({
@@ -19,22 +19,22 @@ function Analytics(opts) {
 }
 
 Analytics.prototype.trackEvent = function(evnt, data) {
-	var _this = this
-		data = data || {};
+	var _this = this;
+	data = data || {};
 
 	$.when(this.loadedDevCheck, this.initialized)
-	 .then(function(isDevMode) {
-	 	if (!isDevMode) {
-		 	Keen.addEvent(evnt, data);
-	 	} else {
-	 		data = $.extend(data, _this.getProperties());
-	 		_this.debug("Waltz analytics not tracked", evnt, data);
-	 	}
-	 });
-}
+	.then(function(isDevMode) {
+		if (!isDevMode) {
+			Keen.addEvent(evnt, data);
+		} else {
+			data = $.extend(data, _this.getProperties());
+			_this.debug("DEBUG: analytics - event -", evnt, data);
+		}
+	});
+};
 
 Analytics.prototype.initializeKeen = function(evnt, data) {
-	var _this = this
+	var _this = this,
 		promise = $.Deferred();
 
 	this.storage.getPrivateSettings(function(options) {
@@ -72,7 +72,7 @@ Analytics.prototype.checkDevMode = function() {
 	);
 
 	return promise;
-}
+};
 
 Analytics.prototype.getProperties = function() {
 	var properties = {
@@ -82,15 +82,15 @@ Analytics.prototype.getProperties = function() {
     };
 
     if (this.options.captureURLData) {
-    	properties.protocol = window.location.protocol;
-    	properties.host = window.location.host;
-    	properties.path = window.location.pathname;
+		properties.protocol = window.location.protocol;
+		properties.host = window.location.host;
+		properties.path = window.location.pathname;
     }
 
     return properties;
-}
+};
 
 Analytics.prototype.debug = function() {
 	console.log.apply(console, arguments);
-}
+};
 

@@ -1,0 +1,18 @@
+{
+    "*://*.expedia.com/*": {
+        "name": "Expedia",
+        "match": "https?://(?!access\\.)(?!mediaroom\\.)(?!www\\.advertising)(?!advertising\\.)([^.]+\\.)?expedia\\.com",
+        "logout": {
+            "cookies": ["user", "linfo"]
+        },
+        "login": {
+            "urls": ["http://www.expedia.com/"],
+            "formURL": "https://www.expedia.com/user/login",
+            "method": "POST",
+            "usernameField": "signin-loginid",
+            "passwordField": "signin-password",
+            "hasHiddenInputs": true,
+            "check": "a#header-account-signout"
+        }
+    }
+}

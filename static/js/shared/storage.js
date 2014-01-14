@@ -48,29 +48,29 @@ Storage.prototype.subscribe = function(e, cb) {
     } else {
         this.eventHandlers[e] = [cb];
     }
-}
+};
 
 Storage.prototype.handleChange = function(changes, areaName) {
     var handlers;
-    for (k in changes) {
+    for (var k in changes) {
         handlers = this.eventHandlers[k] || [];
         for (var i = 0; i < handlers.length; i++) {
             handlers[i](changes[k]);
         }
     }
-}
+};
 
 Storage.prototype.set = function(items, cb) {
     this.base.set(items, cb);
-}
+};
 
 Storage.prototype.get = function(keys, cb) {
     this.base.get(keys, cb);
-}
+};
 
 Storage.prototype.remove = function(keys, cb) {
     this.base.remove(keys, cb);
-}
+};
 
 Storage.prototype.getCredentials = function(cb) {
     var _this = this,
@@ -84,13 +84,13 @@ Storage.prototype.getCredentials = function(cb) {
     });
 
     return promise;
-}
+};
 
 Storage.prototype.setCredentials = function(credentials, cb) {
     var data = {};
     data[this.CREDENTIALS_KEY] = credentials;
     this.set(data, cb);
-}
+};
 
 Storage.prototype.getCredentialsForDomain = function(domain, cb) {
     var promise = $.Deferred();
@@ -100,7 +100,7 @@ Storage.prototype.getCredentialsForDomain = function(domain, cb) {
         promise.resolve(_ret);
     });
     return promise;
-}
+};
 
 Storage.prototype.setCredentialsForDomain = function(domain, creds, cb) {
     var _this = this;
@@ -109,7 +109,7 @@ Storage.prototype.setCredentialsForDomain = function(domain, creds, cb) {
 
         _this.setCredentials(credentials, cb);
     });
-}
+};
 
 Storage.prototype.deleteCredentialsForDomain = function(domain, cb) {
     var _this = this;
@@ -117,7 +117,7 @@ Storage.prototype.deleteCredentialsForDomain = function(domain, cb) {
         credentials[domain] = null;
         _this.setCredentials(credentials, cb);
     });
-}
+};
 
 Storage.prototype.getLogins = function(cb) {
     var _this = this;
@@ -127,7 +127,7 @@ Storage.prototype.getLogins = function(cb) {
         }
         cb(data);
     });
-}
+};
 
 Storage.prototype.addLogin = function(domain) {
     var _this = this;
@@ -139,12 +139,12 @@ Storage.prototype.addLogin = function(domain) {
         save[_this.LOGIN_KEY] = data;
         
         _this.set(save, function() {});
-    })
-}
+    });
+};
 
 Storage.prototype.clearLogins = function(cb) {
     this.remove(this.LOGIN_KEY, cb);
-}
+};
 
 Storage.prototype.getOptions = function(cb) {
     var _this = this,
@@ -158,28 +158,28 @@ Storage.prototype.getOptions = function(cb) {
         _this.setOptions(ret);
 
         if (typeof cb === "function") cb(ret);
-        promise.resolve(ret)
+        promise.resolve(ret);
     });
 
     return promise;
-}
+};
 
 Storage.prototype.setOptions = function(options, cb) {
     var data = {};
     data[this.OPTIONS_KEY] = options;
     this.set(data, cb);
-}
+};
 
 Storage.prototype.getOptionsForDomain = function(domain, cb) {
     this.getOptions(function(options) {
         cb(options[domain] || false);
     });
-}
+};
 
 Storage.prototype.setOptionsForDomain = function(domain, newOptions, cb) {
     var _this = this;
     this.setOption(domain, newOptions, cb);
-}
+};
 
 Storage.prototype.setOption = function(key, value, cb) {
     var _this = this;
@@ -187,7 +187,7 @@ Storage.prototype.setOption = function(key, value, cb) {
         options[key] = value;
         _this.setOptions(options, cb);
     });
-}
+};
 
 Storage.prototype.getDismissals = function(cb) {
     var _this = this,
@@ -205,19 +205,19 @@ Storage.prototype.getDismissals = function(cb) {
     });
 
     return promise;
-}
+};
 
 Storage.prototype.setDismissals = function(options, cb) {
     var save = {};
     save[this.DISMISSALS_KEY] = options;
     this.set(save, cb);
-}
+};
 
 Storage.prototype.getDismissalsForSite = function(domain, cb) {
     this.getDismissals(function(options) {
         cb(options[domain] || {});
     });
-}
+};
 
 Storage.prototype.setDismissalsForSite = function(domain, siteDismissals, cb) {
     var _this = this;
@@ -225,7 +225,7 @@ Storage.prototype.setDismissalsForSite = function(domain, siteDismissals, cb) {
         dismissals[domain] = siteDismissals;
         _this.setDismissals(dismissals, cb);
     });
-}
+};
 
 Storage.prototype.setDismissalForSite = function(domain, key, cb) {
     var _this = this;
@@ -233,7 +233,7 @@ Storage.prototype.setDismissalForSite = function(domain, key, cb) {
         dismissals[key] = true;
         _this.setDismissalsForSite(domain, dismissals, cb);
     });
-}
+};
 
 
 Storage.prototype.getPrivateSettings = function(cb) {
@@ -245,24 +245,24 @@ Storage.prototype.getPrivateSettings = function(cb) {
     });
 
     return promise;
-}
+};
 
 Storage.prototype.setPrivateSettings = function(options, cb) {
     var data = {};
     data[this.PRIVATE_SETTINGS_KEY] = options;
     this.set(data, cb);
-}
+};
 
 Storage.prototype.getPrivateSettingsForSite = function(domain, cb) {
     this.getPrivateSettings(function(options) {
         cb(options[domain] || false);
     });
-}
+};
 
 Storage.prototype.setPrivateSettingsForSite = function(domain, newOptions, cb) {
     var _this = this;
     this.setPrivateSetting(domain, newOptions, cb);
-}
+};
 
 Storage.prototype.setPrivateSetting = function(key, value, cb) {
     var _this = this;
@@ -270,7 +270,7 @@ Storage.prototype.setPrivateSetting = function(key, value, cb) {
         options[key] = value;
         _this.setPrivateSettings(options, cb);
     });
-}
+};
 
 // Allows you to get the entire onboarding data blob
 // This blob includes
@@ -281,15 +281,15 @@ Storage.prototype.getOnboardingData = function(cb) {
     this.get(this.ONBOARDING_KEY, function(data) {
         var ret = data[_this.ONBOARDING_KEY];
         cb(ret);
-    })
-}
+    });
+};
 
 // Allows you to set *all* the onboarding data
 Storage.prototype.setOnboardingData = function(data, cb) {
     var save = {};
     save[this.ONBOARDING_KEY] = data;
     this.set(save, cb);
-}
+};
 
 // Allows you to set a *key* in the onboarding data (not overwrite
 // all the data).
@@ -300,7 +300,7 @@ Storage.prototype.setOnboardingKey = function(key, value, cb) {
 
         _this.setOnboardingData(data, cb);
     });
-}
+};
 
 // Allows you to get the onboarding data for a specific site
 Storage.prototype.getOnboardingSiteData = function(siteKey, cb) {
@@ -309,21 +309,21 @@ Storage.prototype.getOnboardingSiteData = function(siteKey, cb) {
 
     this.getOnboardingData(function(data) {
         if (!data[_this.ONBOARDING_SITES_KEY]) {
-            data[_this.ONBOARDING_SITES_KEY] = {}
+            data[_this.ONBOARDING_SITES_KEY] = {};
         }
         if (!data[_this.ONBOARDING_SITES_KEY][siteKey]) {
-            data[_this.ONBOARDING_SITES_KEY][siteKey] = {}
+            data[_this.ONBOARDING_SITES_KEY][siteKey] = {};
         }
         _.defaults(data[_this.ONBOARDING_SITES_KEY][siteKey], _this.siteOnboardingDefaults);
         _this.setOnboardingData(data);
 
-        var value = data[_this.ONBOARDING_SITES_KEY][siteKey]
+        var value = data[_this.ONBOARDING_SITES_KEY][siteKey];
         if (typeof cb === "function") cb(value);
         promise.resolve(value);
     });
 
     return promise;
-}
+};
 
 // Allows you to set *all* the onboarding data for a specific site
 Storage.prototype.setOnboardingSiteData = function(siteKey, data, cb) {
@@ -344,7 +344,7 @@ Storage.prototype.setOnboardingSiteData = function(siteKey, data, cb) {
 
         _this.setOnboardingKey(_this.ONBOARDING_SITES_KEY, siteSpecificOnboardingData, cb);
     });
-}
+};
 
 // Allows you to set a *key* in the onboarding in the onboarding data
 // for a specific
@@ -354,7 +354,7 @@ Storage.prototype.setOnboardingSiteKey = function(siteKey, key, value, cb) {
         data[key] = value;
         _this.setOnboardingSiteData(siteKey, data, cb);
     });
-}
+};
 
 function StorageBase() {
     _this = this;
@@ -387,7 +387,7 @@ StorageBase.prototype.proxyClient = function(request, sender, sendResponse) {
             return this.remove(request.keys, sendResponse);
         }
     }
-}
+};
 
 StorageBase.prototype.set = function(items, cb) {
     var _this = this;
@@ -406,7 +406,7 @@ StorageBase.prototype.set = function(items, cb) {
     });
 
     return true;
-}
+};
 
 StorageBase.prototype.get = function(key, cb) {
     var _this = this;
@@ -423,10 +423,10 @@ StorageBase.prototype.get = function(key, cb) {
                 messageLocation: "storage"
             }, cb);
         }
-    })
+    });
 
     return true;
-}
+};
 
 StorageBase.prototype.remove = function(keys, cb) {
     var _this = this;
@@ -448,7 +448,7 @@ StorageBase.prototype.remove = function(keys, cb) {
     });
 
     return true;
-}
+};
 
 Storage.prototype.base = new StorageBase();
 

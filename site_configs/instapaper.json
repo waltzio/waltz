@@ -1,0 +1,17 @@
+{
+    "*://*.instapaper.com/*": {
+        "name": "Instapaper",
+        "match": "https?://(?!blog\\.)([^.]+\\.)?instapaper\\.com",
+        "logout": {
+            "cookies": ["pfp"]
+        },
+        "login": {
+            "urls": ["http://www.instapaper.com/user/login"],
+            "formURL": "http://www.instapaper.com/user/login",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "check": "#user_row"
+        }
+    }
+}

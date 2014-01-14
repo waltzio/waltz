@@ -15,15 +15,15 @@ function Crypto(options) {
 
 Crypto.prototype.encryptPassword = function(password, key) {
 	return CryptoJS.AES.encrypt(password, key).toString();
-}
+};
 
 Crypto.prototype.decryptPassword = function(encryptedPassword, key) {
 	return CryptoJS.AES.decrypt(encryptedPassword, key).toString(CryptoJS.enc.Utf8);
-}
+};
 
 Crypto.prototype.encrypt = function(request, cb) {
 	var _this = this,
-		siteKey = request.key
+		siteKey = request.key,
 		username = request.username,
 		unencryptedPassword = request.password,
 		credentialID = Utils.pseudoUniqueID();
@@ -53,12 +53,12 @@ Crypto.prototype.encrypt = function(request, cb) {
 				_ret = {
 					error: data.statusText,
 					status: data.status
-				}
+				};
 			}
 			if (typeof cb === "function") cb(_ret);
 		});
 	});
-}
+};
 
 Crypto.prototype.decrypt = function(request, cb) {
 	var _this = this,
@@ -90,9 +90,9 @@ Crypto.prototype.decrypt = function(request, cb) {
 				_ret = {
 					error: data.statusText,
 					status: data.status
-				}
+				};
 			}
 			if (typeof cb === "function") cb(_ret);
 		});
 	});
-}
+};

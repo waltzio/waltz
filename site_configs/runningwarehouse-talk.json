@@ -11,6 +11,7 @@
             "usernameField": "vb_login_username",
             "passwordField": "vb_login_password",
             "check": "a:contains('Log Out')"
-        }
+        },
+        "ignore": true
     }
 }

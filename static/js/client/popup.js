@@ -1,7 +1,5 @@
 Popup.prototype.shareContainerSelector = '.share-container';
 Popup.prototype.shareMessageSelector = '.share-message';
-Popup.prototype.inviteMessageSelector = '.invite-message';
-Popup.prototype.inviteCountSelector = '.invite-count';
 
 function Popup() {
     var _this = this;
@@ -27,14 +25,8 @@ Popup.prototype.render = function() {
     var $shareContainer = $(this.shareContainerSelector),
         $sharers = $shareContainer.find(this.sharer.shareSelector);
 
-    if (this.settings.waitingListActive && this.settings.inviteCount) {
-        $(this.inviteCountSelector).text(this.settings.inviteCount)
-        $(this.inviteMessageSelector).show();
-        $sharers.data('share-type', 'invite');
-    } else {
-        $(this.shareMessageSelector).show();
-        $sharers.data('share-type', 'share');
-    }
+    $(this.shareMessageSelector).show();
+    $sharers.data('share-type', 'share');
 
     chrome.tabs.query({ active: true }, function(data) {
         var site;
@@ -45,15 +37,6 @@ Popup.prototype.render = function() {
         }
         $('.waltz-share').data('site', site);
     });
-
-    $sharers
-        .data('link', this.settings.inviteLink)
-        .data('inviteCount', this.settings.inviteCount)
-        .data('waitListLength', this.settings.waitListLength);
-
-    $sharers.filter('.facebook').data('link', this.settings.longInviteLink);
-
-    $('.share-link').text(this.settings.inviteLink);
-}
+};
 
 var popup = new Popup();

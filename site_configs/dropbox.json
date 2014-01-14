@@ -15,7 +15,7 @@
             "twoFactor": [
                 {
                     "url": "https://www.dropbox.com/verify_code",
-                    "check": "input[name='otp']"
+                    "check": "input[name='code']"
                 }
             ]
         }

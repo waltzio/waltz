@@ -35,7 +35,7 @@
         });
 
         return promise;
-    }
+    };
 
     Templater.prototype.register = function(named, callback, promise) {
         this.templatesRendering[named] = {
@@ -55,12 +55,12 @@
                     delete(_this.templatesRendering[e.data.named]);
                 }
             }
-        })
-    }
+        });
+    };
 
     Templater.prototype.stopListening = function() {
         window.removeEventListener('message');
-    }
+    };
 
     this.Templater = Templater;
 

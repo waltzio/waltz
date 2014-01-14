@@ -10,16 +10,8 @@
             twitter: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out: <%= link %>.",
             facebook: "Someone finally fixed my password problem, if you're tired of remembering too much, check it out!"
         },
-        waitlist: {
-            twitter: "I found something to get rid of my passwords! <%= waitListLength %> people are in line, but we get in early if you join me: <%= link %>",
-            facebook: "I found something to get rid of my passwords! <%= waitListLength %> people are in line for access, but we get in early if you join me!"
-        },
         requestSite: {
             twitter: "Hey @getwaltz, I'd love to get rid of my passwords on <%= site %>. Can you help?"
-        },
-        invite: {
-            twitter: "Found @getwaltz to get rid of all of my passwords. There's a long wait list, but you can skip it with this link: <%= link %>.",
-            facebook: "Found Waltz to get rid of all of my passwords. There's a long wait list, but you can skip it with this link: <%= link %>."
         }
     };
 
@@ -76,7 +68,7 @@
 
     Sharer.prototype.shareSetupSuccess = function() {
 
-    }
+    };
 
     Sharer.prototype.twitter = function(opts) {
         var url = this.sharedShare(this.twitterBase, opts);
@@ -88,7 +80,7 @@
         url = Utils.addURLParam(url, "u", opts.link);
 
         this.open(url);
-    }
+    };
 
     Sharer.prototype.facebook = function(opts) {
         var url = this.sharedShare(this.facebookBase, opts);
@@ -105,7 +97,7 @@
         url = Utils.addURLParam(url, "picture", "http://getwaltz.com/static/img/waltz-full.png");
 
         this.open(url);
-    }
+    };
 
     Sharer.prototype.email = function(opts) {
         var url = "mailto:";
@@ -118,15 +110,15 @@
         url = Utils.addURLParam(url, "body", opts.message);
 
         this.open(url);
-    }
+    };
 
     Sharer.prototype.open = function(url) {
         window.open(url, "popup", "height=400px,width=600px,top=100px,left=100px");
-    }
+    };
 
     Sharer.prototype.sharedShare = function(url, opts) {
-    return url;
-    }
+        return url;
+    };
 
     this.Sharer = Sharer;
 }).call(this);

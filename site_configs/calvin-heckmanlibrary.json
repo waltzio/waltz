@@ -14,19 +14,22 @@
         },
         "ignore": true
     },
-    "*://*.calvin.edu/*": {
+    "*://*.lib-proxy.calvin.edu/*": {
         "name": "Proxy for Heckman Library",
         "logout": {
             "cookies": ["ezproxy"]
         },
         "login": {
-            "urls": ["https://lib-proxy.calvin.edu/login?url=http://sfxhosted.exlibrisgroup.com/calvin/az"],
+            "urls": [
+            	"http://sfxhosted.exlibrisgroup.com.lib-proxy.calvin.edu/calvin/az",
+            	"https://lib-proxy.calvin.edu/login?url=http://sfxhosted.exlibrisgroup.com/calvin/az"
+            ],
             "formURL": "https://lib-proxy.calvin.edu/login",
             "formOnly": true,
             "method": "POST",
             "usernameField": "user",
             "passwordField": "pass",
-            "check": "a:contains('Logout')"
+            "check": "td.GoButton"
         },
         "ignore": true
     }

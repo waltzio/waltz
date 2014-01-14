@@ -1,0 +1,21 @@
+{
+    "*://*.republicwireless.com/*": {
+        "name": "Republic Wireless",
+        "logout": {
+            "cookies": ["RWSESSIONID", "BWSessionId", "JSESSIONID"]
+        },
+        "login": {
+            "urls": [
+            		"https://republicwireless.com/",
+            		"https://auth.republicwireless.com/login"
+            	],
+            "formURL": "https://auth.republicwireless.com/login",
+            "method": "POST",
+            "hasHiddenInputs": true,
+            "usernameField": "username",
+            "passwordField": "password",
+            "check": "a:contains('Sign Out')",
+            "formOnly": true
+        }
+    }
+}

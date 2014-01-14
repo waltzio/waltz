@@ -32,7 +32,7 @@ Sites.prototype.init = function(data) {
 
     this.siteConfigs = data;
 
-    count = _.filter(data, function(k, v) { return !k.ignore }).length
+    count = _.filter(data, function(k, v) { return !k.ignore; }).length;
 
     $.each(data, function(key, site) {
         if (!site.ignore) {
@@ -42,10 +42,6 @@ Sites.prototype.init = function(data) {
                 "<h4 class='name'>" + site.name + "</h4>",
                 "<img src='/static/img/site_images/" + site.key + ".png'/>",
             "</li>"].join(""));
-
-            (function() {
-
-            })
 
             _this.storage.getOnboardingSiteData(site.key, function(data) {
                 if (data.loginAttempts && data.loginAttempts.success >= 1) {
@@ -59,7 +55,7 @@ Sites.prototype.init = function(data) {
                             var aName = a.find('.name').text(), bName = b.find('.name').text();
                             if (aName > bName) return 1;
                             if (aName < bName) return -1;
-                            return 0
+                            return 0;
                         }
 
                         $siteContainer.prepend(completed.sort(sorter)); 
