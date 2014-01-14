@@ -413,7 +413,7 @@ Delegate.prototype.checkAuthentication = function(request, cb) {
 };
 
 Delegate.prototype.handleCSPHeader = function(details) {
-    var safeDomains = 'https://*.googleapis.com https://*.googleusercontent.com'
+    var safeDomains = 'https://*.googleapis.com https://*.googleusercontent.com';
     for (i = 0; i < details.responseHeaders.length; i++) {
 
         if (Utils.isCSPHeader(details.responseHeaders[i].name.toUpperCase())) {
