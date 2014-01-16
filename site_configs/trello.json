@@ -11,7 +11,7 @@
             "usernameField": "user",
             "passwordField": "password",
             "hasHiddenInputs": true,
-            "check": "a.header-auth.member"
+            "check": "a.header-auth.member, a.header-member"
         }
     }
 }
