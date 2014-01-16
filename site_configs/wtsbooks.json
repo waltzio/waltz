@@ -1,0 +1,19 @@
+{
+    "*://*.wtsbooks.com/*": {
+        "name": "Westminster Bookstore",
+        "logout": {
+            "cookies": ["PHPSESSID"]
+        },
+        "login": {
+            "urls": ["https://www.wtsbooks.com/index/page/myaccount", "https://www.wtsbooks.com/index/page/login"],
+            "formURL": "https://www.wtsbooks.com/index/page/login",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "formOnly": true,
+            "check": "a:contains('Logout')"   
+        },
+        "ignore": true
+    }
+}
