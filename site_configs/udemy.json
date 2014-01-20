@@ -1,0 +1,19 @@
+{
+    "*://*.udemy.com/*": {
+        "name": "Udemy",
+        "match": "https?://(?!support\\.)([^.]+\\.)?udemy\\.com",
+        "logout": {
+            "cookies": ["PHPSESSID", "access_token"]
+        },
+        "login": {
+            "urls": ["https://www.udemy.com/join/login-popup/"],
+            "formURL": "https://www.udemy.com/join/login-submit/",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "submitButton": "input[value='Login']",
+            "hasHiddenInputs": true,
+            "check": "div.links.logout"
+        }
+    }
+}
