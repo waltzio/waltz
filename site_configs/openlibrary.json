@@ -1,0 +1,17 @@
+{
+    "*://*.openlibrary.org/*": {
+        "name": "Open Library",
+        "logout": {
+            "cookies": ["session"]
+        },
+        "login": {
+            "urls": ["https://openlibrary.org/account/login"],
+            "formURL": "https://openlibrary.org/account/login",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "div#headerUserOpen, a:contains('Log out')"
+        }
+    }
+}
