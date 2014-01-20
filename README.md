@@ -1,9 +1,58 @@
 [![Build Status](https://travis-ci.org/waltzio/waltz.png)](https://travis-ci.org/waltzio/waltz)
 
 # Waltz
-An open source password manager designed to work with Clef
+An open source password manager designed to work with [Clef](https://getclef.com/).
 
-## Contributing a site configuration to Waltz
+## Contributing To Waltz
+
+Waltz is open source! You can contribute by adding sites, submitting issues, fixing bugs,
+auditing code, and implementing features.
+
+### Setting up
+
+1. [Download](http://nodejs.org/download/) and install node and npm: 
+
+    	$ brew install node
+
+2. Fork the Waltz repo and run: 
+
+	    $ git clone git@github.com:YOUR-USERNAME/waltz.git
+	    $ cd waltz
+	    $ npm install
+	    $ git checkout -b YOUR-BRANCH-NAME
+	    
+	Branches should be made from the `develop` branch.
+
+3. Running `npm install` will install [grunt](http://gruntjs.com/), which Waltz uses to build site configuration settings and compile sass. First, build the site configuration: 
+
+		$ grunt build-config
+		Running "build-config:go" (build-config) task
+
+		Done, without errors.
+
+4. Then, have grunt watch your files. This will compile site configs and scss when the
+   files are saved:
+
+	    $ grunt
+	    Running "watch" task
+	    Waiting...
+
+5. Finally, you can test your changes by loading Waltz as an unpacked extension in chrome. Make sure the app
+   store version of Waltz has been uninstalled to prevent conflicts.
+
+    * Navigate to [chrome://extensions](chrome://extensions/) in your Chrome browser
+    * Check the "Developer mode" box 
+    * Click "Load unpacked extension..."
+    * Navigate to the Waltz root directory and select it
+
+When you are done making changes, please submit a pull request and
+the Waltz core team will look it over.
+
+If possible, please write tests for the code you write. 
+
+The PR should be ready to merge your branch into the `develop` branch and all tests should pass. 
+
+### Contributing a site configuration
 
 Waltz recognizes sites by using the configuration files found in
 `site_configs`.
@@ -15,7 +64,7 @@ are trying to add (google.com -> `google.json`, facebook.com -> `facebook.json`,
 Please also add a 150x150 `png` with the site logo in `static/img/site_images`
 using the same name as the config file.
 
-### Required fields
+#### Required fields
 
 For many sites, Waltz only needs a few required configuration options to work. 
 
@@ -64,7 +113,13 @@ on `https://localhost/hello` and `http://sub.localhost/`.
         - `check` *string* — a  [jQuery selector](http://api.jquery.com/category/selectors/) for an element that *only*
     appears on a page you had to log in for. The best element to select for is the logout button or link.
 
-### Optional fields
+*Note:* Determining the cookie that stores whether a user is logged in is
+a process of trial and error. Typically, the cookie can be found by logging
+into a website, opening up the Chrome developer console, deleting cookies
+and refreshing the page. If, when you have refreshed the page, you are logged
+out, then you've found the right cookie to add to the `logout.cookies` list.
+
+#### Optional fields
 
 In some cases, Waltz needs a little more information to work properly on more
 complicated sites. For instance, a site might have hidden inputs, two
