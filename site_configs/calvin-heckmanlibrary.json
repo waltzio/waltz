@@ -1,0 +1,36 @@
+{
+    "*://ulysses.calvin.edu/*": {
+        "name": "Heckman Library",
+        "logout": {
+            "cookies": ["ses", "eg_loggedin"]
+        },
+        "login": {
+            "urls": ["https://ulysses.calvin.edu/eg/opac/login"],
+            "formURL": "https://ulysses.calvin.edu/eg/opac/login",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "check": "a:contains('Logout')"
+        },
+        "ignore": true
+    },
+    "*://*.lib-proxy.calvin.edu/*": {
+        "name": "Proxy for Heckman Library",
+        "logout": {
+            "cookies": ["ezproxy"]
+        },
+        "login": {
+            "urls": [
+            	"http://sfxhosted.exlibrisgroup.com.lib-proxy.calvin.edu/calvin/az",
+            	"https://lib-proxy.calvin.edu/login?url=http://sfxhosted.exlibrisgroup.com/calvin/az"
+            ],
+            "formURL": "https://lib-proxy.calvin.edu/login",
+            "formOnly": true,
+            "method": "POST",
+            "usernameField": "user",
+            "passwordField": "pass",
+            "check": "td.GoButton"
+        },
+        "ignore": true
+    }
+}

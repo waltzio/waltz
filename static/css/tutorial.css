@@ -6536,7 +6536,7 @@ th.hide-for-touch {
   }
 
   50% {
-    left: -700px;
+    left: -600px;
     top: -50px;
   }
 
@@ -6560,6 +6560,16 @@ th.hide-for-touch {
 
   5%, 15%, 25% {
     -webkit-transform: scale(1.15, 1.15);
+  }
+}
+
+@-webkit-keyframes opacity-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
   }
 }
 
@@ -6613,7 +6623,7 @@ header h2 {
 }
 .tutorial-slides .slides {
   width: 600px;
-  height: 500px;
+  height: 400px;
   margin: auto;
   position: relative;
 }
@@ -6635,8 +6645,8 @@ header h2 {
   height: 100%;
   width: 100%;
   background: white;
-  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.3);
-  padding: 50px;
+  box-shadow: 5px 5px 0 0 rgba(0, 0, 0, 0.1);
+  padding: 30px;
   position: absolute;
   top: 0;
   left: 0;
@@ -6644,10 +6654,13 @@ header h2 {
 }
 .tutorial-slides .slide h1 {
   font-weight: 100;
-  margin-bottom: 30px;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #EEE;
+  padding-bottom: 5px;
 }
 .tutorial-slides .slide p {
-  font-size: 1.9em;
+  font-size: 1.6em;
   font-weight: 100;
   line-height: 1.1em;
 }
@@ -6743,6 +6756,13 @@ header h2 {
 }
 .tutorial-slides .slide .site-start.github:active {
   box-shadow: 1px 1px 0 0 #060505;
+}
+.tutorial-slides .slide .site-start.completed {
+  opacity: .3;
+  -webkit-box-shadow: none;
+}
+.tutorial-slides .slide .site-start.completed:hover {
+  -webkit-box-shadow: none;
 }
 .tutorial-slides .slide iframe {
   overflow: hidden;

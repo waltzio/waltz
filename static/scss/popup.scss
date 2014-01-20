@@ -4,17 +4,46 @@
 
 html, body {
     width: 300px;
+    height: 470px;
+    padding: 0;
+    margin: 0;
 }
 
 #waltz-popup {
+    margin-top: 15px;
     border: none;
+    padding: 10px;
+    margin: 0;
+    padding-bottom: 0px;
     ul {
         list-style: none;
         margin: 0;
     }
 
-    a {
+    .share-container {
+        li {
+            padding-bottom: 10px;
+        }
+        a.waltz-share {
+            text-align: center;
+            display: block;
+            width: 100%;
+            color: #AAA;
+            font-size: 30px;
+            &:hover {
+                color: #777;
+            }
+        }
 
+        a.share-link {
+            color: #AAA;
+            &:hover {
+                color: #777;
+            }
+        }
+    }
+
+    a {
         &.sites {
             @include popup-button(#0390DC);
         }
@@ -30,5 +59,44 @@ html, body {
         &.request {
             @include popup-button(#00B45C);
         }
+
+        &.b {
+            width: 100%;
+            margin: 15px 0;
+        }
+    }
+
+    .request-container {
+        display: none;
+
+        .columns {
+            padding: 5px;
+        }
+        width: 90%;
+        margin: 0;
+        a.request-twitter {
+            @include popup-button($twitter-color);
+        }
+
+        a.request-github {
+            @include popup-button($github-color);
+        }
+
+        a.request-email {
+            @include popup-button($email-color);
+        }
+
+        a.request-twitter, a.request-github, a.request-email {
+            font-size: 14px;
+            padding: 5px 0 35px 0;
+            text-align: center;
+            &:before {
+                width: 100%;
+                text-align: center;
+                font-size: 25px;
+                top: 25px;
+            }
+        }
+        
     }
 }

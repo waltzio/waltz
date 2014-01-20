@@ -4,11 +4,11 @@
     font-family: $font-family;
     -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
     display: none;
-    z-index: 9999;
+    z-index: $z-index-1st;
     color: #111;
     background: $color;
     padding: 0;
-    width: 280px;
+    width: 380px;
     border: 2px solid $border-color;
     border-radius: 5px;
 
@@ -17,6 +17,7 @@
         font-weight: 700;
         font-size: 16px;
         line-height: 1.2em;
+        text-align: left;
     }
 
     &.floating {

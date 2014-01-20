@@ -1,41 +1,50 @@
 {
   "name": "Waltz",
-  "version": "0.2.1",
+  "version": "1.0.8.3",
   "manifest_version": 2,
-  "description": "Forget About Your Accounts",
+  "description": "A modern account manager for the web.",
+
+  "browser_action": {
+    "default_icon": {
+      "19": "/static/img/waltz-19.png",
+      "38": "/static/img/waltz-38.png"
+    },
+    "default_title": "Waltz",
+    "default_popup": "html/popup.html"
+  },
+
   "background": {
     "scripts": [
-      "static/js/vendor/underscore-min.js",
+      "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
       "static/js/vendor/pubnub.js",
-      "static/js/background/utils.js",
+      "static/js/shared/utils.js",
       "static/js/background/crypto.js", 
       "static/js/shared/storage.js",
       "static/js/vendor/aes.js",
+      "static/js/shared/analytics.js",
+      "static/js/vendor/keen.min.js",
       "static/js/background/delegate.js",
-      "static/js/background/tutorial.js"
+      "/static/js/background/setup.js"
     ]
   },
   "content_scripts": [{
     "matches": ["*://*/*"],
     "js": [
-      "static/js/vendor/underscore-min.js",
+      "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
+      "static/js/shared/utils.js",
+      "static/js/shared/templater.js",
       "static/js/shared/storage.js",
+      "static/js/shared/sharer.js",
       "static/js/client/message.js", 
-      "static/js/client/waltz.js", 
-      "static/js/client/onboarder.js"
+      "static/js/client/onboarder.js",
+      "static/js/shared/analytics.js",
+      "static/js/vendor/keen.min.js",
+      "static/js/client/waltz.js"
     ],
-    "css": ["static/css/waltz.css"]
+    "css": ["/static/css/waltz.css"]
   }],
-  "browser_action": {
-    "default_icon": {
-      "19": "static/img/waltz-19.png",
-      "38": "static/img/waltz-38.png"
-    },
-    "default_title": "Waltz",
-    "default_popup": "html/popup.html"
-  },
   "permissions": [
   	"*://*/*",
     "storage",
@@ -43,17 +52,23 @@
     "tabs",
     "notifications",
     "contextMenus",
-    "webRequest"
+    "webRequest",
+    "webRequestBlocking"
   ],
   "icons": {
-    "16": "static/img/waltz-16.png",
-    "48": "static/img/waltz-48.png",
-    "128": "static/img/waltz-128.png"
+    "16": "/static/img/waltz-16.png",
+    "48": "/static/img/waltz-48.png",
+    "128": "/static/img/waltz-128.png"
   },
   "options_page": "html/options.html",
-  "homepage_url": "http://waltz.io",
+  "homepage_url": "http://getwaltz.com",
   "web_accessible_resources": [
-    "static/img/*"
+    "/static/img/*",
+    "/html/templates.html",
+    "/manifest.json"
   ],
-  "content_security_policy": "script-src 'self' chrome-extension://; object-src 'self'"
+  "content_security_policy": "script-src 'self' chrome-extension:// https://connect.facebook.net; object-src 'self'",
+  "sandbox": {
+    "pages": ["/html/templates.html"]
+  }
 }

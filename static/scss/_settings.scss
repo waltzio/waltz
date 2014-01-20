@@ -1,13 +1,12 @@
-$blue: #0D9DDB;
-$red: #db070a;
-$green: #19b008;
+$blue: #0390DC;
+$red: #DD0005;
+$green: #00BE61;
 $pink: #F50380;
 
-$red-off: #db4c53;
-$green-off: #7fe26c;
-$pink-off: #F774B8;
-
-$blue-on: #087db0;
+$twitter-color: #2396D5;
+$github-color: #010101;
+$facebook-color: #4461A7;
+$email-color: #999;
 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
 $font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
@@ -15,4 +14,11 @@ $button-font-family: $font-family;
 $button-font-weight: 700;
 
 $slide-height: 600px;
-$slide-width: 500px;
+$slide-width: 400px;
+
+$z-index-1st: 2147483647;
+$z-index-2nd: $z-index-1st - 1;
+$z-index-3rd: $z-index-2nd - 1;
+$z-index-4th: $z-index-3rd - 1;
+
+$z-index-below-clef: 9990;

@@ -1,0 +1,23 @@
+{
+    "https://*.cloudflare.com/*": {
+        "name": "CloudFlare",
+        "logout": {
+            "cookies": ["vses2"]
+        },
+        "login": {
+            "urls": ["https://www.cloudflare.com/login"],
+            "formURL": "https://www.cloudflare.com/login",
+            "method": "POST",
+            "usernameField": "login_email",
+            "passwordField": "login_pass",
+            "hasHiddenInputs": true,
+            "check": "li.logout",
+            "twoFactor": [
+                {
+                    "url": "https://www.cloudflare.com/login",
+                    "check": "input#twofactorToken"
+                }
+            ]
+        }
+    }
+}

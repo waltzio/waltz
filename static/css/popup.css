@@ -6531,14 +6531,40 @@ th.hide-for-touch {
 
 html, body {
   width: 300px;
+  height: 470px;
+  padding: 0;
+  margin: 0;
 }
 
 #waltz-popup {
+  margin-top: 15px;
   border: none;
+  padding: 10px;
+  margin: 0;
+  padding-bottom: 0px;
 }
 #waltz-popup ul {
   list-style: none;
   margin: 0;
+}
+#waltz-popup .share-container li {
+  padding-bottom: 10px;
+}
+#waltz-popup .share-container a.waltz-share {
+  text-align: center;
+  display: block;
+  width: 100%;
+  color: #AAA;
+  font-size: 30px;
+}
+#waltz-popup .share-container a.waltz-share:hover {
+  color: #777;
+}
+#waltz-popup .share-container a.share-link {
+  color: #AAA;
+}
+#waltz-popup .share-container a.share-link:hover {
+  color: #777;
 }
 #waltz-popup a.sites {
   box-shadow: 3px 3px 0 0 #026faa;
@@ -6567,6 +6593,13 @@ html, body {
 }
 #waltz-popup a.sites:hover {
   background: #0397e6;
+}
+#waltz-popup a.sites.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }
 #waltz-popup a.sites:before {
   display: block;
@@ -6606,6 +6639,13 @@ html, body {
 #waltz-popup a.tutorial:hover {
   background: #e70005;
 }
+#waltz-popup a.tutorial.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
 #waltz-popup a.tutorial:before {
   display: block;
   position: absolute;
@@ -6643,6 +6683,13 @@ html, body {
 }
 #waltz-popup a.settings:hover {
   background: #f56d00;
+}
+#waltz-popup a.settings.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
 }
 #waltz-popup a.settings:before {
   display: block;
@@ -6682,6 +6729,13 @@ html, body {
 #waltz-popup a.request:hover {
   background: #00be61;
 }
+#waltz-popup a.request.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
 #waltz-popup a.request:before {
   display: block;
   position: absolute;
@@ -6691,4 +6745,162 @@ html, body {
   height: 100%;
   font-size: 45px;
   text-align: center;
+}
+#waltz-popup a.b {
+  width: 100%;
+  margin: 15px 0;
+}
+#waltz-popup .request-container {
+  display: none;
+  width: 90%;
+  margin: 0;
+}
+#waltz-popup .request-container .columns {
+  padding: 5px;
+}
+#waltz-popup .request-container a.request-twitter {
+  box-shadow: 3px 3px 0 0 #1c77a9;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #2396d5;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+  position: relative;
+  padding-left: 25%;
+}
+#waltz-popup .request-container a.request-twitter:hover {
+  box-shadow: 2px 2px 0 0 #1c77a9;
+}
+#waltz-popup .request-container a.request-twitter:active {
+  box-shadow: 1px 1px 0 0 #1c77a9;
+}
+#waltz-popup .request-container a.request-twitter:focus, #waltz-popup .request-container a.request-twitter:active {
+  outline: none;
+}
+#waltz-popup .request-container a.request-twitter:hover {
+  background: #279bdb;
+}
+#waltz-popup .request-container a.request-twitter.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
+#waltz-popup .request-container a.request-twitter:before {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  font-size: 45px;
+  text-align: center;
+}
+#waltz-popup .request-container a.request-github {
+  box-shadow: 3px 3px 0 0 black;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #010101;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+  position: relative;
+  padding-left: 25%;
+}
+#waltz-popup .request-container a.request-github:hover {
+  box-shadow: 2px 2px 0 0 black;
+}
+#waltz-popup .request-container a.request-github:active {
+  box-shadow: 1px 1px 0 0 black;
+}
+#waltz-popup .request-container a.request-github:focus, #waltz-popup .request-container a.request-github:active {
+  outline: none;
+}
+#waltz-popup .request-container a.request-github:hover {
+  background: #060606;
+}
+#waltz-popup .request-container a.request-github.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
+#waltz-popup .request-container a.request-github:before {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  font-size: 45px;
+  text-align: center;
+}
+#waltz-popup .request-container a.request-email {
+  box-shadow: 3px 3px 0 0 gray;
+  width: 90%;
+  margin: 5% auto;
+  display: block;
+  color: white;
+  background: #999999;
+  text-align: left;
+  padding: 15px;
+  text-decoration: none;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.4em;
+  position: relative;
+  padding-left: 25%;
+}
+#waltz-popup .request-container a.request-email:hover {
+  box-shadow: 2px 2px 0 0 gray;
+}
+#waltz-popup .request-container a.request-email:active {
+  box-shadow: 1px 1px 0 0 gray;
+}
+#waltz-popup .request-container a.request-email:focus, #waltz-popup .request-container a.request-email:active {
+  outline: none;
+}
+#waltz-popup .request-container a.request-email:hover {
+  background: #9e9e9e;
+}
+#waltz-popup .request-container a.request-email.loading {
+  -webkit-animation-name: opacity-pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: 1s;
+}
+#waltz-popup .request-container a.request-email:before {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  font-size: 45px;
+  text-align: center;
+}
+#waltz-popup .request-container a.request-twitter, #waltz-popup .request-container a.request-github, #waltz-popup .request-container a.request-email {
+  font-size: 14px;
+  padding: 5px 0 35px 0;
+  text-align: center;
+}
+#waltz-popup .request-container a.request-twitter:before, #waltz-popup .request-container a.request-github:before, #waltz-popup .request-container a.request-email:before {
+  width: 100%;
+  text-align: center;
+  font-size: 25px;
+  top: 25px;
 }

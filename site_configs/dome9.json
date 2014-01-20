@@ -1,0 +1,21 @@
+{
+    "*://*.dome9.com/*": {
+        "name": "Dome9",
+        "logout": {
+            "cookies": ["d9Auth"]
+        },
+        "login": {
+            "urls": [
+                "https://secure.dome9.com/",
+                "https://secure.dome9.com/account/logon?ReturnUrl=%2f"
+            ],
+            "formURL": "https://secure.dome9.com/account/logon?ReturnUrl=%2f",
+            "method": "POST",
+            "usernameField": "UserName",
+            "passwordField": "Password",
+            "hasHiddenInputs": true,
+            "formOnly": true,
+            "check": "div#logindisplay"
+        }
+    }
+}

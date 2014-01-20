@@ -10,6 +10,13 @@ grunt.initConfig({
         debounceDelay: 500
       }
     },
+    jshint: {
+      files: ['static/js/**/*.js'],
+      tasks: ['jshint'],
+      options: {
+        debounceDelay: 500
+      }
+    },
     'build-config': {
       files: ['site_configs/*.json'],
       tasks: ['build-config'],
@@ -28,24 +35,23 @@ grunt.initConfig({
         'static/css/options.css': 'static/scss/options.scss',
         'static/css/popup.css': 'static/scss/popup.scss',
         'static/css/tutorial.css': 'static/scss/tutorial.scss',
-        'static/css/sites.css': 'static/scss/sites.scss'
+        'static/css/sites.css': 'static/scss/sites.scss',
       }
     }
   },
   'chrome-extension': {
     options: {
         name: "Waltz",
-        version: "0.1.1",
+        version: "1.0.8.3",
         id: "obhibkfopclldmnoohabnbimocpgdine",
         chrome: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
         clean: true,
         certDir: 'cert',
         buildDir: 'build',
         resources: [
-            "js/**",
-            "img/**",
-            "html/**",
-	          "css/**"
+           'static/**',
+           'html/**',
+           'site_configs/**'
         ]
     }
   },
@@ -54,7 +60,33 @@ grunt.initConfig({
       src: 'site_configs',
       dest: 'build/site_configs.json'
     }
-  }
+  },
+  jasmine: {
+    waltz: {
+      src: 'static/**/*.js',
+      options: {
+        specs: 'test/spec/*Spec.js',
+        helpers: 'test/spec/*Helper.js'
+      }
+    }
+  },
+  jshint: {
+    files: [
+      'Gruntfile.js', 
+      'static/js/background/**/*.js', 
+      'static/js/client/**/*.js',
+      'static/js/shared/**/*.js'
+    ],
+    options: {
+      // options here to override JSHint defaults
+      globals: {
+        jQuery: true,
+        console: true,
+        module: true,
+        document: true
+      }
+    }
+  },
 });
 
 grunt.task.registerMultiTask('build-config', 'Concatenates site configs.', function() {
@@ -78,8 +110,8 @@ grunt.task.registerMultiTask('build-config', 'Concatenates site configs.', funct
     var relativePath = _this.data.src + '/' + filename;
     siteConfig = grunt.file.readJSON(relativePath);
 
-    for (domain in siteConfig) {
-      siteConfig[domain]['key'] = filename.split('.')[0];
+    for (var domain in siteConfig) {
+      siteConfig[domain].key = filename.split('.')[0];
     }
 
     merged = jsonMerge(merged, siteConfig);
@@ -99,5 +131,8 @@ grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-contrib-watch');
 grunt.loadNpmTasks('grunt-chrome-compile');
 grunt.loadNpmTasks('grunt-merge-json');
+grunt.loadNpmTasks('grunt-contrib-jasmine');
+grunt.loadNpmTasks('grunt-contrib-jshint');
 
 grunt.registerTask('default', ['watch']);
+grunt.registerTask('test', ['jasmine:waltz']);

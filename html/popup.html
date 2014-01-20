@@ -5,16 +5,56 @@
   <link rel="stylesheet" href="/static/css/popup.css" type="text/css" />
 </head>
 
-<body id="waltz-popup">
+<body>
+  <div id="waltz-popup">
+    <a href=""></a>
+    <div class="share-container">
+      <div class="row">
+        <div class="small-12 columns">
+          <ul class="small-block-grid-3">
+            <li><a href="#" class="waltz-share twitter fi-social-twitter" data-share-type="share"></a></li>
+            <li><a href="#" class="waltz-share facebook fi-social-facebook" data-share-type="share"></a></li>
+            <li><a href="#" class="waltz-share email fi-mail" data-share-type="share" data-to="support@getwaltz.com" data-subject="You should get Waltz!"></a></li>
+          </ul>
+        </div>
+          <h6 class="text-center share-message">share waltz with your friends!</h6>
+      </div>
+      <div class="row">
+        <div class="small-12 columns text-center">
+          <a href="" class="share-link">http://getwaltz.com</a>
+        </div>
+      </div>
+    </div>
     <ul>
-        <li><a href=""></a></li>
-        <li><a href="sites.html" target="_blank" class="sites fi-check">Sites where I can use Waltz already.</a></li>
-        <li><a href="https://twitter.com/intent/tweet?text=I'd love to use Waltz on " target="_blank" class="request fi-plus">I want this site to work with Waltz!</a></li>
-        <li><a href="options.html" target="_blank" class="settings fi-widget">Manage settings and account stuff.</a></li>
-        <li><a href="tutorial.html" target="_blank" class="tutorial fi-clipboard-pencil">Show me the tutorial again.</a></li>
+        <li><a href="sites.html" target="_blank" class="b sites fi-check">Sites where I can use Waltz already.</a></li>
+        <li>
+          <a href="#" class="b request fi-plus">I want this site to work with Waltz!</a>
+          <div class="request-container">
+            <div class="row">
+              <h6 class="text-center">Request via</h6>
+              <div class="small-4 columns">
+                <a class="waltz-share request-twitter fi-social-twitter" data-share-type="requestSite">twitter</a>
+              </div>
+              <div class="small-4 columns">
+                <a href="https://github.com/waltzio/waltz/issues/new" target="_blank" class="request-github fi-social-github">github</a>
+              </div>
+              <div class="small-4 columns">
+                <a class="waltz-share email request-email fi-mail" data-subject="Waltz website request" data-to="support@getwaltz.com" data-share-type="requestSite">email</a>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li><a href="options.html" target="_blank" class="b settings fi-widget">Manage settings and account stuff.</a></li>
+        <li><a href="tutorial.html" target="_blank" class="b tutorial fi-clipboard-pencil">Show me the tutorial again.</a></li>
     </ul>
-    <script src="/static/js/vendor/jquery.min.js"></script>
-    <script src="/static/js/client/popup.js"></script>
+  </div>
+  <script src="/static/js/vendor/jquery.min.js"></script>
+  <script src="/static/js/vendor/lodash.min.js"></script>
+  <script src="/static/js/shared/utils.js"></script>
+  <script src="/static/js/shared/storage.js"></script>
+  <script src="/static/js/shared/templater.js"></script>
+  <script src="/static/js/shared/sharer.js"></script>
+  <script src="/static/js/client/popup.js"></script>
 </body>
 
 </html>

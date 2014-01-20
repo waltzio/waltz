@@ -5,29 +5,14 @@
             "cookies": ["NetflixId"]
         },
         "login": {
-            "urls": ["https://signup.netflix.com/Login"],
+            "urls": ["https://signup.netflix.com/"],
             "formURL": "https://signup.netflix.com/Login",
+			"formOnly": true,
             "method": "POST",
-            "usernameField": "session[username_or_email]",
-            "passwordField": "session[password]",
+            "usernameField": "email",
+            "passwordField": "password",
             "hasHiddenInputs": true,
-            "check": "button:contains('Sign out'), input:contains('Sign out')",
-            "twoFactor": [
-                {
-                    "url": "https://twitter.com/account/login_verification/push",
-                    "check": "div.login-verification-push"
-                },
-                { 
-                    "url": "https://twitter.com/account/login_verification/sms",
-                    "check": "input[name]='token'"
-                }
-            ],
-            "exclude": {
-                "forcedRedirectURLs" : ["https://about.twitter.com/download"],
-                "nextURLs": ["https://twitter.com/login/captcha", "https://twitter.com/login/error"]
-            }
-        },
-        "ignore": true
+            "check": "a:contains('Sign out of Netflix')"
+        }
     }
 }
-

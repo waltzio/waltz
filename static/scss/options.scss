@@ -1,12 +1,11 @@
-@import "_settings.scss";
+@import "_settings";
 @import "../foundation/scss/foundation.scss";
-/** Vars **/
-$blueBG: #cadde2;
-$lightBlueBG: #d8eef3;
-$cellBorder: #c1d4d9;
-$cellBackground: #b6c7cc;
+@import "_mixins";
+@import "_animations";
 
-
+.clear {
+	clear: both;
+}
 /** Styles **/
 .header {
 	border-bottom: 1px solid #EEE;
@@ -34,17 +33,32 @@ $cellBackground: #b6c7cc;
 		margin-top: 0;
 		padding-top: 20px;
 		padding-bottom: 20px;
-		border-bottom: 2px solid $cellBorder;
 	}
 
 	&.settings {
 		display: none;
+		padding: 20px;
 
-		.all-settings {
-			padding: 5px 0 5px 50px;
+		.settings-container {
+			margin-bottom: 40px;
+		}
 
-			#api-url {
-				width: 500px;
+		h1 {
+			font-weight: 500;
+			font-size: 30px;
+			margin-bottom: 30px;
+		}
+		ul {
+			list-style: none;
+			margin: 0;
+		}
+
+		.dismissals-container {
+			.dismissed-item {
+				h6 {
+					font-size: 20px;
+					font-weight: 500;
+				}
 			}
 		}
 	}
@@ -52,55 +66,60 @@ $cellBackground: #b6c7cc;
 	&.sites-list {
 
 		ul {
-			list-style-type: none;
-			margin: 0;
-			padding: 0;
+			list-style: none;
+	
+			li.credential {
+				padding: 40px 0 20px 0;
+				border-bottom: 1px solid #EEE;
+			}
 
-			li {
-				background-color: $cellBackground;
-				border-bottom: 2px solid $cellBorder;
-				padding: 5px 0 5px 50px;
-				h3 {
-					display: inline;
-					font-weight: normal;
+			.information-container {
+				.information, .buttons {
+					float: left;
 				}
-
-				.styled {
-					border: 2px solid #d7d8dd;
-					background-color: #c9cbd0;
-					padding: 5px;
-					border-radius: 3px;
-					box-shadow: 0 0 10px -3px #333;
-					cursor: pointer;
-
-					&.success {
-						background-color: green;
+				.information {
+					min-width: 200px;
+					h4, h6 {
+						margin: 0;
 					}
 				}
 
-				.togglePass {
-					border: none;
-					background-color: transparent;
-					height: 25px;
-					width: 25px;
-					background-size: contain;
-					background-repeat: no-repeat;
-					background-position: bottom;
-					cursor: pointer;
+				button.forget {
+				}
+			}
 
-					&.closed {
-						background-image: url(/static/img/eye_open.png);
-					}
+			.decrypted-container {
+				display: none;
 
-					&.open {
-						background-image: url(/static/img/eye_closed.png);
+				input {
+					margin: 0;
+					&[name="password"] {
+						&:not(.toggled) {
+							display: none;
+						}
 					}
 				}
 
-				label {
-					color: #444;
-					margin-left: 20px;
+				button {
+					padding: 8px;
 				}
+			}
+		}
+	}
+
+	button {
+		width: 100%;
+		&.forget {
+			background: $red;
+			&:hover {
+				background: darken($red, 5%);
+			}
+		}
+
+		&.save {
+			background: $green;
+			&:hover {
+				background: darken($green, 5%);
 			}
 		}
 	}

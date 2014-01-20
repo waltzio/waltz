@@ -12,20 +12,20 @@
 	</div>
 
 	<div class="row">
-		<div class="large-2 medium-2 columns nav-bar">
+		<div class="small-2 columns nav-bar">
 			<ul class="side-nav">
 				<li class="sites-tab active" data-target=".sites-list"><a href="#">Sites</a></li>
 				<li class="settings-tab" data-target=".settings"><a href="#">Settings</a></li>
 			</ul>
 		</div>
-		<div class="large-10 medium-10 columns">
+		<div class="small-10 columns">
 			<div class="sites-list main-content">
-				<ul>
-				</ul>
 			</div>
 			<div class="settings main-content">
-				<div class="all-settings">
-					<label for="cy-url">Cy Server URL: </label> <input type="text" name="cy_url" id="cy-url" value="https://api.waltz.io" /><br>
+				<div class="row">
+					<div class="small-4 columns">
+						<button class="save">save settings</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -33,7 +33,12 @@
 </body>
 
 <script src="/static/js/vendor/jquery.min.js"></script>
+<script src="/static/js/vendor/lodash.min.js"></script>
+<script src="/static/js/shared/utils.js"></script>
+<script src="/static/js/shared/templater.js"></script>
 <script src="/static/js/shared/storage.js"></script>
+<script src="/static/js/shared/analytics.js"></script>
+<script src="/static/js/vendor/keen.min.js"></script>
 <script src="/static/js/client/options.js"></script>
 
 </html>

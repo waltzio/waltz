@@ -1,0 +1,197 @@
+<script type="text/html" class="template" id='credentials'>
+<ul class="credentials">
+<% _.each(credentials, function(item, key, list) { %>
+    <% if (item) { %>
+    <li class="credential" data-key="<%= key %>" data-password="<%= item.password %>" data-username="<%= item.username %>">
+        <div class="information-container">
+            <div class="row">
+                <div class="small-6 columns information">
+                    <h4 class="name"><%= key %></h4>
+                    <h6 class="username"><%= item.username %></h6>
+                </div>
+                <div class="small-3 columns">
+                    <button class="decrypt">decrypt</button>
+                </div>
+                <div class="small-3 columns end">
+                    <button class="forget">forget</button>
+                </div>
+            </div>
+        </div>
+        <div class="decrypted-container">
+            <div class="row">
+                <div class="small-3 columns">
+                    <input name="username" type="text" value="<%= item.username %>">
+                </div>
+                <div class="small-3 columns">
+                    <input name="password" type="password" value="" class="toggled">
+                    <input name="password" type="text" value="">
+                </div>
+                <div class="small-3 columns end">
+                    <button class="show">show</button>
+                </div>
+                <div class="small-3 columns buttons end">
+                    <button class="save">save</button>
+                </div>
+            </div>
+        </div>
+        
+    </li>
+    <% } %>
+<% }); %>
+</ul>
+</script>
+
+<script type="text/html" class="template" id='settings'>
+<div class="settings-container">
+    <h1>Settings</h1>
+    <ul class="settings">
+    <% _.each(settings, function(item, key, list) { %>
+        <li class="setting" >
+            <div class="row">
+                <div class="small-6 columns end">
+                    <label for="<%= key %>"><%= item.name %></label>
+                    <input type="text" name="<%= key %>" value="<%= item.value %>">
+                </div>
+            </div>
+        </li>
+    <% }); %>
+    </ul>
+</div>
+</script>
+
+<script type="text/html" class="template" id='dismissals'>
+<div class="dismissals-container">
+    <h1>Waltz has been dismissed in the following places</h1>
+    <ul class="dismissals">
+    <% _.each(dismissals, function(item, key, list) { %>
+        <% if (!item.dismissedForever && !item.pages) return %>
+        <li class="dismissal">
+            <h3 class="name"><%= key %></h3>
+            <% if (item.dismissedForever) { %>
+                <div class="row dismissed-item" data-key="<%= key %>">
+                    <div class="small-6 columns">
+                        <h6>everywhere</h6>
+                    </div>
+                    <div class="small-3 columns end">
+                        <button class="allow">allow</button>
+                    </div>
+                </div>
+            <% } %>
+            <% if (item.pages) { %>
+                <% for (k in item.pages) { %>
+                    <% if (item.pages[k] && item.pages[k].dismissed) { %>
+                        <div class="row dismissed-item" data-key="<%= key %>" data-path="<%= k %>">
+                            <div class="small-6 columns">
+                                <h6><%= k %></h6>
+                            </div>
+                            <div class="small-3 columns end">
+                                <button class="allow">allow</button>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            <% } %>
+        </li>
+    <% }); %>
+    </ul>
+</div>
+</script>
+
+<script type="text/html" class="template" id="registration">
+<div id="waltz-credential-overlay">
+    <div id="waltz-credential-form">
+        <div id="waltz-credential-header">
+            <h1>Waltz replaces all of your passwords with the Clef wave.</h1>
+        </div>
+        <form> 
+            <% if (errorMessage) { %>
+            <p id="waltz-credential-alert"><%= errorMessage %></p>
+            <% } %>
+            <div class="label">your <%= name %> username</div>
+            <input type="text" autocomplete="off" placeholder="type your <%= name %> username" id="waltz-credential-username" value="<%= usernameValue %>" <% if (errorMessage) { %> class="error" <% } %>>
+            <div class="label">your <%= name %> password</div>
+            <input type="password" autocomplete="off" placeholder="type your <%= name %> password" id="waltz-credential-password" value="<%= passwordValue %>" <% if (errorMessage) { %> class="error" <% } %>>
+            <h2>Save your password once, Waltz will replace it forever.</h2>
+            <input type="submit" id="waltz-credential-submit" value="Replace my password">
+
+        </form>
+        <div id="waltz-credential-footer">
+            <div id="waltz-credential-footer-image">
+                <img src="<%= waltzLogo %>">
+            </div>
+            <div id="waltz-credential-footer-message">
+                <p>Your password is securely encrypted on this computer.</p>
+                <p><b>It is never sent to, or stored, on a remote server.</b></p>
+            </div>
+            <div class="waltz-clear"></div>
+        </div>
+    </div>
+</div>
+</script>
+
+<script type="text/html" class="template" id="firstLogin">
+<div id="waltz-first-share-overlay">
+    <div id="waltz-first-share-form">
+        <div id="waltz-first-share-header">
+            <h1>Pretty cool, huh?</h1>
+            <p>If you like what you see, we'd really appreciate you sharing it with your friends.</p>
+
+            <% if (key === "facebook") { %>
+
+                <div class="waltz-share facebook"  id="waltz-first-share">tell your friends on <%= key %></div>
+
+            <% } else if (key === "twitter") { %>
+                 <div class="waltz-share twitter"  id="waltz-first-share">tell your friends on <%= key %></div>
+            <% } else if (key === "github") {%>
+                <div id="waltz-first-share">star the waltz repo</div>
+            <% } %>
+
+            <a id="waltz-first-share-continue">continue tutorial</a>
+        </div>
+    </div>
+</div>
+</script>
+
+<script type="text/html" class="template" id='email-share'>Hey FAVORITE-FRIEND,
+
+There's this cool new thing called Waltz that is much a better way to log in. There are no usernames or passwords to remember, but it still makes logging in safer.
+
+I thought you might enjoy it - interested to hear what you think!
+
+<%= link %>
+
+Thanks,
+YOUR-NAME
+</script>
+
+<script type="text/html" class="template" id='email-requestSite'>Hi Waltz Team!
+
+I would love to use Waltz on <%= site %>.
+
+Thanks!
+YOUR-NAME
+</script>
+
+
+<script src="/static/js/vendor/jquery.min.js"></script>
+<script src="/static/js/vendor/lodash.min.js"></script>
+
+<script>
+    function template(name, context, html) {
+        if (!html) {
+            html = $('#' + name).html();
+        }
+
+       return _.template(html, context);
+    }
+
+    window.addEventListener('message', function(e) {
+        if (e.data.method === "template") {
+            e.source.postMessage({
+                method: "returnTemplate",
+                html: template(e.data.named, e.data.context, e.data.html),
+                named: e.data.named
+            }, '*');
+        }
+    });
+</script>

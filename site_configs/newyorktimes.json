@@ -1,0 +1,19 @@
+{
+    "*://*.nytimes.com/*": {
+        "name": "New York Times",
+        "logout": {
+            "cookies": ["NYT-S"]
+        },
+        "login": {
+            "urls": [
+                "https://myaccount.nytimes.com/auth/login"
+            ],
+            "formURL": "https://myaccount.nytimes.com/auth/login",
+            "method": "POST",
+            "usernameField": "userid",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Log Out'), li.profileDropDownLogOut, div.dropDownModalLinkContainer.box"
+        }
+    }
+}

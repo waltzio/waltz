@@ -1,6 +1,7 @@
 {
     "*://*.github.com/*": {
         "name": "GitHub",
+        "match": "https?://(?!help\\.)(?!training\\.)(?!developer\\.)(?!shop\\.)(?!status\\.)([^.]+\\.)?github\\.com",
         "logout": {
             "cookies": ["user_session"]
         },
@@ -11,7 +12,7 @@
             "usernameField": "login",
             "passwordField": "password",
             "hasHiddenInputs": true,
-            "check": "a#logout",
+            "check": "a#logout, button#logout",
             "twoFactor": [
                 {
                     "url": "https://github.com/session",

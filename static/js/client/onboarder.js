@@ -36,27 +36,27 @@ Onboarder.prototype.init = function(data) {
     }
 
     if (this.siteData.forceTutorial) {
+        if (Date.now() - parseInt(this.siteData.forceTutorial) > 2 * 60 * 1000) {
+            this.siteData.forceTutorial = null;
+        } 
         this.dismissed = false;
-        this.storage.setOnboardingKey("dismissed", false);
-        this.forceTutorial = true;
-        this.siteData = this.storage.siteOnboardingDefaults;
+        this.storage.setOnboardingKey("dismissed", false, function() {});
         this.commitSiteData();
     }
 
     this.initialized.resolve();
-}
+};
 
 Onboarder.prototype.attachHandlers = function() {
     var _this = this;
 
-    this.bind('loggedIn', this.loggedIn);
     this.bind('login.success', this.loginSuccess);
     this.bind('login.failure', this.loginFailure);
     this.bind('show.widget', this.showWidget);
     this.bind('show.credentialOverlay', this.showCredentialOverlay);
     this.bind('show.iframe', this.showIFrame);
     this.bind('hide.widget hide.credentialOverlay', this.hideToolTips);
-}
+};
 
 Onboarder.prototype.bind = function(eventName, cb) {
     // this is a safe event attaching function that waits
@@ -70,28 +70,7 @@ Onboarder.prototype.bind = function(eventName, cb) {
                 cb.bind(_this)(e);
             }
          });
-    })
-}
-
-Onboarder.prototype.loggedIn = function() {
-    if (this.forceTutorial) {
-        var _this = this,
-            $message = this.getMessage();
-
-        $message.find('p').html("<b>Click me to logout and start setting up Clef!</b>");
-        $message.attr('class', 'bottom click');
-
-        $message.click(function() {
-            $message.off('click');
-            chrome.runtime.sendMessage({ 
-                method: "logOutOfSite", 
-                domain: _this.options.site.domain,
-                refresh: true
-            });
-        })
-
-        $message.slideDown();
-    }
+    });
 };
 
 Onboarder.prototype.loginSuccess = function() {
@@ -99,44 +78,125 @@ Onboarder.prototype.loginSuccess = function() {
     this.commitSiteData();
 
     if (this.siteData.loginAttempts.success == 1 && this.totalSuccessfulLogins() < 2) {
-        // case where the user is going through the tutorial for the first time
-        // PRACTICE, yo!
-        var $overlay = this.addOverlay();
 
-        var $img = $("<img src='" + chrome.extension.getURL("/static/img/phone-logout.png") + "'/>");
-        $img.click(function(e) {
-            e.stopPropagation();
-            alert("Not this phone, YOUR phone!");
-        });
-
-        $overlay.append($img);
-
-        var $message = this.getMessage();
-
-        $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to log out and get some practice.");
-
-        $message.attr('class', 'floating left-arrow');
-
-        $message.css({
-            top: parseInt($img.css('top')) + 350,
-            left: parseInt($img.css('left')) + $img.width()
-        })
-
-        $message.fadeIn();
-    } else {
-        chrome.runtime.sendMessage({
-            method: "openNewTab",
-            url: chrome.extension.getURL("html/sites.html")
+        if (this.options.site.config.key === "facebook" || this.options.site.config.key === "twitter") {
+            this.handleFirstFacebookAndTwitterLogin();
+        } else if (this.options.site.config.key === "github") {
+            this.handleFirstGithubLogin();
+        } else {
+            this.showLogoutPrompt();
+        }
+       
+    } else if (this.siteData.forceTutorial) {
+        var _this = this;
+        this.siteData.forceTutorial = null;
+        this.commitSiteData(function() {
+            chrome.runtime.sendMessage({
+                method: "openNewTab",
+                url: chrome.extension.getURL("html/sites.html?success=" + _this.options.site.config.name)
+            });
         });
     }
 
-}
+};
+
+Onboarder.prototype.handleFirstGithubLogin = function() {
+    var _this = this,
+        templater = this.waltz.getTemplater();
+
+    templater.template({
+        named: "firstLogin",
+        context: {
+            key: this.options.site.config.key
+        }
+    }, function(data) {
+        var $overlay = $(data),
+            $form = $overlay.find('#waltz-first-share-form'),
+            $body = $('body');
+
+        $body.append($overlay);
+
+        $overlay.addClass('slide-in');
+        $form.addClass('slide-in');
+
+        $overlay.click(continueTutorial);
+        $overlay.find('#waltz-first-share').click(starRepo);
+        $overlay.find('#waltz-first-share-continue, #waltz-first-share').click(continueTutorial);
+
+        function starRepo() {
+            $('.star-button.unstarred')[0].click();
+        }
+
+        function continueTutorial() {
+            $overlay.remove();
+            _this.showLogoutPrompt();
+        }
+    });
+};
+
+Onboarder.prototype.handleFirstFacebookAndTwitterLogin = function() {
+    var _this = this,
+        templater = this.waltz.getTemplater();
+
+    templater.template({
+        named: "firstLogin",
+        context: {
+            key: this.options.site.config.key
+        }
+    }, function(data) {
+        var $overlay = $(data),
+            $form = $overlay.find('#waltz-first-share-form'),
+            $body = $('body');
+
+        $body.append($overlay);
+
+        $overlay.addClass('slide-in');
+        $form.addClass('slide-in');
+
+        $overlay.click(continueTutorial);
+        $overlay.find('#waltz-first-share-continue, #waltz-first-share').click(continueTutorial);
+
+        _this.sharer = new Sharer(_this.waltz);
+
+        function continueTutorial() {
+            $overlay.remove();
+            _this.showLogoutPrompt();
+        }
+    });
+};
+
+Onboarder.prototype.showLogoutPrompt = function() {
+     // case where the user is going through the tutorial for the first time
+    // PRACTICE, yo!
+    var $overlay = this.addOverlay();
+
+    var $img = $("<img src='" + chrome.extension.getURL("/static/img/phone-logout.png") + "'/>");
+    $img.click(function(e) {
+        e.stopPropagation();
+        alert("Not this phone, YOUR phone!");
+    });
+
+    $overlay.append($img);
+
+    var $message = this.getMessage();
+
+    $message.find('p').html("Nice job! Now <b>click the logout button on your phone</b> to logout and get some practice.");
+
+    $message.attr('class', 'floating left-arrow');
+
+    $message.css({
+        top: parseInt($img.css('top')) + 350,
+        left: parseInt($img.css('left')) + $img.width()
+    });
+
+    $message.fadeIn();
+};
 
 Onboarder.prototype.loginFailure = function() {
     this.failMode = true;
     this.siteData.loginAttempts.fail++;
     this.commitSiteData();
-}
+};
 
 Onboarder.prototype.showWidget = function() {
     if (this.failMode) return;
@@ -146,39 +206,43 @@ Onboarder.prototype.showWidget = function() {
         $message = this.getMessage(),
         text;
 
-    if (this.forceTutorial) {
+    if (_this.siteData.forceTutorial) {
         this.addOverlay();
-    }
 
-    if (_this.siteData.loginAttempts.success === 0) {
-        // first time setting up Waltz
-        text = "Click this to set up Waltz for " + _this.options.site.config.name;
-    } else if (_this.siteData.loginAttempts.success === 1) {
-        // second time after they logged out with their phone in
-        // the tutorial
-        text = "Click this button to log in from now on!";
-    } else {
-        // every other time when they come from the tutorial
-        text = "Click this button to log in!";
-    }
+        if (_this.siteData.loginAttempts.success === 0) {
+            // first time setting up Waltz
+            text = "Click this to set up Waltz for " + _this.options.site.config.name;
+        } else if (_this.siteData.loginAttempts.success === 1) {
+            // second time after they logged out with their phone in
+            // the tutorial
+            text = "Click this button to log in from now on!";
+        } else {
+            // every other time when they come from the tutorial
+            text = "Click this button to log in!";
+        }
 
-    onFinishedTransitioning($widget, "right", function() {
+        onFinishedTransitioning($widget, "right", function() {
 
-        $message.find('p').text(text);
+            $message.find('p').text(text);
 
-        $message.attr('class', 'right-arrow floating fixed');
-        $message.attr('style', '');
+            $message.attr('class', 'right-arrow floating fixed');
+            $message.attr('style', '');
 
-        $message.css({
-            right: parseInt($widget.css('right')) + $widget.width() + _this.MESSAGE_OFFSET,
-            top: parseInt($widget.css('top')) + $widget.height() / 2 - 20
+            $message.css({
+                right: parseInt($widget.css('right')) + $widget.width() + _this.MESSAGE_OFFSET,
+                top: parseInt($widget.css('top')) + $widget.height() / 2 - 20
+            });
+
+            $message.fadeIn();
         });
+    }
 
-        $message.fadeIn();
-    })
-}
+    
+};
 
 Onboarder.prototype.showCredentialOverlay = function() {
+    if (!this.siteData.forceTutorial) return;
+
     var _this = this,
         $credentialForm = $('#' + this.waltz.CREDENTIAL_FORM_ID),
         $message = this.getMessage(),
@@ -187,7 +251,7 @@ Onboarder.prototype.showCredentialOverlay = function() {
     if (this.failMode) {
         text = "Try again...?";
     } else {
-        text = "Type your username and password to securely store them with Waltz."
+        text = "Type your username and password to securely store them with Waltz.";
     }
 
     onFinishedTransitioning($credentialForm, 'margin-top', function() {
@@ -203,7 +267,7 @@ Onboarder.prototype.showCredentialOverlay = function() {
 
         $message.fadeIn();
     });
-}
+};
 
 Onboarder.prototype.showIFrame = function() {
     var $message = this.getMessage(),
@@ -251,28 +315,32 @@ Onboarder.prototype.getMessage = function() {
     this.$message.on('dismiss', this.dismiss.bind(this)); 
 
     return this.$message;
-}
+};
 
 Onboarder.prototype.addOverlay = function() {
-    var _this = this,
+    var _this = this;
+    var $overlay = $('#'+this.OVERLAY_ID);
+    if (!$overlay.length) {
         $overlay = $('<div id="' + this.OVERLAY_ID + '"></div>');
-    $('body').append($overlay);
-    this.router.on('onboarding.dismissed', function() {
+        $('body').append($overlay);
+    }
+    this.bind('onboarding.dismissed widget.dismissed', function() {
         $overlay.remove();
     });
 
     $overlay.click(function() {
         _this.hideToolTips();
         $overlay.remove();
-    })
+    });
 
     return $overlay;
-}
+};
 
 Onboarder.prototype.commitSiteData = function(cb) {
     this.siteData.updatedAt = new Date().getTime();
+    cb = cb || function() {};
     this.storage.setOnboardingSiteData(this.siteKey, this.siteData, cb);
-}
+};
 
 Onboarder.prototype.totalSuccessfulLogins = function() {
     var total = 0;
@@ -280,8 +348,16 @@ Onboarder.prototype.totalSuccessfulLogins = function() {
         total += this.siteSpecificOnboardingData[site].loginAttempts.success;
     }
     return total;
-}
+};
 
+Onboarder.prototype.secondSiteSetup = function() {
+    var numSites = 0;
+    for (var site in this.siteSpecificOnboardingData) {
+        if (this.siteSpecificOnboardingData[site].loginAttempts.success > 1) numSites++;
+    }
+
+    return numSites === 2;
+};
 
 // adds a 50 millisecond delay
 function onFinishedTransitioning(el, style, cb) {
@@ -293,9 +369,9 @@ function onFinishedTransitioning(el, style, cb) {
             $el.on('transitionend', function() {
                 $el.off('transitionend');
                 cb();
-            })
+            });
         } else {
             cb();
         }
-    }, 50);
+    }, 200);
 }
