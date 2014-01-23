@@ -229,6 +229,33 @@ body {
         }
     }
 
+    .analytics {
+        position: relative;
+
+        #keen-count {
+            position: absolute;
+            top: 50px;
+            width: 100%;
+            text-align: center;
+
+            h3 {
+                display: inline-block;
+                font-size: 2em;
+                cursor: default;
+
+                &:hover {
+                    box-shadow: 3px 3px 0 0 #026fa3;
+                }
+            }
+
+            @media #{$small-only} {
+                h3 {
+                    font-size: 1em;
+                }
+            }
+        }
+    }
+
     .footer {
 
         ul {
