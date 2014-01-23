@@ -242,9 +242,11 @@ body {
                 display: inline-block;
                 font-size: 2em;
                 cursor: default;
+                box-shadow: none;
+                opacity: .95;
 
                 &:hover {
-                    box-shadow: 3px 3px 0 0 #026fa3;
+                    box-shadow: none;
                 }
             }
 

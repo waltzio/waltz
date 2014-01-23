@@ -5693,9 +5693,11 @@ body {
     #waltz .analytics #keen-count h3 {
       display: inline-block;
       font-size: 2em;
-      cursor: default; }
+      cursor: default;
+      box-shadow: none;
+      opacity: .95; }
       #waltz .analytics #keen-count h3:hover {
-        box-shadow: 3px 3px 0 0 #026fa3; }
+        box-shadow: none; }
     @media only screen and (max-width: 40em) {
       #waltz .analytics #keen-count h3 {
         font-size: 1em; } }
