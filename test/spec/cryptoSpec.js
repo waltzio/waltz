@@ -1,7 +1,7 @@
 
 
 describe("Crypto", function() {
-    var crypto, password, key, username, 
+    var crypto, password, key, username,
         encryptedPassword, siteKey, pseudoUniqueID, cyURL;
 
     beforeEach(function() {
@@ -16,40 +16,37 @@ describe("Crypto", function() {
 
         crypto.storage.getOptions = function() {};
 
-        spyOn(crypto.storage, "getOptions").and
-            .callFake(function(cb) {
+        spyOn(crypto.storage, "getOptions").andCallFake(function(cb) {
                 var _ret = { cy_url: cyURL };
                 if (cb) cb(_ret);
                 return $.Deferred().resolve(_ret);
             });
 
-        spyOn(Utils, "pseudoUniqueID").and.returnValue(pseudoUniqueID);
+        spyOn(Utils, "pseudoUniqueID").andReturn(pseudoUniqueID);
     });
 
     describe("encryptPassword", function() {
         it("should change the value of the encrypted value", function() {
-            expect(crypto.encryptPassword(password, key)).not.toEqual(password); 
+            expect(crypto.encryptPassword(password, key)).not.toEqual(password);
         });
     });
 
     describe("decryptPassword", function() {
         it("should decrypt an encrypted password", function() {
             var encryptedPassword = crypto.encryptPassword(password, key);
-            expect(crypto.decryptPassword(encryptedPassword, key)).toEqual(password); 
+            expect(crypto.decryptPassword(encryptedPassword, key)).toEqual(password);
         });
     });
 
     describe("encrypt", function() {
 
         beforeEach(function() {
-            spyOn($, "get").and
-                .returnValue($.Deferred().resolve({key: { key: key } }));
+            spyOn($, "get").andReturn($.Deferred().resolve({key: { key: key } }));
 
             crypto.storage.setCredentialsForDomain = function() {};
 
-            spyOn(crypto, "encryptPassword").and.returnValue(encryptedPassword);
-            spyOn(crypto.storage, "setCredentialsForDomain").and
-                .callFake(function(key, data, cb) { cb(); })
+            spyOn(crypto, "encryptPassword").andReturn(encryptedPassword);
+            spyOn(crypto.storage, "setCredentialsForDomain").andCallFake(function(key, data, cb) { cb(); })
         });
 
         it("should encrypt credentials", function() {
@@ -63,8 +60,8 @@ describe("Crypto", function() {
                 expect(crypto.encryptPassword).toHaveBeenCalledWith(password, key);
                 expect(crypto.storage.setCredentialsForDomain)
                     .toHaveBeenCalledWith(
-                        siteKey, 
-                        jasmine.objectContaining({ 
+                        siteKey,
+                        jasmine.objectContaining({
                             username: username,
                             password: encryptedPassword,
                             id: pseudoUniqueID
@@ -73,19 +70,18 @@ describe("Crypto", function() {
                     );
             });
 
-            
+
         });
     });
 
     describe("decrypt", function() {
 
         beforeEach(function() {
-            spyOn($, "get").and
-                .returnValue($.Deferred().resolve({key: { key: key } }));
+            spyOn($, "get").andReturn($.Deferred().resolve({key: { key: key } }));
 
             crypto.storage.getCredentialsForDomain = function() {};
 
-            spyOn(crypto, "decryptPassword").and.returnValue(password);
+            spyOn(crypto, "decryptPassword").andReturn(password);
         });
 
         it("should decrypt credentials with credentialID if credentialID exists", function() {
@@ -94,8 +90,7 @@ describe("Crypto", function() {
                 password: encryptedPassword,
                 id: pseudoUniqueID
             }
-            spyOn(crypto.storage, "getCredentialsForDomain").and
-                .returnValue($.Deferred().resolve(credentials))
+            spyOn(crypto.storage, "getCredentialsForDomain").andReturn($.Deferred().resolve(credentials))
 
             crypto.decrypt({
                 key: siteKey
@@ -107,7 +102,7 @@ describe("Crypto", function() {
                 expect(crypto.decryptPassword).toHaveBeenCalledWith(credentials.password, key);
             });
 
-            
+
         });
 
         it("should decrypt credentials with siteKey if credentialID does not exist", function() {
@@ -115,8 +110,7 @@ describe("Crypto", function() {
                 username: username,
                 password: encryptedPassword
             }
-            spyOn(crypto.storage, "getCredentialsForDomain").and
-                .returnValue($.Deferred().resolve(credentials))
+            spyOn(crypto.storage, "getCredentialsForDomain").andReturn($.Deferred().resolve(credentials))
 
             crypto.decrypt({
                 key: siteKey
@@ -131,7 +125,7 @@ describe("Crypto", function() {
     });
 
 
-    
+
 
 })
 
