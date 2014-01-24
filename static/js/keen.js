@@ -1,5 +1,5 @@
 (function($) {
-	
+
     var Keen=Keen||{configure:function(e){this._cf=e},addEvent:function(e,t,n,i){this._eq=this._eq||[],this._eq.push([e,t,n,i])},setGlobalProperties:function(e){this._gp=e},onChartsReady:function(e){this._ocrq=this._ocrq||[],this._ocrq.push(e)}};(function(){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src=("https:"==document.location.protocol?"https://":"http://")+"dc8na2hxrj29i.cloudfront.net/code/keen-2.1.0-min.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
 
     window.Keen = Keen;
@@ -15,7 +15,7 @@
     	var seriesChart = document.getElementById("keen-series");
     	var seriesContainer = document.getElementsByClassName("analytics")[0];
 
-		Keen.onChartsReady(function() {    
+		Keen.onChartsReady(function() {
 			var clicksPerDay = new Keen.Series("widget_clicked", {
 				analysisType: "count",
 				timeframe: "previous_7_days",
@@ -24,7 +24,7 @@
 
 			var clicksTotal = new Keen.Metric("widget_clicked", {
 				analysisType: "count",
-				timeframe: "previous_7_days"
+				timeframe: "this_7_days"
 			});
 
 			var chartOptions = {
