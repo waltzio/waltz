@@ -66,7 +66,10 @@ grunt.initConfig({
       src: 'static/**/*.js',
       options: {
         specs: 'test/spec/*Spec.js',
-        helpers: 'test/spec/*Helper.js'
+        helpers: 'test/spec/*Helper.js',
+        vendor: ["static/js/vendor/jquery.min.js",
+        "static/js/vendor/lodash.min.js",
+        "static/js/vendor/aes.js"]
       }
     }
   },
