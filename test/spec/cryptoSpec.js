@@ -4,15 +4,16 @@ describe("Crypto", function() {
     var crypto, password, key, username,
         encryptedPassword, siteKey, pseudoUniqueID, cyURL;
 
+    password = "password";
+    username = "username";
+    key = Math.random().toString(36).substring(2);
+    siteKey = "test"
+    pseudoUniqueID = "uniqueID"
+    cyURL = "http://tes.com"
+
     beforeEach(function() {
         crypto = new Crypto();
-        key = Math.random().toString(36).substring(2);
-        password = "password";
-        username = "username";
         encryptedPassword = "encryptedPassword";
-        siteKey = "test";
-        pseudoUniqueID = "uniqueID";
-        cyURL = "http://test.com";
 
         crypto.storage.getOptions = function() {};
 
