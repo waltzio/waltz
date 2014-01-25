@@ -8,7 +8,7 @@ before_install:
   - npm install
   - grunt build-config
 #  - grunt chrome-extension
-script: true
+script: grunt jasmine
 after_script:
   - cd ../../
   - mkdir tempclone
