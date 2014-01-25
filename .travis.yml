@@ -5,7 +5,7 @@ before_install:
   # Setup and run the grunt task to optimize the www submodule
   - sudo apt-get install nodejs npm
   - npm install -g grunt-cli
-before_script: ls -l
+before_script: ./travis-before.sh
 script: grunt jasmine
 after_script: ./travis-after.sh
 env:
