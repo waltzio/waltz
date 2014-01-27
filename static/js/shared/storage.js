@@ -452,3 +452,7 @@ StorageBase.prototype.remove = function(keys, cb) {
 
 Storage.prototype.base = new StorageBase();
 
+if(typeof(module) === "object" && typeof(module.exports) === "object") {
+    module.exports = Storage;
+}
+
