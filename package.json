@@ -4,22 +4,23 @@
   "version": "1.0.83",
   "private": true,
   "dependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-sass": "~0.5.0",
-    "grunt-contrib-watch": "~0.5.3"
+    "sinon": "~1.7.3"
   },
   "engines": {
     "node": "0.10",
     "npm": "1.1.x"
   },
   "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-sass": "~0.5.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "JQDeferred": "~2.1.0",
     "grunt-contrib-clean": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-nodeunit": "~0.1.2",
     "grunt-chrome-compile": "~0.2.2",
     "grunt-merge-json": "~0.9.3",
-    "grunt-contrib-jasmine": "~0.5.2",
     "grunt-contrib-jshint": "~0.8.0"
   }
 }
