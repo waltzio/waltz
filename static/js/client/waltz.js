@@ -475,11 +475,7 @@
                     formSubmitted = false;
                 }
 
-                if (!formSubmitted) {
-                    $form.appendTo($("body")).submit();
-                } else {
-                    $form.submit();
-                }
+                $form.submit();
             });
         }   
     };
