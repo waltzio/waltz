@@ -1,0 +1,38 @@
+{
+    "*://*.bible.com/*": {
+        "name": "YouVersion",
+        "logout": {
+            "cookies": ["a", "b", "c", "f"]
+        },
+        "login": {
+            "urls": ["https://www.bible.com/sign-in"],
+            "formURL": "https://www.bible.com/sign-in",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a#header_profile_trigger"
+        },
+        "ignore": true
+    },
+    "*://*.youversion.com/*": {
+        "name": "YouVersion",
+        "logout": {
+            "cookies": ["youversion"]
+        },
+        "login": {
+            "urls": [
+                "http://www.a.youversion.com/live/all",
+                "http://www.a.youversion.com/sign-in"
+            ],
+            "formURL": "http://www.a.youversion.com/sign-in",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "formOnly": true,
+            "check": "a.sign-out"
+        },
+        "ignore": true
+    }
+}

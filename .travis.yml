@@ -5,25 +5,10 @@ before_install:
   # Setup and run the grunt task to optimize the www submodule
   - sudo apt-get install nodejs npm
   - npm install -g grunt-cli
-  - npm install
-  - grunt build-config
-#  - grunt chrome-extension
-script: true
-after_script:
-  - cd ../../
-  - mkdir tempclone
-  - cd tempclone
-  - git clone $REPO.git waltz
-  - cd waltz
-  - git checkout master
-  - git config user.email "joe@wegnerdesign.com"
-  - git config user.name "Joseph Wegner"
-#  - cp ../../build/Waltz.zip deploy/ -f
-  - ls ../../waltzio/waltz/build
-  - cp ../../waltzio/waltz/build/site_configs.json deploy/site_configs.json -f
-  - git add deploy/site_configs.json
-  - git commit -a -m "Committed from CI (build number - $((TRAVIS_JOB_ID - 1))) [ci skip]"
-  - git push origin master
+  - npm install -g mocha
+before_script: ./travis-before.sh
+script: mocha
+after_script: ./travis-after.sh
 env:
   global:
     # Repo read-write address
@@ -31,4 +16,5 @@ env:
 branches:
   only:
     - master
+    - develop
 source_key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBc3JsZzFCK1g4TFRmU2JOYTVQUE8vRTBEZ1NENGZVTFlBaFAyU2hLUEJueTJVcm80CjNTQlUxNGNXMVFwK0xmMFljZ1MvRW9qTDBDemgvL2pJVXFVM3JOd2pPSHc5M3RRb3FPMXpsL2FXRlA4bi9vNlAKTytVOU84a1hrcjRXV2tod0UrT3lqWnFrQ3FkTHBnNVVvcVo5RlA2dFlyT2JTUkh6WmdGRURKZ2JGckFmUXFWbQpXLzVsejZ2QWQ2dWcyOTFldlBKNUZnV1ZqTnZGREh5cHZVNnBIRVZKMzFscWRoZzVWeFc5NU4xaE94Q3ZqSTRYCm4wRW9FNmp6QTB2bmRmQTZuWVZ5clFWRUVEWUE5b3BlNjRMOHdiYlFJSWljbXJFOG5yVG1NaHZ0bWk5K3ZMVEoKS1M1TEhtdFozT0lDVHFodVloMGdxa0tZVUlNNEdMaHBTeUlzQXdJREFRQUJBb0lCQUVnRGlDK1ExMkVuRUQyYgpKa25RcjV0YjBNaXNKMVFacGY0WVd3bjN0bWV2d3F0TTIvTEZ2MG5rNWQ5THpoSHJ4SGpVenNUQ0dCVzJzQTI3CkNjUzdTOWE4RVBrR25zdDFnemltRFFpelZELzdtL3JuS0hIQzZjeDRONlpxTDRtTFhKVzNEdEFkK25GTWZaL1kKY0dQbFg4c2czMjVBM3BZdnhIcGFramZjNWpWYWI2enJNeHkvN0JhVVNlL0FCMGx4eWhUdVhMTkkzZ1R3eXQzQwplY1JhRXNtNFZBN25WbE9QY0E5dFJwY3B1VEZ6ODZxMmFOY1oycVdVTDl2VjRIUE03MFpRWjZFWUUxalpEZnRXCk9QQllaRVplalpNa1BnTUl5N0lHcUE1WTZsSlRXOGxleUhEUWhDOVdWV1FjUXU2S2ZnKzh0ZkdHTTV3YjRqVmYKTkMyNnRoa0NnWUVBMXYwVlRrNFZIUWNlSU40U2dzaVlDWHZrNGR4eTlCbWJaQjVrZWpkaURXS3J0NE1OTUJnQgpnenk1eVJ4eEtrcmp2WHNHcGV0cnFXNGg5bDN3dEdSMGw4cDMzcG1XMXhIZHdTZkRSODZQeE1Cbk8rUlBTbXJhCjR1NmVzNm82dGZqVjFmSzBPeHphdWFEa1ZvTFBDZ2dDWGFxUUxKWXNaRUdNVi9ldWtvTHVWbzhDZ1lFQTFORlUKQnZRempmOGVqTG1Bc21vVlhDcysvemhiQUZKSzF6d3k3V2kwOWdvL0dKWkJ1Z3MwTWhoOEpEUWlWdjd3VU00dQpiTURkdjBGc3JvYzZoczFNYWZSbEt2bGRzRjdQVHMwWlBPcHQ2aTVJNjJhS3IwVVI1VjNSRGw3aDVpeno0dTNUCnY4dEVpc0VRTVFTU3A0T0xkN3kxMFlRQjFZajVLUW5FazYyVkxVMENnWUJIZThrOHl5dXNCalRYV3QrdXlzSDYKelU0eVoxbDFucG9UZFNPVm01cW50cm8vLzN4QUZJdFVOcm5UaS9oNHhvUG8rZUloQXlFK0tkZHpFcE01ZC9sbwppekxHT2kxMGY0VkxkMHd3TVJlT3BTYnVQQ0M5THNCdkdrWjhtTXFDdlNWa3lSbHlXa3JEMUNKNFBYQlg5b2ZLCjJ5NnJGSmZZRWc5M0pHelFYR2FoTXdLQmdENlBIalZCR2RxVzhTTUs4TU1CbmkvTzRxRGhyeGFFR2szMCt6K0EKdFJsU1g4UFpmNDZ4OW5EM2M1NnMySjljSjhhSkpXcUFzMjZpUzlGdUhRMDlVa1lmT3BJTVpiY1AxNzdoV1pibgpqdEgxTXloSHAyTG9XZDlqMmExd3hOVUZ4OWVnYzh1QWREQ1ptaW5lbjBHdzBKR3RIb0Z0WGFDb3VCMlJLb0VDCjJNUk5Bb0dCQUk3bm02QnIyRU4yTnYwc0JXUm1kVit1bEVoMFIzTThqZ0kvdllTWXpCN0lBK0t0M1BDV1R6U0YKU0FEUGhmQ0tFZnh1Y3c4MW1EYUY2a1I5Lyt4R0l0K0ZhVVhMWXNnVlk5dHUwSmpLU0tNcmxxSWYxQWhjaXlkcwo0WGc2dC9NYnlZRkhkZEtpZ290VlJjbnkzT2FiTitkNnB6eWdueHR0RXdLdlhyMW40VXFVCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==

@@ -96,3 +96,7 @@ Crypto.prototype.decrypt = function(request, cb) {
 		});
 	});
 };
+
+if(typeof(module) === "object" && typeof(module.exports) === "object") {
+	module.exports = Crypto;
+}
