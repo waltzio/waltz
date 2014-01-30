@@ -1,7 +1,7 @@
 {
   "name": "Waltz",
   "description": "A password manager for use with Clef",
-  "version": "1.0.83",
+  "version": "1.0.84",
   "private": true,
   "dependencies": {
     "sinon": "~1.7.3"
