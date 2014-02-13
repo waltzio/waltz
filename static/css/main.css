@@ -5683,6 +5683,24 @@ body {
 #waltz .why .github .button {
   margin-top: 40px;
   float: right; }
+#waltz .analytics {
+  position: relative; }
+  #waltz .analytics #keen-count {
+    position: absolute;
+    top: 50px;
+    width: 100%;
+    text-align: center; }
+    #waltz .analytics #keen-count h3 {
+      display: inline-block;
+      font-size: 2em;
+      cursor: default;
+      box-shadow: none;
+      opacity: .95; }
+      #waltz .analytics #keen-count h3:hover {
+        box-shadow: none; }
+    @media only screen and (max-width: 40em) {
+      #waltz .analytics #keen-count h3 {
+        font-size: 1em; } }
 #waltz .footer ul {
   list-style-type: none;
   text-align: center; }

@@ -229,6 +229,35 @@ body {
         }
     }
 
+    .analytics {
+        position: relative;
+
+        #keen-count {
+            position: absolute;
+            top: 50px;
+            width: 100%;
+            text-align: center;
+
+            h3 {
+                display: inline-block;
+                font-size: 2em;
+                cursor: default;
+                box-shadow: none;
+                opacity: .95;
+
+                &:hover {
+                    box-shadow: none;
+                }
+            }
+
+            @media #{$small-only} {
+                h3 {
+                    font-size: 1em;
+                }
+            }
+        }
+    }
+
     .footer {
 
         ul {
