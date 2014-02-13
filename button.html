@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset='utf-8' />
+        <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+
+                <!-- for Google -->
+        <meta name="description" content="Waltz is a modern account manager, making it easier and safer for you to browse the web. Waltz lets you use Clef (getclef.com) to log in and out of all of your favorite sites without a password. There's nothing for you to remember or type, and Waltz lets you log in to (and out of) everywhere at once." />
+        <meta name="keywords" content="waltz, passwords, password manager, clef, account manager, password free, mobile, app" />
+
+        <meta name="author" content="Waltz" />
+        <meta name="copyright" content="Waltz" />
+        <meta name="application-name" content="Waltz" />
+
+        <meta name="google-site-verification" content="C6BSEZC-E6Mw3b7vttCyqfroVvCHoxPD2O3X7KtaRhM" />
+        <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/obhibkfopclldmnoohabnbimocpgdine">
+
+        <!-- for Facebook -->          
+        <meta property="og:title" content="Waltz | A modern account manager for the web" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="http://getwaltz.com/static/img/waltz-full.png" />
+        <meta property="og:url" content="http://getwaltz.com" />
+        <meta property="og:description" content="Waltz is a modern account manager, making it easier and safer for you to browse the web. Waltz lets you use Clef (getclef.com) to log in and out of all of your favorite sites without a password. There's nothing for you to remember or type, and Waltz lets you log in to (and out of) everywhere at once." />
+
+        <!-- for Twitter -->          
+        <meta name="twitter:card" content="Waltz is a modern account manager for the web." />
+        <meta name="twitter:title" content="Waltz | A modern account maanger for the web" />
+        <meta name="twitter:description" content="Waltz is a modern account manager, making it easier and safer for you to browse the web. Waltz lets you use Clef (getclef.com) to log in and out of all of your favorite sites without a password. There's nothing for you to remember or type, and Waltz lets you log in to (and out of) everywhere at once." />
+        <meta name="twitter:image" content="http://getwaltz.com/static/img/waltz-full.png" />
+
+        <link rel="stylesheet" type="text/css" media="screen" href="/static/css/foundation-icons.css">    
+        <link rel="stylesheet" type="text/css" media="screen" href="/static/css/main.css">
+
+        <title>Waltz | A modern account manager for the web</title>
+    </head>
+
+    <body id="waltz"> 
+        <div class="button blue" id='install'>Get Waltz</div>
+        <script type="text/javascript">
+            install.onclick = function() {
+                if (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
+                    chrome.webstore.install(
+                        "https://chrome.google.com/webstore/detail/obhibkfopclldmnoohabnbimocpgdine", 
+                        function (success) {
+                            console.log(success);
+                        },
+                        function (error) {
+                            console.log(error);
+                        }
+                    );
+                }
+            };
+        </script>
+    </body>
+</html>

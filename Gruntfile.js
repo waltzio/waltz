@@ -59,6 +59,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-concurrent');
  
     // Default task.
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['connect', 'watch']);
  
 };
