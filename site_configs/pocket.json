@@ -1,0 +1,21 @@
+{
+    "*://*.getpocket.com/*": {
+        "name": "Pocket",
+        "match": "https?://(?!help\\.)([^.]+\\.)?getpocket\\.com(?!/options)",
+        "logout": {
+            "cookies": ["sess_password"]
+        },
+        "login": {
+            "urls": [
+                "http://getpocket.com/a/queue/",
+                "https://getpocket.com/login"
+            ],
+            "formURL": "https://getpocket.com/login_process/",
+            "method": "POST",
+            "usernameField": "feed_id",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "li.logout, a:contains('Logout'), a:contains('My List')"
+        }
+    }
+}
