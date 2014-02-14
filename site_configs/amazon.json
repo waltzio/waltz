@@ -41,5 +41,61 @@
             "hasHiddenInputs": true,
             "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
         }
+    }, "*://*.amazon.fr/*": {
+        "name": "Amazon (FR)",
+        "logout": {
+            "cookies": ["x-acbfr", "session-id"]
+        },
+        "login": {
+            "urls": ["https://www.amazon.fr/ap/signin?_encoding=UTF8&openid.assoc_handle=frflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.fr%2Fgp%2Fyourstore%2Fhome%3Fie%3DUTF8%26ref_%3Dgno_signin"],
+            "formURL": "https://www.amazon.fr/ap/signin",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
+        }
+    }, "*://*.amazon.es/*": {
+        "name": "Amazon (FR)",
+        "logout": {
+            "cookies": ["x-acbes", "session-id"]
+        },
+        "login": {
+            "urls": ["https://www.amazon.es/ap/signin?_encoding=UTF8&openid.assoc_handle=esflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.es%2Fgp%2Fyourstore%2Fhome%3Fie%3DUTF8%26ref_%3Dgno_signin"],
+            "formURL": "https://www.amazon.es/ap/signin",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
+        }
+    }, "*://*.amazon.it/*": {
+        "name": "Amazon (IT)",
+        "logout": {
+            "cookies": ["x-acbit", "session-id"]
+        },
+        "login": {
+            "urls": ["https://www.amazon.it/ap/signin/280-4924152-7153541?_encoding=UTF8&_encoding=UTF8&openid.assoc_handle=itflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.it%2Fgp%2Fyourstore%2Fhome%3Fie%3DUTF8%26ref_%3Dgno_signin"],
+            "formURL": "https://www.amazon.it/ap/signin",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
+        }
+    }, "*://*.amazon.cn/*": {
+        "name": "Amazon (CN)",
+        "logout": {
+            "cookies": ["x-acbcn", "session-id"]
+        },
+        "login": {
+            "urls": ["https://www.amazon.cn/ap/signin/475-9001867-8910546?_encoding=UTF8&_encoding=UTF8&openid.assoc_handle=cnflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.cn%2Fgp%2Fyourstore%2Fhome%3Fie%3DUTF8%26ref_%3Dgno_signin"],
+            "formURL": "https://www.amazon.cn/ap/signin",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
+        }
     }
 }
