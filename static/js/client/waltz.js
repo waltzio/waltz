@@ -796,4 +796,8 @@
         });
     });
 
+    var isInstalledNode = document.createElement('div');
+    isInstalledNode.id = 'waltzIsInstalled';
+    document.body.appendChild(isInstalledNode);
+
 }).call(this, jQuery);
