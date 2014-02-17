@@ -1,0 +1,25 @@
+{
+    "*://*.heroku.com/*": {
+        "name": "Heroku",
+        "logout": {
+            "cookies": [
+            	"heroku_session",
+            	"heroku_session_nonce",
+            	"rack.session",
+            	"dashboard_session_nonce",
+            	"_my-heroku_session",
+            	"user_session_secret"]
+        },
+        "login": {
+            "urls": [
+                "https://dashboard.heroku.com/apps",
+                "https://id.heroku.com/login"
+            ],
+            "formURL": "https://id.heroku.com/login",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "check": "a:contains('Logout'), div.appMenuItem.dropDown, a.logout"
+        }
+    }
+}

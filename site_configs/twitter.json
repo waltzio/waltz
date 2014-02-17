@@ -1,6 +1,7 @@
 {
     "*://*.twitter.com/*": {
         "name": "Twitter",
+        "match": "https?://(?!ads\\.)([^.]+\\.)?twitter\\.com",
         "logout": {
             "cookies": ["auth_token"]
         },
@@ -26,6 +27,21 @@
                 "forcedRedirectURLs" : ["https://about.twitter.com/download"],
                 "nextURLs": ["https://twitter.com/login/captcha", "https://twitter.com/login/error"]
             }
+        }
+    },
+    "*://ads.twitter.com/*": {
+        "name": "Twitter Ads",
+        "logout": {
+            "cookies": ["_twttr_ads_sess_"]
+        },
+        "login": {
+            "urls": ["https://ads.twitter.com/login"],
+            "formURL": "https://ads.twitter.com/session",
+            "method": "POST",
+            "usernameField": "user_identifier",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "button:contains('Sign out'), a#sign_out_link"
         }
     }
 }
