@@ -42,6 +42,7 @@
             "passwordField": "password",
             "hasHiddenInputs": true,
             "check": "button:contains('Sign out'), a#sign_out_link"
-        }
+        },
+        "ignore": true
     }
 }
