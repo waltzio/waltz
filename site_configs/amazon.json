@@ -26,7 +26,8 @@
             "passwordField": "password",
             "hasHiddenInputs": true,
             "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
-        }
+        },
+        "ignore": true
     }, "*://*.amazon.de/*": {
         "name": "Amazon (DE)",
         "logout": {
@@ -40,7 +41,8 @@
             "passwordField": "password",
             "hasHiddenInputs": true,
             "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
-        }
+        },
+        "ignore": true
     }, "*://*.amazon.fr/*": {
         "name": "Amazon (FR)",
         "logout": {
@@ -54,7 +56,8 @@
             "passwordField": "password",
             "hasHiddenInputs": true,
             "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
-        }
+        },
+        "ignore": true
     }, "*://*.amazon.es/*": {
         "name": "Amazon (FR)",
         "logout": {
@@ -68,7 +71,8 @@
             "passwordField": "password",
             "hasHiddenInputs": true,
             "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
-        }
+        },
+        "ignore": true
     }, "*://*.amazon.it/*": {
         "name": "Amazon (IT)",
         "logout": {
@@ -82,7 +86,8 @@
             "passwordField": "password",
             "hasHiddenInputs": true,
             "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
-        }
+        },
+        "ignore": true
     }, "*://*.amazon.cn/*": {
         "name": "Amazon (CN)",
         "logout": {
@@ -96,6 +101,7 @@
             "passwordField": "password",
             "hasHiddenInputs": true,
             "check": "a#nav-item-signout, a:contains('Sign Out'), script:contains('Sign Out')"
-        }
+        },
+        "ignore": true
     }
 }
