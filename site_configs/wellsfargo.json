@@ -1,6 +1,7 @@
 {
     "*://*.wellsfargo.com/*": {
         "name": "Wells Fargo",
+        "match": "https://(?!online\\.wellsfargo\\.com/signon\\?serviceType=document&loginMode=jukePassword&origination=email&LOB=CONS&msgId=)",
         "logout": {
             "cookies": ["COOKIE_SID"]
         },
@@ -17,7 +18,23 @@
                 "nextURLs": []
             }
         }
+    }, "https://online.wellsfargo.com/signon?serviceType=document&loginMode=jukePassword&origination=email&LOB=CONS&msgId=": {
+        "name": "Wells Fargo",
+        "logout": {
+            "cookies": ["COOKIE_SID"]
+        },
+        "login": {
+            "urls": [
+            	"https://www.wellsfargo.com/",
+            	"https://online.wellsfargo.com/signon?serviceType=document&loginMode=jukePassword&origination=email&LOB=CONS&msgId="
+            ],
+            "formURL": "https://online.wellsfargo.com/das/cgi-bin/session.cgi?screenid=SIGNON",
+            "method": "POST",
+            "usernameField": "userid",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Sign Off')"
+        },
+        "ignore": true
     }
 }
-
-
