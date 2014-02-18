@@ -1,7 +1,7 @@
 {
     "*://*.paypal.com/*": {
         "name": "PayPal",
-        "match": "https?://(?!shopping\\.)(?!developer\\.)([^.]+\\.)?paypal\\.com(?!/cgi-bin/webscr\\?cmd=_flow)",
+        "match": "https?://(?!shopping\\.)(?!developer\\.)([^.]+\\.)?paypal\\.com",
         "logout": {
             "cookies": ["HaC80bwXscjqZ7KM6VOxULOB534"]
         },
@@ -12,29 +12,7 @@
             "usernameField": "login_email",
             "passwordField": "login_password",
             "hasHiddenInputs": true,
-            "check": "li.logout, a:contains('Log Out'), ul#nav-global-loggedin",
-            "twoFactor": [
-                {
-                    "url": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
-                    "check": "input[name='otp']"
-                }
-            ]
-        }
-    },
-    "*://*.paypal.com/*": {
-        "name": "PayPal",
-        "match": "https?://([^.]+\\.)?paypal\\.com/cgi-bin/webscr\\?cmd=_flow",
-        "logout": {
-            "cookies": ["HaC80bwXscjqZ7KM6VOxULOB534"]
-        },
-        "login": {
-            "urls": ["https://www.paypal.com/cgi-bin/webscr?cmd=_flow"],
-            "formURL": "https://www.paypal.com/us/cgi-bin/webscr", 
-            "method": "POST",
-            "usernameField": "login_email",
-            "passwordField": "login_password",
-            "hasHiddenInputs": true,
-            "check": "li.logout, a:contains('Log Out'), ul#nav-global-loggedin",
+            "check": "li.logout, a:contains('Log Out'), ul#nav-global-loggedin, a#logout-button",
             "twoFactor": [
                 {
                     "url": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
