@@ -131,6 +131,7 @@
   color: #888;
   font-size: 12px;
   text-align: left;
+  background: transparent;
 }
 #waltz-credential-form #waltz-credential-username,
 #waltz-credential-form #waltz-credential-password,
@@ -151,6 +152,8 @@
   width: 85%;
   background: white;
   color: black;
+  height: 24px;
+  box-sizing: content-box;
 }
 #waltz-credential-form #waltz-credential-username:active, #waltz-credential-form #waltz-credential-username:focus,
 #waltz-credential-form #waltz-credential-password:active,
