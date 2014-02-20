@@ -1,0 +1,20 @@
+{
+    "*://*.codecademy.com/*": {
+        "name": "Codecademy",
+        "match": "https?://(?!help\\.)(?!labs\\.)([^.]+\\.)?codecademy\\.com(?!/stories/?)",
+        "logout": {
+            "cookies": ["_session_id", "remember_user_token"]
+        },
+        "login": {
+            "urls": [
+                "http://www.codecademy.com/dashboard"
+            ],
+            "formURL": "http://www.codecademy.com/sign_in",
+            "method": "POST",
+            "usernameField": "user[login]",
+            "passwordField": "user[password]",
+            "hasHiddenInputs": true,
+            "check": "li#notifications, a:contains('Sign Out')"
+        }
+    }
+}
