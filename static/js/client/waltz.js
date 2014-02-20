@@ -38,7 +38,21 @@
             this.acknowledgeLoginAttempt({ success: true });
             return;
         } else if (page == "unknown" && this.options.site.config.login.formOnly) {
-            return;
+            loginCheckInterval = setInterval(function() {
+                if (checks > MAX_CHECKS) {
+                    clearInterval(loginCheckInterval);
+                    return;
+                }
+
+                page = _this.checkPage();
+                if (page === "login") {
+                    kickOff();
+                    clearInterval(loginCheckInterval);
+                    return;
+                } else {
+                    checks++;
+                }
+            }, CHECK_INTERVAL);
         } else if (page == "two_factor") {
             return; 
         } else {
@@ -466,6 +480,17 @@
                 location: window.location.href
             }, function() {
 
+                if (!$form.attr('action')) {
+                    $form.attr('action', siteConfig.login.formURL);
+                }
+
+                if (siteConfig.login.submitUsernameField) {
+                    // if the username field submitted is different than
+                    // the name of the actual field, swap it out
+                    $form
+                        .find('input[name=' + siteConfig.login.usernameField + ']')
+                        .attr('name', siteConfig.login.submitUsernameField);
+                }
                 // hack to fix issues where submit button
                 // has name="submit" -- WAY TOO HARD
                 if (typeof($form[0].submit) !== "function") {
@@ -473,6 +498,14 @@
                     $form.find('input[name="submit"], #submit').remove();
                     $form.css('display', 'none');
                     formSubmitted = false;
+                }
+
+                if (siteConfig.login.additionalData) {
+                    data = siteConfig.login.additionalData;
+                    for (var add in data) {
+                        var input = $('<input>').attr('name', add).attr('value', data[add]);
+                        $form.append(input);
+                    }
                 }
 
                 $form.submit();
