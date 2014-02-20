@@ -1,0 +1,20 @@
+{
+    "*://*.instructables.com/*": {
+        "name": "Instructables",
+        "logout": {
+            "cookies": ["JSESSIONID", "authy"]
+        },
+        "login": {
+            "urls": [
+                "http://www.instructables.com/index",
+                "http://www.instructables.com/account/login?nxtPgName=Login+%3A&nxtPg=/account/login?nxtPgName=Instructables+-+DIY+How+To+Make+Instructions&nxtPg=/index"
+            ],
+            "formURL": "http://www.instructables.com/account/login?nxtPgName=Instructables - DIY How To Make Instructions&nxtPg=/index",
+            "method": "POST",
+            "usernameField": "u",
+            "passwordField": "p",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Logout')"
+        }
+    }
+}
