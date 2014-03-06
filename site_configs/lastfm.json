@@ -1,0 +1,18 @@
+{
+    "*://*.last.fm/*": {
+        "name": "Lastfm",
+        "logout": {
+            "cookies": ["Session"]
+        },
+        "login": {
+            "urls": [
+                "http://last.fm/login"
+            ],
+            "formURL": "https://secure.last.fm/login",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "check": ".logout-button"
+        }
+    }
+}
