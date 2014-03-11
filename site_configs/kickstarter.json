@@ -1,0 +1,22 @@
+{
+    "*://*.kickstarter.com/*": {
+        "name": "Kickstarter",
+        "logout": {
+            "cookies": [
+                "user_credentials",
+                "_ksr_session"
+            ]
+        },
+        "login": {
+            "urls": [
+                "https://www.kickstarter.com/login"
+            ],
+            "formURL": "https://www.kickstarter.com/user_sessions",
+            "method": "POST",
+            "hasHiddenInputs": true,
+            "usernameField": "user_session[email]",
+            "passwordField": "user_session[password]",
+            "check": "#menu-sub-me"
+        }
+    }
+}
