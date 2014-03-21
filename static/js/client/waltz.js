@@ -468,9 +468,9 @@
 
                 // hack to fix issues where submit button
                 // has name="submit" -- WAY TOO HARD
-                if ($form[0].submit !== "function") {
+                if (typeof($form[0].submit) !== "function") {
                     $form = $form.clone();
-                    $form.find('input[name="submit"]').remove();
+                    $form.find('input[name="submit"], #submit').remove();
                     $form.css('display', 'none');
                     formSubmitted = false;
                 }
