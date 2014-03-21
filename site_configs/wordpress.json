@@ -5,17 +5,21 @@
             "cookies": ["wordpress_logged_in","wordpress_sec"]
         },
         "login": {
-            "urls": ["https://en.wordpress.com/wp-login.php","https://wordpress.com/wp-login.php"],
+            "urls": [
+            	"http://wordpress.com/",
+            	"https://en.wordpress.com/wp-login.php",
+            	"https://wordpress.com/wp-login.php"
+            ],
             "formURL": "https://en.wordpress.com/wp-login.php",
             "method": "POST",
             "usernameField": "log",
             "passwordField": "pwd",
             "hasHiddenInputs": true,
-            "check": "#wp-admin-bar-logout",
+            "check": "li#wp-admin-bar-logout, li#wp-admin-bar-blog-admin, a:contains('Sign Out')",
             "twoFactor": [
                 { 
                     "url": "https://en.wordpress.com/wp-login.php",
-                    "check": "input[name='twostep-authcode']"
+                    "check": "input[name='twostep-authcode'], input#authcode"
                 }
             ]
         }

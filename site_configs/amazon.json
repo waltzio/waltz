@@ -59,7 +59,7 @@
         },
         "ignore": true
     }, "*://*.amazon.es/*": {
-        "name": "Amazon (FR)",
+        "name": "Amazon (ES)",
         "logout": {
             "cookies": ["x-acbes", "session-id"]
         },
