@@ -10,6 +10,7 @@
             "method": "POST",
             "usernameField": "email",
             "passwordField": "password",
+            "hasHiddenInputs": true,
             "submitButton": "button:contains(Login)",
             "check": "a:contains(Logout)",
             "exclude": {
