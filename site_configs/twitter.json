@@ -51,7 +51,7 @@
             "cookies": ["SESScf6cd433d7906c8f2c19c615095a1834"]
         },
         "login": {
-            "urls": ["https://dev.twitter.com/user/login?destination=home"],
+            "urls": ["https://dev.twitter.com/"],
             "formURL": "https://dev.twitter.com/user/login?destination=home",
             "method": "POST",
             "usernameField": "name",
