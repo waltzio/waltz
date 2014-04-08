@@ -1,7 +1,7 @@
 {
     "*://*.twitter.com/*": {
         "name": "Twitter",
-        "match": "https?://(?!ads\\.)([^.]+\\.)?twitter\\.com",
+        "match": "https?://(?!ads\\.)(?!status\\.)(?!dev\\.)([^.]+\\.)?twitter\\.com",
         "logout": {
             "cookies": ["auth_token"]
         },
@@ -12,7 +12,7 @@
             "usernameField": "session[username_or_email]",
             "passwordField": "session[password]",
             "hasHiddenInputs": true,
-            "check": "button:contains('Sign out'), input:contains('Sign out'), .current-user, input[type='submit'][value*='Sign out']",
+            "check": ".signed-in, a:contains('Sign out'), button:contains('Sign out'), input:contains('Sign out'), .current-user, input[type='submit'][value*='Sign out']",
             "twoFactor": [
                 {
                     "url": "https://twitter.com/account/login_verification/push",
@@ -42,6 +42,23 @@
             "passwordField": "password",
             "hasHiddenInputs": true,
             "check": "button:contains('Sign out'), a#sign_out_link"
+        },
+        "ignore": true
+    },
+    "*://dev.twitter.com/*": {
+        "name": "Twitter Developers",
+        "logout": {
+            "cookies": ["SESScf6cd433d7906c8f2c19c615095a1834"]
+        },
+        "login": {
+            "urls": ["https://dev.twitter.com/"],
+            "formURL": "https://dev.twitter.com/user/login?destination=home",
+            "method": "POST",
+            "usernameField": "name",
+            "passwordField": "pass",
+            "hasHiddenInputs": true,
+            "formOnly": true,
+            "check": "a:contains('Sign out')"
         },
         "ignore": true
     }
