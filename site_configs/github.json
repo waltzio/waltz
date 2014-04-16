@@ -12,7 +12,7 @@
             "usernameField": "login",
             "passwordField": "password",
             "hasHiddenInputs": true,
-            "check": "a#logout, button#logout",
+            "check": "a#logout, button#logout, .sign-out-button",
             "twoFactor": [
                 {
                     "url": "https://github.com/session",
