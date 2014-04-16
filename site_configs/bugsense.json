@@ -1,0 +1,21 @@
+{
+    "*://*.bugsense.com/*": {
+        "name": "BugSense",
+        "logout": {
+            "cookies": [
+                "bugsense"
+            ]
+        },
+        "login": {
+            "urls": [
+                "https://www.bugsense.com/"
+            ],
+            "formURL": "https://www.bugsense.com/login",
+            "method": "POST",
+            "hasHiddenInputs": false,
+            "usernameField": "email",
+            "passwordField": "password_clear",
+            "check": "a[href='/logout/']"
+        }
+    }
+}
