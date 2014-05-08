@@ -1,0 +1,16 @@
+{
+    "*://cloud.digitalocean.com/*": {
+        "name": "DigitalOcean",
+        "logout": {
+            "cookies": ["_digitalocean2_session_v2", "__cfduid", "__ssid", "__utma", "__utmb", "__utmc", "__utmz"]
+        },
+        "login": {
+            "urls": ["https://cloud.digitalocean.com/login"],
+            "formURL": "https://cloud.digitalocean.com/login",
+            "method": "POST",
+            "usernameField": "user[email]",
+            "passwordField": "user[password]",
+            "hasHiddenInputs": true
+        }
+    }
+}
