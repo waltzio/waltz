@@ -1,0 +1,20 @@
+{
+    "*://*.yahoo.com/*": {
+        "name": "Yahoo",
+        "logout": {
+            "cookies": ["T", "F"]
+        },
+        "login": {
+            "urls": [
+                "https://login.yahoo.com/config/login",
+                "https://login.yahoo.com/config/login_verify2"
+            ],
+            "formURL": "https://login.yahoo.com/config/login?",
+            "method": "POST",
+            "usernameField": "login",
+            "passwordField": "passwd",
+            "hasHiddenInputs": true,
+            "check": "a:contains('Sign Out')"
+        }
+    }
+}
