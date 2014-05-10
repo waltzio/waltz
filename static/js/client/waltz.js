@@ -32,7 +32,7 @@
             page = this.checkPage();
         // First, we need to figure out if the Waltz icon should be displayed.
         if (page == "logged_in") {
-            // If the 'check' selector exists, then we're logged in, 
+            // If the 'check' selector exists, then we're logged in,
             // so don't show Waltz
             this.trigger('loggedIn');
             this.acknowledgeLoginAttempt({ success: true });
@@ -40,9 +40,9 @@
         } else if (page == "unknown" && this.options.site.config.login.formOnly) {
             return;
         } else if (page == "two_factor") {
-            return; 
+            return;
         } else {
-            // the 'check' selector doesn't exist yet, but it may be loaded 
+            // the 'check' selector doesn't exist yet, but it may be loaded
             // dynamically by the page.
             var checks = 0,
                 MAX_CHECKS = 20,
@@ -73,7 +73,7 @@
                         clearInterval(loginCheckInterval);
                         return;
                     } else {
-                        checks++; 
+                        checks++;
                     }
                 };
 
@@ -81,7 +81,7 @@
                 loginCheckInterval = setInterval(checkFunction, CHECK_INTERVAL);
 
             } else {
-                // if we are inTransition, let's keep on looking for a login 
+                // if we are inTransition, let's keep on looking for a login
                 // field. We can do this because the bad password page will
                 // almost certainly contain the field to put in a new password.
                 // ya feel me?
@@ -126,16 +126,16 @@
                     _this.checkAuthentication(function() {
                         var errorMessage = "Invalid username and password.";
                         _this.acknowledgeLoginAttempt({ success: false });
-                        _this.showWidget(); 
-                        _this.requestCredentials(errorMessage); 
+                        _this.showWidget();
+                        _this.requestCredentials(errorMessage);
                     }, function() {
                         _this.acknowledgeLoginAttempt({ success: true });
                         _this.showWidget();
                     });
                 } else {
-                    _this.showWidget(); 
+                    _this.showWidget();
                 }
-    
+
 
                 window.addEventListener('message', _this.closeIFrame.bind(_this));
                 window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
@@ -150,7 +150,7 @@
         if (data.dismissals > this.DISMISSAL_THRESHOLD) {
             var $message = Message.getMessage();
             var text = "Would you like to hide Waltz on " + this.options.site.config.name + " forever?";
-            
+
             var $text = $message.find('p');
             var $widget = this.$widget;
             $text.html(text);
@@ -163,7 +163,7 @@
             $forever.click(function(e) {
                 e.stopPropagation();
                 _this.storage.getDismissalsForSite(
-                    _this.options.site.config.key, 
+                    _this.options.site.config.key,
                     function(dismissals) {
                         dismissals.dismissedForever = true;
                         dismissals.count = 0;
@@ -235,10 +235,10 @@
             } else {
                 this.trigger('login.failure');
             }
-            chrome.runtime.sendMessage({ 
-                method: "acknowledgeLoginAttempt", 
+            chrome.runtime.sendMessage({
+                method: "acknowledgeLoginAttempt",
                 domain: this.options.site.domain,
-                successful: opts.success 
+                successful: opts.success
             });
         }
     };
@@ -298,7 +298,7 @@
         $("body").append($iframe);
 
     };
-    
+
     Waltz.prototype.logInToClef = function(cb) {
         var _this = this;
 
@@ -307,7 +307,7 @@
 
             _this.iframe.fadeIn();
 
-            window.addEventListener("message", listener); 
+            window.addEventListener("message", listener);
 
             function listener(e) {
                 if(e.data.auth) {
@@ -385,8 +385,8 @@
         }
 
         // We are on the login page!
-        if ($login.length > 0 && 
-            $password.length > 0 && 
+        if ($login.length > 0 &&
+            $password.length > 0 &&
             _.some($password, function(v) { return $(v).is(':visible'); })
         ) {
             var $newLogin = $login.clone(),
@@ -405,13 +405,14 @@
             $form.prepend($newLogin);
             $form.prepend($newPassword);
 
+            if (!$form.attr('action')) $form.attr('action', siteConfig.login.formURL);
+
             submitForm($form);
         } else {
             var form = $('<form />')
                 .hide()
                 .attr({ method : siteConfig.login.method })
                 .attr({ action : siteConfig.login.formURL });
-
 
             form.append(
                 $('<input />')
@@ -437,13 +438,13 @@
                     }
                     var $inputs = $form.find('input');
 
-                    $inputs = $inputs.filter(function(input) { 
+                    $inputs = $inputs.filter(function(input) {
                         return $(this).attr('name') != siteConfig.login.passwordField &&
                             $(this).attr('name') != siteConfig.login.usernameField;
                     });
 
                     form.append($inputs);
-                    
+
                     submitForm();
                 };
 
@@ -454,7 +455,7 @@
             } else {
                 submitForm();
             }
-        }   
+        }
 
         function submitForm($form) {
             var formSubmitted = !!$form;
@@ -477,7 +478,7 @@
 
                 $form.submit();
             });
-        }   
+        }
     };
 
     Waltz.prototype.checkAuthentication = function(continueCallback, noUserCallback) {
@@ -509,7 +510,7 @@
             usernameValue = "",
             passwordValue = "";
 
-        // check if username and password fields exist on the page and if 
+        // check if username and password fields exist on the page and if
         // they do, and they have values, set the credential fields
         // to those values (purely for convenience)
         var $potentialUsernameField = $("input[name='" + this.options.site.config.login.usernameField + "']");
@@ -653,7 +654,7 @@
                 this.trigger('show.widget');
             }
             return;
-        } 
+        }
 
 
         //Grab image resource URLs from extensions API
@@ -684,7 +685,7 @@
             _this.storage.getDismissalsForSite(_this.options.site.config.key, function(dismissals) {
                 dismissals.count = (dismissals.count || 0) + 1;
                 _this.storage.setDismissalsForSite(
-                    _this.options.site.config.key, 
+                    _this.options.site.config.key,
                     dismissals
                 );
 
@@ -723,15 +724,15 @@
         if (siteConfig.login.twoFactor) {
             $.map(siteConfig.login.twoFactor, function(twoFactor) {
                 var twoFactorUrl = Utils.url(twoFactor.url),
-                    twoFactorCheck = $(twoFactor.check); 
+                    twoFactorCheck = $(twoFactor.check);
 
-                isTwoFactor |= 
+                isTwoFactor |=
                     (window.location.hostname === twoFactorUrl.hostname &&
                      window.location.pathname === twoFactorUrl.pathname) && twoFactorCheck.length > 0;
             });
         }
         if (isTwoFactor) {
-            return "two_factor"; 
+            return "two_factor";
         }
 
         if ($(this.options.site.config.login.check).length !== 0) {
