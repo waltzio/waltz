@@ -1,0 +1,18 @@
+{
+    "*://*.microsoftonline.com/*": {
+        "name": "Microsoft",
+        "logout": {
+            "cookies": ["PPAuth", "RPSSecAuthOL"]
+        },
+        "login": {
+            "urls": ["https://login.microsoftonline.com/login.srf"],
+            "formURL": "https://login.microsoftonline.com/ppsecure/post.srf",
+            "method": "POST",
+            "formOnly": true,
+            "usernameField": "login",
+            "passwordField": "passwd",
+            "hasHiddenInputs": true,
+            "check": "#O365_MainLink_Me"
+        }
+    }
+}
