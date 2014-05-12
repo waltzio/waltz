@@ -239,7 +239,8 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 			domains.push(key);
 		}
 	}
-	var parsed = _.map(this.siteConfigs, function(config, key) {
+
+    var parsed = _.map(this.siteConfigs, function(config, key) {
         var pattern = Utils.parse_match_pattern(key);
         if (config.match) pattern += ("|" + config.match);
         return pattern;
