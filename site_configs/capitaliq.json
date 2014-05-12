@@ -1,0 +1,17 @@
+{
+    "*://*.capitaliq.com/*": {
+        "name": "CapitalIQ",
+        "logout": {
+            "cookies": ["userLoggedIn", "__CG", "machineIdCookie", "ObSSOCookie", "ASP.NET_SessionId", "uoid"]
+        },
+        "login": {
+            "urls": ["https://www.capitaliq.com/ciqdotnet/login.aspx"],
+            "formURL": "https://www.capitaliq.com/ciqdotnet/login.aspx",
+            "method": "POST",
+            "usernameField": "myLogin$myUsername",
+            "passwordField": "myLogin$myPassword",
+            "hasHiddenInputs": true,
+            "check": "#userNavLabel"
+        }
+    }
+}

@@ -1,6 +1,6 @@
 /*******************
  * Delegate Class
- * 
+ *
  * The delegate is used for passing messages back and forth
  * between the client page and the extension background
  *
@@ -16,7 +16,7 @@ Delegate.prototype.options.backupConfigURL = chrome.extension.getURL("build/site
 
 if (Delegate.prototype.DEBUG) {
 	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
-} 
+}
 
 function Delegate(opts) {
 	var _this = this;
@@ -24,7 +24,7 @@ function Delegate(opts) {
     this.options = $.extend(this.options, opts);
 
     this.storage = new Storage();
-    this.analytics = new Analytics();    
+    this.analytics = new Analytics();
     this.crypto = new Crypto();
 
     if (navigator.onLine) {
@@ -55,18 +55,6 @@ Delegate.prototype.init = function(options) {
         subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
     });
 
-    // bind the router
-    chrome.runtime.onMessage.addListener(this.router.bind(this));
-    window.addEventListener('online', function() {
-        setTimeout(function() {
-            _this.checkAuthentication(function(data) {
-                if (!data.user) {
-                    _this.logout({ silent: true });
-                }
-            });
-        }, 2000);
-    });
-
     //Add the context menu
     chrome.contextMenus.create({
         id: 'waltz-main',
@@ -81,12 +69,12 @@ Delegate.prototype.init = function(options) {
         }
     });
 
-    // Listens to requests, so we can redirect to the original page 
+    // Listens to requests, so we can redirect to the original page
     // after a successful login.
     chrome.webRequest.onCompleted.addListener(
         this.handleSuccessfulLogin.bind(this),
         {
-            urls: Object.keys(this.currentLogins), 
+            urls: Object.keys(this.currentLogins),
             types: ["main_frame"]
         }
     );
@@ -100,11 +88,11 @@ Delegate.prototype.init = function(options) {
     );
 
     chrome.webRequest.onHeadersReceived.addListener(
-        this.handleCSPHeader.bind(this), 
+        this.handleCSPHeader.bind(this),
         {
             urls: ["https://lastpass.com/*"],
             types: ["main_frame"]
-        }, 
+        },
         ["blocking", "responseHeaders"]
     );
 
@@ -136,7 +124,7 @@ Delegate.prototype.init = function(options) {
                 n = n + 1;
                 return;
             }
-            
+
             if (data.user) {
                 _this.loggedIn = true;
                 _this.pubnubSubscribe(data);
@@ -147,25 +135,36 @@ Delegate.prototype.init = function(options) {
         });
     }
 
+    // bind the router
+    chrome.runtime.onMessage.addListener(this.router.bind(this));
+    window.addEventListener('online', function() {
+        setTimeout(function() {
+            _this.checkAuthentication(function(data) {
+                if (!data.user) {
+                    _this.logout({ silent: true });
+                }
+            });
+        }, 2000);
+    });
+
     // when the configs are done loading, blast off, baby!
     $.when(this.configsLoaded).then(kickOff);
 };
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
-    if (request.messageLocation && request.messageLocation !== "delegate") return false;
-    
-	if (typeof(request.method) === "undefined") {
-		return false;
-	}
+    var _this = this;
 
-	switch(request.method) {
-		case "deleteCredentials":
-			return this.deleteCredentials(request.key, sendResponse);
-		case "getHost":
-			return sendResponse(this.options.cy_url);
-		default:
-			return this[request.method].bind(this)(request, sendResponse);
-	}
+    if (request.messageLocation && request.messageLocation !== "delegate") return false;
+
+    if (typeof(request.method) === "undefined") {
+        return false;
+    }
+
+    $.when(this.configsLoaded).then(function() {
+        _this[request.method].bind(_this)(request, sendResponse);
+    });
+
+    return true;
 };
 
 Delegate.prototype.getSiteConfigs = function(request, cb) {
@@ -180,7 +179,7 @@ Delegate.prototype.getSiteConfigs = function(request, cb) {
 };
 
 Delegate.prototype.acknowledgeLoginAttempt = function(request) {
-    
+
     if (request.successful) {
         // If the login is successful, let's refresh other potential tabs
         // to help them log in!
@@ -230,7 +229,25 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 			domains.push(key);
 		}
 	}
-	var parsed = domains.map(Utils.parse_match_pattern).filter(function(pattern) { return pattern !== null; });
+
+    // extract the `key` from all of the configs and compose
+    // them into a regex that can be used to check if Waltz needs
+    // to be loaded on a page.
+    var parsed = _.map(this.siteConfigs, function(config, key) {
+        // `config` is the site config
+        // `key` is the url match pattern used to identify the site
+
+        // transform the `key` into a regular expression
+        var pattern = Utils.parse_match_pattern(key);
+        // if the config has an additional match pattern, add it to the
+        // regular expression as an OR statement
+        if (config.match) pattern += ("|" + config.match);
+
+        return pattern;
+    }).filter(function(pattern) { return pattern !== null; });
+
+    // join all of the site-specific regular expressions into one big
+    // regular expression with an OR
 	this.includedDomainRegex = new RegExp(parsed.join('|'));
 	this.configsLoaded.resolve();
 };
@@ -271,7 +288,7 @@ Delegate.prototype.logout = function(opts) {
 
 	this.storage.getLogins(function(data) {
         if (_.isEmpty(data)) return;
-        
+
 		var sitesCompleted = [],
 			promise,
 			siteConfig,
@@ -283,11 +300,11 @@ Delegate.prototype.logout = function(opts) {
             delete(_this.currentLogins[domain]);
 		}
 
-		$.when(sitesCompleted).then(function() {
+		$.when.apply($, sitesCompleted).then(function() {
 			_this.storage.clearLogins();
 			if (!opts.silent) {
 				chrome.notifications.create(
-					"", 
+					"",
 					{
 						type: "basic",
 						title: "You've been logged out of Waltz.",
@@ -309,9 +326,14 @@ Delegate.prototype.logout = function(opts) {
 };
 
 Delegate.prototype.logOutOfSite = function(opts, cb) {
-    var promise = $.Deferred(),
+    var fullyDonePromise = $.Deferred(),
         domain = opts.domain,
-        siteConfig;
+        cookiesToDelete = [],
+        siteConfig,
+        logoutDomains,
+        logoutCookes,
+        logoutCookie,
+        i;
 
     if (opts.key) {
         siteConfig = this.getConfigForKey(opts.key);
@@ -320,34 +342,58 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
         siteConfig = this.siteConfigs[domain];
     }
 
-    Utils.getCookiesForDomain(domain, function(cookies) {
-        var cookie;
-        for (i = 0; i < cookies.length; i++) {
-            cookie = cookies[i];
-            if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
-                chrome.cookies.remove({
-                    url: Utils.extrapolateUrlFromCookie(cookie),
-                    name: cookie.name
-                });
+    logoutDomains = [domain];
+    logoutCookies = siteConfig.logout.cookies;
+
+    for (i = 0; i < logoutCookies.length; i++) {
+        logoutCookie = logoutCookies[i];
+        if (typeof(logoutCookie) === "object") {
+            cookiesToDelete.push(logoutCookie.cookie);
+            if (logoutDomains.indexOf(logoutCookie.domain) < 0) logoutDomains.push(logoutCookie.domain);
+        } else {
+            cookiesToDelete.push(logoutCookie);
+        }
+    }
+
+    var promises = logoutDomains.map(function(domain) {
+        var promise = $.Deferred();
+        Utils.getCookiesForDomain(domain, function(cookies) {
+            var cookie;
+            for (i = 0; i < cookies.length; i++) {
+                cookie = cookies[i];
+                if (cookiesToDelete.indexOf(cookie.name) != -1) {
+                    chrome.cookies.remove({
+                        url: Utils.extrapolateUrlFromCookie(cookie),
+                        name: cookie.name
+                    });
+                }
+            }
+            promise.resolve();
+        });
+        return promise;
+    });
+
+    $.when.apply($, promises).then(function() {
+        if (opts.refresh) {
+            var refresh = function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    chrome.tabs.reload(data[i].id);
+                }
+            };
+
+            for (var i = 0; i < logoutDomains.length; i++) {
+                chrome.tabs.query(
+                    { url: logoutDomains[i] },
+                    refresh
+                );
             }
         }
 
-        if (opts.refresh) {
-            chrome.tabs.query(
-                { url: domain }, 
-                function(data) { 
-                    for (var i = 0; i < data.length; i++) {
-                        chrome.tabs.reload(data[i].id);
-                    }
-                }
-            );
-        }
-
-        promise.resolve();
+        fullyDonePromise.resolve();
         if (typeof cb === "function") cb();
     });
 
-    return promise;
+    return fullyDonePromise;
 };
 
 Delegate.prototype.forceTutorial = function(opts, cb) {
@@ -376,11 +422,11 @@ Delegate.prototype.decrypt = function(request, cb) {
 
 Delegate.prototype.proxyRequest = function(request, cb) {
     $.ajax({
-        url: request.url, 
+        url: request.url,
         data: request.data,
         type: request.type || 'GET'
     }).done(function(data) {
-        cb(data); 
+        cb(data);
     });
 
 	return true;
@@ -450,7 +496,7 @@ Delegate.prototype.handleLinkCaptures = function(details) {
                 }
             });
         });
-    } 
+    }
 };
 
 Delegate.prototype.handleSuccessfulLogin = function(details) {
@@ -470,8 +516,8 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
         var forcedRedirectUrl = _this.currentLogins[domain].redirectUrl;
         var shouldNotRedirect = false;
 
-        // If the URL which we are trying to force a redirect to 
-        // is the login URL, let the  site handle directing the 
+        // If the URL which we are trying to force a redirect to
+        // is the login URL, let the  site handle directing the
         // user to the right place
         var excludedForcedRedirectUrls = $.merge([], siteConfig.login.urls);
         // Also include the explicitly defined ones in the site config

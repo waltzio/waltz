@@ -1,8 +1,20 @@
 {
     "*://*.microsoftonline.com/*": {
         "name": "Microsoft",
+        "match": "https?://([^.]+\\.)?(microsoftonline|office365)\\.com",
         "logout": {
-            "cookies": ["PPAuth", "RPSSecAuthOL"]
+            "cookies": [
+                "PPAuth",
+                "RPSSecAuthOL",
+                {
+                    "cookie": "RPSSecAuth",
+                    "domain": "*://*.office365.com/*"
+                },
+                {
+                    "cookie": "RPSAuth",
+                    "domain": "*://*.office365.com/*"
+                }
+            ]
         },
         "login": {
             "urls": ["https://login.microsoftonline.com/login.srf"],
@@ -12,7 +24,7 @@
             "usernameField": "login",
             "passwordField": "passwd",
             "hasHiddenInputs": true,
-            "check": "#O365_MainLink_Me"
+            "check": "#O365_MainLink_Me, a[title='Settings']"
         }
     }
 }
