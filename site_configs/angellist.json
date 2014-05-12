@@ -2,7 +2,7 @@
     "*://*.angel.co/*": {
         "name": "AngelList",
         "logout": {
-            "cookies": ["_starlists_session", "remember_user_token"]
+            "cookies": ["_angellist"]
         },
         "login": {
             "urls": ["https://angel.co/login"],
