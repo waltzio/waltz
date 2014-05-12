@@ -230,12 +230,24 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 		}
 	}
 
+    // extract the `key` from all of the configs and compose
+    // them into a regex that can be used to check if Waltz needs
+    // to be loaded on a page.
     var parsed = _.map(this.siteConfigs, function(config, key) {
+        // `config` is the site config
+        // `key` is the url match pattern used to identify the site
+
+        // transform the `key` into a regular expression
         var pattern = Utils.parse_match_pattern(key);
+        // if the config has an additional match pattern, add it to the
+        // regular expression as an OR statement
         if (config.match) pattern += ("|" + config.match);
+
         return pattern;
     }).filter(function(pattern) { return pattern !== null; });
 
+    // join all of the site-specific regular expressions into one big
+    // regular expression with an OR
 	this.includedDomainRegex = new RegExp(parsed.join('|'));
 	this.configsLoaded.resolve();
 };
