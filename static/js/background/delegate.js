@@ -135,8 +135,6 @@ Delegate.prototype.init = function(options) {
         });
     }
 
-    // when the configs are done loading, blast off, baby!
-    $.when(this.configsLoaded).then(kickOff);
     // bind the router
     chrome.runtime.onMessage.addListener(this.router.bind(this));
     window.addEventListener('online', function() {
@@ -148,6 +146,9 @@ Delegate.prototype.init = function(options) {
             });
         }, 2000);
     });
+
+    // when the configs are done loading, blast off, baby!
+    $.when(this.configsLoaded).then(kickOff);
 };
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
