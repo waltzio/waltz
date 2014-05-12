@@ -54,8 +54,9 @@ var Utils = {
         return domain;
     },
     getCookiesForDomain: function (domain, cb) {
+        if (domain.match(/\:\/\//)) domain = Utils.extrapolateDomainFromMatchURL(domain);
         chrome.cookies.getAll(
-            { domain: Utils.extrapolateDomainFromMatchURL(domain) },
+            { domain: domain },
             function(cookies) {
                 cb(cookies);
             }

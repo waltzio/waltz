@@ -324,7 +324,12 @@ Delegate.prototype.logout = function(opts) {
 Delegate.prototype.logOutOfSite = function(opts, cb) {
     var promise = $.Deferred(),
         domain = opts.domain,
-        siteConfig;
+        cookiesToDelete = [],
+        siteConfig,
+        logoutDomains,
+        logoutCookes,
+        logoutCookie,
+        i;
 
     if (opts.key) {
         siteConfig = this.getConfigForKey(opts.key);
@@ -333,27 +338,48 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
         siteConfig = this.siteConfigs[domain];
     }
 
-    Utils.getCookiesForDomain(domain, function(cookies) {
-        var cookie;
-        for (i = 0; i < cookies.length; i++) {
-            cookie = cookies[i];
-            if (siteConfig.logout.cookies.indexOf(cookie.name) != -1) {
-                chrome.cookies.remove({
-                    url: Utils.extrapolateUrlFromCookie(cookie),
-                    name: cookie.name
-                });
-            }
-        }
+    logoutDomains = [domain];
+    logoutCookies = siteConfig.logout.cookies;
 
-        if (opts.refresh) {
-            chrome.tabs.query(
-                { url: domain }, 
-                function(data) { 
-                    for (var i = 0; i < data.length; i++) {
-                        chrome.tabs.reload(data[i].id);
-                    }
+    for (i = 0; i < logoutCookies.length; i++) {
+        logoutCookie = logoutCookies[i];
+        if (typeof(logoutCookie) === "object") {
+            cookiesToDelete.push(logoutCookie.cookie);
+            if (logoutDomains.indexOf(logoutCookie.domain) < 0) logoutDomains.push(logoutCookie.domain);
+        } else {
+            cookiesToDelete.push(logoutCookie);
+        }
+    }
+
+    var promises = logoutDomains.map(function(domain) {
+        Utils.getCookiesForDomain(domain, function(cookies) {
+            var cookie;
+            for (i = 0; i < cookies.length; i++) {
+                cookie = cookies[i];
+                if (cookiesToDelete.indexOf(cookie.name) != -1) {
+                    chrome.cookies.remove({
+                        url: Utils.extrapolateUrlFromCookie(cookie),
+                        name: cookie.name
+                    });
                 }
-            );
+            }
+        });
+    });
+
+    $.when.apply($, promises).then(function() {
+        if (opts.refresh) {
+            var refresh = function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    chrome.tabs.reload(data[i].id);
+                }
+            };
+
+            for (var i = 0; i < logoutDomains.length; i++) {
+                chrome.tabs.query(
+                    { url: logoutDomains[i] },
+                    refresh
+                );
+            }
         }
 
         promise.resolve();
