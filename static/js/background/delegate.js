@@ -230,7 +230,12 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 			domains.push(key);
 		}
 	}
-	var parsed = domains.map(Utils.parse_match_pattern).filter(function(pattern) { return pattern !== null; });
+	var parsed = _.map(this.siteConfigs, function(config, key) {
+        var pattern = Utils.parse_match_pattern(key);
+        if (config.match) pattern += ("|" + config.match);
+        return pattern;
+    }).filter(function(pattern) { return pattern !== null; });
+
 	this.includedDomainRegex = new RegExp(parsed.join('|'));
 	this.configsLoaded.resolve();
 };
