@@ -1,7 +1,6 @@
 {
     "*://*.wellsfargo.com/*": {
         "name": "Wells Fargo",
-        "match": "https://(?!online\\.wellsfargo\\.com/signon\\?serviceType=document&loginMode=jukePassword&origination=email&LOB=CONS&msgId=)",
         "logout": {
             "cookies": ["COOKIE_SID"]
         },

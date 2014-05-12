@@ -20,7 +20,7 @@
     &.waltz-remove {
         right: -($size + 50);
     }
-    
+
     #waltz-login-button {
         height: 100%;
         width: 100%;
@@ -56,6 +56,7 @@
         cursor: pointer;
         padding: 0;
         margin: 0;
+        min-width: 0;
 
         &.waltz-dismiss {
             background-size: 100%;

@@ -42,7 +42,7 @@ grunt.initConfig({
   'chrome-extension': {
     options: {
         name: "Waltz",
-        version: "1.0.8.5",
+        version: "1.0.9",
         id: "obhibkfopclldmnoohabnbimocpgdine",
         chrome: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
         clean: true,
@@ -63,8 +63,8 @@ grunt.initConfig({
   },
   jshint: {
     files: [
-      'Gruntfile.js', 
-      'static/js/background/**/*.js', 
+      'Gruntfile.js',
+      'static/js/background/**/*.js',
       'static/js/client/**/*.js',
       'static/js/shared/**/*.js'
     ],
