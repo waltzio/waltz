@@ -161,17 +161,7 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
     }
 
     $.when(this.configsLoaded).then(function() {
-        switch(request.method) {
-            case "deleteCredentials":
-                _this.deleteCredentials(request.key, sendResponse);
-                break;
-            case "getHost":
-                sendResponse(_this.options.cy_url);
-                break;
-            default:
-                _this[request.method].bind(_this)(request, sendResponse);
-                break;
-        }
+        _this[request.method].bind(_this)(request, sendResponse);
     });
 
     return true;
