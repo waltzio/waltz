@@ -1,0 +1,18 @@
+{
+    "*://*.salesforce.com/*": {
+        "name": "SalesForce",
+        "logout": {
+            "cookies": ["sid"]
+        },
+        "login": {
+            "urls": ["https://login.salesforce.com/"],
+            "formURL": "https://login.salesforce.com/",
+            "method": "POST",
+            "formOnly": true,
+            "usernameField": "un",
+            "passwordField": "pw",
+            "hasHiddenInputs": true,
+            "check": "#userNavLabel"
+        }
+    }
+}
