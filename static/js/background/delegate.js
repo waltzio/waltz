@@ -356,6 +356,7 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
     }
 
     var promises = logoutDomains.map(function(domain) {
+        var promise = $.Deferred();
         Utils.getCookiesForDomain(domain, function(cookies) {
             var cookie;
             for (i = 0; i < cookies.length; i++) {
@@ -367,7 +368,9 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
                     });
                 }
             }
+            promise.resolve();
         });
+        return promise;
     });
 
     $.when.apply($, promises).then(function() {
