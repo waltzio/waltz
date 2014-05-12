@@ -55,18 +55,6 @@ Delegate.prototype.init = function(options) {
         subscribe_key : 'sub-c-188dbfd8-32a0-11e3-a365-02ee2ddab7fe'
     });
 
-    // bind the router
-    chrome.runtime.onMessage.addListener(this.router.bind(this));
-    window.addEventListener('online', function() {
-        setTimeout(function() {
-            _this.checkAuthentication(function(data) {
-                if (!data.user) {
-                    _this.logout({ silent: true });
-                }
-            });
-        }, 2000);
-    });
-
     //Add the context menu
     chrome.contextMenus.create({
         id: 'waltz-main',
@@ -149,23 +137,43 @@ Delegate.prototype.init = function(options) {
 
     // when the configs are done loading, blast off, baby!
     $.when(this.configsLoaded).then(kickOff);
+    // bind the router
+    chrome.runtime.onMessage.addListener(this.router.bind(this));
+    window.addEventListener('online', function() {
+        setTimeout(function() {
+            _this.checkAuthentication(function(data) {
+                if (!data.user) {
+                    _this.logout({ silent: true });
+                }
+            });
+        }, 2000);
+    });
 };
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
-    if (request.messageLocation && request.messageLocation !== "delegate") return false;
-    
-	if (typeof(request.method) === "undefined") {
-		return false;
-	}
+    var _this = this;
 
-	switch(request.method) {
-		case "deleteCredentials":
-			return this.deleteCredentials(request.key, sendResponse);
-		case "getHost":
-			return sendResponse(this.options.cy_url);
-		default:
-			return this[request.method].bind(this)(request, sendResponse);
-	}
+    if (request.messageLocation && request.messageLocation !== "delegate") return false;
+
+    if (typeof(request.method) === "undefined") {
+        return false;
+    }
+
+    $.when(this.configsLoaded).then(function() {
+        switch(request.method) {
+            case "deleteCredentials":
+                _this.deleteCredentials(request.key, sendResponse);
+                break;
+            case "getHost":
+                sendResponse(_this.options.cy_url);
+                break;
+            default:
+                _this[request.method].bind(_this)(request, sendResponse);
+                break;
+        }
+    });
+
+    return true;
 };
 
 Delegate.prototype.getSiteConfigs = function(request, cb) {
