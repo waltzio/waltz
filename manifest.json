@@ -1,6 +1,6 @@
 {
   "name": "Waltz",
-  "version": "1.0.8.5",
+  "version": "1.0.9",
   "manifest_version": 2,
   "description": "A modern account manager for the web.",
 
@@ -19,7 +19,7 @@
       "static/js/vendor/jquery.min.js",
       "static/js/vendor/pubnub.js",
       "static/js/shared/utils.js",
-      "static/js/background/crypto.js", 
+      "static/js/background/crypto.js",
       "static/js/shared/storage.js",
       "static/js/vendor/aes.js",
       "static/js/shared/analytics.js",
@@ -37,7 +37,7 @@
       "static/js/shared/templater.js",
       "static/js/shared/storage.js",
       "static/js/shared/sharer.js",
-      "static/js/client/message.js", 
+      "static/js/client/message.js",
       "static/js/client/onboarder.js",
       "static/js/shared/analytics.js",
       "static/js/vendor/keen.min.js",
