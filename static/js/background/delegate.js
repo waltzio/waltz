@@ -300,7 +300,7 @@ Delegate.prototype.logout = function(opts) {
             delete(_this.currentLogins[domain]);
 		}
 
-		$.when(sitesCompleted).then(function() {
+		$.when.apply($, sitesCompleted).then(function() {
 			_this.storage.clearLogins();
 			if (!opts.silent) {
 				chrome.notifications.create(
