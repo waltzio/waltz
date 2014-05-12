@@ -326,7 +326,7 @@ Delegate.prototype.logout = function(opts) {
 };
 
 Delegate.prototype.logOutOfSite = function(opts, cb) {
-    var promise = $.Deferred(),
+    var fullyDonePromise = $.Deferred(),
         domain = opts.domain,
         cookiesToDelete = [],
         siteConfig,
@@ -389,11 +389,11 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
             }
         }
 
-        promise.resolve();
+        fullyDonePromise.resolve();
         if (typeof cb === "function") cb();
     });
 
-    return promise;
+    return fullyDonePromise;
 };
 
 Delegate.prototype.forceTutorial = function(opts, cb) {
