@@ -5,7 +5,7 @@ var Utils = {
       * @returns  String to be passed to the RegExp constructor */
     parse_match_pattern: function (input) {
         if (typeof input !== 'string') return null;
-        var match_pattern = '(?:^', 
+        var match_pattern = '(?:^',
             regEscape = function(s) {return s.replace(/[[^$.|?*+(){}\\]/g, '\\$&');},
             result = /^(\*|https?|file|ftp|chrome-extension):\/\//.exec(input);
 
@@ -37,7 +37,7 @@ var Utils = {
         var url1 = Utils.url(urlString1);
         var url2 = Utils.url(urlString2);
 
-        return url1.hostname === url2.hostname && 
+        return url1.hostname === url2.hostname &&
                url1.pathname === url2.pathname;
     },
     extrapolateUrlFromCookie: function (cookie) {

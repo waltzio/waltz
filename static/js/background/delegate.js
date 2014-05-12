@@ -1,6 +1,6 @@
 /*******************
  * Delegate Class
- * 
+ *
  * The delegate is used for passing messages back and forth
  * between the client page and the extension background
  *
@@ -16,7 +16,7 @@ Delegate.prototype.options.backupConfigURL = chrome.extension.getURL("build/site
 
 if (Delegate.prototype.DEBUG) {
 	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
-} 
+}
 
 function Delegate(opts) {
 	var _this = this;
@@ -24,7 +24,7 @@ function Delegate(opts) {
     this.options = $.extend(this.options, opts);
 
     this.storage = new Storage();
-    this.analytics = new Analytics();    
+    this.analytics = new Analytics();
     this.crypto = new Crypto();
 
     if (navigator.onLine) {
@@ -81,12 +81,12 @@ Delegate.prototype.init = function(options) {
         }
     });
 
-    // Listens to requests, so we can redirect to the original page 
+    // Listens to requests, so we can redirect to the original page
     // after a successful login.
     chrome.webRequest.onCompleted.addListener(
         this.handleSuccessfulLogin.bind(this),
         {
-            urls: Object.keys(this.currentLogins), 
+            urls: Object.keys(this.currentLogins),
             types: ["main_frame"]
         }
     );
@@ -100,11 +100,11 @@ Delegate.prototype.init = function(options) {
     );
 
     chrome.webRequest.onHeadersReceived.addListener(
-        this.handleCSPHeader.bind(this), 
+        this.handleCSPHeader.bind(this),
         {
             urls: ["https://lastpass.com/*"],
             types: ["main_frame"]
-        }, 
+        },
         ["blocking", "responseHeaders"]
     );
 
@@ -136,7 +136,7 @@ Delegate.prototype.init = function(options) {
                 n = n + 1;
                 return;
             }
-            
+
             if (data.user) {
                 _this.loggedIn = true;
                 _this.pubnubSubscribe(data);
@@ -180,7 +180,7 @@ Delegate.prototype.getSiteConfigs = function(request, cb) {
 };
 
 Delegate.prototype.acknowledgeLoginAttempt = function(request) {
-    
+
     if (request.successful) {
         // If the login is successful, let's refresh other potential tabs
         // to help them log in!
@@ -271,7 +271,7 @@ Delegate.prototype.logout = function(opts) {
 
 	this.storage.getLogins(function(data) {
         if (_.isEmpty(data)) return;
-        
+
 		var sitesCompleted = [],
 			promise,
 			siteConfig,
@@ -287,7 +287,7 @@ Delegate.prototype.logout = function(opts) {
 			_this.storage.clearLogins();
 			if (!opts.silent) {
 				chrome.notifications.create(
-					"", 
+					"",
 					{
 						type: "basic",
 						title: "You've been logged out of Waltz.",
@@ -376,11 +376,11 @@ Delegate.prototype.decrypt = function(request, cb) {
 
 Delegate.prototype.proxyRequest = function(request, cb) {
     $.ajax({
-        url: request.url, 
+        url: request.url,
         data: request.data,
         type: request.type || 'GET'
     }).done(function(data) {
-        cb(data); 
+        cb(data);
     });
 
 	return true;
@@ -450,7 +450,7 @@ Delegate.prototype.handleLinkCaptures = function(details) {
                 }
             });
         });
-    } 
+    }
 };
 
 Delegate.prototype.handleSuccessfulLogin = function(details) {
@@ -470,8 +470,8 @@ Delegate.prototype.handleSuccessfulLogin = function(details) {
         var forcedRedirectUrl = _this.currentLogins[domain].redirectUrl;
         var shouldNotRedirect = false;
 
-        // If the URL which we are trying to force a redirect to 
-        // is the login URL, let the  site handle directing the 
+        // If the URL which we are trying to force a redirect to
+        // is the login URL, let the  site handle directing the
         // user to the right place
         var excludedForcedRedirectUrls = $.merge([], siteConfig.login.urls);
         // Also include the explicitly defined ones in the site config
