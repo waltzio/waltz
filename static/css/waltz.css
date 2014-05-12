@@ -528,6 +528,7 @@
   cursor: pointer;
   padding: 0;
   margin: 0;
+  min-width: 0;
 }
 #waltz-login-wrapper .waltz-button.waltz-dismiss {
   background-size: 100%;
