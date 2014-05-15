@@ -1,8 +1,9 @@
 {
     "*://*.zappos.com/*": {
         "name": "Zappos",
+        "match": "https?://(?!about\\.)(?!jobs\\.)([^.]+\\.)?zappos\\.com",
         "logout": {
-            "cookies": ["tid", "zfc", "zid", "zids"]
+            "cookies": ["tid", "zfc", "zid", "zids", "z3po", "holmes"]
         },
         "login": {
             "urls": [
