@@ -1,0 +1,20 @@
+{
+    "*://*.zappos.com/*": {
+        "name": "Zappos",
+        "match": "https?://(?!about\\.)(?!jobs\\.)([^.]+\\.)?zappos\\.com",
+        "logout": {
+            "cookies": ["tid", "zfc", "zid", "zids", "z3po", "holmes"]
+        },
+        "login": {
+            "urls": [
+                "https://secure-www.zappos.com/account",
+                "https://secure-www.zappos.com/login"
+            ],
+            "formURL": "https://secure-www.zappos.com/authenticate",
+            "method": "POST",
+            "usernameField": "j_username",
+            "passwordField": "j_password",
+            "check": ".gae-click*Global*Header*Logout, a:contains('Logout')"
+        }
+    }
+}
