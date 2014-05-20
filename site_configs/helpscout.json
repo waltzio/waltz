@@ -6,7 +6,7 @@
         },
         "login": {
             "urls": ["https://secure.helpscout.net/members/login/"],
-            "formURL": "https://secure.helpscout.net/members/process/login",
+            "formURL": "https://secure.helpscout.net/members/process/login/",
             "method": "POST",
             "usernameField": "email",
             "passwordField": "password",
