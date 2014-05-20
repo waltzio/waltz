@@ -1,0 +1,18 @@
+{
+    "*://*.instagram.com/*": {
+        "name": "Instagram",
+        "logout": {
+            "cookies": ["sessionid"]
+        },
+        "login": {
+            "urls": ["https://instagram.com/accounts/login/"],
+            "formURL": "https://intagram.com/accounts/login/",
+            "method": "POST",
+            "usernameField": "username",
+            "passwordField": "password",
+            "hasHiddenInputs": true,
+            "check": ".link-profile",
+            "formOnly": true
+        }
+    }
+}
