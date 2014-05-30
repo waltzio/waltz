@@ -5,11 +5,7 @@
             "cookies": ["rm"]
         },
         "login": {
-            "urls": [
-                "http://www.hipchat.com",
-                "https://www.hipchat.com/sign_in",
-                "https://www.hipchat.com/sign_in"
-            ],
+            "urls": ["https://www.hipchat.com/sign_in"],
             "formURL": "https://www.hipchat.com/sign_in",
             "method": "POST",
             "usernameField": "email",
