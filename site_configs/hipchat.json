@@ -1,0 +1,18 @@
+{
+    "*://*.hipchat.com/*": {
+        "name": "HipChat",
+        "logout": {
+            "cookies": ["rm"]
+        },
+        "login": {
+            "urls": ["https://www.hipchat.com/sign_in"],
+            "formURL": "https://www.hipchat.com/sign_in",
+            "method": "POST",
+            "usernameField": "email",
+            "passwordField": "password",
+            "hasHiddenInputs": false,
+            "check": "a:contains('Sign out')"
+        }
+    }
+}
+
