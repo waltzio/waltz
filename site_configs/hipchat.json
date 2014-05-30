@@ -1,6 +1,6 @@
 {
     "*://*.hipchat.com/*": {
-        "name": "Hipchat",
+        "name": "HipChat",
         "logout": {
             "cookies": ["rm"]
         },
