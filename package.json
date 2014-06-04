@@ -11,16 +11,13 @@
     "npm": "1.1.x"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-sass": "~0.5.0",
-    "grunt-contrib-watch": "~0.5.3",
-    "JQDeferred": "~2.1.0",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-nodeunit": "~0.1.2",
-    "grunt-chrome-compile": "~0.2.2",
-    "grunt-merge-json": "~0.9.3",
-    "grunt-contrib-jshint": "~0.8.0"
+    "JQDeferred": "^2.1.0",
+    "grunt": "^0.4.5",
+    "grunt-chrome-compile": "^0.2.2",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-nodeunit": "^0.1.2",
+    "grunt-contrib-sass": "^0.7.3",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-merge-json": "^0.9.4"
   }
 }
