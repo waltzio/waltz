@@ -52,7 +52,7 @@ Sites.prototype.init = function(data) {
                 if (!--count) {
                     (function() { 
                         function sorter(a, b) {
-                            var aName = a.find('.name').text(), bName = b.find('.name').text();
+                            var aName = a.find('.name').text().toLowerCase(), bName = b.find('.name').text().toLowerCase();
                             if (aName > bName) return 1;
                             if (aName < bName) return -1;
                             return 0;
