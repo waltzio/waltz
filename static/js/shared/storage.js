@@ -17,6 +17,8 @@ Storage.prototype.DISMISSALS_KEY = "dismissals";
 
 Storage.prototype.dismissForeverKey = "forever";
 
+StorageBase.prototype.STORAGE_TYPE = 'sync';
+
 Storage.prototype.optionsDefaults = {
     cy_url: "https://api.waltz.io"
 };
@@ -363,7 +365,7 @@ function StorageBase() {
 
     this.ready = $.Deferred();
 
-    chrome.storage.local.get(null, function(data) {
+    chrome.storage[_this.STORAGE_TYPE].get(null, function(data) {
         _this.data = data;
         _this.ready.resolve();
     });
@@ -394,7 +396,7 @@ StorageBase.prototype.set = function(items, cb) {
     $.when(this.ready).then(function() {
         _.merge(_this.data, items);
         if (_this.isBackgroundPage) {
-            chrome.storage.local.set(_this.data, cb);
+            chrome.storage[_this.STORAGE_TYPE].set(_this.data, cb);
         } else {
             if (!cb) cb = function() {};
             chrome.runtime.sendMessage({
@@ -436,7 +438,7 @@ StorageBase.prototype.remove = function(keys, cb) {
             for (var i = 0; i < keys.length; i++) {
                 delete(_this.data[keys[i]]);
             }
-            chrome.storage.local.remove(keys, cb);
+            chrome.storage[_this.STORAGE_TYPE].remove(keys, cb);
         } else {
             if (!cb) cb = function() {};
             chrome.runtime.sendMessage({
