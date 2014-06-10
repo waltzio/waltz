@@ -7,7 +7,7 @@ function Setup(opts) {
 
     this.analytics = new Analytics();
     this.storage = new Storage();
-    
+
     this.storage.getPrivateSettings(function(settings) {
         _this.settings = settings;
         if (opts.install) {
@@ -23,7 +23,7 @@ Setup.prototype.openTutorial = function() {
     this.analytics.trackEvent('first_tutorial');
 
     this.storage.setPrivateSetting(
-        this.SETUP_KEY, 
+        this.SETUP_KEY,
         true,
         function() {
             chrome.tabs.create({
@@ -42,9 +42,9 @@ Setup.prototype.onInstall = function() {
     if (savedVersion !== version) {
         if (savedVersion) {
             this.analytics.trackEvent(
-                'update', 
-                { 
-                    oldVersion: savedVersion, 
+                'update',
+                {
+                    oldVersion: savedVersion,
                     newVersion: details.version
                 }
             );
@@ -70,9 +70,13 @@ Setup.prototype.onStartup = function(settings) {
 var setup;
 // These are the two entry points for the extension.
 chrome.runtime.onInstalled.addListener(function() {
-    setup = new Setup({ install: true });
+    Raven.context(function() {
+        setup = new Setup({ install: true });
+    });
 });
 
 chrome.runtime.onStartup.addListener(function() {
-    setup = new Setup();
+    Raven.context(function() {
+        setup = new Setup();
+    });
 });

@@ -15,6 +15,7 @@
 
   "background": {
     "scripts": [
+      "static/js/vendor/raven.min.js",
       "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
       "static/js/vendor/pubnub.js",
