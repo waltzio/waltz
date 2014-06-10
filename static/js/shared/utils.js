@@ -55,12 +55,20 @@ var Utils = {
     },
     getCookiesForDomain: function (domain, cb) {
         if (domain.match(/\:\/\//)) domain = Utils.extrapolateDomainFromMatchURL(domain);
-        chrome.cookies.getAll(
-            { domain: domain },
-            function(cookies) {
-                cb(cookies);
-            }
-        );
+        var attempts = 0;
+        (function getCookies() {
+            chrome.cookies.getAll(
+                { domain: domain },
+                function (cookies) {
+                    if (chrome.extension.lastError && attempts < 10) {
+                        attempts++;
+                        return setTimeout(getCookies, 500);
+                    } else {
+                        cb(cookies);
+                    }
+                }
+            )
+        })();
     },
     getURLParams: function () {
         var vars = {};
