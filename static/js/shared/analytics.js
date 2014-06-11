@@ -20,7 +20,7 @@ Analytics.prototype.trackEvent = function(evnt, data) {
 	$.when(this.loadedDevCheck, this.initialized)
 	.then(function(isDevMode) {
 		data = $.extend(data, _this.getProperties());
-		if (isDevMode) {
+		if (!isDevMode) {
 			mixpanel.track(evnt, data);
 		} else {
 			_this.debug("DEBUG: analytics - event -", evnt, data);
