@@ -1,0 +1,17 @@
+{
+    "*://*.exontech.sk/*": {
+        "name": "eXon Technologies",
+        "logout": {
+            "cookies": ["WHMCSAOND8PKGGpbI"]
+        },
+        "login": {
+            "urls": ["https://secure.exontech.sk/clientzone/clientarea.php"],
+            "formURL": "https://secure.exontech.sk/clientzone/dologin.php",
+            "method": "POST",
+            "hasHiddenInputs": false,
+            "usernameField": "username",
+            "passwordField": "password",
+            "check": "a[href='logout.php']"
+        }
+    }
+}
