@@ -15,16 +15,16 @@
 
   "background": {
     "scripts": [
-      "static/js/vendor/raven.min.js",
       "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
       "static/js/vendor/pubnub.js",
       "static/js/shared/utils.js",
+      "static/js/vendor/raven.min.js",
       "static/js/background/crypto.js",
       "static/js/shared/storage.js",
       "static/js/vendor/aes.js",
+      "static/js/vendor/mixpanel.min.js",
       "static/js/shared/analytics.js",
-      "static/js/vendor/keen.min.js",
       "static/js/background/delegate.js",
       "/static/js/background/setup.js"
     ]
@@ -40,8 +40,8 @@
       "static/js/shared/sharer.js",
       "static/js/client/message.js",
       "static/js/client/onboarder.js",
+      "static/js/vendor/mixpanel.min.js",
       "static/js/shared/analytics.js",
-      "static/js/vendor/keen.min.js",
       "static/js/client/waltz.js"
     ],
     "css": ["/static/css/waltz.css"]
@@ -68,7 +68,7 @@
     "/html/templates.html",
     "/manifest.json"
   ],
-  "content_security_policy": "script-src 'self' chrome-extension:// https://connect.facebook.net; object-src 'self'",
+  "content_security_policy": "script-src 'self' chrome-extension:// https://connect.facebook.net https://cdn.mxpnl.com; object-src 'self'",
   "sandbox": {
     "pages": ["/html/templates.html"]
   }

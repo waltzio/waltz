@@ -46,7 +46,6 @@ Options.prototype.init = function(options, credentials, dismissals) {
 
 	this.render();
 
-	this.analytics.trackEvent("options_page");
 };
 
 Options.prototype.render = function() {
@@ -91,7 +90,7 @@ Options.prototype.render = function() {
 			$settings.append(html);
 		}
 	));
-	
+
 	$.when.apply($, renderingComplete).then(this.attachHandlers.bind(this));
 };
 
@@ -119,7 +118,7 @@ Options.prototype.attachSettingsHandlers = function() {
 			_this.storage.setOption(this.name, $(this).val());
 
 			if(this.name == "cy_url") {
-				_this.analytics.trackEvent("changed_cy_url", {
+				_this.analytics.trackEvent("Change Cy URL", {
 					is_https: $(this).val().toLowerCase().substr(0, 8) === "https://"
 				});
 			}
@@ -136,7 +135,7 @@ Options.prototype.attachSettingsHandlers = function() {
 				if ($item.data('path')) {
 					dismissals.pages[$item.data('path')] = null;
 					var dismissalCount = _.filter(
-						dismissals.pages, 
+						dismissals.pages,
 						function(page) { return page !== null; }
 					).length;
 
@@ -160,7 +159,7 @@ Options.prototype.attachSettingsHandlers = function() {
 Options.prototype.attachCredentialsHandlers = function() {
 	var _this = this,
 		$credentials = $(this.credentialsSelector);
-	
+
 	$credentials.find(this.decryptButtonSelector).click(function() {
 		var $this = $(this),
 			$credential = $this.parents('.credential'),
@@ -186,7 +185,7 @@ Options.prototype.attachCredentialsHandlers = function() {
 				if(response.error) {
 					alert(response.error);
 					return false;
-				} 
+				}
 
 				$credential.find(_this.passwordInputSelector).val(response.password);
 				$credential.find(_this.decryptedContainerSelector).slideDown();
@@ -194,10 +193,6 @@ Options.prototype.attachCredentialsHandlers = function() {
 				finishedLoading.resolve();
 			});
 		}
-
-		_this.analytics.trackEvent("credential_decrypted", {
-			site: $credential.data('key')
-		});
 	});
 
 	$credentials.find(this.forgetButtonSelector).click(function() {
@@ -209,11 +204,6 @@ Options.prototype.attachCredentialsHandlers = function() {
 				$credential.slideUp(300, function() { $(this).remove(); });
 			}
 		);
-
-		_this.analytics.trackEvent("credential_forgotten", {
-			site: $credential.data('key')
-		});
-
 	});
 
 	$credentials.find(this.showButtonSelector).click(function() {
@@ -244,10 +234,6 @@ Options.prototype.attachCredentialsHandlers = function() {
 				username: $credential.find(_this.usernameInputSelector).val(),
 				password: $credential.find(_this.passwordInputSelector).filter('.toggled').val()
 			}, function() { doneSaving.resolve(); });
-
-			_this.analytics.trackEvent("credential_edited", {
-				site: $credential.data('key')
-			});
 	});
 };
 

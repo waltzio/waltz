@@ -19,9 +19,6 @@ function Setup(opts) {
 }
 
 Setup.prototype.openTutorial = function() {
-    this.analytics.trackEvent('first_setup');
-    this.analytics.trackEvent('first_tutorial');
-
     this.storage.setPrivateSetting(
         this.SETUP_KEY,
         true,
@@ -42,14 +39,14 @@ Setup.prototype.onInstall = function() {
     if (savedVersion !== version) {
         if (savedVersion) {
             this.analytics.trackEvent(
-                'update',
+                'Update',
                 {
                     oldVersion: savedVersion,
                     newVersion: details.version
                 }
             );
         } else {
-            this.analytics.trackEvent('install', { version: version });
+            this.analytics.trackEvent('Install', { version: version });
         }
         this.storage.setPrivateSetting(this.VERSION_KEY, version);
     }
