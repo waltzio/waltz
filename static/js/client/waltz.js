@@ -21,7 +21,10 @@
         if (!opts) return;
 
         this.storage = new Storage();
-        this.analytics = new Analytics({ captureURLData: true });
+        this.analytics = new Analytics({
+            captureURLData: true,
+            properties: { site: opts.site.config.key }
+        });
 
         this.options = opts;
         this.onboarder = new Onboarder(this);
@@ -174,7 +177,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
-                _this.analytics.trackEvent("dismissal_saved", {duration: "forever"});
+                _this.analytics.trackEvent("Dismiss widget", {duration: "forever"});
             });
 
             $page.click(function(e) {
@@ -195,7 +198,7 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
-                _this.analytics.trackEvent("dismissal_saved", {duration: "page"});
+                _this.analytics.trackEvent("Dismiss widget", {duration: "page"});
             });
 
             $cancel.click(function(e) {
@@ -213,7 +216,6 @@
                         $message.find('#'+Message.DISMISS_ID).click();
                     }
                 );
-                _this.analytics.trackEvent("dismissal_saved", {duration: "cancel"});
             });
 
             $message.attr('class', 'floating fixed');
@@ -238,6 +240,7 @@
             chrome.runtime.sendMessage({
                 method: "acknowledgeLoginAttempt",
                 domain: this.options.site.domain,
+                key: this.options.site.config.key,
                 successful: opts.success
             });
         }
@@ -311,6 +314,7 @@
 
             function listener(e) {
                 if(e.data.auth) {
+                    _this.analytics.trackEvent('Sync');
                     _this.iframe.remove();
                     if (typeof cb == "function") {
                         cb();
@@ -464,6 +468,7 @@
             chrome.runtime.sendMessage({
                 method: "login",
                 domain: _this.options.site.domain,
+                key: _this.options.site.config.key,
                 location: window.location.href
             }, function() {
 
@@ -494,7 +499,7 @@
                     noUserCallback();
                 } else {
                     _this.logInToClef(continueCallback);
-                    _this.analytics.trackEvent("clef_auth_shown");
+                    _this.analytics.trackEvent("Show Clef overlay");
                 }
             } else {
                 if (typeof(continueCallback) == "function") {
@@ -550,6 +555,7 @@
             setTimeout(function() {
                 $.merge($overlay, $form).addClass(_this.CREDENTIAL_SLIDE_IN_CLASS);
                 _this.trigger('show.credentialOverlay');
+                _this.analytics.trackEvent('Show credential overlay');
             }, 0);
 
             $usernameField.focus();
@@ -568,7 +574,7 @@
                         _this.trigger('remove.credentialOverlay');
                     }, 500);
 
-                    _this.analytics.trackEvent("credentials_form_dismissed", {
+                    _this.analytics.trackEvent("Dismiss credentials form", {
                         had_entered_credentials: !($usernameField.val() === "" && $passwordField.val() === ""),
                         shown_duration: Date.now() - formShownTime
                     });
@@ -610,6 +616,7 @@
                 // store the credentials in the DB
                 _this.encryptCredentials(credentials, function() {
                     // BOOM!
+                    _this.analytics.trackEvent('Save credentials');
                     _this.submitLoginForm(credentials);
                 });
             }
@@ -623,7 +630,7 @@
 
         var attemptLogin = function() {
 
-            _this.analytics.trackEvent("widget_clicked");
+            _this.analytics.trackEvent("Click widget");
 
             if (!_this.iframe) {
                 _this.loadIFrame();
@@ -689,7 +696,6 @@
                     dismissals
                 );
 
-                _this.analytics.trackEvent("widget_dismissed");
                 _this.trigger('widget.dismissed', { dismissals: dismissals.count });
 
             });
@@ -701,7 +707,7 @@
         this.$widget = $widget;
         this.trigger('show.widget');
 
-        _this.analytics.trackEvent("show_widget");
+        _this.analytics.trackEvent("Show widget");
     };
 
     Waltz.prototype.hideWidget = function(opts) {

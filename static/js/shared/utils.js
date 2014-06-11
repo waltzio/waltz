@@ -64,10 +64,10 @@ var Utils = {
                         attempts++;
                         return setTimeout(getCookies, 500);
                     } else {
-                        cb(cookies);
+                        return cb(cookies);
                     }
                 }
-            )
+            );
         })();
     },
     getURLParams: function () {
@@ -152,6 +152,22 @@ var Utils = {
     },
     isCSPHeader: function(headerName) {
       return (headerName == 'CONTENT-SECURITY-POLICY') || (headerName == 'X-WEBKIT-CSP');
+    },
+    isDevMode: function() {
+        var _this = this,
+            promise = $.Deferred();
+
+        if (this.devMode) return promise.resolve(this.devMode);
+
+        $.getJSON(
+            chrome.runtime.getURL('manifest.json'),
+            function(data) {
+                _this.devMode = !('update_url' in data);
+                promise.resolve(_this.devMode);
+            }
+        );
+
+        return promise;
     },
     settings: {}
 };

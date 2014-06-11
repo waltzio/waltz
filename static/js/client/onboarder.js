@@ -9,6 +9,10 @@ function Onboarder(waltz) {
     this.options = $.extend(this.defaults, waltz.options);
     this.siteKey = this.options.site.config.key;
     this.storage = new Storage();
+    this.analytics = new Analytics({
+        captureURLData: true,
+        properties: { site: this.siteKey }
+    });
 
     this.initialized = $.Deferred();
     this.storage.getOnboardingData(this.init.bind(this));
@@ -22,7 +26,7 @@ Onboarder.prototype.init = function(data) {
     this.siteSpecificOnboardingData = this.data[this.storage.ONBOARDING_SITES_KEY] || {};
     this.siteData = this.siteSpecificOnboardingData[this.siteKey];
 
-    // if there's no siteData, that means we haven't 
+    // if there's no siteData, that means we haven't
     // had a kickoff of waltz on this site yet
     // let's initialize the data so we have it next time :)
     if (!this.siteData) {
@@ -38,7 +42,7 @@ Onboarder.prototype.init = function(data) {
     if (this.siteData.forceTutorial) {
         if (Date.now() - parseInt(this.siteData.forceTutorial) > 2 * 60 * 1000) {
             this.siteData.forceTutorial = null;
-        } 
+        }
         this.dismissed = false;
         this.storage.setOnboardingKey("dismissed", false, function() {});
         this.commitSiteData();
@@ -80,17 +84,20 @@ Onboarder.prototype.loginSuccess = function() {
     if (this.siteData.loginAttempts.success == 1 && this.totalSuccessfulLogins() < 2) {
 
         if (this.options.site.config.key === "facebook" || this.options.site.config.key === "twitter") {
+            this.analytics.trackEvent('Show share prompt', { type: this.options.site.config.key });
             this.handleFirstFacebookAndTwitterLogin();
         } else if (this.options.site.config.key === "github") {
+            this.analytics.trackEvent('Show share prompt', { type: this.options.site.config.key });
             this.handleFirstGithubLogin();
         } else {
             this.showLogoutPrompt();
         }
-       
+
     } else if (this.siteData.forceTutorial) {
         var _this = this;
         this.siteData.forceTutorial = null;
         this.commitSiteData(function() {
+            _this.analytics.trackEvent('Show sites page');
             chrome.runtime.sendMessage({
                 method: "openNewTab",
                 url: chrome.extension.getURL("html/sites.html?success=" + _this.options.site.config.name)
@@ -124,6 +131,7 @@ Onboarder.prototype.handleFirstGithubLogin = function() {
         $overlay.find('#waltz-first-share-continue, #waltz-first-share').click(continueTutorial);
 
         function starRepo() {
+            _this.analytics.trackEvent('Share', { type: 'github' });
             $('.star-button.unstarred')[0].click();
         }
 
@@ -154,7 +162,11 @@ Onboarder.prototype.handleFirstFacebookAndTwitterLogin = function() {
         $form.addClass('slide-in');
 
         $overlay.click(continueTutorial);
-        $overlay.find('#waltz-first-share-continue, #waltz-first-share').click(continueTutorial);
+        $overlay.find('#waltz-first-share').click(function() {
+            _this.analytics.trackEvent('Share', { type: _this.options.site.config.key });
+            continueTutorial();
+        });
+        $overlay.find('#waltz-first-share-continue').click(continueTutorial);
 
         _this.sharer = new Sharer(_this.waltz);
 
@@ -190,6 +202,7 @@ Onboarder.prototype.showLogoutPrompt = function() {
     });
 
     $message.fadeIn();
+    this.analytics.trackEvent('Show logout prompt');
 };
 
 Onboarder.prototype.loginFailure = function() {
@@ -212,10 +225,12 @@ Onboarder.prototype.showWidget = function() {
         if (_this.siteData.loginAttempts.success === 0) {
             // first time setting up Waltz
             text = "Click this to set up Waltz for " + _this.options.site.config.name;
+            this.analytics.trackEvent('Show initial login prompt');
         } else if (_this.siteData.loginAttempts.success === 1) {
             // second time after they logged out with their phone in
             // the tutorial
             text = "Click this button to log in from now on!";
+            this.analytics.trackEvent('Show second login prompt');
         } else {
             // every other time when they come from the tutorial
             text = "Click this button to log in!";
@@ -237,7 +252,7 @@ Onboarder.prototype.showWidget = function() {
         });
     }
 
-    
+
 };
 
 Onboarder.prototype.showCredentialOverlay = function() {
@@ -309,10 +324,10 @@ Onboarder.prototype.dismiss = function() {
 };
 
 Onboarder.prototype.getMessage = function() {
-    if (this.$message) return this.$message; 
+    if (this.$message) return this.$message;
 
     this.$message = Message.getMessage();
-    this.$message.on('dismiss', this.dismiss.bind(this)); 
+    this.$message.on('dismiss', this.dismiss.bind(this));
 
     return this.$message;
 };
