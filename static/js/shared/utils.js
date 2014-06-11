@@ -55,12 +55,20 @@ var Utils = {
     },
     getCookiesForDomain: function (domain, cb) {
         if (domain.match(/\:\/\//)) domain = Utils.extrapolateDomainFromMatchURL(domain);
-        chrome.cookies.getAll(
-            { domain: domain },
-            function(cookies) {
-                cb(cookies);
-            }
-        );
+        var attempts = 0;
+        (function getCookies() {
+            chrome.cookies.getAll(
+                { domain: domain },
+                function (cookies) {
+                    if (chrome.extension.lastError && attempts < 10) {
+                        attempts++;
+                        return setTimeout(getCookies, 500);
+                    } else {
+                        return cb(cookies);
+                    }
+                }
+            );
+        })();
     },
     getURLParams: function () {
         var vars = {};
@@ -144,6 +152,22 @@ var Utils = {
     },
     isCSPHeader: function(headerName) {
       return (headerName == 'CONTENT-SECURITY-POLICY') || (headerName == 'X-WEBKIT-CSP');
+    },
+    isDevMode: function() {
+        var _this = this,
+            promise = $.Deferred();
+
+        if (this.devMode) return promise.resolve(this.devMode);
+
+        $.getJSON(
+            chrome.runtime.getURL('manifest.json'),
+            function(data) {
+                _this.devMode = !('update_url' in data);
+                promise.resolve(_this.devMode);
+            }
+        );
+
+        return promise;
     },
     settings: {}
 };

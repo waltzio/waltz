@@ -61,11 +61,6 @@ Delegate.prototype.init = function(options) {
         title: 'Waltz',
         onclick: function(info, tab) {
             chrome.tabs.create({url: "/html/options.html"});
-
-            _this.analytics.trackEvent("context_menu", {
-                tabIndex: tab.index,
-                url: tab.url
-            });
         }
     });
 
@@ -161,7 +156,9 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
     }
 
     $.when(this.configsLoaded).then(function() {
-        _this[request.method].bind(_this)(request, sendResponse);
+        Raven.context(function() {
+            _this[request.method].bind(_this)(request, sendResponse);
+        });
     });
 
     return true;
@@ -190,6 +187,9 @@ Delegate.prototype.acknowledgeLoginAttempt = function(request) {
                 }
             });
         });
+        this.analytics.trackEvent('Login success', { site: request.key });
+    } else {
+        this.analytics.trackEvent('Login failure', { site: request.key });
     }
 
     delete(this.currentLogins[request.domain]);
@@ -207,7 +207,7 @@ Delegate.prototype.login = function(request, cb) {
         modified: new Date()
     };
 	this.storage.addLogin(request.domain);
-
+    this.analytics.trackEvent('Login attempt', { site: request.key });
     if (typeof cb === "function") cb();
 };
 
@@ -317,11 +317,8 @@ Delegate.prototype.logout = function(opts) {
 			_this.pubnubUnsubscribe(_this.user);
 			_this.user = false;
 			_this.loggedIn = false;
+            _this.analytics.trackEvent('Logout', { sites_count: Object.keys(data).length });
 		});
-
-        _this.analytics.trackEvent("logout_request", {
-            sites_count: Object.keys(data).length
-        });
 	});
 };
 
@@ -357,7 +354,7 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
 
     var promises = logoutDomains.map(function(domain) {
         var promise = $.Deferred();
-        Utils.getCookiesForDomain(domain, function(cookies) {
+        Utils.getCookiesForDomain(domain, function removeCookies(cookies) {
             var cookie;
             for (i = 0; i < cookies.length; i++) {
                 cookie = cookies[i];

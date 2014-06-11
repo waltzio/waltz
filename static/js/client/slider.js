@@ -14,7 +14,7 @@
             this.$slides = $(this.slideSelector);
             this.storage = new Storage();
             this.analytics = new Analytics();
-            this.analytics.trackEvent("start_tutorial");
+            this.analytics.trackEvent("Start tutorial");
 
             this.$slides.each(function() {
                 $('.tutorial-slides').addClass($(this).attr('id'));
@@ -59,10 +59,11 @@
             if (customNext) {
                 $slide.prevUntil('#' + customNext).addClass('removed');
             }
-            
+
             $slide.addClass('removed');
             this.previous.push($slide.attr('id'));
             $('.tutorial-slides').removeClass($slide.attr('id'));
+            this.analytics.trackEvent('Tutorial slide ' + $slide.attr('id'));
         };
 
         Slider.prototype.previousSlide = function(e) {
@@ -82,12 +83,12 @@
         Slider.prototype.startSiteSetup = function(e) {
             e.preventDefault();
 
-            this.analytics.trackEvent('finish_tutorial');
+            this.analytics.trackEvent('Finish tutorial');
 
-            var $a = $(e.currentTarget), 
+            var $a = $(e.currentTarget),
                 siteKey = $a.text().toLowerCase();
 
-            this.analytics.trackEvent('tutorial_site_setup', { siteKey: siteKey });
+            this.analytics.trackEvent('Tutorial site setup', { site: siteKey });
 
             if ($a.hasClass('completed')) return;
 
