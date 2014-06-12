@@ -36,7 +36,25 @@ Storage.prototype.siteOnboardingDefaults = {
 Storage.prototype.eventHandlers = {};
 
 function Storage() {
+    var _this = this;
+
     this.listening = false;
+}
+
+Storage.prototype.migrateLocalToSync = function(cb) {
+    var _this = this;
+    this.getPrivateSetting("migrated_to_sync", function(migrated) {
+        if (!migrated) {
+            chrome.storage.local.get(null, function(data) {
+                _.defaults(_this.base.data, data);
+                chrome.storage.sync.set(_this.base.data, function() {
+                    _this.setPrivateSetting("migrated_to_sync", true, cb);
+                });
+            });
+        } else {
+            if (typeof cb === "function") cb();
+        }
+    });
 }
 
 Storage.prototype.subscribe = function(e, cb) {
@@ -63,15 +81,18 @@ Storage.prototype.handleChange = function(changes, areaName) {
 };
 
 Storage.prototype.set = function(items, cb) {
-    this.base.set(items, cb);
+    var _this = this;
+    _this.base.set(items, cb);
 };
 
 Storage.prototype.get = function(keys, cb) {
-    this.base.get(keys, cb);
+    var _this = this;
+    _this.base.get(keys, cb);
 };
 
 Storage.prototype.remove = function(keys, cb) {
-    this.base.remove(keys, cb);
+    var _this = this;
+    _this.base.remove(keys, cb);
 };
 
 Storage.prototype.getCredentials = function(cb) {
@@ -273,6 +294,13 @@ Storage.prototype.setPrivateSetting = function(key, value, cb) {
         _this.setPrivateSettings(options, cb);
     });
 };
+
+Storage.prototype.getPrivateSetting = function(key, cb) {
+    var _this = this;
+    this.getPrivateSettings(function(options) {
+        cb(options[key]);
+    });
+}
 
 // Allows you to get the entire onboarding data blob
 // This blob includes

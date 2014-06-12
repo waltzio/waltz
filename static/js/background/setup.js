@@ -8,13 +8,15 @@ function Setup(opts) {
     this.analytics = new Analytics();
     this.storage = new Storage();
     
-    this.storage.getPrivateSettings(function(settings) {
-        _this.settings = settings;
-        if (opts.install) {
-            _this.onInstall();
-        } else {
-            _this.onStartup();
-        }
+    this.storage.migrateLocalToSync(function() {
+        this.storage.getPrivateSettings(function(settings) {
+            _this.settings = settings;
+            if (opts.install) {
+                _this.onInstall();
+            } else {
+                _this.onStartup();
+            }
+        });
     });
 }
 
