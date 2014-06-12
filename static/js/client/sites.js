@@ -13,7 +13,7 @@ function Sites() {
         $congratsContainer.find('span.name').text(params.success);
         $congratsContainer.find(this.sharer.shareSelector).data('name', params.success);
         $(this.congratulationsSelector).show();
-    } 
+    }
 
 
     this.storage = new Storage();
@@ -50,7 +50,7 @@ Sites.prototype.init = function(data) {
                 completed.push($siteHTML);
 
                 if (!--count) {
-                    (function() { 
+                    (function() {
                         function sorter(a, b) {
                             var aName = a.find('.name').text().toLowerCase(), bName = b.find('.name').text().toLowerCase();
                             if (aName > bName) return 1;
@@ -58,15 +58,13 @@ Sites.prototype.init = function(data) {
                             return 0;
                         }
 
-                        $siteContainer.prepend(completed.sort(sorter)); 
+                        $siteContainer.prepend(completed.sort(sorter));
                         _this.attachHandlers();
                     })();
                 }
             });
         }
     });
-    
-    _this.analytics.trackEvent("sites_list");
 };
 
 Sites.prototype.attachHandlers = function() {
@@ -77,7 +75,7 @@ Sites.prototype.redirectToSite = function(e) {
     e.preventDefault();
 
     var $a = $(e.currentTarget),
-        $li = $a.parents('li'), 
+        $li = $a.parents('li'),
         siteKey = $li.data('site-key');
 
     chrome.runtime.sendMessage({
