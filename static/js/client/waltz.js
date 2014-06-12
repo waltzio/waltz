@@ -139,7 +139,6 @@
                     _this.showWidget();
                 }
 
-
                 window.addEventListener('message', _this.closeIFrame.bind(_this));
                 window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
             });
@@ -376,9 +375,18 @@
             return $('input[name="' + name + '"]');
         }
 
-        var $login = findInput(siteConfig.login.usernameField),
+        var $login;
+        var $password;
+        var $form;
+        if (siteConfig.login.loginForm) {
+            $form = siteConfig.login.loginForm.container;
+            $login = siteConfig.login.loginForm.usernameField;
+            $password = siteConfig.login.loginForm.passwordField;
+        } else {
+            $login = findInput(siteConfig.login.usernameField),
             $password = findInput(siteConfig.login.passwordField),
             $form = $login.parents('form');
+        }
 
         if (siteConfig.login.submitButton) {
             $form = $form.filter(':has(' + siteConfig.login.submitButton + ')');
@@ -393,6 +401,8 @@
             $password.length > 0 &&
             _.some($password, function(v) { return $(v).is(':visible'); })
         ) {
+            // We close the login fields so it doesn't look like the username
+            // and passwords are filled in. We want it to be magic!
             var $newLogin = $login.clone(),
                 $newPassword = $password.clone();
 
@@ -409,7 +419,9 @@
             $form.prepend($newLogin);
             $form.prepend($newPassword);
 
-            if (!$form.attr('action')) $form.attr('action', siteConfig.login.formURL);
+            if (!$form.attr('action')) {
+                $form.attr('action', siteConfig.login.formURL);
+            }
 
             submitForm($form);
         } else {
@@ -726,6 +738,15 @@
 
     Waltz.prototype.checkPage = function() {
         var siteConfig = this.options.site.config;
+        if (siteConfig.isAnonymous) {
+            var loginForm = this.findLoginForm();
+            if (loginForm) {
+                siteConfig.login.loginForm = loginForm;
+                return "login";
+            } else {
+                return "unknown";
+            }
+        }
         var isTwoFactor = false;
         if (siteConfig.login.twoFactor) {
             $.map(siteConfig.login.twoFactor, function(twoFactor) {
@@ -787,19 +808,104 @@
         this.router.on(eventName, cb);
     };
 
+    Waltz.prototype.findLoginForm = function() {
+        var passwordInputs = $("input[type='password']");
+        var loginForm;
+        var maxScore = -Infinity;
+
+        passwordInputs.each(function() {
+            var formParent;
+            var potentialParent;
+
+            var currentParent = this;
+            while ($(currentParent).parent().length) {
+                currentParent = $(currentParent).parent();
+                // Look for a form. If we have found a form, we take that to 
+                // be the most likely candidate parent.
+                if ($(currentParent).is('form') && !formParent) {
+                    formParent = currentParent;
+                    break;
+                } 
+                // Otherwise, we keep looking and take the parent with more
+                // than one input.
+                else if ($(currentParent).find('input').length > 1 && !potentialParent) {
+                    potentialParent = currentParent;
+                }
+            }
+            var formContainer = formParent ? formParent : potentialParent;
+            if (formContainer) {
+                if ($(formContainer).find("input[type='password']").length > 1) {
+                    return;
+                }
+                if ($(formContainer).find("input[type='email']").length > 1) {
+                    return;
+                }
+                if (!$(formContainer).find("input[type='email'], input[type='text']").length) {
+                    return;
+                }
+
+                var hasButtons = $(formContainer)
+                    .find("input[type='submit'], button")
+                    .length > 0;
+                var hasRememberMe = $(formContainer)
+                    .find("input[type='checkbox']")
+                    .length == 1;
+                var otherInputsScore = $(formContainer)
+                    .find('input')
+                    .not("[type='checkbox'] [type='text'], [type='email'], [type='password'], [type='submit'], [type='hidden']")
+                    .length * 2;
+                otherInputsScore += $(formContainer)
+                    .find('input')
+                    .filter("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit']")
+                    .length - hasRememberMe - hasButtons - 2;
+
+                var score = 0;
+                score += hasButtons + hasRememberMe - otherInputsScore;
+                if (score > maxScore) {
+                    maxScore = score;
+                    loginForm = formContainer;
+                }
+            }
+        });
+
+        if (!loginForm) return null;
+        var usernameField = $(loginForm).find("input[type='text']").first();
+        var passwordField = $(loginForm).find("input[type='password']").first();
+        var submitButton = $(loginForm).find("input[type='submit'], button").first();
+
+        var emailField = $(loginForm).find("input[type='email']");
+        if (emailField.length) usernameField = emailField.first();
+
+        var commonUsernameClasses = ['login', 'uid', 'email', 'user', 'username'];
+        $.each(commonUsernameClasses, function(i, usernameClass) {
+            var matches = $(loginForm)
+                .find('input.' + usernameClass + ', input#' + usernameClass);
+            if (matches.length) usernameField = $(matches).first();
+        });
+
+        return {
+            container: loginForm,
+            usernameField: usernameField,
+            passwordField: passwordField,
+            submitButton: submitButton
+        };
+    }
+
     chrome.runtime.sendMessage({
         method: "initialize",
         location: document.location
     }, function(options) {
         $(document).ready(function() {
-            if (!options) return;
-            new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
-                var pageSettings = dismissals.pages || {};
-                var pathSettings = pageSettings[window.location.pathname];
-                if (!dismissals.dismissedForever && !(pathSettings && pathSettings.dismissed)) {
-                    var waltz = new Waltz(options);
-                }
-            });
+            if (options) {
+                new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
+                    var pageSettings = dismissals.pages || {};
+                    var pathSettings = pageSettings[window.location.pathname];
+                    if (!dismissals.dismissedForever && 
+                        !(pathSettings && pathSettings.dismissed)) {
+                        var waltz = new Waltz(options);
+                    }
+                });
+            } 
         });
     });
 

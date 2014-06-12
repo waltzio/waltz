@@ -574,14 +574,11 @@ Delegate.prototype.getConfigForKey = function(key) {
     return false;
 };
 
-Delegate.prototype.initialize = function(data, callback) {
-	var url = data.location.href.split('#')[0],
-        _this = this;
+Delegate.prototype.findSiteConfig = function(url) {
 	if (this.includedDomainRegex.test(url)) {
-		var options;
 		for (var site in this.siteConfigs) {
             var matched;
-            if(typeof(this.siteConfigs[site].match) !== "undefined") {
+            if (typeof(this.siteConfigs[site].match) !== "undefined") {
                 var regex = new RegExp(this.siteConfigs[site].match);
                 matched = regex.test(url);
             } else {
@@ -589,27 +586,54 @@ Delegate.prototype.initialize = function(data, callback) {
             }
 
 			if (matched) {
-				options = {
-					site: {
-						domain: site,
-						config: this.siteConfigs[site]
-					},
-                    currentLogin: this.currentLogins[site],
-				};
-                sendMatchCallback();
-				return true;
+                return site;
 			}
 		}
-	} else {
-		callback(false);
-	}
+	} 
+}
 
-    function sendMatchCallback() {
-        _this.refreshOptions({}, function() {
-            options.cyHost = _this.options.cy_url;
-            callback(options);
-        });
+Delegate.prototype.buildAnonymousSiteOptions = function(url) {
+    var parsedURL = Utils.url(url);
+    var site = parsedURL.hostname;
+    var options = {
+        site: {
+            domain: site,
+            config: {
+                name: site,
+                key: site,
+                login: {
+                    formOnly: true
+                },
+                logout: {},
+                isAnonymous: true
+            }, 
+            currentLogin: this.currentLogins[site]
+        }
+    };
+    return options;
+}
+
+Delegate.prototype.initialize = function(data, callback) {
+	var url = data.location.href.split('#')[0],
+        _this = this;
+
+    var options;
+    var site = this.findSiteConfig(url);
+    if (!site) {
+        options = this.buildAnonymousSiteOptions(url);
+    } else {
+        options = {
+            site: {
+                domain: site,
+                config: this.siteConfigs[site]
+            },
+            currentLogin: this.currentLogins[site],
+        };
+        options.site.config.isAnonymous = false;
     }
-
+    _this.refreshOptions({}, function() {
+        options.cyHost = _this.options.cy_url;
+        callback(options);
+    });
     return true;
 };
