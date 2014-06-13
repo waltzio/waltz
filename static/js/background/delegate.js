@@ -338,33 +338,45 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
     } else {
         siteConfig = this.siteConfigs[domain];
     }
+    if (!siteConfig) {
+        siteConfig = this.buildAnonymousSiteConfig(domain);
+        domain = Utils.getDomainName(domain);
+    }
 
     logoutDomains = [domain];
     logoutCookies = siteConfig.logout.cookies;
 
-    for (i = 0; i < logoutCookies.length; i++) {
-        logoutCookie = logoutCookies[i];
-        if (typeof(logoutCookie) === "object") {
-            cookiesToDelete.push(logoutCookie.cookie);
-            if (logoutDomains.indexOf(logoutCookie.domain) < 0) logoutDomains.push(logoutCookie.domain);
-        } else {
-            cookiesToDelete.push(logoutCookie);
+    // Wildcard to delete all cookies
+    var deleteAllCookies = false;
+    if (logoutCookies.length == 1 && logoutCookies[0] == '*') {
+        deleteAllCookies = true;
+    }
+
+    if (!deleteAllCookies) {
+        for (i = 0; i < logoutCookies.length; i++) {
+            logoutCookie = logoutCookies[i];
+            if (typeof(logoutCookie) === "object") {
+                cookiesToDelete.push(logoutCookie.cookie);
+                if (logoutDomains.indexOf(logoutCookie.domain) < 0) logoutDomains.push(logoutCookie.domain);
+            } else {
+                cookiesToDelete.push(logoutCookie);
+            }
         }
     }
 
     var promises = logoutDomains.map(function(domain) {
         var promise = $.Deferred();
         Utils.getCookiesForDomain(domain, function removeCookies(cookies) {
-            var cookie;
-            for (i = 0; i < cookies.length; i++) {
-                cookie = cookies[i];
-                if (cookiesToDelete.indexOf(cookie.name) != -1) {
+            $.each(cookies, function(i, cookie) {
+                var shouldDelete = (deleteAllCookies || 
+                    cookiesToDelete.indexOf(cookie.name) != -1);
+                if (shouldDelete) {
                     chrome.cookies.remove({
                         url: Utils.extrapolateUrlFromCookie(cookie),
                         name: cookie.name
                     });
                 }
-            }
+            })
             promise.resolve();
         });
         return promise;
@@ -379,8 +391,10 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
             };
 
             for (var i = 0; i < logoutDomains.length; i++) {
+                var domain = logoutDomains[i];
+                if (!domain.match(/\:\/\//)) domain = '*://*.' + domain + '/*';
                 chrome.tabs.query(
-                    { url: logoutDomains[i] },
+                    { url: domain },
                     refresh
                 );
             }
@@ -592,23 +606,33 @@ Delegate.prototype.findSiteConfig = function(url) {
 	} 
 }
 
-Delegate.prototype.buildAnonymousSiteOptions = function(url) {
-    var parsedURL = Utils.url(url);
-    var site = parsedURL.hostname;
+Delegate.prototype.buildAnonymousSiteConfig = function(domain) {
+    return {
+        name: domain,
+        key: domain,
+        login: {},
+        logout: {
+            cookies: ['*']
+        },
+        isAnonymous: true
+    };
+}
+
+Delegate.prototype.buildAnonymousSiteOptionsForDomain = function(domain) {
     var options = {
         site: {
-            domain: site,
-            config: {
-                name: site,
-                key: site,
-                login: {},
-                logout: {},
-                isAnonymous: true
-            }, 
+            domain: domain,
+            config: this.buildAnonymousSiteConfig(domain)
         },
-        currentLogin: this.currentLogins[site]
+        currentLogin: this.currentLogins[domain]
     };
     return options;
+}
+
+Delegate.prototype.buildAnonymousSiteOptions = function(url) {
+    var parsedURL = Utils.url(url);
+    var domain = parsedURL.hostname;
+    return this.buildAnonymousSiteOptionsForDomain(domain);
 }
 
 Delegate.prototype.initialize = function(data, callback) {

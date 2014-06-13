@@ -70,6 +70,17 @@ var Utils = {
             );
         })();
     },
+    getDomainName: function(domain) {
+        var parts = domain.split('.').reverse();
+        var cnt = parts.length;
+        if (cnt >= 3) {
+            // see if the second level domain is a common SLD.
+            if (parts[1].match(/^(com|edu|gov|net|mil|org|nom|co|name|info|biz)$/i)) {
+                return parts[2] + '.' + parts[1] + '.' + parts[0];
+            }
+        }
+        return parts[1]+'.'+parts[0];
+    },
     getURLParams: function () {
         var vars = {};
         var parts = window.location.href.replace(

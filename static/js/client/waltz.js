@@ -42,6 +42,8 @@
             return;
         } else if (page == "unknown" && this.options.site.config.login.formOnly) {
             return;
+        } else if (page == "unknown" && this.options.site.config.isAnonymous) {
+            return;
         } else if (page == "two_factor") {
             return;
         } else {
@@ -884,6 +886,9 @@
                 .find('input.' + usernameClass + ', input#' + usernameClass);
             if (matches.length) usernameField = $(matches).first();
         });
+
+        $(usernameField).css({ "border": '#FF0000 1px solid'});
+        $(passwordField).css({ "border": '#FF0000 1px solid'});
 
         return {
             container: loginForm,
