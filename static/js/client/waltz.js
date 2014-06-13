@@ -37,7 +37,7 @@
         if (page == "logged_in") {
             // If the 'check' selector exists, then we're logged in,
             // so don't show Waltz
-            this.trigger('loggedIn');
+            _this.trigger('loggedIn');
             this.acknowledgeLoginAttempt({ success: true });
             return;
         } else if (page == "unknown" && this.options.site.config.login.formOnly) {
@@ -65,7 +65,7 @@
 
                     page = _this.checkPage();
                     if (page === "logged_in") {
-                        this.trigger('loggedIn');
+                        _this.trigger('loggedIn');
                         $(".waltz-dismiss").click();
                         clearInterval(loginCheckInterval);
                         return;
@@ -98,8 +98,10 @@
                         }
 
                         page = _this.checkPage();
-                        if (page === "logged_in") {
-                            this.trigger('loggedIn');
+                        var isAnonymousLoggedInPage =
+                            _this.options.site.config.isAnonymous && page != "login";
+                        if (page === "logged_in" || isAnonymousLoggedInPage) {
+                            _this.trigger('loggedIn');
                             _this.acknowledgeLoginAttempt({ success: true });
                             clearInterval(loginCheckInterval);
                             return;

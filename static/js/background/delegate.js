@@ -601,14 +601,12 @@ Delegate.prototype.buildAnonymousSiteOptions = function(url) {
             config: {
                 name: site,
                 key: site,
-                login: {
-                    formOnly: true
-                },
+                login: {},
                 logout: {},
                 isAnonymous: true
             }, 
-            currentLogin: this.currentLogins[site]
-        }
+        },
+        currentLogin: this.currentLogins[site]
     };
     return options;
 }
