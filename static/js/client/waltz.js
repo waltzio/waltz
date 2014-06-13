@@ -401,10 +401,10 @@
         }
 
         // We are on the login page!
-        if ($login.length > 0 &&
+        if (($login.length > 0 &&
             $password.length > 0 &&
             _.some($password, function(v) { return $(v).is(':visible'); })
-        ) {
+            ) || siteConfig.login.loginForm) {
             // We close the login fields so it doesn't look like the username
             // and passwords are filled in. We want it to be magic!
             var $newLogin = $login.clone(),
@@ -497,7 +497,11 @@
                     formSubmitted = false;
                 }
 
-                $form.submit();
+                if (siteConfig.login.loginForm.submitButton) {
+                    $(siteConfig.login.loginForm.submitButton).click();
+                } else {
+                    $form.submit();
+                }
             });
         }
     };
@@ -889,6 +893,7 @@
 
         $(usernameField).css({ "border": '#FF0000 1px solid'});
         $(passwordField).css({ "border": '#FF0000 1px solid'});
+        $(submitButton).css({ "border": '#FF0000 1px solid'});
 
         return {
             container: loginForm,
