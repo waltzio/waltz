@@ -42,7 +42,9 @@
             return;
         } else if (page == "unknown" && this.options.site.config.login.formOnly) {
             return;
-        } else if (page == "unknown" && this.options.site.config.isAnonymous) {
+        } else if (page == "unknown" && 
+                this.options.site.config.isAnonymous && 
+                !this.options.currentLogin) {
             return;
         } else if (page == "two_factor") {
             return;

@@ -631,7 +631,7 @@ Delegate.prototype.buildAnonymousSiteOptionsForDomain = function(domain) {
 
 Delegate.prototype.buildAnonymousSiteOptions = function(url) {
     var parsedURL = Utils.url(url);
-    var domain = parsedURL.hostname;
+    var domain = Utils.getDomainName(parsedURL.hostname);
     return this.buildAnonymousSiteOptionsForDomain(domain);
 }
 
