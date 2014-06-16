@@ -20,6 +20,7 @@
         // If there are no opts, Waltz is not supported on this site
         if (!opts) return;
 
+        this.kickedOff = false;
         this.storage = new Storage();
         this.analytics = new Analytics({
             captureURLData: true,
@@ -30,6 +31,13 @@
         this.onboarder = new Onboarder(this);
         this.sharer = new Sharer(this);
         this.thirdPartyCookiesChecked = $.Deferred();
+
+        var observer = new MutationSummary({
+            callback: this.handleDOMChanges.bind(this),
+            queries: [{
+                element: "input[type='password']"
+            }]
+        });
 
         var _this = this,
             page = this.checkPage();
@@ -59,7 +67,7 @@
             if (!this.options.currentLogin) {
                 // If we're not inTransition, let's assume that we need to log
                 // in. So, kickOff then check to see if we need to hide.
-                kickOff();
+                this.kickOff();
 
                 var checkFunction = function() {
                     if (checks > MAX_CHECKS) {
@@ -93,7 +101,7 @@
                 // almost certainly contain the field to put in a new password.
                 // ya feel me?
                 if (page === "login") {
-                    kickOff();
+                    this.kickOff();
                 } else {
                     loginCheckInterval = setInterval(function() {
                         if (checks > MAX_CHECKS) {
@@ -110,7 +118,7 @@
                             clearInterval(loginCheckInterval);
                             return;
                         } else if (page === "login") {
-                            kickOff();
+                            _this.kickOff();
                             clearInterval(loginCheckInterval);
                             return;
                         } else {
@@ -121,36 +129,52 @@
             }
         }
 
-        function kickOff() {
-            _this.loginCredentials = false;
-
-            _this.storage.getCredentialsForDomain(_this.options.site.config.key, function (creds) {
-
-                _this.loginCredentials = creds;
-
-                if (_this.options.currentLogin) {
-                    if (!_this.iframe) {
-                        _this.loadIFrame();
-                    }
-                    _this.checkAuthentication(function() {
-                        var errorMessage = "Invalid username and password.";
-                        _this.acknowledgeLoginAttempt({ success: false });
-                        _this.showWidget();
-                        _this.requestCredentials(errorMessage);
-                    }, function() {
-                        _this.acknowledgeLoginAttempt({ success: true });
-                        _this.showWidget();
-                    });
-                } else {
-                    _this.showWidget();
-                }
-
-                window.addEventListener('message', _this.closeIFrame.bind(_this));
-                window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
-            });
-        }
-
         this.on('widget.dismissed', this.widgetDismissed.bind(this));
+    }
+
+    Waltz.prototype.kickOff = function() {
+        var _this = this;
+        _this.kickedOff = true;
+        _this.loginCredentials = false;
+
+        _this.storage.getCredentialsForDomain(_this.options.site.config.key, function (creds) {
+
+            _this.loginCredentials = creds;
+
+            if (_this.options.currentLogin) {
+                if (!_this.iframe) {
+                    _this.loadIFrame();
+                }
+                _this.checkAuthentication(function() {
+                    var errorMessage = "Invalid username and password.";
+                    _this.acknowledgeLoginAttempt({ success: false });
+                    _this.showWidget();
+                    _this.requestCredentials(errorMessage);
+                }, function() {
+                    _this.acknowledgeLoginAttempt({ success: true });
+                    _this.showWidget();
+                });
+            } else {
+                _this.showWidget();
+            }
+
+            window.addEventListener('message', _this.closeIFrame.bind(_this));
+            window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
+        });
+    };
+
+    Waltz.prototype.handleDOMChanges = function(summary) {
+        var _this = this;
+        var change = summary[0];
+        var page = _this.checkPage();
+        var isAnonymousLoggedInPage =
+            _this.options.site.config.isAnonymous && page != "login";
+        if (page === "logged_in" || isAnonymousLoggedInPage) {
+            _this.trigger('loggedIn');
+            _this.acknowledgeLoginAttempt({ success: true });
+        } else if (page === "login") {
+            if (!_this.kickedOff) _this.kickOff();
+        }
     }
 
     Waltz.prototype.widgetDismissed = function(e, data) {
@@ -488,8 +512,8 @@
                 domain: _this.options.site.domain,
                 key: _this.options.site.config.key,
                 location: window.location.href
-            }, function() {
-
+            }, function(currentLogin) {
+                _this.options.currentLogin = currentLogin;
                 // hack to fix issues where submit button
                 // has name="submit" -- WAY TOO HARD
                 if (typeof($form[0].submit) !== "function") {

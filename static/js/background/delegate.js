@@ -208,7 +208,7 @@ Delegate.prototype.login = function(request, cb) {
     };
 	this.storage.addLogin(request.domain);
     this.analytics.trackEvent('Login attempt', { site: request.key });
-    if (typeof cb === "function") cb();
+    if (typeof cb === "function") cb(this.currentLogins[request.domain]);
 };
 
 Delegate.prototype.refreshOptions = function(request, cb) {
