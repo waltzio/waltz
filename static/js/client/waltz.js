@@ -53,19 +53,28 @@
 
         var _this = this;
         $(document).ready(function() {
-            var page = _this.checkPage();
-            _this.handlePage(page);
+            // Disconnect the loginFieldObserver. We do this b/c we add another
+            // observer for any DOM change.
+            loginFieldObserver.disconnect();
 
-            var loggedInObserver = new MutationSummary({
+            // Though not ideal, this observer observes the whole DOM, since
+            // filtering by the full-CSS login check selector isn't always supported.
+            _this.DOMObserver = new MutationSummary({
                 callback: _this.handleDOMChanges.bind(_this),
                 queries: [{ all: true }]
             });
+
+            // Check page type on document load
+            var page = _this.checkPage();
+            _this.handlePage(page);
         });
     }
 
     Waltz.prototype.handlePage = function(page) {
         // First, we need to figure out if the Waltz icon should be displayed.
-        if (page == "login" && !this.kickedOff) {
+        var shouldKickOff = (page == "login" || 
+                (page == "unknown" && !this.options.site.config.isAnonymous));
+        if (shouldKickOff && !this.kickedOff) {
             this.kickOff();
         } else if (page == "logged_in" && this.options.currentLogin) {
             this.trigger('loggedIn');
@@ -448,6 +457,14 @@
                 location: window.location.href
             }, function(currentLogin) {
                 _this.options.currentLogin = currentLogin;
+                _this.kickedOff = false;
+                var $overlay = $('#' + _this.CREDENTIAL_OVERLAY_ID);
+                if (!$overlay.is(':hidden')) {
+                    _this.DOMObserver.disconnect();
+                    $overlay.click();
+                    _this.DOMObserver.reconnect();
+                } 
+
                 // hack to fix issues where submit button
                 // has name="submit" -- WAY TOO HARD
                 if (typeof($form[0].submit) !== "function") {
