@@ -42,9 +42,10 @@
     Waltz.prototype.addDOMObservers = function() {
         var loginCheck = "input[type='password']";
         if (this.options.site.config.login.passwordField) {
-            loginCheck = "input[name='"+this.options.site.config.login.passwordField + "']";
+            loginCheck = "input[name='" + this.options.site.config.login.passwordField + "']";
         }
 
+        // Notifies us when the login selector is added to the page.
         var loginFieldObserver = new MutationSummary({
             callback: this.handleDOMChanges.bind(this),
             queries: [{ element: loginCheck }]
@@ -316,7 +317,7 @@
         var _this = this;
 
         this.decryptCredentials(function(response) {
-            if(response.error) {
+            if (response.error) {
                 if(response.error === "authentication") {
                     _this.logInToClef(_this.decryptAndLogIn.bind(this));
                 } else {
@@ -456,8 +457,9 @@
                     formSubmitted = false;
                 }
 
-                if (siteConfig.login.loginForm && siteConfig.login.loginForm.submitButton) {
-                    $(siteConfig.login.loginForm.submitButton).click();
+                if (siteConfig.login.loginForm && 
+                    siteConfig.login.loginForm.submitButton.length) {
+                    siteConfig.login.loginForm.submitButton.click();
                 } else {
                     $form.submit();
                 }
@@ -780,7 +782,7 @@
         var passwordInputs = $("input[type='password']").filter(function() {
             return $(this).parents('#waltz-credential-form').length < 1;
         });
-        var loginForm;
+        var $loginForm;
         var maxScore = -Infinity;
 
         passwordInputs.each(function() {
@@ -832,35 +834,31 @@
                 score += hasButtons + hasRememberMe - otherInputsScore;
                 if (score > maxScore) {
                     maxScore = score;
-                    loginForm = formContainer;
+                    $loginForm = formContainer;
                 }
             }
         });
 
-        if (!loginForm) return null;
-        var usernameField = $(loginForm).find("input[type='text']").first();
-        var passwordField = $(loginForm).find("input[type='password']").first();
-        var submitButton = $(loginForm).find("input[type='submit'], button").first();
+        if (!$loginForm) return null;
+        var $usernameField = $loginForm.find("input[type='text']").first();
+        var $passwordField = $loginForm.find("input[type='password']").first();
+        var $submitButton = $loginForm.find("input[type='submit'], button").first();
 
-        var emailField = $(loginForm).find("input[type='email']");
-        if (emailField.length) usernameField = emailField.first();
+        var $emailField = $loginForm.find("input[type='email']");
+        if ($emailField.length) $usernameField = $emailField.first();
 
         var commonUsernameClasses = ['login', 'uid', 'email', 'user', 'username'];
         $.each(commonUsernameClasses, function(i, usernameClass) {
-            var matches = $(loginForm)
+            var matches = $loginForm
                 .find('input.' + usernameClass + ', input#' + usernameClass);
-            if (matches.length) usernameField = $(matches).first();
+            if (matches.length) $usernameField = $(matches).first();
         });
 
-        $(usernameField).css({ "border": '#FF0000 1px solid'});
-        $(passwordField).css({ "border": '#FF0000 1px solid'});
-        $(submitButton).css({ "border": '#FF0000 1px solid'});
-
         return {
-            container: loginForm,
-            usernameField: usernameField,
-            passwordField: passwordField,
-            submitButton: submitButton
+            container: $loginForm,
+            usernameField: $usernameField,
+            passwordField: $passwordField,
+            submitButton: $submitButton
         };
     }
 

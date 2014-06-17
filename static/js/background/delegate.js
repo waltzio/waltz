@@ -347,17 +347,16 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
     logoutCookies = siteConfig.logout.cookies;
 
     // Wildcard to delete all cookies
-    var deleteAllCookies = false;
-    if (logoutCookies.length == 1 && logoutCookies[0] == '*') {
-        deleteAllCookies = true;
-    }
+    var deleteAllCookies = logoutCookies.length == 1 && logoutCookies[0] == '*';
 
     if (!deleteAllCookies) {
         for (i = 0; i < logoutCookies.length; i++) {
             logoutCookie = logoutCookies[i];
             if (typeof(logoutCookie) === "object") {
                 cookiesToDelete.push(logoutCookie.cookie);
-                if (logoutDomains.indexOf(logoutCookie.domain) < 0) logoutDomains.push(logoutCookie.domain);
+                if (logoutDomains.indexOf(logoutCookie.domain) < 0) {
+                    logoutDomains.push(logoutCookie.domain);
+                }
             } else {
                 cookiesToDelete.push(logoutCookie);
             }
@@ -392,6 +391,7 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
 
             for (var i = 0; i < logoutDomains.length; i++) {
                 var domain = logoutDomains[i];
+                // Make the domain a wildcard if it isn't already
                 if (!domain.match(/\:\/\//)) domain = '*://*.' + domain + '/*';
                 chrome.tabs.query(
                     { url: domain },
