@@ -635,6 +635,18 @@ Delegate.prototype.buildAnonymousSiteOptions = function(url) {
     return this.buildAnonymousSiteOptionsForDomain(domain);
 }
 
+Delegate.prototype.buildSiteOptions = function(site) {
+    var options = {
+        site: {
+            domain: site,
+            config: this.siteConfigs[site]
+        },
+        currentLogin: this.currentLogins[site],
+    };
+    options.site.config.isAnonymous = false;
+    return options;
+}
+
 Delegate.prototype.initialize = function(data, callback) {
 	var url = data.location.href.split('#')[0],
         _this = this;
@@ -644,14 +656,7 @@ Delegate.prototype.initialize = function(data, callback) {
     if (!site) {
         options = this.buildAnonymousSiteOptions(url);
     } else {
-        options = {
-            site: {
-                domain: site,
-                config: this.siteConfigs[site]
-            },
-            currentLogin: this.currentLogins[site],
-        };
-        options.site.config.isAnonymous = false;
+        options = this.buildSiteOptions(site);
     }
     _this.refreshOptions({}, function() {
         options.cyHost = _this.options.cy_url;
