@@ -32,104 +32,44 @@
         this.sharer = new Sharer(this);
         this.thirdPartyCookiesChecked = $.Deferred();
 
-        var observer = new MutationSummary({
-            callback: this.handleDOMChanges.bind(this),
-            queries: [{
-                element: "input[type='password']"
-            }]
-        });
+        this.addDOMObservers();
 
-        var _this = this,
-            page = this.checkPage();
-        // First, we need to figure out if the Waltz icon should be displayed.
-        if (page == "logged_in") {
-            // If the 'check' selector exists, then we're logged in,
-            // so don't show Waltz
-            _this.trigger('loggedIn');
-            this.acknowledgeLoginAttempt({ success: true });
-            return;
-        } else if (page == "unknown" && this.options.site.config.login.formOnly) {
-            return;
-        } else if (page == "unknown" && 
-                this.options.site.config.isAnonymous && 
-                !this.options.currentLogin) {
-            return;
-        } else if (page == "two_factor") {
-            return;
-        } else {
-            // the 'check' selector doesn't exist yet, but it may be loaded
-            // dynamically by the page.
-            var checks = 0,
-                MAX_CHECKS = 20,
-                CHECK_INTERVAL = 300,
-                loginCheckInterval;
+        var page = this.checkPage();
+        this.handlePage(page);
+        this.on('widget.dismissed', this.widgetDismissed.bind(this));
+    }
 
-            if (!this.options.currentLogin) {
-                // If we're not inTransition, let's assume that we need to log
-                // in. So, kickOff then check to see if we need to hide.
-                this.kickOff();
-
-                var checkFunction = function() {
-                    if (checks > MAX_CHECKS) {
-                        clearInterval(loginCheckInterval);
-                        return;
-                    }
-
-                    page = _this.checkPage();
-                    if (page === "logged_in") {
-                        _this.trigger('loggedIn');
-                        $(".waltz-dismiss").click();
-                        clearInterval(loginCheckInterval);
-                        return;
-                    } else if (page == "login") {
-                        clearInterval(loginCheckInterval);
-                    } else if (page == "unknown" && _this.options.site.config.login.formOnly) {
-                        $(".waltz-dismiss").click();
-                        clearInterval(loginCheckInterval);
-                        return;
-                    } else {
-                        checks++;
-                    }
-                };
-
-                checkFunction();
-                loginCheckInterval = setInterval(checkFunction, CHECK_INTERVAL);
-
-            } else {
-                // if we are inTransition, let's keep on looking for a login
-                // field. We can do this because the bad password page will
-                // almost certainly contain the field to put in a new password.
-                // ya feel me?
-                if (page === "login") {
-                    this.kickOff();
-                } else {
-                    loginCheckInterval = setInterval(function() {
-                        if (checks > MAX_CHECKS) {
-                            clearInterval(loginCheckInterval);
-                            return;
-                        }
-
-                        page = _this.checkPage();
-                        var isAnonymousLoggedInPage =
-                            _this.options.site.config.isAnonymous && page != "login";
-                        if (page === "logged_in" || isAnonymousLoggedInPage) {
-                            _this.trigger('loggedIn');
-                            _this.acknowledgeLoginAttempt({ success: true });
-                            clearInterval(loginCheckInterval);
-                            return;
-                        } else if (page === "login") {
-                            _this.kickOff();
-                            clearInterval(loginCheckInterval);
-                            return;
-                        } else {
-                            checks++;
-                        }
-                    }, CHECK_INTERVAL);
-                }
-            }
+    Waltz.prototype.addDOMObservers = function() {
+        var loginCheck = "input[type='password']";
+        if (this.options.site.config.login.passwordField) {
+            loginCheck = "input[name='"+this.options.site.config.login.passwordField + "']";
         }
 
-        this.on('widget.dismissed', this.widgetDismissed.bind(this));
+        var loginFieldObserver = new MutationSummary({
+            callback: this.handleDOMChanges.bind(this),
+            queries: [{ element: loginCheck }]
+        });
+
+        var _this = this;
+        $(document).ready(function() {
+            var page = _this.checkPage();
+            _this.handlePage(page);
+
+            var loggedInObserver = new MutationSummary({
+                callback: _this.handleDOMChanges.bind(_this),
+                queries: [{ all: true }]
+            });
+        });
+    }
+
+    Waltz.prototype.handlePage = function(page) {
+        // First, we need to figure out if the Waltz icon should be displayed.
+        if (page == "login" && !this.kickedOff) {
+            this.kickOff();
+        } else if (page == "logged_in" && this.options.currentLogin) {
+            this.trigger('loggedIn');
+            this.acknowledgeLoginAttempt({ success: true });
+        } 
     }
 
     Waltz.prototype.kickOff = function() {
@@ -165,16 +105,8 @@
 
     Waltz.prototype.handleDOMChanges = function(summary) {
         var _this = this;
-        var change = summary[0];
         var page = _this.checkPage();
-        var isAnonymousLoggedInPage =
-            _this.options.site.config.isAnonymous && page != "login";
-        if (page === "logged_in" || isAnonymousLoggedInPage) {
-            _this.trigger('loggedIn');
-            _this.acknowledgeLoginAttempt({ success: true });
-        } else if (page === "login") {
-            if (!_this.kickedOff) _this.kickOff();
-        }
+        this.handlePage(page);
     }
 
     Waltz.prototype.widgetDismissed = function(e, data) {
@@ -272,6 +204,7 @@
                 key: this.options.site.config.key,
                 successful: opts.success
             });
+            this.options.currentLogin = null;
         }
     };
 
@@ -523,7 +456,7 @@
                     formSubmitted = false;
                 }
 
-                if (siteConfig.login.loginForm.submitButton) {
+                if (siteConfig.login.loginForm && siteConfig.login.loginForm.submitButton) {
                     $(siteConfig.login.loginForm.submitButton).click();
                 } else {
                     $form.submit();
@@ -778,9 +711,10 @@
                 siteConfig.login.loginForm = loginForm;
                 return "login";
             } else {
-                return "unknown";
+                return "logged_in";
             }
         }
+
         var isTwoFactor = false;
         if (siteConfig.login.twoFactor) {
             $.map(siteConfig.login.twoFactor, function(twoFactor) {
@@ -933,17 +867,13 @@
         method: "initialize",
         location: document.location
     }, function(options) {
-        $(document).ready(function() {
-            if (options) {
-                new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
-                    var pageSettings = dismissals.pages || {};
-                    var pathSettings = pageSettings[window.location.pathname];
-                    if (!dismissals.dismissedForever && 
-                        !(pathSettings && pathSettings.dismissed)) {
-                        var waltz = new Waltz(options);
-                    }
-                });
-            } 
+        new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
+            var pageSettings = dismissals.pages || {};
+            var pathSettings = pageSettings[window.location.pathname];
+            if (!dismissals.dismissedForever && 
+                !(pathSettings && pathSettings.dismissed)) {
+                var waltz = new Waltz(options);
+            }
         });
     });
 
