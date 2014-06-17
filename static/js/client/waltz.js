@@ -796,11 +796,6 @@
                     formParent = currentParent;
                     break;
                 } 
-                // Otherwise, we keep looking and take the parent with more
-                // than one input.
-                else if ($(currentParent).find('input').length > 1 && !potentialParent) {
-                    potentialParent = currentParent;
-                }
             }
             var formContainer = formParent ? formParent : potentialParent;
             if (formContainer) {
