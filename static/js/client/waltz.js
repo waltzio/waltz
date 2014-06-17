@@ -777,7 +777,9 @@
     };
 
     Waltz.prototype.findLoginForm = function() {
-        var passwordInputs = $("input[type='password']");
+        var passwordInputs = $("input[type='password']").filter(function() {
+            return $(this).parents('#waltz-credential-form').length < 1;
+        });
         var loginForm;
         var maxScore = -Infinity;
 
