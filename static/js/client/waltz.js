@@ -460,6 +460,9 @@
                 _this.kickedOff = false;
                 var $overlay = $('#' + _this.CREDENTIAL_OVERLAY_ID);
                 if (!$overlay.is(':hidden')) {
+                    // We disconnect the DOMObserver, since we don't want the 
+                    // overlay hiding to trigger the callback (and thus giving
+                    // a false-positive error dialog for ajax logins)
                     _this.DOMObserver.disconnect();
                     $overlay.click();
                     _this.DOMObserver.reconnect();
