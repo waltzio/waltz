@@ -814,9 +814,13 @@
                     return;
                 }
 
-                var hasButtons = $(formContainer)
-                    .find("input[type='submit'], button")
-                    .length > 0;
+                var submitButtons = $(formContainer)
+                    .find("input[type='submit'], button");
+                // Super specific work-around for forms which have a 'Change
+                // email' button (but which are not login forms), i.e. Mixpanel
+                if (submitButtons.text().match(/change email/i)) return;
+
+                var hasButtons = submitButtons.length > 0;
                 var hasRememberMe = $(formContainer)
                     .find("input[type='checkbox']")
                     .length == 1;
