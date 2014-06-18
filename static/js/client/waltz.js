@@ -376,7 +376,7 @@
             $password.length > 0 &&
             _.some($password, function(v) { return $(v).is(':visible'); })
             ) || siteConfig.login.loginForm) {
-            // We close the login fields so it doesn't look like the username
+            // We clone the login fields so it doesn't look like the username
             // and passwords are filled in. We want it to be magic!
             var $newLogin = $login.clone(),
                 $newPassword = $password.clone();

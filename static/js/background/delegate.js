@@ -375,7 +375,7 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
                         name: cookie.name
                     });
                 }
-            })
+            });
             promise.resolve();
         });
         return promise;
