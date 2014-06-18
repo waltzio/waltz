@@ -73,7 +73,9 @@
     Waltz.prototype.handlePage = function(page) {
         // First, we need to figure out if the Waltz icon should be displayed.
         var shouldKickOff = (page == "login" || 
-                (page == "unknown" && !this.options.site.config.isAnonymous));
+                (page == "unknown" && 
+                 !this.options.site.config.login.formOnly &&
+                 !this.options.site.config.isAnonymous));
         if (shouldKickOff && !this.kickedOff) {
             this.kickOff();
         } else if (page == "logged_in" && this.options.currentLogin) {
