@@ -801,53 +801,40 @@
     };
 
     Waltz.prototype.findLoginForm = function() {
-        var passwordInputs = $("input[type='password']").filter(function() {
+        var passwordInputs = $("input[type='password']:visible").filter(function() {
             return $(this).parents('#waltz-credential-form').length < 1;
         });
         var $loginForm;
         var maxScore = -Infinity;
 
         passwordInputs.each(function() {
-            var formParent;
-            var potentialParent;
-
-            var currentParent = this;
-            while ($(currentParent).parent().length) {
-                currentParent = $(currentParent).parent();
-                // Look for a form. If we have found a form, we take that to 
-                // be the most likely candidate parent.
-                if ($(currentParent).is('form') && !formParent) {
-                    formParent = currentParent;
-                    break;
-                } 
-            }
-            var formContainer = formParent ? formParent : potentialParent;
-            if (formContainer) {
-                if ($(formContainer).find("input[type='password']").length > 1) {
+            var $form = $(this).parents('form:visible');
+            if ($form.length) {
+                if ($form.find("input[type='password']").length > 1) {
                     return;
                 }
-                if ($(formContainer).find("input[type='email']").length > 1) {
+                if ($form.find("input[type='email']").length > 1) {
                     return;
                 }
-                if (!$(formContainer).find("input[type='email'], input[type='text']").length) {
+                if (!$form.find("input[type='email'], input[type='text']").length) {
                     return;
                 }
 
-                var submitButtons = $(formContainer)
+                var submitButtons = $form
                     .find("input[type='submit'], button");
                 // Super specific work-around for forms which have a 'Change
                 // email' button (but which are not login forms), i.e. Mixpanel
                 if (submitButtons.text().match(/change email/i)) return;
 
                 var hasButtons = submitButtons.length > 0;
-                var hasRememberMe = $(formContainer)
+                var hasRememberMe = $form
                     .find("input[type='checkbox']")
                     .length == 1;
-                var otherInputsScore = $(formContainer)
+                var otherInputsScore = $form
                     .find('input')
                     .not("[type='checkbox'] [type='text'], [type='email'], [type='password'], [type='submit'], [type='hidden']")
                     .length * 2;
-                otherInputsScore += $(formContainer)
+                otherInputsScore += $form
                     .find('input')
                     .filter("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit']")
                     .length - hasRememberMe - hasButtons - 2;
@@ -856,7 +843,7 @@
                 score += hasButtons + hasRememberMe - otherInputsScore;
                 if (score > maxScore) {
                     maxScore = score;
-                    $loginForm = formContainer;
+                    $loginForm = $form;
                 }
             }
         });
