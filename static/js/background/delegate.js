@@ -27,6 +27,8 @@ function Delegate(opts) {
     this.analytics = new Analytics();
     this.crypto = new Crypto();
 
+    this.ongoingAJAXRequests = {};
+
     if (navigator.onLine) {
         start();
     } else {
@@ -63,6 +65,22 @@ Delegate.prototype.init = function(options) {
             chrome.tabs.create({url: "/html/options.html"});
         }
     });
+
+    chrome.webRequest.onBeforeRequest.addListener(
+        this.onBeforeAJAXRequest.bind(this),
+        {
+            urls: ["*://*/*"],
+            types: ["xmlhttprequest"]
+        }
+    );
+
+    chrome.webRequest.onCompleted.addListener(
+        this.onAJAXCompleted.bind(this),
+        {
+            urls: ["*://*/*"],
+            types: ["xmlhttprequest"]
+        }
+    );
 
     // Listens to requests, so we can redirect to the original page
     // after a successful login.
@@ -157,10 +175,24 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 
     $.when(this.configsLoaded).then(function() {
         Raven.context(function() {
+            request['sender'] = sender;
             _this[request.method].bind(_this)(request, sendResponse);
         });
     });
 
+    return true;
+};
+
+Delegate.prototype.onBeforeAJAXRequest = function(details) {
+    this.ongoingAJAXRequests[details.tabId] = true;
+};
+
+Delegate.prototype.onAJAXCompleted = function(details) {
+    delete(this.ongoingAJAXRequests[details.tabId]);
+};
+
+Delegate.prototype.hasOngoingAJAXRequest = function(request, callback) {
+    callback(this.ongoingAJAXRequests[request.sender.tab]);
     return true;
 };
 

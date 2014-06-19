@@ -4,6 +4,8 @@
     Waltz.prototype.MAIN_BUTTON_CONTAINER_ID = 'waltz-login-wrapper';
     Waltz.prototype.MAIN_BUTTON_ID = 'waltz-login-button';
 
+    Waltz.prototype.CLONED_USERNAME_ID = "waltz-cloned-username";
+    Waltz.prototype.CLONED_PASSWORD_ID = "waltz-cloned-password";
     Waltz.prototype.CREDENTIAL_OVERLAY_ID = "waltz-credential-overlay";
     Waltz.prototype.CREDENTIAL_USERNAME_ID = "waltz-credential-username";
     Waltz.prototype.CREDENTIAL_PASSWORD_ID = "waltz-credential-password";
@@ -207,6 +209,7 @@
         if (this.options.currentLogin) {
             if (opts.success) {
                 this.trigger('login.success');
+                if (this.$widget) this.hideWidget();
             } else {
                 this.trigger('login.failure');
             }
@@ -378,25 +381,31 @@
             ) || siteConfig.login.loginForm) {
             // We clone the login fields so it doesn't look like the username
             // and passwords are filled in. We want it to be magic!
-            var $newLogin = $login.clone(),
+            var $newLogin = $('#' + _this.CLONED_USERNAME_ID);
+            var $newPassword = $('#' + _this.CLONED_PASSWORD_ID);
+            var existing = $newLogin.length && $newPassword.length;
+            if (!existing) {
+                $newLogin = $login.clone();
                 $newPassword = $password.clone();
 
-            $newLogin.attr('type', 'hidden');
-            $newPassword.attr('type', 'hidden');
-            $newLogin.attr('id', '');
-            $newPassword.attr('id', '');
+                $newLogin.attr('type', 'hidden');
+                $newPassword.attr('type', 'hidden');
+                $newLogin.attr('id', _this.CLONED_USERNAME_ID);
+                $newPassword.attr('id', _this.CLONED_PASSWORD_ID);
+
+                $password.attr('name', '');
+                $login.attr('name', '');
+
+                $form.prepend($newLogin);
+                $form.prepend($newPassword);
+
+                if (!$form.attr('action')) {
+                    $form.attr('action', siteConfig.login.formURL);
+                }
+            }
+
             $newLogin.val(data.username);
             $newPassword.val(data.password);
-
-            $password.attr('name', '');
-            $login.attr('name', '');
-
-            $form.prepend($newLogin);
-            $form.prepend($newPassword);
-
-            if (!$form.attr('action')) {
-                $form.attr('action', siteConfig.login.formURL);
-            }
 
             submitForm($form);
         } else {
@@ -459,7 +468,7 @@
                 location: window.location.href
             }, function(currentLogin) {
                 _this.options.currentLogin = currentLogin;
-                _this.kickedOff = false;
+
                 var $overlay = $('#' + _this.CREDENTIAL_OVERLAY_ID);
                 if (!$overlay.is(':hidden')) {
                     // We disconnect the DOMObserver, since we don't want the 
@@ -485,9 +494,28 @@
                 } else {
                     $form.submit();
                 }
+
+                setTimeout(_this.showLoginError.bind(_this), 2000);
             });
         }
     };
+
+    Waltz.prototype.showLoginError = function() {
+        var _this = this;
+        chrome.runtime.sendMessage({
+            method: "hasOngoingAJAXRequest"
+        }, function(hasOngoingRequest) {
+            if (!hasOngoingRequest) {
+                var page = _this.checkPage();
+                if (page == "login") {
+                    var errorMessage = "Invalid username and password.";
+                    _this.acknowledgeLoginAttempt({ success: false });
+                    _this.requestCredentials(errorMessage);
+                }
+            }
+        });
+
+    }
 
     Waltz.prototype.checkAuthentication = function(continueCallback, noUserCallback) {
         var _this = this;
@@ -549,8 +577,13 @@
                 $passwordField = $overlay.find('#' + _this.CREDENTIAL_PASSWORD_ID),
                 $body = $('body');
 
-
-            $body.append($overlay);
+            var $existingOverlay = $body.find('#' + _this.CREDENTIAL_OVERLAY_ID);
+            if ($existingOverlay.length) {
+                $existingOverlay.html(html);
+                $overlay = $existingOverlay;
+            } else {
+                $body.append($overlay);
+            }
 
             var formShownTime = Date.now();
 
@@ -788,7 +821,7 @@
     };
 
     Waltz.prototype.getTemplater = function() {
-        if (!this.tempalter) this.templater = new Templater();
+        if (!this.templater) this.templater = new Templater();
         return this.templater;
     };
 
