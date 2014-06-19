@@ -388,24 +388,45 @@
                 $newLogin = $login.clone();
                 $newPassword = $password.clone();
 
-                $newLogin.attr('type', 'hidden');
-                $newPassword.attr('type', 'hidden');
+                // Position the cloned login fields precisely over the actual ones
+                var loginPosition = $login.position();
+                $newLogin.css({
+                    position: 'absolute',
+                    top: loginPosition.top,
+                    left: loginPosition.left,
+                    width: $login.css('width'),
+                    height: $login.css('height'),
+                    'margin-left': $login.css('margin-left'),
+                    'margin-top': $login.css('margin-top')
+                });
+                var passwordPosition = $password.position();
+                $newPassword.css({
+                    position: 'absolute',
+                    top: passwordPosition.top,
+                    left: passwordPosition.left,
+                    width: $password.css('width'),
+                    height: $password.css('height'),
+                    'margin-left': $password.css('margin-left'),
+                    'margin-top': $password.css('margin-top')
+                });
+
+                $newLogin.insertAfter($login);
+                $newPassword.insertAfter($password);
+
                 $newLogin.attr('id', _this.CLONED_USERNAME_ID);
                 $newPassword.attr('id', _this.CLONED_PASSWORD_ID);
 
-                $password.attr('name', '');
-                $login.attr('name', '');
-
-                $form.prepend($newLogin);
-                $form.prepend($newPassword);
+                $newPassword.attr('name', '');
+                $newLogin.attr('name', '');
 
                 if (!$form.attr('action')) {
                     $form.attr('action', siteConfig.login.formURL);
                 }
             }
 
-            $newLogin.val(data.username);
-            $newPassword.val(data.password);
+            // Trigger any event handlers (like validation)
+            $login.focus().val(data.username).change().blur();
+            $password.focus().val(data.password).change().blur();
 
             submitForm($form);
         } else {
@@ -506,6 +527,10 @@
             method: "hasOngoingAJAXRequest"
         }, function(hasOngoingRequest) {
             if (!hasOngoingRequest) {
+                _this.options.site.config.login.loginForm.container.find('input').val('');
+                var $clonedFields = $('#' + _this.CLONED_USERNAME_ID)
+                    .add($('#' + _this.CLONED_PASSWORD_ID));
+                $clonedFields.remove();
                 var page = _this.checkPage();
                 if (page == "login") {
                     var errorMessage = "Invalid username and password.";
@@ -843,10 +868,10 @@
         passwordInputs.each(function() {
             var $form = $(this).parents('form:visible');
             if ($form.length) {
-                if ($form.find("input[type='password']").length > 1) {
+                if ($form.find("input[type='password']").filter(":not(#waltz-cloned-password)").length > 1) {
                     return;
                 }
-                if ($form.find("input[type='email']").length > 1) {
+                if ($form.find("input[type='email']").filter(":not(#waltz-cloned-username)").length > 1) {
                     return;
                 }
                 if (!$form.find("input[type='email'], input[type='text']").length) {
@@ -869,6 +894,7 @@
                     .length * 2;
                 otherInputsScore += $form
                     .find('input')
+                    .filter(':not(#waltz-cloned-username), :not(#waltz-cloned-password)')
                     .filter("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit']")
                     .length - hasRememberMe - hasButtons - 2;
 
