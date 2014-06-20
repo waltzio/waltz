@@ -487,7 +487,32 @@
   font-size: 14px;
 }
 
-#waltz-login-wrapper {
+#waltz-login-wrapper.overlayed {
+  background: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  cursor: pointer;
+}
+#waltz-login-wrapper.overlayed.click-to-remove {
+  background: rgba(230, 230, 230, 0.6);
+}
+#waltz-login-wrapper.overlayed #waltz-login-button {
+  width: 80%;
+  height: 40px;
+  position: relative;
+  top: 50%;
+  margin: auto;
+  margin-top: -20px;
+  background: white;
+  border: 2px solid transparent;
+  line-height: 40px;
+  text-align: center;
+  font-family: "Avenir";
+  color: #48bdfd;
+}
+#waltz-login-wrapper.overlayed #waltz-login-button:hover {
+  border-color: #48bdfd;
+}
+#waltz-login-wrapper.floating {
   position: fixed;
   top: 30px;
   right: 30px;
@@ -495,10 +520,10 @@
   width: 64px;
   height: 64px;
 }
-#waltz-login-wrapper.waltz-remove {
+#waltz-login-wrapper.floating.waltz-remove {
   right: -114px;
 }
-#waltz-login-wrapper #waltz-login-button {
+#waltz-login-wrapper.floating #waltz-login-button {
   height: 100%;
   width: 100%;
   background-repeat: no-repeat;
@@ -512,10 +537,10 @@
   -webkit-animation-duration: 4s;
   -webkit-animation-iteration-count: infinite;
 }
-#waltz-login-wrapper #waltz-login-button:hover {
+#waltz-login-wrapper.floating #waltz-login-button:hover {
   background-color: black;
 }
-#waltz-login-wrapper .waltz-button {
+#waltz-login-wrapper.floating .waltz-button {
   height: 20px;
   width: 20px;
   border-radius: 10px;
@@ -530,7 +555,7 @@
   margin: 0;
   min-width: 0;
 }
-#waltz-login-wrapper .waltz-button.waltz-dismiss {
+#waltz-login-wrapper.floating .waltz-button.waltz-dismiss {
   background-size: 100%;
   background-position: center center;
   background-color: transparent;
@@ -538,6 +563,6 @@
   right: -10px;
   transition: background-color 200ms;
 }
-#waltz-login-wrapper .waltz-button.waltz-dismiss:hover {
+#waltz-login-wrapper.floating .waltz-button.waltz-dismiss:hover {
   background-color: #dd0005;
 }

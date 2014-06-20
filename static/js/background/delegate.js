@@ -367,7 +367,7 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
         var promise = $.Deferred();
         Utils.getCookiesForDomain(domain, function removeCookies(cookies) {
             $.each(cookies, function(i, cookie) {
-                var shouldDelete = (deleteAllCookies || 
+                var shouldDelete = (deleteAllCookies ||
                     cookiesToDelete.indexOf(cookie.name) != -1);
                 if (shouldDelete) {
                     chrome.cookies.remove({
@@ -603,8 +603,8 @@ Delegate.prototype.findSiteConfig = function(url) {
                 return site;
 			}
 		}
-	} 
-}
+	}
+};
 
 Delegate.prototype.buildAnonymousSiteConfig = function(domain) {
     return {
@@ -616,7 +616,7 @@ Delegate.prototype.buildAnonymousSiteConfig = function(domain) {
         },
         isAnonymous: true
     };
-}
+};
 
 Delegate.prototype.buildAnonymousSiteOptionsForDomain = function(domain) {
     var options = {
@@ -627,13 +627,13 @@ Delegate.prototype.buildAnonymousSiteOptionsForDomain = function(domain) {
         currentLogin: this.currentLogins[domain]
     };
     return options;
-}
+};
 
 Delegate.prototype.buildAnonymousSiteOptions = function(url) {
     var parsedURL = Utils.url(url);
     var domain = Utils.getDomainName(parsedURL.hostname);
     return this.buildAnonymousSiteOptionsForDomain(domain);
-}
+};
 
 Delegate.prototype.buildSiteOptions = function(site) {
     var options = {
@@ -645,7 +645,7 @@ Delegate.prototype.buildSiteOptions = function(site) {
     };
     options.site.config.isAnonymous = false;
     return options;
-}
+};
 
 Delegate.prototype.initialize = function(data, callback) {
 	var url = data.location.href.split('#')[0],
