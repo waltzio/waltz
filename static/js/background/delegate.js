@@ -85,7 +85,7 @@ Delegate.prototype.init = function(options) {
     chrome.webRequest.onHeadersReceived.addListener(
         this.handleCSPHeader.bind(this),
         {
-            urls: ["https://lastpass.com/*"],
+            urls: ["*://*/*"],
             types: ["main_frame"]
         },
         ["blocking", "responseHeaders"]
@@ -456,14 +456,20 @@ Delegate.prototype.checkAuthentication = function(request, cb) {
 };
 
 Delegate.prototype.handleCSPHeader = function(details) {
-    var safeDomains = 'https://*.googleapis.com https://*.googleusercontent.com';
+    var safeDomains = [
+        'https://*.googleapis.com',
+        'https://*.googleusercontent.com',
+        'https://clef.io',
+        'https://*.waltz.io'
+    ].join(' '),
+        ruleRegex = new RegExp('(font\-src|style\-src|frame\-src)', 'g');
+
     for (i = 0; i < details.responseHeaders.length; i++) {
 
         if (Utils.isCSPHeader(details.responseHeaders[i].name.toUpperCase())) {
             var csp = details.responseHeaders[i].value;
 
-            csp = csp.replace('font-src', 'font-src ' + safeDomains);
-            csp = csp.replace('style-src', 'style-src ' + safeDomains);
+            csp = csp.replace(ruleRegex, '$1 ' + safeDomains);
 
             details.responseHeaders[i].value = csp;
         }
