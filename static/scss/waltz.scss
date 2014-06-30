@@ -94,7 +94,7 @@
         }
 
         .waltz-dismiss {
-            $size: 30px;
+            $size: 20px;
             $color: #aaa;
             height: $size;
             width: $size;
@@ -104,17 +104,42 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            margin-left: - $button-size;
+            margin-left: - $button-size / 2 - $size - 10px;
             margin-top: -$size / 2;
             border: 1px solid $color;
             color: $color;
             font-family: "Open Sans", sans-serif;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 300;
+
             &:hover {
                 $hover-color: darken($color, 10%);
                 border-color: $hover-color;
                 color: $hover-color;
+            }
+
+            &:before {
+                content: "click now to dismiss waltz";
+                position: absolute;
+                top: -10%;
+                right: 140%;
+                margin-left: -40px;
+                font-size: 12px;
+                line-height: 14px;
+                width: 80px;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-weight: bold;
+                transition: 500ms all;
+                opacity: 0;
+            }
+        }
+
+        &.hover {
+            .waltz-dismiss {
+                &:before {
+                    opacity: 1;
+                }
             }
         }
     }

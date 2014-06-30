@@ -557,25 +557,43 @@
   background-image: url("chrome-extension://__MSG_@@extension_id__/static/img/small-phone.png");
 }
 #waltz-login-wrapper.overlayed .waltz-dismiss {
-  height: 30px;
-  width: 30px;
-  line-height: 30px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
   text-align: center;
-  border-radius: 30px;
+  border-radius: 20px;
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-left: -100px;
-  margin-top: -15px;
+  margin-left: -80px;
+  margin-top: -10px;
   border: 1px solid #aaaaaa;
   color: #aaaaaa;
   font-family: "Open Sans", sans-serif;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 300;
 }
 #waltz-login-wrapper.overlayed .waltz-dismiss:hover {
   border-color: #909090;
   color: #909090;
+}
+#waltz-login-wrapper.overlayed .waltz-dismiss:before {
+  content: "click now to dismiss waltz";
+  position: absolute;
+  top: -10%;
+  right: 140%;
+  margin-left: -40px;
+  font-size: 12px;
+  line-height: 14px;
+  width: 80px;
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  transition: 500ms all;
+  opacity: 0;
+}
+#waltz-login-wrapper.overlayed.hover .waltz-dismiss:before {
+  opacity: 1;
 }
 #waltz-login-wrapper.floating {
   position: fixed;
