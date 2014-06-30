@@ -175,7 +175,7 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 
     $.when(this.configsLoaded).then(function() {
         Raven.context(function() {
-            request['sender'] = sender;
+            request.sender = sender;
             _this[request.method].bind(_this)(request, sendResponse);
         });
     });

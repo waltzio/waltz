@@ -540,7 +540,7 @@
             }
         });
 
-    }
+    };
 
     Waltz.prototype.checkAuthentication = function(continueCallback, noUserCallback) {
         var _this = this;
@@ -687,7 +687,7 @@
     //Draws the waltz widget and binds the interactions
     Waltz.prototype.showWidget = function(form) {
         var _this = this,
-            $waltzCircle;
+            $button;
 
         var attemptLogin = function() {
 
@@ -709,7 +709,7 @@
                 }
                 else {
                     _this.showThirdPartyCookieMessage();
-                    $waltzCircle.one('click', attemptLogin);
+                    $button.one('click', attemptLogin);
                 }
             });
         };
@@ -717,8 +717,8 @@
         if (this.$widget) {
             if (this.$widget.hasClass('waltz-remove')) {
                 this.$widget.removeClass('waltz-remove');
-                $waltzCircle = $('#'+this.MAIN_BUTTON_ID);
-                $waltzCircle.one('click', attemptLogin);
+                $button = $('#'+this.MAIN_BUTTON_ID);
+                $button.one('click', attemptLogin);
                 this.trigger('show.widget');
             }
             return;
@@ -730,53 +730,63 @@
         //Build HTML for clef widget
         var $widget = $("<div id='" + this.MAIN_BUTTON_CONTAINER_ID + "'></div>");
 
-        function findBoundingBoxDimensions(fields) {
-            return fields.map(function(el) {
-                var $el = $(el),
-                    offset = $el.offset();
-
-                return {
-                    top: offset.top,
-                    right: offset.left + el.outerWidth(),
-                    bottom: offset.top + el.outerHeight(),
-                    left: offset.left
-                };
-            }).reduce(function(prev, curr) {
-                curr.top = Math.min(prev.top, curr.top);
-                curr.left = Math.min(prev.left, curr.left);
-                curr.right = Math.max(prev.right, curr.right);
-                curr.bottom = Math.max(prev.bottom, curr.bottom);
-                return curr;
-            }, { top: Infinity, right: -Infinity, bottom: -Infinity, left: Infinity});
-        }
-
         if (loginForm) {
             $widget.addClass('overlayed');
-            var dim = findBoundingBoxDimensions(
-                [loginForm.passwordField, loginForm.usernameField, loginForm.submitButton]
-            ),
-                PADDING = 10,
-                MIN_HEIGHT = 100;
 
-            var height = Math.max(dim.bottom - dim.top, MIN_HEIGHT),
-                width = dim.right - dim.left,
-                top = dim.top - PADDING,
-                left = dim.left - PADDING;
+            var $wrapper = loginForm.container.wrap('<div>').parent();
+            $wrapper.css({ position: 'relative' });
 
-            $widget.css({
-                top: top,
-                left: left,
-                width: width,
-                height: height,
-                padding: PADDING
+            var height = loginForm.container.outerHeight(),
+                width = loginForm.container.outerWidth(),
+                top = loginForm.container.offset().top,
+                left = loginForm.container.offset().left;
+
+            var blur = loginForm.container.Vague({intensity: 4 });
+            blur.blur();
+
+            $button = $("<div>").attr('id', this.MAIN_BUTTON_ID);
+
+            var $background = $('<div>');
+            $background
+                .attr('id', 'waltz-button-background')
+                .css({
+                    'background-image': 'url(' + chrome.extension.getURL('/static/img/waltz-128.png') + ')'
+                });
+
+            var $dismiss = $('<div>&times;</div>').addClass('waltz-dismiss');
+
+            $button.append($background);
+            $widget.append($dismiss);
+            $widget.append($button);
+            $wrapper.append($widget);
+
+            var hoverTimeout;
+            $button.hover(function(e) {
+                clearTimeout(hoverTimeout);
+                $wrapper.trigger('mouseleave');
+            }, function() { $wrapper.trigger('mouseenter'); });
+
+            $wrapper.hover(function() {
+                hoverTimeout = setTimeout(function() {
+                    blur.animate(1, { duration: 200 });
+                }, 300);
+            }, function() {
+                clearTimeout(hoverTimeout);
+                blur.animate(3, { duration: 200 });
             });
 
-            var $button = $("<div>")
-                .attr('id', this.MAIN_BUTTON_ID)
-                .text('Log in with your phone');
+            $widget.click(function(e) {
+                e.stopPropagation();
+                _this.dismiss();
+            });
 
-            $widget.append($button);
-
+            $widget.add($dismiss).click(function(e) {
+                e.stopPropagation();
+                $wrapper.off('mouseenter').off('mouseleave');
+                blur.unblur();
+                clearTimeout(hoverTimeout);
+                _this.dismiss();
+            });
 
         } else {
             $widget.addClass('floating');
@@ -787,41 +797,49 @@
                 "<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
                 );
 
-            $waltzCircle = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
+            $button = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
 
-            $widget.append($waltzCircle, $waltzActions);
+            $widget.append($button, $waltzActions);
             //Style the widget with the correct image resource
-            $waltzCircle.css({
+            $button.css({
                 "background-image": "url("+wSource+")"
             });
 
-            $(document).ready(this.loadIFrame.bind(this));
-
-            $waltzCircle.one('click', attemptLogin);
+            $("body").append($widget);
 
             $widget.find(".waltz-dismiss").click(function(e) {
                 e.stopPropagation();
-                _this.storage.getDismissalsForSite(_this.options.site.config.key, function(dismissals) {
-                    dismissals.count = (dismissals.count || 0) + 1;
-                    _this.storage.setDismissalsForSite(
-                        _this.options.site.config.key,
-                        dismissals
-                    );
-
-                    _this.trigger('widget.dismissed', { dismissals: dismissals.count });
-
-                });
-
-                _this.hideWidget({ remove: true });
+                _this.dismiss();
             });
         }
 
+        $(document).ready(this.loadIFrame.bind(this));
 
-        $("body").append($widget);
+        $button.one('click', function(e) {
+            e.stopPropagation();
+            attemptLogin();
+        });
+
         this.$widget = $widget;
         this.trigger('show.widget');
 
         _this.analytics.trackEvent("Show widget");
+    };
+
+    Waltz.prototype.dismiss = function() {
+        var _this = this;
+         this.storage.getDismissalsForSite(this.options.site.config.key, function(dismissals) {
+            dismissals.count = (dismissals.count || 0) + 1;
+            _this.storage.setDismissalsForSite(
+                _this.options.site.config.key,
+                dismissals
+            );
+
+            _this.trigger('widget.dismissed', { dismissals: dismissals.count });
+
+        });
+
+        this.hideWidget({ remove: true });
     };
 
     Waltz.prototype.hideWidget = function(opts) {
@@ -995,23 +1013,6 @@
                 var waltz = new Waltz(options);
             }
         });
-    });
-
-    // REMOVE AFTER TESTING
-    var waltz = new Waltz({
-        site: {
-            domain: 'localhost',
-            config: {
-                name: 'localhost',
-                key: 'localhost',
-                login: {},
-                logout: {
-                    cookies: ['*']
-                },
-                isAnonymous: true
-            },
-            currentLogin: false
-        }
     });
 
     var isInstalledNode = document.createElement('div');
