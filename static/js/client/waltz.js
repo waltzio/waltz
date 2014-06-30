@@ -768,17 +768,18 @@
 
             var hoverTimeout;
             $button.hover(function(e) {
+                e.stopPropagation();
                 clearTimeout(hoverTimeout);
-                $wrapper.trigger('mouseleave');
-            }, function() { $wrapper.trigger('mouseenter'); });
+                $widget.removeClass('hover');
+            });
 
-            $wrapper.hover(function() {
+            $widget.hover(function() {
                 hoverTimeout = setTimeout(function() {
                     $widget.addClass('hover');
                 }, 300);
             }, function() {
                 clearTimeout(hoverTimeout);
-                $widget.removeClass ('hover');
+                $widget.removeClass('hover');
             });
 
             $widget.add($dismiss).click(function(e) {
