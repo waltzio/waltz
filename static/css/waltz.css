@@ -518,9 +518,13 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
   top: 40%;
 }
-#waltz-login-wrapper.overlayed #waltz-login-button:hover:after {
+#waltz-login-wrapper.overlayed #waltz-login-button:hover:before {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
   top: 60%;
+}
+#waltz-login-wrapper.overlayed #waltz-login-button:hover:after {
+  bottom: 50%;
+  opacity: 0;
 }
 #waltz-login-wrapper.overlayed #waltz-login-button #waltz-button-background {
   position: absolute;
@@ -535,6 +539,22 @@
   background-repeat: no-repeat;
 }
 #waltz-login-wrapper.overlayed #waltz-login-button:after {
+  content: "Click to log \A in with Waltz";
+  position: absolute;
+  top: 50%;
+  left: 110%;
+  width: 105%;
+  margin-top: -12px;
+  text-align: left;
+  font-family: "Open Sans", sans-serif;
+  color: #aaa;
+  white-space: pre;
+  font-size: 12px;
+  line-height: 14px;
+  transition: 500ms;
+  font-weight: 100;
+}
+#waltz-login-wrapper.overlayed #waltz-login-button:before {
   content: " ";
   width: 40px;
   height: 80px;
@@ -557,31 +577,33 @@
   background-image: url("chrome-extension://__MSG_@@extension_id__/static/img/small-phone.png");
 }
 #waltz-login-wrapper.overlayed .waltz-dismiss {
-  height: 20px;
-  width: 20px;
-  line-height: 20px;
+  height: 14px;
+  width: 14px;
+  line-height: 14px;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 14px;
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-left: -80px;
-  margin-top: -10px;
+  margin-left: -74px;
+  margin-top: -7px;
   border: 1px solid #aaaaaa;
   color: #aaaaaa;
   font-family: "Open Sans", sans-serif;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 300;
   cursor: pointer;
+  opacity: .7;
 }
 #waltz-login-wrapper.overlayed .waltz-dismiss:hover {
   border-color: #909090;
   color: #909090;
+  opacity: 1;
 }
 #waltz-login-wrapper.overlayed .waltz-dismiss:before {
-  content: "click to dismiss waltz";
+  content: "Click to dismiss waltz";
   position: absolute;
-  top: -20%;
+  top: -50%;
   right: 140%;
   margin-left: -40px;
   font-size: 12px;
@@ -589,8 +611,11 @@
   width: 80px;
   text-align: right;
   font-family: "Open Sans", sans-serif;
-  font-weight: bold;
   transition: 500ms all;
+  opacity: 0;
+  color: #aaa;
+}
+#waltz-login-wrapper.overlayed.hover #waltz-login-button:after {
   opacity: 0;
 }
 #waltz-login-wrapper.overlayed.hover .waltz-dismiss:before {

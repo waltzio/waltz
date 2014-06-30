@@ -49,9 +49,14 @@
             &:hover {
                 box-shadow: $hover-shadow;
                 top: 40%;
-                &:after {
+                &:before {
                     box-shadow: $hover-shadow;
                     top: 60%;
+                }
+
+                &:after {
+                    bottom: 50%;
+                    opacity: 0;
                 }
             }
 
@@ -69,6 +74,23 @@
             }
 
             &:after {
+                content: "Click to log \A in with Waltz";
+                position: absolute;
+                top: 50%;
+                left: 110%;
+                width: 105%;
+                margin-top: -12px;
+                text-align: left;
+                font-family: "Open Sans", sans-serif;
+                color: #aaa;
+                white-space: pre;
+                font-size: 12px;
+                line-height: 14px;
+                transition: 500ms;
+                font-weight: 100;
+            }
+
+            &:before {
                 content: " ";
                 $width: 40px;
                 width: $width;
@@ -95,7 +117,7 @@
         }
 
         .waltz-dismiss {
-            $size: 20px;
+            $size: 14px;
             $color: #aaa;
             height: $size;
             width: $size;
@@ -110,20 +132,22 @@
             border: 1px solid $color;
             color: $color;
             font-family: "Open Sans", sans-serif;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 300;
             cursor: pointer;
+            opacity: .7;
 
             &:hover {
                 $hover-color: darken($color, 10%);
                 border-color: $hover-color;
                 color: $hover-color;
+                opacity: 1;
             }
 
             &:before {
-                content: "click to dismiss waltz";
+                content: "Click to dismiss waltz";
                 position: absolute;
-                top: -20%;
+                top: -50%;
                 right: 140%;
                 margin-left: -40px;
                 font-size: 12px;
@@ -131,13 +155,18 @@
                 width: 80px;
                 text-align: right;
                 font-family: "Open Sans", sans-serif;
-                font-weight: bold;
                 transition: 500ms all;
                 opacity: 0;
+                color: #aaa;
             }
         }
 
         &.hover {
+            #waltz-login-button {
+                &:after {
+                    opacity: 0;
+                }
+            }
             .waltz-dismiss {
                 &:before {
                     opacity: 1;
