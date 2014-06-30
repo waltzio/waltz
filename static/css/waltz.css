@@ -494,7 +494,6 @@
   width: 100%;
   height: 100%;
   z-index: 999999;
-  cursor: pointer;
 }
 #waltz-login-wrapper.overlayed.click-to-remove {
   background: rgba(230, 230, 230, 0.6);
@@ -512,6 +511,7 @@
   top: 50%;
   margin: auto;
   margin-top: -50px;
+  cursor: pointer;
   transition: 500ms all;
 }
 #waltz-login-wrapper.overlayed #waltz-login-button:hover {
@@ -572,21 +572,22 @@
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   font-weight: 300;
+  cursor: pointer;
 }
 #waltz-login-wrapper.overlayed .waltz-dismiss:hover {
   border-color: #909090;
   color: #909090;
 }
 #waltz-login-wrapper.overlayed .waltz-dismiss:before {
-  content: "click now to dismiss waltz";
+  content: "click to dismiss waltz";
   position: absolute;
-  top: -10%;
+  top: -25%;
   right: 140%;
   margin-left: -40px;
   font-size: 12px;
   line-height: 14px;
   width: 80px;
-  text-align: center;
+  text-align: right;
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
   transition: 500ms all;

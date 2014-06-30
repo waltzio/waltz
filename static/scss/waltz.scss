@@ -18,7 +18,6 @@
         width: 100%;
         height: 100%;
         z-index: 999999;
-        cursor: pointer;
 
         &.click-to-remove {
             background: transparentize(darken($background, 10%), .3);
@@ -42,6 +41,8 @@
 
             margin: auto;
             margin-top: -$button-size / 2;
+
+            cursor: pointer;
 
             transition: 500ms all;
 
@@ -111,6 +112,7 @@
             font-family: "Open Sans", sans-serif;
             font-size: 16px;
             font-weight: 300;
+            cursor: pointer;
 
             &:hover {
                 $hover-color: darken($color, 10%);
@@ -119,15 +121,15 @@
             }
 
             &:before {
-                content: "click now to dismiss waltz";
+                content: "click to dismiss waltz";
                 position: absolute;
-                top: -10%;
+                top: -25%;
                 right: 140%;
                 margin-left: -40px;
                 font-size: 12px;
                 line-height: 14px;
                 width: 80px;
-                text-align: center;
+                text-align: right;
                 font-family: "Open Sans", sans-serif;
                 font-weight: bold;
                 transition: 500ms all;

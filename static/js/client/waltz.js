@@ -774,12 +774,10 @@
 
             $wrapper.hover(function() {
                 hoverTimeout = setTimeout(function() {
-                    blur.animate(2, { duration: 200 });
                     $widget.addClass('hover');
                 }, 300);
             }, function() {
                 clearTimeout(hoverTimeout);
-                blur.animate(3, { duration: 200 });
                 $widget.removeClass ('hover');
             });
 
