@@ -564,13 +564,14 @@
   border-radius: 30px;
   position: absolute;
   top: 50%;
-  left: 20%;
+  left: 50%;
+  margin-left: -100px;
   margin-top: -15px;
   border: 1px solid #aaaaaa;
   color: #aaaaaa;
   font-family: "Open Sans", sans-serif;
   font-size: 20px;
-  font-weight: light;
+  font-weight: 300;
 }
 #waltz-login-wrapper.overlayed .waltz-dismiss:hover {
   border-color: #909090;

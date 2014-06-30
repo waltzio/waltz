@@ -781,11 +781,6 @@
                 blur.animate(3, { duration: 200 });
             });
 
-            $widget.click(function(e) {
-                e.stopPropagation();
-                _this.dismiss();
-            });
-
             $widget.add($dismiss).click(function(e) {
                 e.stopPropagation();
                 $wrapper.off('mouseenter').off('mouseleave');

@@ -8,6 +8,7 @@
 
 #waltz-login-wrapper {
     &.overlayed {
+        $button-size: 100px;
         $background: rgba(255, 255, 255, .9);
         $shadow: 0 0 15px rgba(0, 0, 0, .5);
         $hover-shadow: 0 0 20px rgba(0, 0, 0, .7);
@@ -28,11 +29,10 @@
         }
 
         #waltz-login-button {
-            $size: 100px;
 
-            height: $size;
-            width: $size;
-            border-radius: $size;
+            height: $button-size;
+            width: $button-size;
+            border-radius: $button-size;
             z-index: 2;
 
             box-shadow: $shadow;
@@ -41,7 +41,7 @@
             top: 50%;
 
             margin: auto;
-            margin-top: -$size / 2;
+            margin-top: -$button-size / 2;
 
             transition: 500ms all;
 
@@ -61,7 +61,7 @@
                 z-index: 2;
                 height: 100%;
                 width: 100%;
-                border-radius: $size;
+                border-radius: $button-size;
                 background-size: 100%;
                 background-position: 50%;
                 background-repeat: no-repeat;
@@ -103,7 +103,8 @@
             border-radius: $size;
             position: absolute;
             top: 50%;
-            left: 20%;
+            left: 50%;
+            margin-left: - $button-size;
             margin-top: -$size / 2;
             border: 1px solid $color;
             color: $color;
