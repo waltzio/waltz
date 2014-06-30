@@ -1,6 +1,6 @@
 {
   "name": "Waltz",
-  "version": "1.0.9.2",
+  "version": "2.0.0",
   "manifest_version": 2,
   "description": "A modern account manager for the web.",
 
@@ -34,6 +34,8 @@
     "js": [
       "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
+      "static/js/vendor/mutation-summary.js",
+      "static/js/vendor/blur.js",
       "static/js/shared/utils.js",
       "static/js/shared/templater.js",
       "static/js/shared/storage.js",

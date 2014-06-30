@@ -4,6 +4,8 @@
     Waltz.prototype.MAIN_BUTTON_CONTAINER_ID = 'waltz-login-wrapper';
     Waltz.prototype.MAIN_BUTTON_ID = 'waltz-login-button';
 
+    Waltz.prototype.CLONED_USERNAME_ID = "waltz-cloned-username";
+    Waltz.prototype.CLONED_PASSWORD_ID = "waltz-cloned-password";
     Waltz.prototype.CREDENTIAL_OVERLAY_ID = "waltz-credential-overlay";
     Waltz.prototype.CREDENTIAL_USERNAME_ID = "waltz-credential-username";
     Waltz.prototype.CREDENTIAL_PASSWORD_ID = "waltz-credential-password";
@@ -20,6 +22,7 @@
         // If there are no opts, Waltz is not supported on this site
         if (!opts) return;
 
+        this.kickedOff = false;
         this.storage = new Storage();
         this.analytics = new Analytics({
             captureURLData: true,
@@ -31,122 +34,94 @@
         this.sharer = new Sharer(this);
         this.thirdPartyCookiesChecked = $.Deferred();
 
-        var _this = this,
-            page = this.checkPage();
-        // First, we need to figure out if the Waltz icon should be displayed.
-        if (page == "logged_in") {
-            // If the 'check' selector exists, then we're logged in,
-            // so don't show Waltz
-            this.trigger('loggedIn');
-            this.acknowledgeLoginAttempt({ success: true });
-            return;
-        } else if (page == "unknown" && this.options.site.config.login.formOnly) {
-            return;
-        } else if (page == "two_factor") {
-            return;
-        } else {
-            // the 'check' selector doesn't exist yet, but it may be loaded
-            // dynamically by the page.
-            var checks = 0,
-                MAX_CHECKS = 20,
-                CHECK_INTERVAL = 300,
-                loginCheckInterval;
+        this.addDOMObservers();
 
-            if (!this.options.currentLogin) {
-                // If we're not inTransition, let's assume that we need to log
-                // in. So, kickOff then check to see if we need to hide.
-                kickOff();
-
-                var checkFunction = function() {
-                    if (checks > MAX_CHECKS) {
-                        clearInterval(loginCheckInterval);
-                        return;
-                    }
-
-                    page = _this.checkPage();
-                    if (page === "logged_in") {
-                        this.trigger('loggedIn');
-                        $(".waltz-dismiss").click();
-                        clearInterval(loginCheckInterval);
-                        return;
-                    } else if (page == "login") {
-                        clearInterval(loginCheckInterval);
-                    } else if (page == "unknown" && _this.options.site.config.login.formOnly) {
-                        $(".waltz-dismiss").click();
-                        clearInterval(loginCheckInterval);
-                        return;
-                    } else {
-                        checks++;
-                    }
-                };
-
-                checkFunction();
-                loginCheckInterval = setInterval(checkFunction, CHECK_INTERVAL);
-
-            } else {
-                // if we are inTransition, let's keep on looking for a login
-                // field. We can do this because the bad password page will
-                // almost certainly contain the field to put in a new password.
-                // ya feel me?
-                if (page === "login") {
-                    kickOff();
-                } else {
-                    loginCheckInterval = setInterval(function() {
-                        if (checks > MAX_CHECKS) {
-                            clearInterval(loginCheckInterval);
-                            return;
-                        }
-
-                        page = _this.checkPage();
-                        if (page === "logged_in") {
-                            this.trigger('loggedIn');
-                            _this.acknowledgeLoginAttempt({ success: true });
-                            clearInterval(loginCheckInterval);
-                            return;
-                        } else if (page === "login") {
-                            kickOff();
-                            clearInterval(loginCheckInterval);
-                            return;
-                        } else {
-                            checks++;
-                        }
-                    }, CHECK_INTERVAL);
-                }
-            }
-        }
-
-        function kickOff() {
-            _this.loginCredentials = false;
-
-            _this.storage.getCredentialsForDomain(_this.options.site.config.key, function (creds) {
-
-                _this.loginCredentials = creds;
-
-                if (_this.options.currentLogin) {
-                    if (!_this.iframe) {
-                        _this.loadIFrame();
-                    }
-                    _this.checkAuthentication(function() {
-                        var errorMessage = "Invalid username and password.";
-                        _this.acknowledgeLoginAttempt({ success: false });
-                        _this.showWidget();
-                        _this.requestCredentials(errorMessage);
-                    }, function() {
-                        _this.acknowledgeLoginAttempt({ success: true });
-                        _this.showWidget();
-                    });
-                } else {
-                    _this.showWidget();
-                }
-
-
-                window.addEventListener('message', _this.closeIFrame.bind(_this));
-                window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
-            });
-        }
-
+        var page = this.checkPage();
+        this.handlePage(page);
         this.on('widget.dismissed', this.widgetDismissed.bind(this));
     }
+
+    Waltz.prototype.addDOMObservers = function() {
+        var loginCheck = "input[type='password']";
+        if (this.options.site.config.login.passwordField) {
+            loginCheck = "input[name='" + this.options.site.config.login.passwordField + "']";
+        }
+
+        // Notifies us when the login selector is added to the page.
+        var loginFieldObserver = new MutationSummary({
+            callback: this.handleDOMChanges.bind(this),
+            queries: [{ element: loginCheck }]
+        });
+
+        var _this = this;
+        $(document).ready(function() {
+            // Disconnect the loginFieldObserver. We do this b/c we add another
+            // observer for any DOM change.
+            loginFieldObserver.disconnect();
+
+            // Though not ideal, this observer observes the whole DOM, since
+            // filtering by the full-CSS login check selector isn't always supported.
+            _this.DOMObserver = new MutationSummary({
+                callback: _this.handleDOMChanges.bind(_this),
+                queries: [{ all: true }]
+            });
+
+            // Check page type on document load
+            var page = _this.checkPage();
+            _this.handlePage(page);
+        });
+    };
+
+    Waltz.prototype.handlePage = function(page) {
+        // First, we need to figure out if the Waltz icon should be displayed.
+        var shouldKickOff = (page == "login" ||
+                (page == "unknown" &&
+                 !this.options.site.config.login.formOnly &&
+                 !this.options.site.config.isAnonymous));
+        if (shouldKickOff && !this.kickedOff) {
+            this.kickOff();
+        } else if (page == "logged_in" && this.options.currentLogin) {
+            this.trigger('loggedIn');
+            this.acknowledgeLoginAttempt({ success: true });
+        }
+    };
+
+    Waltz.prototype.kickOff = function() {
+        var _this = this;
+        _this.kickedOff = true;
+        _this.loginCredentials = false;
+
+        _this.storage.getCredentialsForDomain(_this.options.site.config.key, function (creds) {
+
+            _this.loginCredentials = creds;
+
+            if (_this.options.currentLogin) {
+                if (!_this.iframe) {
+                    _this.loadIFrame();
+                }
+                _this.checkAuthentication(function() {
+                    var errorMessage = "Invalid username and password.";
+                    _this.acknowledgeLoginAttempt({ success: false });
+                    _this.showWidget();
+                    _this.requestCredentials(errorMessage);
+                }, function() {
+                    _this.acknowledgeLoginAttempt({ success: true });
+                    _this.showWidget();
+                });
+            } else {
+                _this.showWidget();
+            }
+
+            window.addEventListener('message', _this.closeIFrame.bind(_this));
+            window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
+        });
+    };
+
+    Waltz.prototype.handleDOMChanges = function(summary) {
+        var _this = this;
+        var page = _this.checkPage();
+        this.handlePage(page);
+    };
 
     Waltz.prototype.widgetDismissed = function(e, data) {
         var _this = this;
@@ -234,6 +209,7 @@
         if (this.options.currentLogin) {
             if (opts.success) {
                 this.trigger('login.success');
+                if (this.$widget) this.hideWidget();
             } else {
                 this.trigger('login.failure');
             }
@@ -243,6 +219,7 @@
                 key: this.options.site.config.key,
                 successful: opts.success
             });
+            this.options.currentLogin = null;
         }
     };
 
@@ -354,7 +331,7 @@
         var _this = this;
 
         this.decryptCredentials(function(response) {
-            if(response.error) {
+            if (response.error) {
                 if(response.error === "authentication") {
                     _this.logInToClef(_this.decryptAndLogIn.bind(this));
                 } else {
@@ -376,9 +353,20 @@
             return $('input[name="' + name + '"]');
         }
 
-        var $login = findInput(siteConfig.login.usernameField),
-            $password = findInput(siteConfig.login.passwordField),
+        var $login;
+        var $password;
+        var $form;
+        var $submitButton;
+        if (siteConfig.login.loginForm) {
+            $form = siteConfig.login.loginForm.container;
+            $login = siteConfig.login.loginForm.usernameField;
+            $password = siteConfig.login.loginForm.passwordField;
+            $submitButton = siteConfig.login.loginForm.submitButton;
+        } else {
+            $login = findInput(siteConfig.login.usernameField);
+            $password = findInput(siteConfig.login.passwordField);
             $form = $login.parents('form');
+        }
 
         if (siteConfig.login.submitButton) {
             $form = $form.filter(':has(' + siteConfig.login.submitButton + ')');
@@ -389,27 +377,62 @@
         }
 
         // We are on the login page!
-        if ($login.length > 0 &&
+        if (($login.length > 0 &&
             $password.length > 0 &&
             _.some($password, function(v) { return $(v).is(':visible'); })
-        ) {
-            var $newLogin = $login.clone(),
+            ) || siteConfig.login.loginForm) {
+            // We clone the login fields so it doesn't look like the username
+            // and passwords are filled in. We want it to be magic!
+            var $newLogin = $('#' + _this.CLONED_USERNAME_ID);
+            var $newPassword = $('#' + _this.CLONED_PASSWORD_ID);
+            var existing = $newLogin.length && $newPassword.length;
+            if (!existing) {
+                $newLogin = $login.clone();
                 $newPassword = $password.clone();
 
-            $newLogin.attr('type', 'hidden');
-            $newPassword.attr('type', 'hidden');
-            $newLogin.attr('id', '');
-            $newPassword.attr('id', '');
-            $newLogin.val(data.username);
-            $newPassword.val(data.password);
+                // Position the cloned login fields precisely over the actual ones
+                var loginPosition = $login.position();
+                $newLogin.css({
+                    position: 'absolute',
+                    top: loginPosition.top,
+                    left: loginPosition.left,
+                    width: $login.css('width'),
+                    height: $login.css('height'),
+                    'margin-left': $login.css('margin-left'),
+                    'margin-top': $login.css('margin-top')
+                });
+                var passwordPosition = $password.position();
+                $newPassword.css({
+                    position: 'absolute',
+                    top: passwordPosition.top,
+                    left: passwordPosition.left,
+                    width: $password.css('width'),
+                    height: $password.css('height'),
+                    'margin-left': $password.css('margin-left'),
+                    'margin-top': $password.css('margin-top')
+                });
 
-            $password.attr('name', '');
-            $login.attr('name', '');
+                $newLogin.insertAfter($login);
+                $newPassword.insertAfter($password);
 
-            $form.prepend($newLogin);
-            $form.prepend($newPassword);
+                $newLogin.attr('id', _this.CLONED_USERNAME_ID);
+                $newPassword.attr('id', _this.CLONED_PASSWORD_ID);
 
-            if (!$form.attr('action')) $form.attr('action', siteConfig.login.formURL);
+                $newPassword.attr('name', '');
+                $newLogin.attr('name', '');
+
+                if (!$form.attr('action')) {
+                    $form.attr('action', siteConfig.login.formURL);
+                }
+            }
+
+            // Trigger any event handlers (like validation)
+            $login.focus().val(data.username).keydown().keypress().keyup().change().blur();
+            $password.focus().val(data.password).keydown().keypress().keyup().change().blur();
+            // Force the submitButton to be enabled
+            if ($submitButton) {
+                $submitButton.prop('disabled', false);
+            }
 
             submitForm($form);
         } else {
@@ -470,7 +493,18 @@
                 domain: _this.options.site.domain,
                 key: _this.options.site.config.key,
                 location: window.location.href
-            }, function() {
+            }, function(currentLogin) {
+                _this.options.currentLogin = currentLogin;
+
+                var $overlay = $('#' + _this.CREDENTIAL_OVERLAY_ID);
+                if (!$overlay.is(':hidden')) {
+                    // We disconnect the DOMObserver, since we don't want the
+                    // overlay hiding to trigger the callback (and thus giving
+                    // a false-positive error dialog for ajax logins)
+                    if (_this.DOMObserver) _this.DOMObserver.disconnect();
+                    $overlay.click();
+                    if (_this.DOMObserver) _this.DOMObserver.reconnect();
+                }
 
                 // hack to fix issues where submit button
                 // has name="submit" -- WAY TOO HARD
@@ -481,9 +515,37 @@
                     formSubmitted = false;
                 }
 
-                $form.submit();
+                if (siteConfig.login.loginForm &&
+                    siteConfig.login.loginForm.submitButton.length) {
+                    siteConfig.login.loginForm.submitButton.click();
+                } else {
+                    $form.submit();
+                }
+
+                setTimeout(_this.showLoginError.bind(_this), 2000);
             });
         }
+    };
+
+    Waltz.prototype.showLoginError = function() {
+        var _this = this;
+        chrome.runtime.sendMessage({
+            method: "hasOngoingAJAXRequest"
+        }, function(hasOngoingRequest) {
+            if (!hasOngoingRequest) {
+                _this.options.site.config.login.loginForm.container.find('input').val('');
+                var $clonedFields = $('#' + _this.CLONED_USERNAME_ID)
+                    .add($('#' + _this.CLONED_PASSWORD_ID));
+                $clonedFields.remove();
+                var page = _this.checkPage();
+                if (page == "login") {
+                    var errorMessage = "Invalid username and password.";
+                    _this.acknowledgeLoginAttempt({ success: false });
+                    _this.requestCredentials(errorMessage);
+                }
+            }
+        });
+
     };
 
     Waltz.prototype.checkAuthentication = function(continueCallback, noUserCallback) {
@@ -546,8 +608,13 @@
                 $passwordField = $overlay.find('#' + _this.CREDENTIAL_PASSWORD_ID),
                 $body = $('body');
 
-
-            $body.append($overlay);
+            var $existingOverlay = $body.find('#' + _this.CREDENTIAL_OVERLAY_ID);
+            if ($existingOverlay.length) {
+                $existingOverlay.html(html);
+                $overlay = $existingOverlay;
+            } else {
+                $body.append($overlay);
+            }
 
             var formShownTime = Date.now();
 
@@ -626,7 +693,7 @@
     //Draws the waltz widget and binds the interactions
     Waltz.prototype.showWidget = function(form) {
         var _this = this,
-            $waltzCircle;
+            $button;
 
         var attemptLogin = function() {
 
@@ -648,7 +715,7 @@
                 }
                 else {
                     _this.showThirdPartyCookieMessage();
-                    $waltzCircle.one('click', attemptLogin);
+                    $button.one('click', attemptLogin);
                 }
             });
         };
@@ -656,58 +723,124 @@
         if (this.$widget) {
             if (this.$widget.hasClass('waltz-remove')) {
                 this.$widget.removeClass('waltz-remove');
-                $waltzCircle = $('#'+this.MAIN_BUTTON_ID);
-                $waltzCircle.one('click', attemptLogin);
+                $button = $('#'+this.MAIN_BUTTON_ID);
+                $button.one('click', attemptLogin);
                 this.trigger('show.widget');
             }
             return;
         }
 
 
-        //Grab image resource URLs from extensions API
-        var wSource = chrome.extension.getURL("/static/img/waltz-128.png");
-        var pSource = chrome.extension.getURL("/static/img/pencil.png");
-        var xSource = chrome.extension.getURL("/static/img/x.png");
+        var loginForm = this.options.site.config.login.loginForm;
 
         //Build HTML for clef widget
         var $widget = $("<div id='" + this.MAIN_BUTTON_CONTAINER_ID + "'></div>");
-        var $waltzActions = $(
-            "<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
-            );
 
-        $waltzCircle = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
+        if (loginForm) {
+            $widget.addClass('overlayed');
 
-        $widget.append($waltzCircle, $waltzActions);
-        //Style the widget with the correct image resource
-        $waltzCircle.css({
-            "background-image": "url("+wSource+")"
-        });
+            var $wrapper = loginForm.container.wrap('<div>').parent();
+            $wrapper.css({ position: 'relative' });
+
+            var height = loginForm.container.outerHeight(),
+                width = loginForm.container.outerWidth(),
+                top = loginForm.container.offset().top,
+                left = loginForm.container.offset().left;
+
+            var blur = loginForm.container.Vague({intensity: 4 });
+            blur.blur();
+
+            $button = $("<div>").attr('id', this.MAIN_BUTTON_ID);
+
+            var $background = $('<div>');
+            $background
+                .attr('id', 'waltz-button-background')
+                .css({
+                    'background-image': 'url(' + chrome.extension.getURL('/static/img/waltz-128.png') + ')'
+                });
+
+            var $dismiss = $('<div>&times;</div>').addClass('waltz-dismiss');
+
+            $button.append($background);
+            $widget.append($dismiss);
+            $widget.append($button);
+            $wrapper.append($widget);
+
+            var hoverTimeout;
+            $button.hover(function(e) {
+                clearTimeout(hoverTimeout);
+                $wrapper.trigger('mouseleave');
+            }, function() { $wrapper.trigger('mouseenter'); });
+
+            $wrapper.hover(function() {
+                hoverTimeout = setTimeout(function() {
+                    $widget.addClass('hover');
+                }, 300);
+            }, function() {
+                clearTimeout(hoverTimeout);
+                $widget.removeClass ('hover');
+            });
+
+            $widget.add($dismiss).click(function(e) {
+                e.stopPropagation();
+                $wrapper.off('mouseenter').off('mouseleave');
+                blur.unblur();
+                clearTimeout(hoverTimeout);
+                _this.dismiss();
+            });
+
+        } else {
+            $widget.addClass('floating');
+            //Grab image resource URLs from extensions API
+            var wSource = chrome.extension.getURL("/static/img/waltz-128.png");
+            var xSource = chrome.extension.getURL("/static/img/x.png");
+            var $waltzActions = $(
+                "<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
+                );
+
+            $button = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
+
+            $widget.append($button, $waltzActions);
+            //Style the widget with the correct image resource
+            $button.css({
+                "background-image": "url("+wSource+")"
+            });
+
+            $("body").append($widget);
+
+            $widget.find(".waltz-dismiss").click(function(e) {
+                e.stopPropagation();
+                _this.dismiss();
+            });
+        }
 
         $(document).ready(this.loadIFrame.bind(this));
 
-        $waltzCircle.one('click', attemptLogin);
-
-        $widget.find(".waltz-dismiss").click(function(e) {
+        $button.one('click', function(e) {
             e.stopPropagation();
-            _this.storage.getDismissalsForSite(_this.options.site.config.key, function(dismissals) {
-                dismissals.count = (dismissals.count || 0) + 1;
-                _this.storage.setDismissalsForSite(
-                    _this.options.site.config.key,
-                    dismissals
-                );
-
-                _this.trigger('widget.dismissed', { dismissals: dismissals.count });
-
-            });
-
-            _this.hideWidget({ remove: true });
+            attemptLogin();
         });
 
-        $("body").append($widget);
         this.$widget = $widget;
         this.trigger('show.widget');
 
         _this.analytics.trackEvent("Show widget");
+    };
+
+    Waltz.prototype.dismiss = function() {
+        var _this = this;
+         this.storage.getDismissalsForSite(this.options.site.config.key, function(dismissals) {
+            dismissals.count = (dismissals.count || 0) + 1;
+            _this.storage.setDismissalsForSite(
+                _this.options.site.config.key,
+                dismissals
+            );
+
+            _this.trigger('widget.dismissed', { dismissals: dismissals.count });
+
+        });
+
+        this.hideWidget({ remove: true });
     };
 
     Waltz.prototype.hideWidget = function(opts) {
@@ -726,6 +859,16 @@
 
     Waltz.prototype.checkPage = function() {
         var siteConfig = this.options.site.config;
+        if (siteConfig.isAnonymous) {
+            var loginForm = this.findLoginForm();
+            if (loginForm) {
+                siteConfig.login.loginForm = loginForm;
+                return "login";
+            } else {
+                return "logged_in";
+            }
+        }
+
         var isTwoFactor = false;
         if (siteConfig.login.twoFactor) {
             $.map(siteConfig.login.twoFactor, function(twoFactor) {
@@ -775,7 +918,7 @@
     };
 
     Waltz.prototype.getTemplater = function() {
-        if (!this.tempalter) this.templater = new Templater();
+        if (!this.templater) this.templater = new Templater();
         return this.templater;
     };
 
@@ -787,19 +930,89 @@
         this.router.on(eventName, cb);
     };
 
+    Waltz.prototype.findLoginForm = function() {
+        var passwordInputs = $("input[type='password']:visible").filter(function() {
+            return $(this).parents('#waltz-credential-form').length < 1;
+        });
+        var $loginForm;
+        var maxScore = -Infinity;
+
+        passwordInputs.each(function() {
+            var $form = $(this).parents('form:visible');
+            if ($form.length) {
+                if ($form.find("input[type='password']").filter(":not(#waltz-cloned-password)").length > 1) {
+                    return;
+                }
+                if ($form.find("input[type='email']").filter(":not(#waltz-cloned-username)").length > 1) {
+                    return;
+                }
+                if (!$form.find("input[type='email'], input[type='text']").length) {
+                    return;
+                }
+
+                var submitButtons = $form
+                    .find("input[type='submit'], button");
+                // Super specific work-around for forms which have a 'Change
+                // email' button (but which are not login forms), i.e. Mixpanel
+                if (submitButtons.text().match(/change email/i)) return;
+
+                var hasButtons = submitButtons.length > 0;
+                var hasRememberMe = $form
+                    .find("input[type='checkbox']")
+                    .length == 1;
+                var otherInputsScore = $form
+                    .find('input')
+                    .not("[type='checkbox'] [type='text'], [type='email'], [type='password'], [type='submit'], [type='hidden']")
+                    .length * 2;
+                otherInputsScore += $form
+                    .find('input')
+                    .filter(':not(#waltz-cloned-username), :not(#waltz-cloned-password)')
+                    .filter("[type='checkbox'], [type='text'], [type='email'], [type='password'], [type='submit']")
+                    .length - hasRememberMe - hasButtons - 2;
+
+                var score = 0;
+                score += hasButtons + hasRememberMe - otherInputsScore;
+                if (score > maxScore) {
+                    maxScore = score;
+                    $loginForm = $form;
+                }
+            }
+        });
+
+        if (!$loginForm) return null;
+        var $usernameField = $loginForm.find("input[type='text']").first();
+        var $passwordField = $loginForm.find("input[type='password']").first();
+        var $submitButton = $loginForm.find("input[type='submit'], button").first();
+
+        var $emailField = $loginForm.find("input[type='email']");
+        if ($emailField.length) $usernameField = $emailField.first();
+
+        var commonUsernameClasses = ['login', 'uid', 'email', 'user', 'username'];
+        $.each(commonUsernameClasses, function(i, usernameClass) {
+            var matches = $loginForm
+                .find('input.' + usernameClass + ', input#' + usernameClass);
+            if (matches.length) $usernameField = $(matches).first();
+        });
+
+        return {
+            container: $loginForm,
+            usernameField: $usernameField,
+            passwordField: $passwordField,
+            submitButton: $submitButton
+        };
+    }   ;
+
     chrome.runtime.sendMessage({
         method: "initialize",
         location: document.location
     }, function(options) {
-        $(document).ready(function() {
-            if (!options) return;
-            new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
-                var pageSettings = dismissals.pages || {};
-                var pathSettings = pageSettings[window.location.pathname];
-                if (!dismissals.dismissedForever && !(pathSettings && pathSettings.dismissed)) {
-                    var waltz = new Waltz(options);
-                }
-            });
+        new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
+            var pageSettings = dismissals.pages || {};
+            var pathSettings = pageSettings[window.location.pathname];
+            if (!dismissals.dismissedForever &&
+                !(pathSettings && pathSettings.dismissed)) {
+                var waltz = new Waltz(options);
+            }
         });
     });
 

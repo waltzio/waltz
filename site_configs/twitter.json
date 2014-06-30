@@ -6,7 +6,7 @@
             "cookies": ["auth_token"]
         },
         "login": {
-            "urls": ["https://twitter.com/login"],
+            "urls": ["https://twitter.com/login", "https://twitter.com", "http://twitter.com"],
             "formURL": "https://twitter.com/sessions",
             "method": "POST",
             "usernameField": "session[username_or_email]",
@@ -14,6 +14,10 @@
             "hasHiddenInputs": true,
             "check": ".signed-in, a:contains('Sign out'), button:contains('Sign out'), input:contains('Sign out'), .current-user, input[type='submit'][value*='Sign out']",
             "twoFactor": [
+                {
+                    "url": "https://twitter.com/account/login_verification",
+                    "check": "#login-verification-form"
+                },
                 {
                     "url": "https://twitter.com/account/login_verification/push",
                     "check": "div.login-verification-push"
