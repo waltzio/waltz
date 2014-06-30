@@ -581,7 +581,7 @@
 #waltz-login-wrapper.overlayed .waltz-dismiss:before {
   content: "click to dismiss waltz";
   position: absolute;
-  top: -25%;
+  top: -20%;
   right: 140%;
   margin-left: -40px;
   font-size: 12px;
