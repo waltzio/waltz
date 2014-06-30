@@ -508,7 +508,7 @@ Delegate.prototype.handleCSPHeader = function(details) {
         'https://clef.io',
         'https://*.waltz.io'
     ].join(' '),
-        ruleRegex = new RegExp('(font\-src|style\-src|frame\-src)', 'g');
+        ruleRegex = new RegExp('(font-src|style-src|frame-src)', 'g');
 
     for (i = 0; i < details.responseHeaders.length; i++) {
 
