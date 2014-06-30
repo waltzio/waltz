@@ -27,6 +27,8 @@ function Delegate(opts) {
     this.analytics = new Analytics();
     this.crypto = new Crypto();
 
+    this.ongoingAJAXRequests = {};
+
     if (navigator.onLine) {
         start();
     } else {
@@ -63,6 +65,22 @@ Delegate.prototype.init = function(options) {
             chrome.tabs.create({url: "/html/options.html"});
         }
     });
+
+    chrome.webRequest.onBeforeRequest.addListener(
+        this.onBeforeAJAXRequest.bind(this),
+        {
+            urls: ["*://*/*"],
+            types: ["xmlhttprequest"]
+        }
+    );
+
+    chrome.webRequest.onCompleted.addListener(
+        this.onAJAXCompleted.bind(this),
+        {
+            urls: ["*://*/*"],
+            types: ["xmlhttprequest"]
+        }
+    );
 
     // Listens to requests, so we can redirect to the original page
     // after a successful login.
@@ -157,10 +175,24 @@ Delegate.prototype.router = function(request, sender, sendResponse) {
 
     $.when(this.configsLoaded).then(function() {
         Raven.context(function() {
+            request.sender = sender;
             _this[request.method].bind(_this)(request, sendResponse);
         });
     });
 
+    return true;
+};
+
+Delegate.prototype.onBeforeAJAXRequest = function(details) {
+    this.ongoingAJAXRequests[details.tabId] = true;
+};
+
+Delegate.prototype.onAJAXCompleted = function(details) {
+    delete(this.ongoingAJAXRequests[details.tabId]);
+};
+
+Delegate.prototype.hasOngoingAJAXRequest = function(request, callback) {
+    callback(this.ongoingAJAXRequests[request.sender.tab]);
     return true;
 };
 
@@ -208,7 +240,7 @@ Delegate.prototype.login = function(request, cb) {
     };
 	this.storage.addLogin(request.domain);
     this.analytics.trackEvent('Login attempt', { site: request.key });
-    if (typeof cb === "function") cb();
+    if (typeof cb === "function") cb(this.currentLogins[request.domain]);
 };
 
 Delegate.prototype.refreshOptions = function(request, cb) {
@@ -338,33 +370,44 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
     } else {
         siteConfig = this.siteConfigs[domain];
     }
+    if (!siteConfig) {
+        siteConfig = this.buildAnonymousSiteConfig(domain);
+        domain = Utils.getDomainName(domain);
+    }
 
     logoutDomains = [domain];
     logoutCookies = siteConfig.logout.cookies;
 
-    for (i = 0; i < logoutCookies.length; i++) {
-        logoutCookie = logoutCookies[i];
-        if (typeof(logoutCookie) === "object") {
-            cookiesToDelete.push(logoutCookie.cookie);
-            if (logoutDomains.indexOf(logoutCookie.domain) < 0) logoutDomains.push(logoutCookie.domain);
-        } else {
-            cookiesToDelete.push(logoutCookie);
+    // Wildcard to delete all cookies
+    var deleteAllCookies = logoutCookies.length == 1 && logoutCookies[0] == '*';
+
+    if (!deleteAllCookies) {
+        for (i = 0; i < logoutCookies.length; i++) {
+            logoutCookie = logoutCookies[i];
+            if (typeof(logoutCookie) === "object") {
+                cookiesToDelete.push(logoutCookie.cookie);
+                if (logoutDomains.indexOf(logoutCookie.domain) < 0) {
+                    logoutDomains.push(logoutCookie.domain);
+                }
+            } else {
+                cookiesToDelete.push(logoutCookie);
+            }
         }
     }
 
     var promises = logoutDomains.map(function(domain) {
         var promise = $.Deferred();
         Utils.getCookiesForDomain(domain, function removeCookies(cookies) {
-            var cookie;
-            for (i = 0; i < cookies.length; i++) {
-                cookie = cookies[i];
-                if (cookiesToDelete.indexOf(cookie.name) != -1) {
+            $.each(cookies, function(i, cookie) {
+                var shouldDelete = (deleteAllCookies ||
+                    cookiesToDelete.indexOf(cookie.name) != -1);
+                if (shouldDelete) {
                     chrome.cookies.remove({
                         url: Utils.extrapolateUrlFromCookie(cookie),
                         name: cookie.name
                     });
                 }
-            }
+            });
             promise.resolve();
         });
         return promise;
@@ -379,8 +422,11 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
             };
 
             for (var i = 0; i < logoutDomains.length; i++) {
+                var domain = logoutDomains[i];
+                // Make the domain a wildcard if it isn't already
+                if (!domain.match(/\:\/\//)) domain = '*://*.' + domain + '/*';
                 chrome.tabs.query(
-                    { url: logoutDomains[i] },
+                    { url: domain },
                     refresh
                 );
             }
@@ -580,14 +626,11 @@ Delegate.prototype.getConfigForKey = function(key) {
     return false;
 };
 
-Delegate.prototype.initialize = function(data, callback) {
-	var url = data.location.href.split('#')[0],
-        _this = this;
+Delegate.prototype.findSiteConfig = function(url) {
 	if (this.includedDomainRegex.test(url)) {
-		var options;
 		for (var site in this.siteConfigs) {
             var matched;
-            if(typeof(this.siteConfigs[site].match) !== "undefined") {
+            if (typeof(this.siteConfigs[site].match) !== "undefined") {
                 var regex = new RegExp(this.siteConfigs[site].match);
                 matched = regex.test(url);
             } else {
@@ -595,27 +638,67 @@ Delegate.prototype.initialize = function(data, callback) {
             }
 
 			if (matched) {
-				options = {
-					site: {
-						domain: site,
-						config: this.siteConfigs[site]
-					},
-                    currentLogin: this.currentLogins[site],
-				};
-                sendMatchCallback();
-				return true;
+                return site;
 			}
 		}
-	} else {
-		callback(false);
 	}
+};
 
-    function sendMatchCallback() {
-        _this.refreshOptions({}, function() {
-            options.cyHost = _this.options.cy_url;
-            callback(options);
-        });
+Delegate.prototype.buildAnonymousSiteConfig = function(domain) {
+    return {
+        name: domain,
+        key: domain,
+        login: {},
+        logout: {
+            cookies: ['*']
+        },
+        isAnonymous: true
+    };
+};
+
+Delegate.prototype.buildAnonymousSiteOptionsForDomain = function(domain) {
+    var options = {
+        site: {
+            domain: domain,
+            config: this.buildAnonymousSiteConfig(domain)
+        },
+        currentLogin: this.currentLogins[domain]
+    };
+    return options;
+};
+
+Delegate.prototype.buildAnonymousSiteOptions = function(url) {
+    var parsedURL = Utils.url(url);
+    var domain = Utils.getDomainName(parsedURL.hostname);
+    return this.buildAnonymousSiteOptionsForDomain(domain);
+};
+
+Delegate.prototype.buildSiteOptions = function(site) {
+    var options = {
+        site: {
+            domain: site,
+            config: this.siteConfigs[site]
+        },
+        currentLogin: this.currentLogins[site],
+    };
+    options.site.config.isAnonymous = false;
+    return options;
+};
+
+Delegate.prototype.initialize = function(data, callback) {
+	var url = data.location.href.split('#')[0],
+        _this = this;
+
+    var options;
+    var site = this.findSiteConfig(url);
+    if (!site) {
+        options = this.buildAnonymousSiteOptions(url);
+    } else {
+        options = this.buildSiteOptions(site);
     }
-
+    _this.refreshOptions({}, function() {
+        options.cyHost = _this.options.cy_url;
+        callback(options);
+    });
     return true;
 };

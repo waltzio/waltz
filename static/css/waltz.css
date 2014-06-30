@@ -487,7 +487,116 @@
   font-size: 14px;
 }
 
-#waltz-login-wrapper {
+#waltz-login-wrapper.overlayed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+}
+#waltz-login-wrapper.overlayed.click-to-remove {
+  background: rgba(230, 230, 230, 0.6);
+}
+#waltz-login-wrapper.overlayed.waltz-remove {
+  display: none;
+}
+#waltz-login-wrapper.overlayed #waltz-login-button {
+  height: 100px;
+  width: 100px;
+  border-radius: 100px;
+  z-index: 2;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  position: relative;
+  top: 50%;
+  margin: auto;
+  margin-top: -50px;
+  cursor: pointer;
+  transition: 500ms all;
+}
+#waltz-login-wrapper.overlayed #waltz-login-button:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  top: 40%;
+}
+#waltz-login-wrapper.overlayed #waltz-login-button:hover:after {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  top: 60%;
+}
+#waltz-login-wrapper.overlayed #waltz-login-button #waltz-button-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  border-radius: 100px;
+  background-size: 100%;
+  background-position: 50%;
+  background-repeat: no-repeat;
+}
+#waltz-login-wrapper.overlayed #waltz-login-button:after {
+  content: " ";
+  width: 40px;
+  height: 80px;
+  position: absolute;
+  z-index: 1;
+  top: 10%;
+  left: 50%;
+  margin-left: -20px;
+  text-align: center;
+  background: white;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  box-sizing: border-box;
+  border-radius: 5px;
+  transition: 500ms all;
+  background-size: 40%;
+  background-position: 50% 85%;
+  background-repeat: no-repeat;
+  background-image: url("chrome-extension://__MSG_@@extension_id__/static/img/small-phone.png");
+}
+#waltz-login-wrapper.overlayed .waltz-dismiss {
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -80px;
+  margin-top: -10px;
+  border: 1px solid #aaaaaa;
+  color: #aaaaaa;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  cursor: pointer;
+}
+#waltz-login-wrapper.overlayed .waltz-dismiss:hover {
+  border-color: #909090;
+  color: #909090;
+}
+#waltz-login-wrapper.overlayed .waltz-dismiss:before {
+  content: "click to dismiss waltz";
+  position: absolute;
+  top: -20%;
+  right: 140%;
+  margin-left: -40px;
+  font-size: 12px;
+  line-height: 14px;
+  width: 80px;
+  text-align: right;
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  transition: 500ms all;
+  opacity: 0;
+}
+#waltz-login-wrapper.overlayed.hover .waltz-dismiss:before {
+  opacity: 1;
+}
+#waltz-login-wrapper.floating {
   position: fixed;
   top: 30px;
   right: 30px;
@@ -495,10 +604,10 @@
   width: 64px;
   height: 64px;
 }
-#waltz-login-wrapper.waltz-remove {
+#waltz-login-wrapper.floating.waltz-remove {
   right: -114px;
 }
-#waltz-login-wrapper #waltz-login-button {
+#waltz-login-wrapper.floating #waltz-login-button {
   height: 100%;
   width: 100%;
   background-repeat: no-repeat;
@@ -512,10 +621,10 @@
   -webkit-animation-duration: 4s;
   -webkit-animation-iteration-count: infinite;
 }
-#waltz-login-wrapper #waltz-login-button:hover {
+#waltz-login-wrapper.floating #waltz-login-button:hover {
   background-color: black;
 }
-#waltz-login-wrapper .waltz-button {
+#waltz-login-wrapper.floating .waltz-button {
   height: 20px;
   width: 20px;
   border-radius: 10px;
@@ -530,7 +639,7 @@
   margin: 0;
   min-width: 0;
 }
-#waltz-login-wrapper .waltz-button.waltz-dismiss {
+#waltz-login-wrapper.floating .waltz-button.waltz-dismiss {
   background-size: 100%;
   background-position: center center;
   background-color: transparent;
@@ -538,6 +647,6 @@
   right: -10px;
   transition: background-color 200ms;
 }
-#waltz-login-wrapper .waltz-button.waltz-dismiss:hover {
+#waltz-login-wrapper.floating .waltz-button.waltz-dismiss:hover {
   background-color: #dd0005;
 }

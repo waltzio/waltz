@@ -60,7 +60,9 @@ var Utils = {
             chrome.cookies.getAll(
                 { domain: domain },
                 function (cookies) {
-                    if (chrome.extension.lastError && attempts < 10) {
+                    var retry = (chrome.extension.lastError ||
+                        cookies === undefined || cookies === null);
+                    if (retry && attempts < 10) {
                         attempts++;
                         return setTimeout(getCookies, 500);
                     } else {
@@ -69,6 +71,17 @@ var Utils = {
                 }
             );
         })();
+    },
+    getDomainName: function(domain) {
+        var parts = domain.split('.').reverse();
+        var cnt = parts.length;
+        if (cnt >= 3) {
+            // see if the second level domain is a common SLD.
+            if (parts[1].match(/^(com|edu|gov|net|mil|org|nom|co|name|info|biz)$/i)) {
+                return parts[2] + '.' + parts[1] + '.' + parts[0];
+            }
+        }
+        return parts[1]+'.'+parts[0];
     },
     getURLParams: function () {
         var vars = {};
@@ -139,6 +152,21 @@ var Utils = {
             $el.removeClass('loading');
             $el.text(saveText);
         }
+    },
+    onFinishedTransitioning: function (el, style, cb) {
+        var $el = el,
+            initialValue = el.css(style);
+
+        setTimeout(function() {
+            if ($el.css(style) !== initialValue) {
+                $el.on('transitionend', function() {
+                    $el.off('transitionend');
+                    cb();
+                });
+            } else {
+                cb();
+            }
+        }, 200);
     },
     isEmail: function(email) {
         var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
