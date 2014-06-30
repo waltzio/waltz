@@ -356,10 +356,12 @@
         var $login;
         var $password;
         var $form;
+        var $submitButton;
         if (siteConfig.login.loginForm) {
             $form = siteConfig.login.loginForm.container;
             $login = siteConfig.login.loginForm.usernameField;
             $password = siteConfig.login.loginForm.passwordField;
+            $submitButton = siteConfig.login.loginForm.submitButton;
         } else {
             $login = findInput(siteConfig.login.usernameField);
             $password = findInput(siteConfig.login.passwordField);
@@ -425,8 +427,12 @@
             }
 
             // Trigger any event handlers (like validation)
-            $login.focus().val(data.username).change().blur();
-            $password.focus().val(data.password).change().blur();
+            $login.focus().val(data.username).keydown().keypress().keyup().change().blur();
+            $password.focus().val(data.password).keydown().keypress().keyup().change().blur();
+            // Force the submitButton to be enabled
+            if ($submitButton) {
+                $submitButton.prop('disabled', false);
+            }
 
             submitForm($form);
         } else {
@@ -495,9 +501,9 @@
                     // We disconnect the DOMObserver, since we don't want the
                     // overlay hiding to trigger the callback (and thus giving
                     // a false-positive error dialog for ajax logins)
-                    _this.DOMObserver.disconnect();
+                    if (_this.DOMObserver) _this.DOMObserver.disconnect();
                     $overlay.click();
-                    _this.DOMObserver.reconnect();
+                    if (_this.DOMObserver) _this.DOMObserver.reconnect();
                 }
 
                 // hack to fix issues where submit button
