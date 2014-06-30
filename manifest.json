@@ -35,6 +35,7 @@
       "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
       "static/js/vendor/mutation-summary.js",
+      "static/js/vendor/blur.js",
       "static/js/shared/utils.js",
       "static/js/shared/templater.js",
       "static/js/shared/storage.js",

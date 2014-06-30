@@ -70,12 +70,12 @@
             var page = _this.checkPage();
             _this.handlePage(page);
         });
-    }
+    };
 
     Waltz.prototype.handlePage = function(page) {
         // First, we need to figure out if the Waltz icon should be displayed.
-        var shouldKickOff = (page == "login" || 
-                (page == "unknown" && 
+        var shouldKickOff = (page == "login" ||
+                (page == "unknown" &&
                  !this.options.site.config.login.formOnly &&
                  !this.options.site.config.isAnonymous));
         if (shouldKickOff && !this.kickedOff) {
@@ -83,8 +83,8 @@
         } else if (page == "logged_in" && this.options.currentLogin) {
             this.trigger('loggedIn');
             this.acknowledgeLoginAttempt({ success: true });
-        } 
-    }
+        }
+    };
 
     Waltz.prototype.kickOff = function() {
         var _this = this;
@@ -121,7 +121,7 @@
         var _this = this;
         var page = _this.checkPage();
         this.handlePage(page);
-    }
+    };
 
     Waltz.prototype.widgetDismissed = function(e, data) {
         var _this = this;
@@ -498,13 +498,13 @@
 
                 var $overlay = $('#' + _this.CREDENTIAL_OVERLAY_ID);
                 if (!$overlay.is(':hidden')) {
-                    // We disconnect the DOMObserver, since we don't want the 
+                    // We disconnect the DOMObserver, since we don't want the
                     // overlay hiding to trigger the callback (and thus giving
                     // a false-positive error dialog for ajax logins)
                     if (_this.DOMObserver) _this.DOMObserver.disconnect();
                     $overlay.click();
                     if (_this.DOMObserver) _this.DOMObserver.reconnect();
-                } 
+                }
 
                 // hack to fix issues where submit button
                 // has name="submit" -- WAY TOO HARD
@@ -515,7 +515,7 @@
                     formSubmitted = false;
                 }
 
-                if (siteConfig.login.loginForm && 
+                if (siteConfig.login.loginForm &&
                     siteConfig.login.loginForm.submitButton.length) {
                     siteConfig.login.loginForm.submitButton.click();
                 } else {
@@ -546,7 +546,7 @@
             }
         });
 
-    }
+    };
 
     Waltz.prototype.checkAuthentication = function(continueCallback, noUserCallback) {
         var _this = this;
@@ -693,7 +693,7 @@
     //Draws the waltz widget and binds the interactions
     Waltz.prototype.showWidget = function(form) {
         var _this = this,
-            $waltzCircle;
+            $button;
 
         var attemptLogin = function() {
 
@@ -715,7 +715,7 @@
                 }
                 else {
                     _this.showThirdPartyCookieMessage();
-                    $waltzCircle.one('click', attemptLogin);
+                    $button.one('click', attemptLogin);
                 }
             });
         };
@@ -723,58 +723,124 @@
         if (this.$widget) {
             if (this.$widget.hasClass('waltz-remove')) {
                 this.$widget.removeClass('waltz-remove');
-                $waltzCircle = $('#'+this.MAIN_BUTTON_ID);
-                $waltzCircle.one('click', attemptLogin);
+                $button = $('#'+this.MAIN_BUTTON_ID);
+                $button.one('click', attemptLogin);
                 this.trigger('show.widget');
             }
             return;
         }
 
 
-        //Grab image resource URLs from extensions API
-        var wSource = chrome.extension.getURL("/static/img/waltz-128.png");
-        var pSource = chrome.extension.getURL("/static/img/pencil.png");
-        var xSource = chrome.extension.getURL("/static/img/x.png");
+        var loginForm = this.options.site.config.login.loginForm;
 
         //Build HTML for clef widget
         var $widget = $("<div id='" + this.MAIN_BUTTON_CONTAINER_ID + "'></div>");
-        var $waltzActions = $(
-            "<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
-            );
 
-        $waltzCircle = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
+        if (loginForm) {
+            $widget.addClass('overlayed');
 
-        $widget.append($waltzCircle, $waltzActions);
-        //Style the widget with the correct image resource
-        $waltzCircle.css({
-            "background-image": "url("+wSource+")"
-        });
+            var $wrapper = loginForm.container.wrap('<div>').parent();
+            $wrapper.css({ position: 'relative' });
+
+            var height = loginForm.container.outerHeight(),
+                width = loginForm.container.outerWidth(),
+                top = loginForm.container.offset().top,
+                left = loginForm.container.offset().left;
+
+            var blur = loginForm.container.Vague({intensity: 4 });
+            blur.blur();
+
+            $button = $("<div>").attr('id', this.MAIN_BUTTON_ID);
+
+            var $background = $('<div>');
+            $background
+                .attr('id', 'waltz-button-background')
+                .css({
+                    'background-image': 'url(' + chrome.extension.getURL('/static/img/waltz-128.png') + ')'
+                });
+
+            var $dismiss = $('<div>&times;</div>').addClass('waltz-dismiss');
+
+            $button.append($background);
+            $widget.append($dismiss);
+            $widget.append($button);
+            $wrapper.append($widget);
+
+            var hoverTimeout;
+            $button.hover(function(e) {
+                clearTimeout(hoverTimeout);
+                $wrapper.trigger('mouseleave');
+            }, function() { $wrapper.trigger('mouseenter'); });
+
+            $wrapper.hover(function() {
+                hoverTimeout = setTimeout(function() {
+                    $widget.addClass('hover');
+                }, 300);
+            }, function() {
+                clearTimeout(hoverTimeout);
+                $widget.removeClass ('hover');
+            });
+
+            $widget.add($dismiss).click(function(e) {
+                e.stopPropagation();
+                $wrapper.off('mouseenter').off('mouseleave');
+                blur.unblur();
+                clearTimeout(hoverTimeout);
+                _this.dismiss();
+            });
+
+        } else {
+            $widget.addClass('floating');
+            //Grab image resource URLs from extensions API
+            var wSource = chrome.extension.getURL("/static/img/waltz-128.png");
+            var xSource = chrome.extension.getURL("/static/img/x.png");
+            var $waltzActions = $(
+                "<button style='background-image:url("+xSource+");' class='waltz-button waltz-dismiss'></button>"
+                );
+
+            $button = $("<div id='" + this.MAIN_BUTTON_ID + "'></div>");
+
+            $widget.append($button, $waltzActions);
+            //Style the widget with the correct image resource
+            $button.css({
+                "background-image": "url("+wSource+")"
+            });
+
+            $("body").append($widget);
+
+            $widget.find(".waltz-dismiss").click(function(e) {
+                e.stopPropagation();
+                _this.dismiss();
+            });
+        }
 
         $(document).ready(this.loadIFrame.bind(this));
 
-        $waltzCircle.one('click', attemptLogin);
-
-        $widget.find(".waltz-dismiss").click(function(e) {
+        $button.one('click', function(e) {
             e.stopPropagation();
-            _this.storage.getDismissalsForSite(_this.options.site.config.key, function(dismissals) {
-                dismissals.count = (dismissals.count || 0) + 1;
-                _this.storage.setDismissalsForSite(
-                    _this.options.site.config.key,
-                    dismissals
-                );
-
-                _this.trigger('widget.dismissed', { dismissals: dismissals.count });
-
-            });
-
-            _this.hideWidget({ remove: true });
+            attemptLogin();
         });
 
-        $("body").append($widget);
         this.$widget = $widget;
         this.trigger('show.widget');
 
         _this.analytics.trackEvent("Show widget");
+    };
+
+    Waltz.prototype.dismiss = function() {
+        var _this = this;
+         this.storage.getDismissalsForSite(this.options.site.config.key, function(dismissals) {
+            dismissals.count = (dismissals.count || 0) + 1;
+            _this.storage.setDismissalsForSite(
+                _this.options.site.config.key,
+                dismissals
+            );
+
+            _this.trigger('widget.dismissed', { dismissals: dismissals.count });
+
+        });
+
+        this.hideWidget({ remove: true });
     };
 
     Waltz.prototype.hideWidget = function(opts) {
@@ -934,7 +1000,7 @@
             passwordField: $passwordField,
             submitButton: $submitButton
         };
-    }
+    }   ;
 
     chrome.runtime.sendMessage({
         method: "initialize",
@@ -943,7 +1009,7 @@
         new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
             var pageSettings = dismissals.pages || {};
             var pathSettings = pageSettings[window.location.pathname];
-            if (!dismissals.dismissedForever && 
+            if (!dismissals.dismissedForever &&
                 !(pathSettings && pathSettings.dismissed)) {
                 var waltz = new Waltz(options);
             }

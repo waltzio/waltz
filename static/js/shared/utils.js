@@ -60,7 +60,7 @@ var Utils = {
             chrome.cookies.getAll(
                 { domain: domain },
                 function (cookies) {
-                    var retry = (chrome.extension.lastError || 
+                    var retry = (chrome.extension.lastError ||
                         cookies === undefined || cookies === null);
                     if (retry && attempts < 10) {
                         attempts++;
@@ -152,6 +152,21 @@ var Utils = {
             $el.removeClass('loading');
             $el.text(saveText);
         }
+    },
+    onFinishedTransitioning: function (el, style, cb) {
+        var $el = el,
+            initialValue = el.css(style);
+
+        setTimeout(function() {
+            if ($el.css(style) !== initialValue) {
+                $el.on('transitionend', function() {
+                    $el.off('transitionend');
+                    cb();
+                });
+            } else {
+                cb();
+            }
+        }, 200);
     },
     isEmail: function(email) {
         var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;

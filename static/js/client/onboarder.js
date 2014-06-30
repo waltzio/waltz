@@ -236,7 +236,7 @@ Onboarder.prototype.showWidget = function() {
             text = "Click this button to log in!";
         }
 
-        onFinishedTransitioning($widget, "right", function() {
+        Utils.onFinishedTransitioning($widget, "right", function() {
 
             $message.find('p').text(text);
 
@@ -269,7 +269,7 @@ Onboarder.prototype.showCredentialOverlay = function() {
         text = "Type your username and password to securely store them with Waltz.";
     }
 
-    onFinishedTransitioning($credentialForm, 'margin-top', function() {
+    Utils.onFinishedTransitioning($credentialForm, 'margin-top', function() {
         $message.find('p').text(text);
 
         $message.attr('class', 'top-arrow floating');
@@ -373,20 +373,3 @@ Onboarder.prototype.secondSiteSetup = function() {
 
     return numSites === 2;
 };
-
-// adds a 50 millisecond delay
-function onFinishedTransitioning(el, style, cb) {
-    var $el = el,
-        initialValue = el.css(style);
-
-    setTimeout(function() {
-        if ($el.css(style) !== initialValue) {
-            $el.on('transitionend', function() {
-                $el.off('transitionend');
-                cb();
-            });
-        } else {
-            cb();
-        }
-    }, 200);
-}
