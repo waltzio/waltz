@@ -14,7 +14,7 @@
             "twoFactor": [
                 {
                     "url": "https://www.facebook.com/checkpoint/",
-                    "check": "input[name='approvals_code']"
+                    "check": "input[name='approvals_code'], form.checkpoint"
                 }     
             ]
         }
