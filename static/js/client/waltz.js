@@ -989,6 +989,9 @@
         var $submitButton = $loginForm.find("input[type='submit'], button").first();
 
         var $emailField = $loginForm.find("input[type='email']");
+
+        if ($usernameField.length + $emailField.length > 1) return;
+
         if ($emailField.length) $usernameField = $emailField.first();
 
         var commonUsernameClasses = ['login', 'uid', 'email', 'user', 'username'];
