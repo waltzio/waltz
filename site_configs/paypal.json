@@ -6,17 +6,25 @@
             "cookies": ["HaC80bwXscjqZ7KM6VOxULOB534"]
         },
         "login": {
-            "urls": ["https://www.paypal.com/us/cgi-bin/webscr?cmd=_account"],
+            "urls": [
+                "https://www.paypal.com/us/cgi-bin/webscr?cmd=_account", 
+                "https://www.paypal.com/us/home",
+                "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit"
+            ],
             "formURL": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
             "method": "POST",
             "usernameField": "login_email",
             "passwordField": "login_password",
             "hasHiddenInputs": true,
-            "check": "li.logout, a:contains('Log Out'), ul#nav-global-loggedin, a#logout-button",
+            "check": "li.logout, h2:contains('Logging in'), a:contains('Log Out'), ul#nav-global-loggedin, a#logout-button",
             "twoFactor": [
                 {
                     "url": "https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-submit",
-                    "check": "input[name='otp']"
+                    "check": "input[name='otp'], #securityCode"
+                },
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_login-submit",
+                    "check": "input[name='otp'], #securityCode"
                 }
             ]
         }
