@@ -15,7 +15,7 @@ Delegate.prototype.options.configURL = "https://raw.github.com/waltzio/waltz/mas
 Delegate.prototype.options.backupConfigURL = chrome.extension.getURL("build/site_configs.json");
 
 if (Delegate.prototype.DEBUG) {
-	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
+    Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
     debug.enable('waltz:*');
 }
 
