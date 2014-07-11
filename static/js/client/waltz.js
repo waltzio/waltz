@@ -135,6 +135,8 @@
                     log('kicking off...');
                     _this.pageIsBeingHandled.resolve();
                     _this.kickOff();
+                } else {
+                    _this.pageIsBeingHandled.resolve();
                 }
             }
         }
@@ -843,7 +845,7 @@
                 blur.unblur();
                 _this.blurred = false;
                 clearTimeout(hoverTimeout);
-                _this.dismiss();
+                _this.hideWidget();
             });
 
         } else {
