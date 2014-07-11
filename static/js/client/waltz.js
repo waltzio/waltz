@@ -17,6 +17,7 @@
 
     Waltz.prototype.DISMISSAL_THRESHOLD = 1;
 
+    var log = debug('debug:waltz');
 
     function Waltz(opts) {
         // If there are no opts, Waltz is not supported on this site
@@ -36,8 +37,6 @@
 
         this.addDOMObservers();
 
-        var page = this.checkPage();
-        this.handlePage(page);
         this.on('widget.dismissed', this.widgetDismissed.bind(this));
     }
 
@@ -73,16 +72,58 @@
     };
 
     Waltz.prototype.handlePage = function(page) {
-        // First, we need to figure out if the Waltz icon should be displayed.
-        var shouldKickOff = (page == "login" ||
-                (page == "unknown" &&
-                 !this.options.site.config.login.formOnly &&
-                 !this.options.site.config.isAnonymous));
-        if (shouldKickOff && !this.kickedOff) {
-            this.kickOff();
-        } else if (page == "logged_in" && this.options.currentLogin) {
-            this.trigger('loggedIn');
-            this.acknowledgeLoginAttempt({ success: true });
+        var _this = this;
+
+        // If there is as login in progress, mark it as a success or failure.
+        if (_this.options.currentLogin) {
+            log('currentLogin present');
+            // Login has definitely failed.
+            if (page == "login") {
+                log('on login page');
+                if (!_this.iframe) {
+                    _this.loadIFrame();
+                }
+                // Check that the user is still logged in before showing the
+                // credential form
+                _this.checkAuthentication(function() {
+                    var errorMessage = "Invalid username and password.";
+                    _this.acknowledgeLoginAttempt({ success: false });
+                    _this.showWidget();
+                    _this.requestCredentials(errorMessage);
+                }, function() {
+                    // If the user has logged out, then acknowledge the
+                    // existing login attempt to reset login state
+                    _this.acknowledgeLoginAttempt({ success: true });
+                    _this.showWidget();
+                });
+            } 
+            // Login has definitely succeeded.
+            else if (page == "logged_in") {
+                log('on logged in page');
+                this.trigger('loggedIn');
+                this.acknowledgeLoginAttempt({ success: true });
+            } 
+            // Login has probably succeeded.
+            // However, we delay the acknowledgement to ensure any
+            // dynamically loaded login/error forms have a chance to load.
+            else if (page == "unknown" && !this.waiting) {
+                this.waiting = true;
+                log('on unknown page... waiting');
+                this.acknowledgeLoginAttempt({ success: true, delay: 500 });
+            }
+        } 
+        // No login is in progress
+        else {
+            log('no login in progress');
+            // Show the widget if the page has a login form or is configured
+            var shouldKickOff = (page == "login" ||
+                    (page == "unknown" &&
+                    !this.options.site.config.login.formOnly &&
+                    !this.options.site.config.isAnonymous));
+            if (shouldKickOff && !this.kickedOff) {
+                log('kicking off...');
+                this.kickOff();
+            }
         }
     };
 
@@ -94,23 +135,7 @@
         _this.storage.getCredentialsForDomain(_this.options.site.config.key, function (creds) {
 
             _this.loginCredentials = creds;
-
-            if (_this.options.currentLogin) {
-                if (!_this.iframe) {
-                    _this.loadIFrame();
-                }
-                _this.checkAuthentication(function() {
-                    var errorMessage = "Invalid username and password.";
-                    _this.acknowledgeLoginAttempt({ success: false });
-                    _this.showWidget();
-                    _this.requestCredentials(errorMessage);
-                }, function() {
-                    _this.acknowledgeLoginAttempt({ success: true });
-                    _this.showWidget();
-                });
-            } else {
-                _this.showWidget();
-            }
+            _this.showWidget();
 
             window.addEventListener('message', _this.closeIFrame.bind(_this));
             window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
@@ -206,20 +231,31 @@
     };
 
     Waltz.prototype.acknowledgeLoginAttempt = function(opts) {
-        if (this.options.currentLogin) {
-            if (opts.success) {
-                this.trigger('login.success');
-                if (this.$widget) this.hideWidget();
-            } else {
-                this.trigger('login.failure');
+        var _this = this;
+        var acknowledge = function() {
+            if (_this.waiting) _this.waiting = false;
+            if (_this.options.currentLogin) {
+                if (opts.success) {
+                    log('acknowledge login success');
+                    _this.trigger('login.success');
+                    if (_this.$widget) _this.hideWidget();
+                } else {
+                    log('acknowledge login failure');
+                    _this.trigger('login.failure');
+                }
+                chrome.runtime.sendMessage({
+                    method: "acknowledgeLoginAttempt",
+                    domain: _this.options.site.domain,
+                    key: _this.options.site.config.key,
+                    successful: opts.success
+                });
+                _this.options.currentLogin = null;
             }
-            chrome.runtime.sendMessage({
-                method: "acknowledgeLoginAttempt",
-                domain: this.options.site.domain,
-                key: this.options.site.config.key,
-                successful: opts.success
-            });
-            this.options.currentLogin = null;
+        }
+        if (opts.delay) {
+            setTimeout(acknowledge, opts.delay);
+        } else {
+            acknowledge();
         }
     };
 
@@ -391,30 +427,29 @@
                 $newPassword = $password.clone();
 
                 // Position the cloned login fields precisely over the actual ones
-                var loginPosition = $login.offset();
-                $newLogin.attr('style', getComputedStyle($login[0]).cssText);
+                var loginPosition = $login.position();
                 $newLogin.css({
                     position: 'absolute',
                     top: loginPosition.top,
                     left: loginPosition.left,
-                    'z-index': 1000
+                    width: $login.css('width'),
+                    height: $login.css('height'),
+                    'margin-left': $login.css('margin-left'),
+                    'margin-top': $login.css('margin-top')
                 });
-                var passwordPosition = $password.offset();
-                $newPassword.attr('style', getComputedStyle($password[0]).cssText);
+                var passwordPosition = $password.position();
                 $newPassword.css({
                     position: 'absolute',
                     top: passwordPosition.top,
                     left: passwordPosition.left,
-                    'z-index': 1000
+                    width: $password.css('width'),
+                    height: $password.css('height'),
+                    'margin-left': $password.css('margin-left'),
+                    'margin-top': $password.css('margin-top')
                 });
 
-                if (_this.blurred) {
-                    $newLogin.Vague({intensity: 4}).blur();
-                    $newPassword.Vague({intensity: 4}).blur();
-                }
-
-                $('body').append($newLogin);
-                $('body').append($newPassword);
+                $newLogin.insertAfter($login);
+                $newPassword.insertAfter($password);
 
                 $newLogin.attr('id', _this.CLONED_USERNAME_ID);
                 $newPassword.attr('id', _this.CLONED_PASSWORD_ID);
@@ -504,12 +539,14 @@
                     // a false-positive error dialog for ajax logins)
                     if (_this.DOMObserver) _this.DOMObserver.disconnect();
                     $overlay.click();
-                    if (_this.DOMObserver) _this.DOMObserver.reconnect();
                 }
 
                 // hack to fix issues where submit button
                 // has name="submit" -- WAY TOO HARD
-                if (typeof($form[0].submit) !== "function") {
+                var hasInputNamedSubmit = function(form) { 
+                    return typeof(form.submit != "function"); 
+                };
+                if (_.some($form, hasInputNamedSubmit)) {
                     $form = $form.clone();
                     $form.find('input[name="submit"], #submit').remove();
                     $form.css('display', 'none');
@@ -534,16 +571,14 @@
             method: "hasOngoingAJAXRequest"
         }, function(hasOngoingRequest) {
             if (!hasOngoingRequest) {
+                log('showLoginError');
                 _this.options.site.config.login.loginForm.container.find('input').val('');
                 var $clonedFields = $('#' + _this.CLONED_USERNAME_ID)
                     .add($('#' + _this.CLONED_PASSWORD_ID));
                 $clonedFields.remove();
                 var page = _this.checkPage();
-                if (page == "login") {
-                    var errorMessage = "Invalid username and password.";
-                    _this.acknowledgeLoginAttempt({ success: false });
-                    _this.requestCredentials(errorMessage);
-                }
+                _this.handlePage(page);
+                if (_this.DOMObserver) _this.DOMObserver.reconnect();
             }
         });
 
@@ -749,7 +784,6 @@
                 left = loginForm.container.offset().left;
 
             var blur = loginForm.container.Vague({intensity: 4 });
-            _this.blurred = true;
             blur.blur();
 
             $button = $("<div>").attr('id', this.MAIN_BUTTON_ID);
@@ -788,7 +822,6 @@
                 e.stopPropagation();
                 $wrapper.off('mouseenter').off('mouseleave');
                 blur.unblur();
-                _this.blurred = false;
                 clearTimeout(hoverTimeout);
                 _this.dismiss();
             });
@@ -869,7 +902,7 @@
                 siteConfig.login.loginForm = loginForm;
                 return "login";
             } else {
-                return "logged_in";
+                return "unknown";
             }
         }
 
@@ -984,20 +1017,11 @@
         });
 
         if (!$loginForm) return null;
-
-        // Don't detect a form if there is a Clef login button on the page
-        if ($('iframe[src^="https://clef.io/iframes/button"').length) return;
-
-        // Don't detect a form that has more than one text/email input
-        if ($loginForm.find("input[type='text']:visible").length + 
-            $loginForm.find("input[type='email']:visible").length > 1) return;
-
         var $usernameField = $loginForm.find("input[type='text']").first();
         var $passwordField = $loginForm.find("input[type='password']").first();
         var $submitButton = $loginForm.find("input[type='submit'], button").first();
 
         var $emailField = $loginForm.find("input[type='email']");
-
         if ($emailField.length) $usernameField = $emailField.first();
 
         var commonUsernameClasses = ['login', 'uid', 'email', 'user', 'username'];
@@ -1019,6 +1043,9 @@
         method: "initialize",
         location: document.location
     }, function(options) {
+        if (options.debug) {
+            debug.enable('debug:*');
+        }
         new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
             var pageSettings = dismissals.pages || {};
             var pathSettings = pageSettings[window.location.pathname];

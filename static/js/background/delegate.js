@@ -16,6 +16,7 @@ Delegate.prototype.options.backupConfigURL = chrome.extension.getURL("build/site
 
 if (Delegate.prototype.DEBUG) {
 	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
+    debug.enable('debug:*');
 }
 
 function Delegate(opts) {
@@ -207,7 +208,7 @@ Delegate.prototype.getSiteConfigs = function(request, cb) {
      return true;
 };
 
-Delegate.prototype.acknowledgeLoginAttempt = function(request) {
+Delegate.prototype.acknowledgeLoginAttempt = function(request, cb) {
 
     if (request.successful) {
         // If the login is successful, let's refresh other potential tabs
@@ -225,6 +226,8 @@ Delegate.prototype.acknowledgeLoginAttempt = function(request) {
     }
 
     delete(this.currentLogins[request.domain]);
+
+    if (typeof(cb) == "function") cb();
 };
 
 Delegate.prototype.login = function(request, cb) {
@@ -698,6 +701,7 @@ Delegate.prototype.initialize = function(data, callback) {
     }
     _this.refreshOptions({}, function() {
         options.cyHost = _this.options.cy_url;
+        options.debug = Delegate.prototype.DEBUG;
         callback(options);
     });
     return true;
