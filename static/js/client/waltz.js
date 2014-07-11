@@ -17,7 +17,7 @@
 
     Waltz.prototype.DISMISSAL_THRESHOLD = 1;
 
-    var log = debug('debug:waltz');
+    var log = debug('waltz:waltz.js');
 
     function Waltz(opts) {
         // If there are no opts, Waltz is not supported on this site
@@ -1059,7 +1059,7 @@
         location: document.location
     }, function(options) {
         if (options.debug) {
-            debug.enable('debug:*');
+            debug.enable('waltz:*');
         }
         new Storage().getDismissalsForSite(options.site.config.key, function(dismissals) {
             var pageSettings = dismissals.pages || {};

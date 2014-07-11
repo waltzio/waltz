@@ -16,7 +16,7 @@ Delegate.prototype.options.backupConfigURL = chrome.extension.getURL("build/site
 
 if (Delegate.prototype.DEBUG) {
 	Delegate.prototype.options.configURL = Delegate.prototype.options.backupConfigURL;
-    debug.enable('debug:*');
+    debug.enable('waltz:*');
 }
 
 function Delegate(opts) {
