@@ -443,29 +443,30 @@
                 $newPassword = $password.clone();
 
                 // Position the cloned login fields precisely over the actual ones
-                var loginPosition = $login.position();
+                var loginPosition = $login.offset();
+                $newLogin.attr('style', getComputedStyle($login[0]).cssText);
                 $newLogin.css({
                     position: 'absolute',
                     top: loginPosition.top,
                     left: loginPosition.left,
-                    width: $login.css('width'),
-                    height: $login.css('height'),
-                    'margin-left': $login.css('margin-left'),
-                    'margin-top': $login.css('margin-top')
+                    'z-index': 1000
                 });
-                var passwordPosition = $password.position();
+                var passwordPosition = $password.offset();
+                $newPassword.attr('style', getComputedStyle($password[0]).cssText);
                 $newPassword.css({
                     position: 'absolute',
                     top: passwordPosition.top,
                     left: passwordPosition.left,
-                    width: $password.css('width'),
-                    height: $password.css('height'),
-                    'margin-left': $password.css('margin-left'),
-                    'margin-top': $password.css('margin-top')
+                    'z-index': 1000
                 });
 
-                $newLogin.insertAfter($login);
-                $newPassword.insertAfter($password);
+                if (_this.blurred) {
+                    $newLogin.Vague({intensity: 4}).blur();
+                    $newPassword.Vague({intensity: 4}).blur();
+                }
+
+                $('body').append($newLogin);
+                $('body').append($newPassword);
 
                 $newLogin.attr('id', _this.CLONED_USERNAME_ID);
                 $newPassword.attr('id', _this.CLONED_PASSWORD_ID);
@@ -801,6 +802,7 @@
                 left = loginForm.container.offset().left;
 
             var blur = loginForm.container.Vague({intensity: 4 });
+            this.blurred = true;
             blur.blur();
 
             $button = $("<div>").attr('id', this.MAIN_BUTTON_ID);
@@ -839,6 +841,7 @@
                 e.stopPropagation();
                 $wrapper.off('mouseenter').off('mouseleave');
                 blur.unblur();
+                _this.blurred = true;
                 clearTimeout(hoverTimeout);
                 _this.dismiss();
             });
