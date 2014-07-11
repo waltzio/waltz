@@ -17,6 +17,7 @@
     "scripts": [
       "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
+      "static/js/vendor/debug.js",
       "static/js/vendor/pubnub.js",
       "static/js/shared/utils.js",
       "static/js/vendor/raven.min.js",
@@ -34,6 +35,7 @@
     "js": [
       "static/js/vendor/lodash.min.js",
       "static/js/vendor/jquery.min.js",
+      "static/js/vendor/debug.js",
       "static/js/vendor/mutation-summary.js",
       "static/js/vendor/blur.js",
       "static/js/shared/utils.js",
