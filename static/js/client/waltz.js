@@ -841,7 +841,7 @@
                 e.stopPropagation();
                 $wrapper.off('mouseenter').off('mouseleave');
                 blur.unblur();
-                _this.blurred = true;
+                _this.blurred = false;
                 clearTimeout(hoverTimeout);
                 _this.dismiss();
             });
@@ -1037,6 +1037,14 @@
         });
 
         if (!$loginForm) return null;
+        // Don't detect a form if there is a Clef login button on the page
+        if ($('iframe[src^="https://clef.io/iframes/button"').length) return;
+
+        // Don't detect a form that has more than one text/email input
+        if ($loginForm.find("input[type='text']:visible").length +
+            $loginForm.find("input[type='email']:visible").length > 1) return;
+
+
         var $usernameField = $loginForm.find("input[type='text']").first();
         var $passwordField = $loginForm.find("input[type='password']").first();
         var $submitButton = $loginForm.find("input[type='submit'], button").first();
