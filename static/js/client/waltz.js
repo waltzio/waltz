@@ -119,6 +119,8 @@
                     log('on unknown page... waiting');
                     _this.acknowledgeLoginAttempt({ success: true, delay: 500 });
                     _this.pageIsBeingHandled.resolve();
+                } else {
+                    _this.pageIsBeingHandled.resolve();
                 }
             }
             // No login is in progress
