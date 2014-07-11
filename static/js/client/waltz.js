@@ -74,56 +74,70 @@
     Waltz.prototype.handlePage = function(page) {
         var _this = this;
 
-        // If there is as login in progress, mark it as a success or failure.
-        if (_this.options.currentLogin) {
-            log('currentLogin present');
-            // Login has definitely failed.
-            if (page == "login") {
-                log('on login page');
-                if (!_this.iframe) {
-                    _this.loadIFrame();
+        function execute() {
+            _this.pageIsBeingHandled = $.Deferred();
+            // If there is as login in progress, mark it as a success or failure.
+            if (_this.options.currentLogin) {
+                log('currentLogin present');
+                // Login has definitely failed.
+                if (page == "login") {
+                    log('on login page');
+                    if (!_this.iframe) {
+                        _this.loadIFrame();
+                    }
+                    // Check that the user is still logged in before showing the
+                    // credential form
+                    _this.checkAuthentication(function() {
+                        var errorMessage = "Invalid username and password.";
+                        _this.acknowledgeLoginAttempt({ success: false });
+                        _this.showWidget();
+                        _this.requestCredentials(errorMessage);
+                        _this.pageIsBeingHandled.resolve();
+                    }, function() {
+                        // If the user has logged out, then acknowledge the
+                        // existing login attempt to reset login state
+                        _this.acknowledgeLoginAttempt({ success: true });
+                        _this.showWidget();
+                        _this.pageIsBeingHandled.resolve();
+                    });
                 }
-                // Check that the user is still logged in before showing the
-                // credential form
-                _this.checkAuthentication(function() {
-                    var errorMessage = "Invalid username and password.";
-                    _this.acknowledgeLoginAttempt({ success: false });
-                    _this.showWidget();
-                    _this.requestCredentials(errorMessage);
-                }, function() {
-                    // If the user has logged out, then acknowledge the
-                    // existing login attempt to reset login state
+                // Login has definitely succeeded.
+                else if (page == "logged_in") {
+                    log('on logged in page');
+                    _this.trigger('loggedIn');
                     _this.acknowledgeLoginAttempt({ success: true });
-                    _this.showWidget();
-                });
-            } 
-            // Login has definitely succeeded.
-            else if (page == "logged_in") {
-                log('on logged in page');
-                this.trigger('loggedIn');
-                this.acknowledgeLoginAttempt({ success: true });
-            } 
-            // Login has probably succeeded.
-            // However, we delay the acknowledgement to ensure any
-            // dynamically loaded login/error forms have a chance to load.
-            else if (page == "unknown" && !this.waiting) {
-                this.waiting = true;
-                log('on unknown page... waiting');
-                this.acknowledgeLoginAttempt({ success: true, delay: 500 });
+                    _this.pageIsBeingHandled.resolve();
+                }
+                // Login has probably succeeded.
+                // However, we delay the acknowledgement to ensure any
+                // dynamically loaded login/error forms have a chance to load.
+                else if (page == "unknown" && !_this.waiting) {
+                    _this.waiting = true;
+                    log('on unknown page... waiting');
+                    _this.acknowledgeLoginAttempt({ success: true, delay: 500 });
+                    _this.pageIsBeingHandled.resolve();
+                }
             }
-        } 
-        // No login is in progress
-        else {
-            log('no login in progress');
-            // Show the widget if the page has a login form or is configured
-            var shouldKickOff = (page == "login" ||
-                    (page == "unknown" &&
-                    !this.options.site.config.login.formOnly &&
-                    !this.options.site.config.isAnonymous));
-            if (shouldKickOff && !this.kickedOff) {
-                log('kicking off...');
-                this.kickOff();
+            // No login is in progress
+            else {
+                log('no login in progress');
+                // Show the widget if the page has a login form or is configured
+                var shouldKickOff = (page == "login" ||
+                        (page == "unknown" &&
+                        !_this.options.site.config.login.formOnly &&
+                        !_this.options.site.config.isAnonymous));
+                if (shouldKickOff && !_this.kickedOff) {
+                    log('kicking off...');
+                    _this.pageIsBeingHandled.resolve();
+                    _this.kickOff();
+                }
             }
+        }
+
+        if (this.pageIsBeingHandled) {
+            $.when(this.pageIsBeingHandled).then(execute);
+        } else {
+            execute();
         }
     };
 
@@ -543,8 +557,8 @@
 
                 // hack to fix issues where submit button
                 // has name="submit" -- WAY TOO HARD
-                var hasInputNamedSubmit = function(form) { 
-                    return typeof(form.submit != "function"); 
+                var hasInputNamedSubmit = function(form) {
+                    return typeof(form.submit != "function");
                 };
                 if (_.some($form, hasInputNamedSubmit)) {
                     $form = $form.clone();
