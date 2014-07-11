@@ -38,6 +38,9 @@
         this.addDOMObservers();
 
         this.on('widget.dismissed', this.widgetDismissed.bind(this));
+
+        window.addEventListener('message', this.closeIFrame.bind(this));
+        window.addEventListener('message', this.thirdPartyCookiesCheck.bind(this));
     }
 
     Waltz.prototype.addDOMObservers = function() {
@@ -150,9 +153,6 @@
 
             _this.loginCredentials = creds;
             _this.showWidget();
-
-            window.addEventListener('message', _this.closeIFrame.bind(_this));
-            window.addEventListener('message', _this.thirdPartyCookiesCheck.bind(_this));
         });
     };
 
@@ -752,6 +752,7 @@
             if (!_this.iframe) {
                 _this.loadIFrame();
             }
+
             $.when(_this.thirdPartyCookiesChecked).then(function(enabled) {
                 if (enabled) {
                     _this.checkAuthentication(function() {
