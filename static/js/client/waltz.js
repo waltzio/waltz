@@ -882,8 +882,6 @@
 
         this.$widget = $widget;
         this.trigger('show.widget');
-
-        _this.analytics.trackEvent("Show widget");
     };
 
     Waltz.prototype.dismiss = function() {
