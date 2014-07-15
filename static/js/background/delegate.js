@@ -151,15 +151,6 @@ Delegate.prototype.init = function(options) {
 
     // bind the router
     chrome.runtime.onMessage.addListener(this.router.bind(this));
-    window.addEventListener('online', function() {
-        setTimeout(function() {
-            _this.checkAuthentication(function(data) {
-                if (!data.user) {
-                    _this.logout({ silent: true });
-                }
-            });
-        }, 2000);
-    });
 
     // when the configs are done loading, blast off, baby!
     $.when(this.configsLoaded).then(kickOff);
