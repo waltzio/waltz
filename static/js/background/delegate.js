@@ -151,15 +151,6 @@ Delegate.prototype.init = function(options) {
 
     // bind the router
     chrome.runtime.onMessage.addListener(this.router.bind(this));
-    window.addEventListener('online', function() {
-        setTimeout(function() {
-            _this.checkAuthentication(function(data) {
-                if (!data.user) {
-                    _this.logout({ silent: true });
-                }
-            });
-        }, 2000);
-    });
 
     // when the configs are done loading, blast off, baby!
     $.when(this.configsLoaded).then(kickOff);
@@ -401,17 +392,19 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
     var promises = logoutDomains.map(function(domain) {
         var promise = $.Deferred();
         Utils.getCookiesForDomain(domain, function removeCookies(cookies) {
-            $.each(cookies, function(i, cookie) {
-                var shouldDelete = (deleteAllCookies ||
-                    cookiesToDelete.indexOf(cookie.name) != -1);
-                if (shouldDelete) {
-                    chrome.cookies.remove({
-                        url: Utils.extrapolateUrlFromCookie(cookie),
-                        name: cookie.name
-                    });
-                }
-            });
-            promise.resolve();
+            if (cookies) {
+                $.each(cookies, function(i, cookie) {
+                    var shouldDelete = (deleteAllCookies ||
+                        cookiesToDelete.indexOf(cookie.name) != -1);
+                    if (shouldDelete) {
+                        chrome.cookies.remove({
+                            url: Utils.extrapolateUrlFromCookie(cookie),
+                            name: cookie.name
+                        });
+                    }
+                });
+            }
+           promise.resolve();
         });
         return promise;
     });
