@@ -392,17 +392,19 @@ Delegate.prototype.logOutOfSite = function(opts, cb) {
     var promises = logoutDomains.map(function(domain) {
         var promise = $.Deferred();
         Utils.getCookiesForDomain(domain, function removeCookies(cookies) {
-            $.each(cookies, function(i, cookie) {
-                var shouldDelete = (deleteAllCookies ||
-                    cookiesToDelete.indexOf(cookie.name) != -1);
-                if (shouldDelete) {
-                    chrome.cookies.remove({
-                        url: Utils.extrapolateUrlFromCookie(cookie),
-                        name: cookie.name
-                    });
-                }
-            });
-            promise.resolve();
+            if (cookies) {
+                $.each(cookies, function(i, cookie) {
+                    var shouldDelete = (deleteAllCookies ||
+                        cookiesToDelete.indexOf(cookie.name) != -1);
+                    if (shouldDelete) {
+                        chrome.cookies.remove({
+                            url: Utils.extrapolateUrlFromCookie(cookie),
+                            name: cookie.name
+                        });
+                    }
+                });
+            }
+           promise.resolve();
         });
         return promise;
     });
