@@ -164,8 +164,6 @@ Delegate.prototype.syncAuthenticationState = function (cb) {
     run(function() {
         // every time we come online, sync
         window.addEventListener('online', run);
-        // every time we go offline, stop listening on pubnub
-        window.addEventListener('offline', _this.pubnubUnsubscribe.bind(_this, null));
     });
 }
 
