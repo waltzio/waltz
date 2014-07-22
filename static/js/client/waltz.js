@@ -1038,7 +1038,7 @@
 
         if (!$loginForm) return null;
         // Don't detect a form if there is a Clef login button on the page
-        if ($('iframe[src^="https://clef.io/iframes/button"').length) return;
+        if ($('iframe[src^="https://clef.io/iframes/button]"').length) return;
 
         // Don't detect a form that has more than one text/email input
         if ($loginForm.find("input[type='text']:visible").length +
@@ -1086,6 +1086,6 @@
 
     var isInstalledNode = document.createElement('div');
     isInstalledNode.id = 'waltzIsInstalled';
-    document.body.appendChild(isInstalledNode);
+    if (document.body) document.body.appendChild(isInstalledNode);
 
 }).call(this, jQuery);
