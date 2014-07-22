@@ -27,6 +27,7 @@ function Delegate(opts) {
     this.storage = new Storage();
     this.analytics = new Analytics();
     this.crypto = new Crypto();
+    this.log = debug('waltz:delegate.js');
 
     this.ongoingAJAXRequests = {};
 
@@ -126,34 +127,43 @@ Delegate.prototype.init = function(options) {
         }
     });
 
-    // check whether logged in, exponential backoff
-    // BOOM!
+    // bind the router
+    chrome.runtime.onMessage.addListener(this.router.bind(this));
+
+    // when the configs are done loading, blast off, baby!
+    $.when(this.configsLoaded).then(this.syncAuthenticationState.bind(this));
+};
+
+Delegate.prototype.syncAuthenticationState = function (cb) {
+    var _this = this;
+
     var n = 0;
-    function kickOff() {
+    function run(callback) {
         _this.checkAuthentication(function(data) {
             if (data.error == "noconn") {
-                console.log('no connection, will retry in ' + Math.pow(2,n) + ' seconds.');
+                _this.log('no connection, will retry in ' + Math.pow(2,n) + ' seconds.');
                 // exponential backoff, hooray!
-                setTimeout(kickOff, Math.pow(2, n) * 1000);
+                setTimeout(run, Math.pow(2, n) * 1000);
                 n = n + 1;
                 return;
             }
 
             if (data.user) {
-                _this.loggedIn = true;
                 _this.pubnubSubscribe(data);
+                _this.loggedIn = true;
             } else {
                 _this.loggedIn = false;
                 _this.logout({ silent: true });
             }
+
+            if (typeof(callback) == "function") callback();
         });
     }
 
-    // bind the router
-    chrome.runtime.onMessage.addListener(this.router.bind(this));
-
-    // when the configs are done loading, blast off, baby!
-    $.when(this.configsLoaded).then(kickOff);
+    run(function() {
+        // every time we come online, sync
+        window.addEventListener('online', run);
+    });
 };
 
 Delegate.prototype.router = function(request, sender, sendResponse) {
@@ -279,33 +289,36 @@ Delegate.prototype.updateSiteConfigs = function(data) {
 };
 
 Delegate.prototype.pubnubSubscribe = function(data) {
-	var _this = this;
+    var _this = this;
 
-	if (!data) {
-		this.checkAuthentication(handleData);
-	} else {
-		handleData(data);
-	}
+    if (!data) {
+        this.checkAuthentication(handleData);
+    } else {
+        handleData(data);
+    }
 
-	function handleData(data) {
-		_this.user = data.user;
-		_this.pubnub.subscribe({
-			channel: data.user,
-			message: function(m) {
-				if (m && m == "logout") {
-					_this.logout();
-				}
-			}
-		});
-	}
+    function handleData(data) {
+        _this.user = data.user;
+        _this.log("Subscribing to PubNub on channel: " + data.user);
+        _this.pubnub.subscribe({
+            channel: data.user,
+            message: function(m) {
+                if (m && m == "logout") {
+                    _this.logout();
+                }
+            }
+        });
+    }
 };
 
 Delegate.prototype.pubnubUnsubscribe = function(channel) {
-	if (channel) {
-		this.pubnub.unsubscribe({
-			channel: channel
-		});
-	}
+    channel = channel || this.user;
+    if (channel) {
+        this.log("Unsubscribing from PubNub channel: " + channel);
+        this.pubnub.unsubscribe({
+            channel: channel
+        });
+    }
 };
 
 Delegate.prototype.logout = function(opts) {
