@@ -269,7 +269,8 @@
                 });
                 _this.options.currentLogin = null;
             }
-        }
+        };
+
         if (opts.delay) {
             setTimeout(acknowledge, opts.delay);
         } else {

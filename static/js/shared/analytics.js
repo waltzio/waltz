@@ -8,6 +8,7 @@ function Analytics(opts) {
 	this.options = opts || {};
 	this.properties = this.options.properties || {};
 	this.storage = new Storage();
+	this.log = debug('waltz:analytics.js');
 
 	this.initialized = this.initialize();
 	this.loadedDevCheck = Utils.isDevMode();
@@ -23,7 +24,7 @@ Analytics.prototype.trackEvent = function(evnt, data) {
 		if (!isDevMode) {
 			mixpanel.track(evnt, data);
 		} else {
-			_this.debug("DEBUG: analytics - event -", evnt, data);
+			_this.log(evnt, data);
 		}
 	});
 };
@@ -71,9 +72,5 @@ Analytics.prototype.getProperties = function() {
     }
 
     return properties;
-};
-
-Analytics.prototype.debug = function() {
-	console.log.apply(console, arguments);
 };
 
