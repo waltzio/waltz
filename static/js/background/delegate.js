@@ -292,7 +292,7 @@ Delegate.prototype.pubnubSubscribe = function(data) {
     var _this = this;
 
     if (!data) {
-    this.checkAuthentication(handleData);
+        this.checkAuthentication(handleData);
     } else {
         handleData(data);
     }
