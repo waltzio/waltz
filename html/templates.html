@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        
+
     </li>
     <% } %>
 <% }); %>
@@ -103,7 +103,7 @@
         <div id="waltz-credential-header">
             <h1>Waltz replaces all of your passwords with the Clef wave.</h1>
         </div>
-        <form> 
+        <form>
             <% if (errorMessage) { %>
             <p id="waltz-credential-alert"><%= errorMessage %></p>
             <% } %>
@@ -175,6 +175,7 @@ YOUR_NAME
 
 <script src="/static/js/vendor/jquery.min.js"></script>
 <script src="/static/js/vendor/lodash.min.js"></script>
+<script src="/static/js/vendor/debug.js"></script>
 
 <script>
     function template(name, context, html) {
