@@ -516,7 +516,6 @@
 }
 #waltz-login-wrapper.overlayed #waltz-login-button:hover {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-  top: 40%;
 }
 #waltz-login-wrapper.overlayed #waltz-login-button:hover:before {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);

@@ -241,7 +241,7 @@
 
             $message.css({
                 right: this.onboarder.MESSAGE_OFFSET,
-                top: parseInt($widget.css('top')) + $widget.height() / 2 - 40
+                top: this.onboarder.MESSAGE_OFFSET
             });
 
             $message.fadeIn();
@@ -592,10 +592,12 @@
         }, function(hasOngoingRequest) {
             if (!hasOngoingRequest) {
                 log('showLoginError');
-                _this.options.site.config.login.loginForm.container.find('input').val('');
+                if (_this.options.site.config.login.loginForm) _this.options.site.config.login.loginForm.container.find('input').val('');
+
                 var $clonedFields = $('#' + _this.CLONED_USERNAME_ID)
                     .add($('#' + _this.CLONED_PASSWORD_ID));
                 $clonedFields.remove();
+
                 var page = _this.checkPage();
                 _this.handlePage(page);
                 if (_this.DOMObserver) _this.DOMObserver.reconnect();
@@ -751,7 +753,8 @@
         var _this = this,
             $button;
 
-        var attemptLogin = function() {
+        var attemptLogin = function(e) {
+            if (e) e.stopPropagation();
 
             _this.analytics.trackEvent("Click widget");
 
@@ -846,7 +849,7 @@
                 blur.unblur();
                 _this.blurred = false;
                 clearTimeout(hoverTimeout);
-                _this.hideWidget();
+                _this.dismiss();
             });
 
         } else {
@@ -876,10 +879,7 @@
 
         $(document).ready(this.loadIFrame.bind(this));
 
-        $button.one('click', function(e) {
-            e.stopPropagation();
-            attemptLogin();
-        });
+        $button.one('click', attemptLogin);
 
         this.$widget = $widget;
         this.trigger('show.widget');
