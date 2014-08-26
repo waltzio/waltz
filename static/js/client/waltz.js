@@ -1039,7 +1039,7 @@
 
         if (!$loginForm) return null;
         // Don't detect a form if there is a Clef login button on the page
-        if ($('iframe[src^="https://clef.io/iframes/button]"').length) return;
+        if ($('iframe[src^="https://clef.io/iframes"]').length) return;
 
         // Don't detect a form that has more than one text/email input
         if ($loginForm.find("input[type='text']:visible").length +
@@ -1066,7 +1066,7 @@
             passwordField: $passwordField,
             submitButton: $submitButton
         };
-    }   ;
+    };
 
     chrome.runtime.sendMessage({
         method: "initialize",
