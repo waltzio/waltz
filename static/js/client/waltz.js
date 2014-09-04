@@ -992,6 +992,7 @@
         var passwordInputs = $("input[type='password']:visible").filter(function() {
             return $(this).parents('#waltz-credential-form').length < 1;
         });
+
         var $loginForm;
         var maxScore = -Infinity;
 
@@ -1004,12 +1005,13 @@
                 if ($form.find("input[type='email']").filter(":not(#waltz-cloned-username)").length > 1) {
                     return;
                 }
-                if (!$form.find("input[type='email'], input[type='text']").length) {
+                if (!$form.find("input[type='email'], input[type='text'], input:not([type])").length) {
                     return;
                 }
 
+
                 var submitButtons = $form
-                    .find("input[type='submit'], button");
+                    .find("input[type='submit'], button, input[type='image']");
                 // Super specific work-around for forms which have a 'Change
                 // email' button (but which are not login forms), i.e. Mixpanel
                 if (submitButtons.text().match(/change email/i)) return;
@@ -1045,10 +1047,9 @@
         if ($loginForm.find("input[type='text']:visible").length +
             $loginForm.find("input[type='email']:visible").length > 1) return;
 
-
-        var $usernameField = $loginForm.find("input[type='text']").first();
+        var $usernameField = $loginForm.find("input[type='text'], input:not([type])").first();
         var $passwordField = $loginForm.find("input[type='password']").first();
-        var $submitButton = $loginForm.find("input[type='submit'], button").first();
+        var $submitButton = $loginForm.find("input[type='submit'], button, input[type='image']").first();
 
         var $emailField = $loginForm.find("input[type='email']");
         if ($emailField.length) $usernameField = $emailField.first();
