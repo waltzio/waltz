@@ -60,8 +60,7 @@ var Utils = {
             chrome.cookies.getAll(
                 { domain: domain },
                 function (cookies) {
-                    var retry = (chrome.extension.lastError ||
-                        cookies === undefined || cookies === null);
+                    var retry = (chrome.extension.lastError || chrome.runtime.lastError || cookies === undefined || cookies === null);
                     if (retry && attempts < 10) {
                         attempts++;
                         return setTimeout(getCookies, 500);
