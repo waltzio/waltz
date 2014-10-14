@@ -72,7 +72,7 @@
     "/html/templates.html",
     "/manifest.json"
   ],
-  "content_security_policy": "script-src 'self' chrome-extension:// https://connect.facebook.net https://cdn.mxpnl.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://connect.facebook.net https://cdn.mxpnl.com; object-src 'self'",
   "sandbox": {
     "pages": ["/html/templates.html"]
   }
