@@ -137,14 +137,11 @@ Delegate.prototype.init = function(options) {
 Delegate.prototype.syncAuthenticationState = function (cb) {
     var _this = this;
 
-    var n = 0;
     function run(callback) {
         _this.checkAuthentication(function(data) {
             if (data.error == "noconn") {
-                _this.log('no connection, will retry in ' + Math.pow(2,n) + ' seconds.');
-                // exponential backoff, hooray!
-                setTimeout(run, Math.pow(2, n) * 1000);
-                n = n + 1;
+                _this.log('no connection, will retry in 1 seconds.');
+                setTimeout(run, 1 * 1000);
                 return;
             }
 
