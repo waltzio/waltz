@@ -42,7 +42,7 @@ grunt.initConfig({
   'chrome-extension': {
     options: {
         name: "Waltz",
-        version: "2.0.12",
+        version: "2.0.13",
         id: "obhibkfopclldmnoohabnbimocpgdine",
         chrome: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
         clean: true,
