@@ -16,7 +16,7 @@
             "hasHiddenInputs": true,
             "usernameField": "user_session[email]",
             "passwordField": "user_session[password]",
-            "check": "#menu-sub-me"
+            "check": "#menu-sub-me, #menu-me-account, a:contains('Log out')"
         }
     }
 }
