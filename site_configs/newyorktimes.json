@@ -13,7 +13,7 @@
             "usernameField": "userid",
             "passwordField": "password",
             "hasHiddenInputs": true,
-            "check": "a:contains('Log Out'), li.profileDropDownLogOut, div.dropDownModalLinkContainer.box"
+            "check": "a:contains('Log Out'), a:contains('My Account'), li.profileDropDownLogOut, div.dropDownModalLinkContainer.box, .log-out-button"
         }
     }
 }
