@@ -5,7 +5,7 @@
             "cookies": ["duo_main_session", "auth_tkt", "wuuid"]
         },
         "login": {
-            "urls": [],
+            "urls": ["https://www.duolingo.com/"],
             "formURL": "http://www.duolingo.com/login",
             "method": "POST",
             "usernameField": "login",
