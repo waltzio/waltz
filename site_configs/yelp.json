@@ -1,0 +1,18 @@
+{
+    "*://*.yelp.com/*": {
+        "name": "Yelp",
+        "logout": {
+            "cookies": ["zs", "s", "bse"]
+        },
+        "login": {
+            "urls": ["http://www.yelp.com/", "https://www.yelp.com/login"],
+            "formURL": "https://www.yelp.com/login?return_url=%2Fsf",
+            "method": "POST",
+            "hasHiddenInputs": true,
+            "formOnly": true,
+            "usernameField": "email",
+            "passwordField": "password",
+            "check": "a#logout-link"
+        }
+    }
+}
